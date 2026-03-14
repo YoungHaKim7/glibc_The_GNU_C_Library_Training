@@ -77,3 +77,26 @@ Visit https://www.gnu.org/software/libc/manual/
 - `manual/string.texi` - Simple, readable implementations (good starting point)
 
 Would you like me to show you a specific section?
+
+#
+Perfect! The glibc manual has been built successfully. The HTML documentation is now available at:
+
+**`glibc/build/manual/libc/`**
+
+You can open the main index page in your browser:
+
+```bash
+xdg-open glibc/build/manual/libc/index.html
+```
+
+Or if you want to view it from the terminal with a text-based browser:
+
+```bash
+lynx glibc/build/manual/libc/index.html
+```
+
+**Summary:** The original error occurred because glibc requires building from a separate build directory (not from the source tree directly). The fix was to:
+
+1. Create a build directory: `mkdir build && cd build`
+2. Configure glibc: `../configure --prefix=/usr`
+3. Build the manual: `make -C ../manual objdir=$(pwd) html`
