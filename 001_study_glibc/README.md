@@ -43,3 +43,37 @@ ls -la csu/
 4. **Look at `stdlib/`** for fundamental utilities
 
 Would you like me to show you a specific simple function to get started, such as strlen or strcmp?
+
+# 책 읽는 방법
+**The `info` command works!** Your system has the glibc documentation installed.
+
+## Summary: How to View the glibc Manual
+
+You have **3 options**:
+
+### 1. **Use `info` command** (Best - interactive navigation)
+```bash
+info libc
+```
+- Navigate with arrow keys
+- Press `n` for next, `p` for previous, `u` for up
+- Press `q` to quit
+- Press `Enter` on menu items to jump to sections
+
+### 2. **Read `.texi` files directly** (Simple - just read)
+The Texinfo files are readable text:
+- `manual/intro.texi` - Introduction (what I showed above)
+- `manual/creature.texi` - Library overview
+- `manual/string.texi` - String functions
+- `manual/startup.texi` - Program startup
+
+### 3. **Online documentation**
+Visit https://www.gnu.org/software/libc/manual/
+
+---
+
+**Which topic interests you most?** Based on your README, I'd recommend starting with:
+- `manual/intro.texi` - Big picture overview
+- `manual/string.texi` - Simple, readable implementations (good starting point)
+
+Would you like me to show you a specific section?
