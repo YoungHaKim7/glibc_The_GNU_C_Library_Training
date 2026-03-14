@@ -1,6 +1,10 @@
 # glibc_The_GNU_C_Library_Training
 https://sourceware.org/glibc/sources.html
 
+# Raw bindings to platform APIs for Rust 
+- https://github.com/rust-lang/libc
+  - Doc
+    - https://docs.rs/libc/latest/libc/
 
 ## Download sources
 
