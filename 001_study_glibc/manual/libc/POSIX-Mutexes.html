@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>POSIX Mutexes (The GNU C Library)</title>
+
+<meta name="description" content="POSIX Mutexes (The GNU C Library)">
+<meta name="keywords" content="POSIX Mutexes (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="POSIX-Threads.html" rel="up" title="POSIX Threads">
+<link href="POSIX-Threads-Other-APIs.html" rel="next" title="POSIX Threads Other APIs">
+<link href="POSIX-Spin-Locks.html" rel="prev" title="POSIX Spin Locks">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="POSIX-Mutexes">
+<div class="nav-panel">
+<p>
+Next: <a href="POSIX-Threads-Other-APIs.html" accesskey="n" rel="next">POSIX Threads Other APIs</a>, Previous: <a href="POSIX-Spin-Locks.html" accesskey="p" rel="prev">POSIX Spin Locks</a>, Up: <a href="POSIX-Threads.html" accesskey="u" rel="up">POSIX Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="POSIX-Mutexes-1"><span>36.2.7 POSIX Mutexes<a class="copiable-link" href="#POSIX-Mutexes-1"> &para;</a></span></h4>
+
+<p>A <em class="emph">mutex</em>, or &ldquo;mutual exclusion&rdquo;, is a way of guaranteeing that
+only one thread at a time is able to execute a protected bit of code
+(or access any other resource).  Two or more threads trying to execute
+the same code at the same time, will instead take turns, according to
+the mutex.
+</p>
+<p>A mutex is much like a spinlock, but implemented in a way that is more
+appropriate for use in non-realtime threads, and is more
+resource-conserving.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fmutex_005finit"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_mutex_init</strong> <code class="def-code-arguments">(pthread_mutex_t *<var class="var">mutex</var>, const pthread_mutexattr_t *<var class="var">mutexattr</var>)</code><a class="copiable-link" href="#index-pthread_005fmutex_005finit"> &para;</a></span></dt>
+<dd><p>Initializes a mutex.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_mutex_init.3.html">pthread_mutex_init(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fmutex_005fdestroy"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_mutex_destroy</strong> <code class="def-code-arguments">(pthread_mutex_t *<var class="var">mutex</var>)</code><a class="copiable-link" href="#index-pthread_005fmutex_005fdestroy"> &para;</a></span></dt>
+<dd><p>Destroys a no-longer-needed mutex.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_mutex_destroy.3.html">pthread_mutex_destroy(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fmutex_005flock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_mutex_lock</strong> <code class="def-code-arguments">(pthread_mutex_t *<var class="var">mutex</var>)</code><a class="copiable-link" href="#index-pthread_005fmutex_005flock"> &para;</a></span></dt>
+<dd><p>Only one thread at a time may lock <var class="var">mutex</var>, and must unlock it
+when appropriate.  If a thread calls <code class="code">pthread_mutex_lock</code> while
+<var class="var">mutex</var> is locked by another thread, the calling thread will wait
+until <var class="var">mutex</var> is unlocked, then attempt to lock it.  Since there
+may be many threads waiting at the same time, the calling thread may
+need to repeat this wait-and-try many times before it successfully
+locks <var class="var">mutex</var>, at which point the call to
+<code class="code">pthread_mutex_locks</code> returns successfully.
+</p>
+<p>This function may fail with the following:
+</p>
+<dl class="table">
+<dt><code class="code">EAGAIN</code></dt>
+<dd><p>Too many locks were attempted.
+</p>
+</dd>
+<dt><code class="code">EDEADLK</code></dt>
+<dd><p>The calling thread already holds a lock on <var class="var">mutex</var>.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p><var class="var">mutex</var> has an invalid kind, or an invalid priority was requested.
+</p>
+</dd>
+<dt><code class="code">ENOTRECOVERABLE</code></dt>
+<dd><p>The thread holding the lock died in a way that the system cannot recover from.
+</p>
+</dd>
+<dt><code class="code">EOWNERDEAD</code></dt>
+<dd><p>The thread holding the lock died in a way that the system can recover from.
+</p>
+</dd>
+</dl>
+
+<p>This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_mutex_lock.3.html">pthread_mutex_lock(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fmutex_005ftrylock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_mutex_trylock</strong> <code class="def-code-arguments">(pthread_mutex_t *<var class="var">mutex</var>)</code><a class="copiable-link" href="#index-pthread_005fmutex_005ftrylock"> &para;</a></span></dt>
+<dd><p>Like <code class="code">pthread_mutex_lock</code> but if the lock cannot be immediately
+obtained, returns EBUSY.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_mutex_trylock.3.html">pthread_mutex_trylock(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fmutex_005funlock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_mutex_unlock</strong> <code class="def-code-arguments">(pthread_mutex_t *<var class="var">mutex</var>)</code><a class="copiable-link" href="#index-pthread_005fmutex_005funlock"> &para;</a></span></dt>
+<dd><p>Unlocks <var class="var">mutex</var>.  Returns EPERM if the calling thread doesn&rsquo;t hold
+the lock on <var class="var">mutex</var>.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_mutex_unlock.3.html">pthread_mutex_unlock(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fmutex_005fclocklock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_mutex_clocklock</strong> <code class="def-code-arguments">(pthread_mutex_t *<var class="var">mutex</var>, clockid_t <var class="var">clockid</var>, const struct timespec *<var class="var">abstime</var>)</code><a class="copiable-link" href="#index-pthread_005fmutex_005fclocklock"> &para;</a></span></dt>
+</dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fmutex_005ftimedlock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_mutex_timedlock</strong> <code class="def-code-arguments">(pthread_mutex_t *<var class="var">mutex</var>, const struct timespec *<var class="var">abstime</var>)</code><a class="copiable-link" href="#index-pthread_005fmutex_005ftimedlock"> &para;</a></span></dt>
+<dd>
+<p>These two functions act like <code class="code">pthread_mutex_lock</code> with the
+exception that the call will not wait past time <var class="var">abstime</var>, as
+reported by <var class="var">clockid</var> or (for <code class="code">pthread_mutex_timedlock</code>)
+<code class="code">CLOCK_REALTIME</code>.  If <var class="var">abstime</var> is reached and the mutex
+still cannot be locked, an <code class="code">ETIMEDOUT</code> error is returned.
+If the time had already passed when these functions
+are called, and the mutex cannot be immediately locked, the function
+times out immediately.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fmutexattr_005finit"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_mutexattr_init</strong> <code class="def-code-arguments">(const pthread_mutexattr_t *<var class="var">attr</var>)</code><a class="copiable-link" href="#index-pthread_005fmutexattr_005finit"> &para;</a></span></dt>
+<dd><p>Initializes <var class="var">attr</var> with default values.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_mutexattr_init.3.html">pthread_mutexattr_init(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fmutexattr_005fdestroy"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_mutexattr_destroy</strong> <code class="def-code-arguments">(pthread_mutexattr_t *<var class="var">attr</var>)</code><a class="copiable-link" href="#index-pthread_005fmutexattr_005fdestroy"> &para;</a></span></dt>
+<dd><p>Destroys <var class="var">attr</var> and releases any resources it may have allocated.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_mutexattr_destroy.3.html">pthread_mutexattr_destroy(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fmutexattr_005fsettype"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_mutexattr_settype</strong> <code class="def-code-arguments">(pthread_mutexattr_t *<var class="var">attr</var>, int <var class="var">kind</var>)</code><a class="copiable-link" href="#index-pthread_005fmutexattr_005fsettype"> &para;</a></span></dt>
+<dd><p>This functions allow you to change what kind of mutex a mutex is, by
+changing the attributes used to initialize it.  The values for
+<var class="var">kind</var> are:
+</p>
+<dl class="table">
+<dt><code class="code">PTHREAD_MUTEX_NORMAL</code></dt>
+<dd><p>No attempt to detect deadlock is performed; a thread will deadlock if
+it tries to lock this mutex yet already holds a lock to it.
+Attempting to unlock a mutex not locked by the calling thread results
+in undefined behavior.
+</p>
+</dd>
+<dt><code class="code">PTHREAD_MUTEX_ERRORCHECK</code></dt>
+<dd><p>Attempts to relock a mutex, or unlock a mutex not held, will result in an error.
+</p>
+</dd>
+<dt><code class="code">PTHREAD_MUTEX_RECURSIVE</code></dt>
+<dd><p>Attempts to relock a mutex already held succeed, but require a
+matching number of unlocks to release it.  Attempts to unlock a mutex
+not held will result in an error.
+</p>
+</dd>
+<dt><code class="code">PTHREAD_MUTEX_DEFAULT</code></dt>
+<dd><p>Attempts to relock a mutex, or unlock a mutex not held, will result in
+undefined behavior.  This is the default.
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fmutexattr_005fgettype"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_mutexattr_gettype</strong> <code class="def-code-arguments">(const pthread_mutexattr_t *<var class="var">attr</var>, int *<var class="var">kind</var>)</code><a class="copiable-link" href="#index-pthread_005fmutexattr_005fgettype"> &para;</a></span></dt>
+<dd><p>This function gets the kind of mutex <var class="var">mutex</var> is.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="POSIX-Threads-Other-APIs.html">POSIX Threads Other APIs</a>, Previous: <a href="POSIX-Spin-Locks.html">POSIX Spin Locks</a>, Up: <a href="POSIX-Threads.html">POSIX Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

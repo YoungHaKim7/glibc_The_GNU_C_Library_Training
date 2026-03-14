@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Opening and Closing Files (The GNU C Library)</title>
+
+<meta name="description" content="Opening and Closing Files (The GNU C Library)">
+<meta name="keywords" content="Opening and Closing Files (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Low_002dLevel-I_002fO.html" rel="up" title="Low-Level I/O">
+<link href="I_002fO-Primitives.html" rel="next" title="I/O Primitives">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Opening-and-Closing-Files">
+<div class="nav-panel">
+<p>
+Next: <a href="I_002fO-Primitives.html" accesskey="n" rel="next">Input and Output Primitives</a>, Up: <a href="Low_002dLevel-I_002fO.html" accesskey="u" rel="up">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Opening-and-Closing-Files-1"><span>13.1 Opening and Closing Files<a class="copiable-link" href="#Opening-and-Closing-Files-1"> &para;</a></span></h3>
+
+<a class="index-entry-id" id="index-opening-a-file-descriptor"></a>
+<a class="index-entry-id" id="index-closing-a-file-descriptor"></a>
+<p>This section describes the primitives for opening and closing files
+using file descriptors.  The <code class="code">open</code> and <code class="code">creat</code> functions are
+declared in the header file <samp class="file">fcntl.h</samp>, while <code class="code">close</code> is
+declared in <samp class="file">unistd.h</samp>.
+<a class="index-entry-id" id="index-unistd_002eh"></a>
+<a class="index-entry-id" id="index-fcntl_002eh-1"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-open"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">open</strong> <code class="def-code-arguments">(const char *<var class="var">filename</var>, int <var class="var">flags</var>[, mode_t <var class="var">mode</var>])</code><a class="copiable-link" href="#index-open"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">open</code> function creates and returns a new file descriptor for
+the file named by <var class="var">filename</var>.  Initially, the file position
+indicator for the file is at the beginning of the file.  The argument
+<var class="var">mode</var> (see <a class="pxref" href="Permission-Bits.html">The Mode Bits for Access Permission</a>) is used only when a file is
+created, but it doesn&rsquo;t hurt to supply the argument in any case.
+</p>
+<p>The <var class="var">flags</var> argument controls how the file is to be opened.  This is
+a bit mask; you create the value by the bitwise OR of the appropriate
+parameters (using the &lsquo;<samp class="samp">|</samp>&rsquo; operator in C).
+See <a class="xref" href="File-Status-Flags.html">File Status Flags</a>, for the parameters available.
+</p>
+<p>The normal return value from <code class="code">open</code> is a non-negative integer file
+descriptor.  In the case of an error, a value of <em class="math">-1</em> is returned
+instead.  In addition to the usual file name errors (see <a class="pxref" href="File-Name-Errors.html">File Name Errors</a>), the following <code class="code">errno</code> error conditions are defined
+for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EACCES</code></dt>
+<dd><p>The file exists but is not readable/writable as requested by the <var class="var">flags</var>
+argument, or the file does not exist and the directory is unwritable so
+it cannot be created.
+</p>
+</dd>
+<dt><code class="code">EEXIST</code></dt>
+<dd><p>Both <code class="code">O_CREAT</code> and <code class="code">O_EXCL</code> are set, and the named file already
+exists.
+</p>
+</dd>
+<dt><code class="code">EINTR</code></dt>
+<dd><p>The <code class="code">open</code> operation was interrupted by a signal.
+See <a class="xref" href="Interrupted-Primitives.html">Primitives Interrupted by Signals</a>.
+</p>
+</dd>
+<dt><code class="code">EISDIR</code></dt>
+<dd><p>The <var class="var">flags</var> argument specified write access, and the file is a directory.
+</p>
+</dd>
+<dt><code class="code">EMFILE</code></dt>
+<dd><p>The process has too many files open.
+The maximum number of file descriptors is controlled by the
+<code class="code">RLIMIT_NOFILE</code> resource limit; see <a class="pxref" href="Limits-on-Resources.html">Limiting Resource Usage</a>.
+</p>
+</dd>
+<dt><code class="code">ENFILE</code></dt>
+<dd><p>The entire system, or perhaps the file system which contains the
+directory, cannot support any additional open files at the moment.
+(This problem cannot happen on GNU/Hurd systems.)
+</p>
+</dd>
+<dt><code class="code">ENOENT</code></dt>
+<dd><p>The named file does not exist, and <code class="code">O_CREAT</code> is not specified.
+</p>
+</dd>
+<dt><code class="code">ENOSPC</code></dt>
+<dd><p>The directory or file system that would contain the new file cannot be
+extended, because there is no disk space left.
+</p>
+</dd>
+<dt><code class="code">ENXIO</code></dt>
+<dd><p><code class="code">O_NONBLOCK</code> and <code class="code">O_WRONLY</code> are both set in the <var class="var">flags</var>
+argument, the file named by <var class="var">filename</var> is a FIFO (see <a class="pxref" href="Pipes-and-FIFOs.html">Pipes and FIFOs</a>), and no process has the file open for reading.
+</p>
+</dd>
+<dt><code class="code">EROFS</code></dt>
+<dd><p>The file resides on a read-only file system and any of <code class="code">O_WRONLY</code><!-- /@w -->,
+<code class="code">O_RDWR</code>, and <code class="code">O_TRUNC</code> are set in the <var class="var">flags</var> argument,
+or <code class="code">O_CREAT</code> is set and the file does not already exist.
+</p></dd>
+</dl>
+
+
+<p>If on a 32 bit machine the sources are translated with
+<code class="code">_FILE_OFFSET_BITS == 64</code> the function <code class="code">open</code> returns a file
+descriptor opened in the large file mode which enables the file handling
+functions to use files up to 2^63 bytes in size and offset from
+&minus;2^63 to 2^63.  This happens transparently for the user
+since all of the low-level file handling functions are equally replaced.
+</p>
+<p>This function is a cancellation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time <code class="code">open</code> is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this calls to <code class="code">open</code> should be
+protected using cancellation handlers.
+</p>
+<p>The <code class="code">open</code> function is the underlying primitive for the <code class="code">fopen</code>
+and <code class="code">freopen</code> functions, that create streams.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-open64"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">open64</strong> <code class="def-code-arguments">(const char *<var class="var">filename</var>, int <var class="var">flags</var>[, mode_t <var class="var">mode</var>])</code><a class="copiable-link" href="#index-open64"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">open</code>.  It returns a file descriptor
+which can be used to access the file named by <var class="var">filename</var>.  The only
+difference is that on 32 bit systems the file is opened in the
+large file mode.  I.e., file length and file offsets can exceed 31 bits.
+</p>
+<p>When the sources are translated with <code class="code">_FILE_OFFSET_BITS == 64</code> this
+function is actually available under the name <code class="code">open</code>.  I.e., the
+new, extended API using 64 bit file sizes and offsets transparently
+replaces the old API.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-openat"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">openat</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, const char *<var class="var">filename</var>, int <var class="var">flags</var>[, mode_t <var class="var">mode</var>])</code><a class="copiable-link" href="#index-openat"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is the descriptor-relative variant of the <code class="code">open</code>
+function.  See <a class="xref" href="Descriptor_002dRelative-Access.html">Descriptor-Relative Access</a>.
+</p>
+<p>Note that the <var class="var">flags</var> argument of <code class="code">openat</code> does not accept
+<code class="code">AT_&hellip;</code> flags, only the flags described for the <code class="code">open</code>
+function above.
+</p>
+<p>The <code class="code">openat</code> function can fail for additional reasons:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">filedes</var> argument is not a valid file descriptor.
+</p>
+</dd>
+<dt><code class="code">ENOTDIR</code></dt>
+<dd><p>The descriptor <var class="var">filedes</var> is not associated with a directory, and
+<var class="var">filename</var> is a relative file name.
+</p></dd>
+</dl>
+
+<p>When the sources are compiled with <code class="code">_FILE_OFFSET_BITS == 64</code> this
+function is in fact <code class="code">openat64</code> since the LFS interface transparently
+replaces the normal implementation.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-openat64"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">openat64</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, const char *<var class="var">filename</var>, int <var class="var">flags</var>[, mode_t <var class="var">mode</var>])</code><a class="copiable-link" href="#index-openat64"> &para;</a></span></dt>
+<dd>
+<p>The large-file variant of the <code class="code">openat</code>, similar to how
+<code class="code">open64</code> is the large-file variant of <code class="code">open</code>.
+</p>
+<p>When the sources are translated with <code class="code">_FILE_OFFSET_BITS == 64</code> this
+function is actually available under the name <code class="code">openat</code>.  I.e., the
+new, extended API using 64 bit file sizes and offsets transparently
+replaces the old API.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-open_005fhow"><span class="category-def">Data Type: </span><span><strong class="def-name">struct open_how</strong><a class="copiable-link" href="#index-struct-open_005fhow"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">open_how</code> structure describes how to open a file using <code class="code">openat2</code>.
+</p>
+<p><strong class="strong">Portability note:</strong> In the future, additional fields can be added
+to <code class="code">struct open_how</code>, so that the size of this data type increases.
+Do not use it in places where this matters, such as structure fields in
+installed header files, where such a change could affect the application
+binary interface (ABI).
+</p>
+<p>The following generic fields are available.
+</p>
+<dl class="table">
+<dt><code class="code">flags</code></dt>
+<dd><p>This field specifies the file creation and file status flags to use when
+opening the file.
+All of the <code class="code">O_*</code> flags defined for <code class="code">openat</code> are valid.
+The <code class="code">openat2</code> is stricter than <code class="code">openat</code> in rejecting unknown or
+conflicting values. For example, <code class="code">openat2</code> rejects a mode that
+exceeds 07777, whereas <code class="code">openat</code> silently ignores
+excess high-order bits.
+</p>
+</dd>
+<dt><code class="code">mode</code></dt>
+<dd><p>This field specifies the mode for the new file, similar to <code class="code">mode</code>
+argument of <code class="code">openat</code>. It should be in the range 0..07777.
+</p>
+</dd>
+<dt><code class="code">resolve</code></dt>
+<dd><p>This is a bitmask of flags that affect the resolution of file name components.
+Unlike <code class="code">O_NOFOLLOW</code>, it affects all file name components, not just the
+last one. The following flags are available.
+</p>
+<dl class="table">
+<dt><code class="code">RESOLVE_NO_XDEV</code></dt>
+<dd><p>Disallow traversal of mount points during path resolution (including all
+bind mounts).
+</p>
+</dd>
+<dt><code class="code">RESOLVE_NO_MAGICLINKS</code></dt>
+<dd><p>Disallow all <strong class="strong">magic-link</strong> resolution during path resolution. Magic
+links are symbolic link-like objects that are found in <strong class="strong">procfs</strong>;
+for example the <code class="code">/proc/pid/exe</code>.
+</p>
+</dd>
+<dt><code class="code">RESOLVE_NO_SYMLINKS</code></dt>
+<dd><p>Disallow resolution of symbolic links during path resolution.
+This option implies <code class="code">RESOLVE_NO_MAGICLINKS</code>.
+</p>
+</dd>
+<dt><code class="code">RESOLVE_BENEATH</code></dt>
+<dd><p>This rejects absolute pathnames, pathnames containing <samp class="file">..</samp>
+components that would be resolved relative to <var class="var">dfd</var>,
+and symbolic links that resolve to pathnames that would be rejected.
+The rejection occurs even if <var class="var">dfd</var> is the root directory.
+</p>
+</dd>
+<dt><code class="code">RESOLVE_IN_ROOT</code></dt>
+<dd><p>Treat absolute pathnames as being relative to <var class="var">dfd</var>,
+treat a <samp class="file">..</samp> component as being equivalent to <samp class="file">.</samp>
+if it is resolved relative to <var class="var">dfd</var>,
+and treat symbolic link contents consistently with this.
+</p></dd>
+</dl>
+
+</dd>
+</dl>
+
+</dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-openat2"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">openat2</strong> <code class="def-code-arguments">(int <var class="var">dirfd</var>, const char *<var class="var">pathname</var>, const struct open_how *<var class="var">how</var>, size_t <var class="var">size</var>)</code><a class="copiable-link" href="#index-openat2"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is an extension of the <code class="code">openat</code> and provides a superset of its
+functionality.  See <a class="xref" href="Descriptor_002dRelative-Access.html">Descriptor-Relative Access</a>.
+</p>
+<p>The <var class="var">size</var> argument must equal <code class="code">sizeof *<var class="var">how</var></code>. For portability
+to future API versions that may extend <code class="code">struct open_how</code>, <code class="code">*<var class="var">how</var></code>
+should be fully initialized e.g., by a struct initializer, by <code class="code">memset</code> to zero,
+or by having static storage duration.
+</p>
+<p>On failure, <code class="code">openat2</code> returns <em class="math">-1</em> and sets <code class="code">errno</code>. It can
+fail for any of the reasons <code class="code">openat</code> fails, plus the following reasons:
+</p>
+<dl class="table">
+<dt><code class="code">E2BIG</code></dt>
+<dd><p><var class="var">size</var> is too large for any future extension, <code class="code">*<var class="var">how</var></code> contains
+non-zero members that are future extensions not supported by this kernel
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>An unknown flag or invalid value was used on <code class="code">*<var class="var">how</var></code>; or
+<code class="code"><var class="var">how</var>-&gt;mode</code> is non-zero, but <code class="code"><var class="var">how</var>-&gt;flags</code> does not contain
+<code class="code">O_CREAT</code> or <code class="code">O_TMPFILE</code>, or <var class="var">size</var> is smaller than the ones supported
+by the kernel.
+</p></dd>
+</dl>
+
+<p>It can also return all the errors <code class="code">openat</code> returns.
+</p>
+<p>Similar to <code class="code">openat</code>, <code class="code">openat2</code> is a cancellation point.
+</p>
+<p>Unlike other <code class="code">open</code>-like functions, this function ignores
+<code class="code">_FILE_OFFSET_BITS</code> and always operates in large file mode.
+</p></dd></dl>
+
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-creat"><span class="category-def">Obsolete function: </span><span><code class="def-type">int</code> <strong class="def-name">creat</strong> <code class="def-code-arguments">(const char *<var class="var">filename</var>, mode_t <var class="var">mode</var>)</code><a class="copiable-link" href="#index-creat"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is obsolete.  The call:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">creat (<var class="var">filename</var>, <var class="var">mode</var>)
+</pre></div>
+
+<p>is equivalent to:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">open (<var class="var">filename</var>, O_WRONLY | O_CREAT | O_TRUNC, <var class="var">mode</var>)
+</pre></div>
+
+<p>If on a 32 bit machine the sources are translated with
+<code class="code">_FILE_OFFSET_BITS == 64</code> the function <code class="code">creat</code> returns a file
+descriptor opened in the large file mode which enables the file handling
+functions to use files up to 2^63 in size and offset from
+&minus;2^63 to 2^63.  This happens transparently for the user
+since all of the low-level file handling functions are equally replaced.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-creat64"><span class="category-def">Obsolete function: </span><span><code class="def-type">int</code> <strong class="def-name">creat64</strong> <code class="def-code-arguments">(const char *<var class="var">filename</var>, mode_t <var class="var">mode</var>)</code><a class="copiable-link" href="#index-creat64"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">creat</code>.  It returns a file descriptor
+which can be used to access the file named by <var class="var">filename</var>.  The only
+difference is that on 32 bit systems the file is opened in the
+large file mode.  I.e., file length and file offsets can exceed 31 bits.
+</p>
+<p>To use this file descriptor one must not use the normal operations but
+instead the counterparts named <code class="code">*64</code>, e.g., <code class="code">read64</code>.
+</p>
+<p>When the sources are translated with <code class="code">_FILE_OFFSET_BITS == 64</code> this
+function is actually available under the name <code class="code">open</code>.  I.e., the
+new, extended API using 64 bit file sizes and offsets transparently
+replaces the old API.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-close"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">close</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>)</code><a class="copiable-link" href="#index-close"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">close</code> closes the file descriptor <var class="var">filedes</var>.
+Closing a file has the following consequences:
+</p>
+<ul class="itemize mark-bullet">
+<li>The file descriptor is deallocated.
+
+</li><li>Any record locks owned by the process on the file are unlocked.
+
+</li><li>When all file descriptors associated with a pipe or FIFO have been closed,
+any unread data is discarded.
+</li></ul>
+
+<p>This function is a cancellation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time <code class="code">close</code> is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this, calls to <code class="code">close</code> should be
+protected using cancellation handlers.
+</p>
+<p>The normal return value from <code class="code">close</code> is <em class="math">0</em>; a value of <em class="math">-1</em>
+is returned in case of failure.  The following <code class="code">errno</code> error
+conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">filedes</var> argument is not a valid file descriptor.
+</p>
+</dd>
+<dt><code class="code">EINTR</code></dt>
+<dd><p>The <code class="code">close</code> call was interrupted by a signal.
+See <a class="xref" href="Interrupted-Primitives.html">Primitives Interrupted by Signals</a>.
+Here is an example of how to handle <code class="code">EINTR</code> properly:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">TEMP_FAILURE_RETRY (close (desc));
+</pre></div>
+
+</dd>
+<dt><code class="code">ENOSPC</code></dt>
+<dt><code class="code">EIO</code></dt>
+<dt><code class="code">EDQUOT</code></dt>
+<dd><p>When the file is accessed by NFS, these errors from <code class="code">write</code> can sometimes
+not be detected until <code class="code">close</code>.  See <a class="xref" href="I_002fO-Primitives.html">Input and Output Primitives</a>, for details
+on their meaning.
+</p></dd>
+</dl>
+
+<p>Please note that there is <em class="emph">no</em> separate <code class="code">close64</code> function.
+This is not necessary since this function does not determine nor depend
+on the mode of the file.  The kernel which performs the <code class="code">close</code>
+operation knows which mode the descriptor is used for and can handle
+this situation.
+</p></dd></dl>
+
+<p>To close a stream, call <code class="code">fclose</code> (see <a class="pxref" href="Closing-Streams.html">Closing Streams</a>) instead
+of trying to close its underlying file descriptor with <code class="code">close</code>.
+This flushes any buffered output and updates the stream object to
+indicate that it is closed.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-close_005frange"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">close_range</strong> <code class="def-code-arguments">(unsigned int <var class="var">lowfd</var>, unsigned int <var class="var">maxfd</var>, int <var class="var">flags</var>)</code><a class="copiable-link" href="#index-close_005frange"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>The function <code class="code">close_range</code> closes the file descriptor from <var class="var">lowfd</var>
+to <var class="var">maxfd</var> (inclusive).  This function is similar to call <code class="code">close</code> in
+specified file descriptor range depending on the <var class="var">flags</var>.
+</p>
+<p>This is function is only supported on recent Linux versions and the GNU C Library
+does not provide any fallback (the application will need to handle possible
+<code class="code">ENOSYS</code>).
+</p>
+<p>The <var class="var">flags</var> add options on how the files are closes.  Linux currently
+supports:
+</p>
+<dl class="vtable">
+<dt><a id="index-CLOSE_005fRANGE_005fUNSHARE"></a><span><code class="code">CLOSE_RANGE_UNSHARE</code><a class="copiable-link" href="#index-CLOSE_005fRANGE_005fUNSHARE"> &para;</a></span></dt>
+<dd><p>Unshare the file descriptor table before closing file descriptors.
+</p>
+</dd>
+<dt><a id="index-CLOSE_005fRANGE_005fCLOEXEC"></a><span><code class="code">CLOSE_RANGE_CLOEXEC</code><a class="copiable-link" href="#index-CLOSE_005fRANGE_005fCLOEXEC"> &para;</a></span></dt>
+<dd><p>Set the <code class="code">FD_CLOEXEC</code> bit instead of closing the file descriptor.
+</p></dd>
+</dl>
+
+<p>The normal return value from <code class="code">close_range</code> is <em class="math">0</em>; a value
+of <em class="math">-1</em> is returned in case of failure.  The following <code class="code">errno</code> error
+conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">lowfd</var> value is larger than <var class="var">maxfd</var> or an unsupported <var class="var">flags</var>
+is used.
+</p>
+</dd>
+<dt><code class="code">ENOMEM</code></dt>
+<dd><p>Either there is not enough memory for the operation, or the process is
+out of address space.  It can only happen when <code class="code">CLOSE_RANGE_UNSHARED</code>
+flag is used.
+</p>
+</dd>
+<dt><code class="code">EMFILE</code></dt>
+<dd><p>The process has too many files open and it can only happens when
+<code class="code">CLOSE_RANGE_UNSHARED</code> flag is used.
+The maximum number of file descriptors is controlled by the
+<code class="code">RLIMIT_NOFILE</code> resource limit; see <a class="pxref" href="Limits-on-Resources.html">Limiting Resource Usage</a>.
+</p>
+</dd>
+<dt><code class="code">ENOSYS</code></dt>
+<dd><p>The kernel does not implement the required functionality.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-closefrom"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">closefrom</strong> <code class="def-code-arguments">(int <var class="var">lowfd</var>)</code><a class="copiable-link" href="#index-closefrom"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>The function <code class="code">closefrom</code> closes all file descriptors greater than or equal
+to <var class="var">lowfd</var>.  This function is similar to calling
+<code class="code">close</code> for all open file descriptors not less than <var class="var">lowfd</var>.
+</p>
+<p>Already closed file descriptors are ignored.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="I_002fO-Primitives.html">Input and Output Primitives</a>, Up: <a href="Low_002dLevel-I_002fO.html">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Variable Size Automatic (The GNU C Library)</title>
+
+<meta name="description" content="Variable Size Automatic (The GNU C Library)">
+<meta name="keywords" content="Variable Size Automatic (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Memory-Allocation.html" rel="up" title="Memory Allocation">
+<link href="Obstacks.html" rel="prev" title="Obstacks">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Variable-Size-Automatic">
+<div class="nav-panel">
+<p>
+Previous: <a href="Obstacks.html" accesskey="p" rel="prev">Obstacks</a>, Up: <a href="Memory-Allocation.html" accesskey="u" rel="up">Allocating Storage For Program Data</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Automatic-Storage-with-Variable-Size"><span>3.2.7 Automatic Storage with Variable Size<a class="copiable-link" href="#Automatic-Storage-with-Variable-Size"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-automatic-freeing"></a>
+<a class="index-entry-id" id="index-alloca-function"></a>
+<a class="index-entry-id" id="index-automatic-storage-with-variable-size"></a>
+
+<p>The function <code class="code">alloca</code> supports a kind of half-dynamic allocation in
+which blocks are allocated dynamically but freed automatically.
+</p>
+<p>Allocating a block with <code class="code">alloca</code> is an explicit action; you can
+allocate as many blocks as you wish, and compute the size at run time.  But
+all the blocks are freed when you exit the function that <code class="code">alloca</code> was
+called from, just as if they were automatic variables declared in that
+function.  There is no way to free the space explicitly.
+</p>
+<p>The prototype for <code class="code">alloca</code> is in <samp class="file">stdlib.h</samp>.  This function is
+a BSD extension.
+<a class="index-entry-id" id="index-stdlib_002eh-5"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-alloca"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">alloca</strong> <code class="def-code-arguments">(size_t <var class="var">size</var>)</code><a class="copiable-link" href="#index-alloca"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The return value of <code class="code">alloca</code> is the address of a block of <var class="var">size</var>
+bytes of memory, allocated in the stack frame of the calling function.
+</p></dd></dl>
+
+<p>Do not use <code class="code">alloca</code> inside the arguments of a function call&mdash;you
+will get unpredictable results, because the stack space for the
+<code class="code">alloca</code> would appear on the stack in the middle of the space for
+the function arguments.  An example of what to avoid is <code class="code">foo (x,
+alloca (4), y)</code>.
+</p>
+
+<ul class="mini-toc">
+<li><a href="Alloca-Example.html" accesskey="1"><code class="code">alloca</code> Example</a></li>
+<li><a href="Advantages-of-Alloca.html" accesskey="2">Advantages of <code class="code">alloca</code></a></li>
+<li><a href="Disadvantages-of-Alloca.html" accesskey="3">Disadvantages of <code class="code">alloca</code></a></li>
+<li><a href="GNU-C-Variable_002dSize-Arrays.html" accesskey="4">GNU C Variable-Size Arrays</a></li>
+</ul>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Obstacks.html">Obstacks</a>, Up: <a href="Memory-Allocation.html">Allocating Storage For Program Data</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

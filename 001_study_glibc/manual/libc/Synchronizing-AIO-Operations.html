@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Synchronizing AIO Operations (The GNU C Library)</title>
+
+<meta name="description" content="Synchronizing AIO Operations (The GNU C Library)">
+<meta name="keywords" content="Synchronizing AIO Operations (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Asynchronous-I_002fO.html" rel="up" title="Asynchronous I/O">
+<link href="Cancel-AIO-Operations.html" rel="next" title="Cancel AIO Operations">
+<link href="Status-of-AIO-Operations.html" rel="prev" title="Status of AIO Operations">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Synchronizing-AIO-Operations">
+<div class="nav-panel">
+<p>
+Next: <a href="Cancel-AIO-Operations.html" accesskey="n" rel="next">Cancellation of AIO Operations</a>, Previous: <a href="Status-of-AIO-Operations.html" accesskey="p" rel="prev">Getting the Status of AIO Operations</a>, Up: <a href="Asynchronous-I_002fO.html" accesskey="u" rel="up">Perform I/O Operations in Parallel</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Getting-into-a-Consistent-State"><span>13.11.3 Getting into a Consistent State<a class="copiable-link" href="#Getting-into-a-Consistent-State"> &para;</a></span></h4>
+
+<p>When dealing with asynchronous operations it is sometimes necessary to
+get into a consistent state.  This would mean for AIO that one wants to
+know whether a certain request or a group of requests were processed.
+This could be done by waiting for the notification sent by the system
+after the operation terminated, but this sometimes would mean wasting
+resources (mainly computation time).  Instead POSIX.1b defines two
+functions which will help with most kinds of consistency.
+</p>
+<p>The <code class="code">aio_fsync</code> and <code class="code">aio_fsync64</code> functions are only available
+if the symbol <code class="code">_POSIX_SYNCHRONIZED_IO</code> is defined in <samp class="file">unistd.h</samp>.
+</p>
+<a class="index-entry-id" id="index-synchronizing-1"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-aio_005ffsync"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">aio_fsync</strong> <code class="def-code-arguments">(int <var class="var">op</var>, struct aiocb *<var class="var">aiocbp</var>)</code><a class="copiable-link" href="#index-aio_005ffsync"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock heap
+| AC-Unsafe lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Calling this function forces all I/O operations queued at the
+time of the function call operating on the file descriptor
+<code class="code">aiocbp-&gt;aio_fildes</code> into the synchronized I/O completion state
+(see <a class="pxref" href="Synchronizing-I_002fO.html">Synchronizing I/O operations</a>).  The <code class="code">aio_fsync</code> function returns
+immediately but the notification through the method described in
+<code class="code">aiocbp-&gt;aio_sigevent</code> will happen only after all requests for this
+file descriptor have terminated and the file is synchronized.  This also
+means that requests for this very same file descriptor which are queued
+after the synchronization request are not affected.
+</p>
+<p>If <var class="var">op</var> is <code class="code">O_DSYNC</code> the synchronization happens as with a call
+to <code class="code">fdatasync</code>.  Otherwise <var class="var">op</var> should be <code class="code">O_SYNC</code> and
+the synchronization happens as with <code class="code">fsync</code>.
+</p>
+<p>As long as the synchronization has not happened, a call to
+<code class="code">aio_error</code> with the reference to the object pointed to by
+<var class="var">aiocbp</var> returns <code class="code">EINPROGRESS</code>.  Once the synchronization is
+done <code class="code">aio_error</code> return <em class="math">0</em> if the synchronization was not
+successful.  Otherwise the value returned is the value to which the
+<code class="code">fsync</code> or <code class="code">fdatasync</code> function would have set the
+<code class="code">errno</code> variable.  In this case nothing can be assumed about the
+consistency of the data written to this file descriptor.
+</p>
+<p>The return value of this function is <em class="math">0</em> if the request was
+successfully enqueued.  Otherwise the return value is <em class="math">-1</em> and
+<code class="code">errno</code> is set to one of the following values:
+</p>
+<dl class="table">
+<dt><code class="code">EAGAIN</code></dt>
+<dd><p>The request could not be enqueued due to temporary lack of resources.
+</p></dd>
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The file descriptor <code class="code"><var class="var">aiocbp</var>-&gt;aio_fildes</code> is not valid.
+</p></dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The implementation does not support I/O synchronization or the <var class="var">op</var>
+parameter is other than <code class="code">O_DSYNC</code> and <code class="code">O_SYNC</code>.
+</p></dd>
+<dt><code class="code">ENOSYS</code></dt>
+<dd><p>This function is not implemented.
+</p></dd>
+</dl>
+
+<p>When the sources are compiled with <code class="code">_FILE_OFFSET_BITS == 64</code> this
+function is in fact <code class="code">aio_fsync64</code> since the LFS interface
+transparently replaces the normal implementation.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-aio_005ffsync64"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">aio_fsync64</strong> <code class="def-code-arguments">(int <var class="var">op</var>, struct aiocb64 *<var class="var">aiocbp</var>)</code><a class="copiable-link" href="#index-aio_005ffsync64"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock heap
+| AC-Unsafe lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">aio_fsync</code> with the only difference
+that the argument is a reference to a variable of type <code class="code">struct
+aiocb64</code>.
+</p>
+<p>When the sources are compiled with <code class="code">_FILE_OFFSET_BITS == 64</code> this
+function is available under the name <code class="code">aio_fsync</code> and so
+transparently replaces the interface for small files on 32 bit
+machines.
+</p></dd></dl>
+
+<p>Another method of synchronization is to wait until one or more requests of a
+specific set terminated.  This could be achieved by the <code class="code">aio_*</code>
+functions to notify the initiating process about the termination but in
+some situations this is not the ideal solution.  In a program which
+constantly updates clients somehow connected to the server it is not
+always the best solution to go round robin since some connections might
+be slow.  On the other hand letting the <code class="code">aio_*</code> functions notify the
+caller might also be not the best solution since whenever the process
+works on preparing data for a client it makes no sense to be
+interrupted by a notification since the new client will not be handled
+before the current client is served.  For situations like this
+<code class="code">aio_suspend</code> should be used.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-aio_005fsuspend"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">aio_suspend</strong> <code class="def-code-arguments">(const struct aiocb *const <var class="var">list</var>[], int <var class="var">nent</var>, const struct timespec *<var class="var">timeout</var>)</code><a class="copiable-link" href="#index-aio_005fsuspend"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>When calling this function, the calling thread is suspended until at
+least one of the requests pointed to by the <var class="var">nent</var> elements of the
+array <var class="var">list</var> has completed.  If any of the requests has already
+completed at the time <code class="code">aio_suspend</code> is called, the function returns
+immediately.  Whether a request has terminated or not is determined by
+comparing the error status of the request with <code class="code">EINPROGRESS</code>.  If
+an element of <var class="var">list</var> is <code class="code">NULL</code>, the entry is simply ignored.
+</p>
+<p>If no request has finished, the calling process is suspended.  If
+<var class="var">timeout</var> is <code class="code">NULL</code>, the process is not woken until a request
+has finished.  If <var class="var">timeout</var> is not <code class="code">NULL</code>, the process remains
+suspended at least as long as specified in <var class="var">timeout</var>.  In this case,
+<code class="code">aio_suspend</code> returns with an error.
+</p>
+<p>The return value of the function is <em class="math">0</em> if one or more requests
+from the <var class="var">list</var> have terminated.  Otherwise the function returns
+<em class="math">-1</em> and <code class="code">errno</code> is set to one of the following values:
+</p>
+<dl class="table">
+<dt><code class="code">EAGAIN</code></dt>
+<dd><p>None of the requests from the <var class="var">list</var> completed in the time specified
+by <var class="var">timeout</var>.
+</p></dd>
+<dt><code class="code">EINTR</code></dt>
+<dd><p>A signal interrupted the <code class="code">aio_suspend</code> function.  This signal might
+also be sent by the AIO implementation while signalling the termination
+of one of the requests.
+</p></dd>
+<dt><code class="code">ENOSYS</code></dt>
+<dd><p>The <code class="code">aio_suspend</code> function is not implemented.
+</p></dd>
+</dl>
+
+<p>When the sources are compiled with <code class="code">_FILE_OFFSET_BITS == 64</code> this
+function is in fact <code class="code">aio_suspend64</code> since the LFS interface
+transparently replaces the normal implementation.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-aio_005fsuspend64"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">aio_suspend64</strong> <code class="def-code-arguments">(const struct aiocb64 *const <var class="var">list</var>[], int <var class="var">nent</var>, const struct timespec *<var class="var">timeout</var>)</code><a class="copiable-link" href="#index-aio_005fsuspend64"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">aio_suspend</code> with the only difference
+that the argument is a reference to a variable of type <code class="code">struct
+aiocb64</code>.
+</p>
+<p>When the sources are compiled with <code class="code">_FILE_OFFSET_BITS == 64</code> this
+function is available under the name <code class="code">aio_suspend</code> and so
+transparently replaces the interface for small files on 32 bit
+machines.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Cancel-AIO-Operations.html">Cancellation of AIO Operations</a>, Previous: <a href="Status-of-AIO-Operations.html">Getting the Status of AIO Operations</a>, Up: <a href="Asynchronous-I_002fO.html">Perform I/O Operations in Parallel</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

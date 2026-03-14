@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>RISC-V (The GNU C Library)</title>
+
+<meta name="description" content="RISC-V (The GNU C Library)">
+<meta name="keywords" content="RISC-V (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Platform.html" rel="up" title="Platform">
+<link href="X86.html" rel="next" title="X86">
+<link href="PowerPC.html" rel="prev" title="PowerPC">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="appendixsec-level-extent" id="RISC_002dV">
+<div class="nav-panel">
+<p>
+Next: <a href="X86.html" accesskey="n" rel="next">X86-specific Facilities</a>, Previous: <a href="PowerPC.html" accesskey="p" rel="prev">PowerPC-specific Facilities</a>, Up: <a href="Platform.html" accesskey="u" rel="up">Platform-specific facilities</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="appendixsec" id="RISC_002dV_002dspecific-Facilities"><span>E.2 RISC-V-specific Facilities<a class="copiable-link" href="#RISC_002dV_002dspecific-Facilities"> &para;</a></span></h3>
+
+<p>Cache management facilities specific to RISC-V systems that implement the Linux
+ABI are declared in <samp class="file">sys/cachectl.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-_005f_005friscv_005fflush_005ficache"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">__riscv_flush_icache</strong> <code class="def-code-arguments">(void *<var class="var">start</var>, void *<var class="var">end</var>, unsigned long int <var class="var">flags</var>)</code><a class="copiable-link" href="#index-_005f_005friscv_005fflush_005ficache"> &para;</a></span></dt>
+<dd><p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Enforce ordering between stores and instruction cache fetches.  The range of
+addresses over which ordering is enforced is specified by <var class="var">start</var> and
+<var class="var">end</var>.  The <var class="var">flags</var> argument controls the extent of this ordering, with
+the default behavior (a <var class="var">flags</var> value of 0) being to enforce the fence on
+all threads in the current process.  Setting the
+<code class="code">SYS_RISCV_FLUSH_ICACHE_LOCAL</code> bit allows users to indicate that enforcing
+ordering on only the current thread is necessary.  All other flag bits are
+reserved.
+</p></dd></dl>
+
+</div>
+
+
+
+</body>
+</html>

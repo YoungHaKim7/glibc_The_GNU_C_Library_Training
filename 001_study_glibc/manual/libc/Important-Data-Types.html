@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Important Data Types (The GNU C Library)</title>
+
+<meta name="description" content="Important Data Types (The GNU C Library)">
+<meta name="keywords" content="Important Data Types (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Language-Features.html" rel="up" title="Language Features">
+<link href="Data-Type-Measurements.html" rel="next" title="Data Type Measurements">
+<link href="Null-Pointer-Constant.html" rel="prev" title="Null Pointer Constant">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Important-Data-Types">
+<div class="nav-panel">
+<p>
+Next: <a href="Data-Type-Measurements.html" accesskey="n" rel="next">Data Type Measurements</a>, Previous: <a href="Null-Pointer-Constant.html" accesskey="p" rel="prev">Null Pointer Constant</a>, Up: <a href="Language-Features.html" accesskey="u" rel="up">C Language Facilities in the Library</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Important-Data-Types-1"><span>A.4 Important Data Types<a class="copiable-link" href="#Important-Data-Types-1"> &para;</a></span></h3>
+
+<p>The result of subtracting two pointers in C is always an integer, but the
+precise data type varies from C compiler to C compiler.  Likewise, the
+data type of the result of <code class="code">sizeof</code> also varies between compilers.
+Also, it helps to have a data type with the greatest fundamental alignment.
+ISO C defines standard aliases for these types, so you can refer to
+them in a portable fashion.  They are defined in the header file
+<samp class="file">stddef.h</samp>.
+<a class="index-entry-id" id="index-stddef_002eh"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-ptrdiff_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">ptrdiff_t</strong><a class="copiable-link" href="#index-ptrdiff_005ft"> &para;</a></span></dt>
+<dd>
+<p>This is the signed integer type of the result of subtracting two
+pointers.  For example, with the declaration <code class="code">char *p1, *p2;</code>, the
+expression <code class="code">p2 - p1</code> is of type <code class="code">ptrdiff_t</code>.  This will
+probably be one of the standard signed integer types (<code class="code">short&nbsp;int</code><!-- /@w -->, <code class="code">int</code> or <code class="code">long&nbsp;int</code><!-- /@w -->), but might be a nonstandard
+type that exists only for this purpose.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-size_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">size_t</strong><a class="copiable-link" href="#index-size_005ft"> &para;</a></span></dt>
+<dd>
+<p>This is an unsigned integer type used to represent the sizes of objects.
+The result of the <code class="code">sizeof</code> operator is of this type, and functions
+such as <code class="code">malloc</code> (see <a class="pxref" href="Unconstrained-Allocation.html">Unconstrained Allocation</a>) and
+<code class="code">memcpy</code> (see <a class="pxref" href="Copying-Strings-and-Arrays.html">Copying Strings and Arrays</a>) accept arguments of
+this type to specify object sizes.  On systems using the GNU C Library, this
+will be <code class="code">unsigned&nbsp;int</code><!-- /@w --> or <code class="code">unsigned&nbsp;long&nbsp;int</code><!-- /@w -->.
+</p>
+<p><strong class="strong">Usage Note:</strong> <code class="code">size_t</code> is the preferred way to declare any
+arguments or variables that hold the size of an object.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-max_005falign_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">max_align_t</strong><a class="copiable-link" href="#index-max_005falign_005ft"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-fundamental-alignment"></a>
+<p>This is an object type with the greatest <em class="dfn">fundamental alignment</em>,
+i.e., the greatest alignment needed by standard types.
+Code can use <code class="code">alignof (max_align_t)</code> when calculating space
+needed for arbitrary collections of objects, so long as the objects&rsquo;
+types have a fundamental alignment and lack stricter alignment specifiers.
+</p></dd></dl>
+
+<p>In the GNU C Library, the value of <code class="code">alignof (max_align_t)</code> is 16 on
+most architectures.  However, it is 8 on 32-bit architectures that do
+not require 16-byte alignment from <code class="code">malloc</code> to support predefined
+types.
+</p>
+<p><strong class="strong">Compatibility Note:</strong> The C11 standard introduced <code class="code">max_align_t</code>;
+older compilers may lack the type.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Data-Type-Measurements.html">Data Type Measurements</a>, Previous: <a href="Null-Pointer-Constant.html">Null Pointer Constant</a>, Up: <a href="Language-Features.html">C Language Facilities in the Library</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

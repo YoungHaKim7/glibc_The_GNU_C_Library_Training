@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>ISO C Threads Return Values (The GNU C Library)</title>
+
+<meta name="description" content="ISO C Threads Return Values (The GNU C Library)">
+<meta name="keywords" content="ISO C Threads Return Values (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="ISO-C-Threads.html" rel="up" title="ISO C Threads">
+<link href="ISO-C-Thread-Management.html" rel="next" title="ISO C Thread Management">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="ISO-C-Threads-Return-Values">
+<div class="nav-panel">
+<p>
+Next: <a href="ISO-C-Thread-Management.html" accesskey="n" rel="next">Creation and Control</a>, Up: <a href="ISO-C-Threads.html" accesskey="u" rel="up">ISO C Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Return-Values"><span>36.1.1 Return Values<a class="copiable-link" href="#Return-Values"> &para;</a></span></h4>
+
+<p>The ISO C thread specification provides the following enumeration
+constants for return values from functions in the API:
+</p>
+<dl class="vtable">
+<dt><a id="index-thrd_005ftimedout"></a><span><code class="code">thrd_timedout</code><a class="copiable-link" href="#index-thrd_005ftimedout"> &para;</a></span></dt>
+<dd>
+<p>A specified time was reached without acquiring the requested resource,
+usually a mutex or condition variable.
+</p>
+</dd>
+<dt><a id="index-thrd_005fsuccess"></a><span><code class="code">thrd_success</code><a class="copiable-link" href="#index-thrd_005fsuccess"> &para;</a></span></dt>
+<dd>
+<p>The requested operation succeeded.
+</p>
+</dd>
+<dt><a id="index-thrd_005fbusy"></a><span><code class="code">thrd_busy</code><a class="copiable-link" href="#index-thrd_005fbusy"> &para;</a></span></dt>
+<dd>
+<p>The requested operation failed because a requested resource is already
+in use.
+</p>
+</dd>
+<dt><a id="index-thrd_005ferror"></a><span><code class="code">thrd_error</code><a class="copiable-link" href="#index-thrd_005ferror"> &para;</a></span></dt>
+<dd>
+<p>The requested operation failed.
+</p>
+</dd>
+<dt><a id="index-thrd_005fnomem"></a><span><code class="code">thrd_nomem</code><a class="copiable-link" href="#index-thrd_005fnomem"> &para;</a></span></dt>
+<dd>
+<p>The requested operation failed because it was unable to allocate
+enough memory.
+</p></dd>
+</dl>
+
+
+</div>
+
+
+
+</body>
+</html>

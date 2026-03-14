@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>System Calls (The GNU C Library)</title>
+
+<meta name="description" content="System Calls (The GNU C Library)">
+<meta name="keywords" content="System Calls (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Program-Basics.html" rel="up" title="Program Basics">
+<link href="Program-Termination.html" rel="next" title="Program Termination">
+<link href="Auxiliary-Vector.html" rel="prev" title="Auxiliary Vector">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="System-Calls">
+<div class="nav-panel">
+<p>
+Next: <a href="Program-Termination.html" accesskey="n" rel="next">Program Termination</a>, Previous: <a href="Auxiliary-Vector.html" accesskey="p" rel="prev">Auxiliary Vector</a>, Up: <a href="Program-Basics.html" accesskey="u" rel="up">The Basic Program/System Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="System-Calls-1"><span>26.6 System Calls<a class="copiable-link" href="#System-Calls-1"> &para;</a></span></h3>
+
+<a class="index-entry-id" id="index-system-call"></a>
+<p>A system call is a request for service that a program makes of the
+kernel.  The service is generally something that only the kernel has
+the privilege to do, such as doing I/O.  Programmers don&rsquo;t normally
+need to be concerned with system calls because there are functions in
+the GNU C Library to do virtually everything that system calls do.
+These functions work by making system calls themselves.  For example,
+there is a system call that changes the permissions of a file, but
+you don&rsquo;t need to know about it because you can just use the GNU C Library&rsquo;s
+<code class="code">chmod</code> function.
+</p>
+<a class="index-entry-id" id="index-kernel-call"></a>
+<p>System calls are sometimes called syscalls or kernel calls, and this
+interface is mostly a purely mechanical translation from the kernel&rsquo;s
+ABI to the C ABI. For the set of syscalls where we do not guarantee
+POSIX Thread cancellation the wrappers only organize the incoming
+arguments from the C calling convention to the calling convention of
+the target kernel. For the set of syscalls where we provided POSIX
+Thread cancellation the wrappers set some internal state in the
+library to support cancellation, but this does not impact the
+behaviour of the syscall provided by the kernel.
+</p>
+<p>In some cases, if the GNU C Library detects that a system call has been
+superseded by a more capable one, the wrapper may map the old call to
+the new one.  For example, <code class="code">dup2</code> is implemented via <code class="code">dup3</code>
+by passing an additional empty flags argument, and <code class="code">open</code> calls
+<code class="code">openat</code> passing the additional <code class="code">AT_FDCWD</code>.  Sometimes even
+more is done, such as converting between 32-bit and 64-bit time
+values.  In general, though, such processing is only to make the
+system call better match the C ABI, rather than change its
+functionality.
+</p>
+<p>However, there are times when you want to make a system call explicitly,
+and for that, the GNU C Library provides the <code class="code">syscall</code> function.
+<code class="code">syscall</code> is harder to use and less portable than functions like
+<code class="code">chmod</code>, but easier and more portable than coding the system call
+in assembler instructions.
+</p>
+<p><code class="code">syscall</code> is most useful when you are working with a system call
+which is special to your system or is newer than the GNU C Library you
+are using.  <code class="code">syscall</code> is implemented in an entirely generic way;
+the function does not know anything about what a particular system
+call does or even if it is valid.
+</p>
+<p>The description of <code class="code">syscall</code> in this section assumes a certain
+protocol for system calls on the various platforms on which the GNU C Library
+runs.  That protocol is not defined by any strong authority, but
+we won&rsquo;t describe it here either because anyone who is coding
+<code class="code">syscall</code> probably won&rsquo;t accept anything less than kernel and C
+library source code as a specification of the interface between them
+anyway.
+</p>
+<p><code class="code">syscall</code> does not provide cancellation logic, even if the system
+call you&rsquo;re calling is listed as cancellable above.
+</p>
+<p>Using <code class="code">syscall</code> with system calls that affect the internal state of
+process of thread will likely result in undefined behavior. For this reason,
+at least the following system call numbers are not supported when invoked via
+<code class="code">syscall</code>: <code class="code">SYS_clone</code>, <code class="code">SYS_clone2</code>, <code class="code">SYS_clone3</code>,
+<code class="code">SYS_rt_sigreturn</code>, <code class="code">SYS_sigreturn</code>, <code class="code">SYS_vfork</code>.
+</p>
+<p><code class="code">syscall</code> is declared in <samp class="file">unistd.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-syscall"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">syscall</strong> <code class="def-code-arguments">(long int <var class="var">sysno</var>, &hellip;)</code><a class="copiable-link" href="#index-syscall"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p><code class="code">syscall</code> performs a generic system call.
+</p>
+<a class="index-entry-id" id="index-system-call-number"></a>
+<p><var class="var">sysno</var> is the system call number.  Each kind of system call is
+identified by a number.  Macros for all the possible system call numbers
+are defined in <samp class="file">sys/syscall.h</samp>
+</p>
+<p>The remaining arguments are the arguments for the system call, in
+order, and their meanings depend on the kind of system call.
+If you code more arguments than the system call takes, the extra ones to
+the right are ignored.
+</p>
+<p>The return value is the return value from the system call, unless the
+system call failed.  In that case, <code class="code">syscall</code> returns <code class="code">-1</code> and
+sets <code class="code">errno</code> to an error code that the system call returned.  Note
+that system calls do not return <code class="code">-1</code> when they succeed.
+<a class="index-entry-id" id="index-errno"></a>
+</p>
+<p>If you specify an invalid <var class="var">sysno</var>, <code class="code">syscall</code> returns <code class="code">-1</code>
+with <code class="code">errno</code> = <code class="code">ENOSYS</code>.
+</p>
+<p>Example:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">
+
+#include &lt;unistd.h&gt;
+#include &lt;sys/syscall.h&gt;
+#include &lt;errno.h&gt;
+
+...
+
+int rc;
+
+rc = syscall(SYS_chmod, &quot;/etc/passwd&quot;, 0444);
+
+if (rc == -1)
+   fprintf(stderr, &quot;chmod failed, errno = %d\n&quot;, errno);
+
+</pre></div>
+
+<p>This, if all the compatibility stars are aligned, is equivalent to the
+following preferable code:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">
+
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;errno.h&gt;
+
+...
+
+int rc;
+
+rc = chmod(&quot;/etc/passwd&quot;, 0444);
+if (rc == -1)
+   fprintf(stderr, &quot;chmod failed, errno = %d\n&quot;, errno);
+
+</pre></div>
+
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Program-Termination.html">Program Termination</a>, Previous: <a href="Auxiliary-Vector.html">Auxiliary Vector</a>, Up: <a href="Program-Basics.html">The Basic Program/System Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

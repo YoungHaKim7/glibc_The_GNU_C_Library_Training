@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Local Namespace Details (The GNU C Library)</title>
+
+<meta name="description" content="Local Namespace Details (The GNU C Library)">
+<meta name="keywords" content="Local Namespace Details (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Local-Namespace.html" rel="up" title="Local Namespace">
+<link href="Local-Socket-Example.html" rel="next" title="Local Socket Example">
+<link href="Local-Namespace-Concepts.html" rel="prev" title="Local Namespace Concepts">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Local-Namespace-Details">
+<div class="nav-panel">
+<p>
+Next: <a href="Local-Socket-Example.html" accesskey="n" rel="next">Example of Local-Namespace Sockets</a>, Previous: <a href="Local-Namespace-Concepts.html" accesskey="p" rel="prev">Local Namespace Concepts</a>, Up: <a href="Local-Namespace.html" accesskey="u" rel="up">The Local Namespace</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Details-of-Local-Namespace"><span>16.5.2 Details of Local Namespace<a class="copiable-link" href="#Details-of-Local-Namespace"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-sys_002fsocket_002eh-4"></a>
+<p>To create a socket in the local namespace, use the constant
+<code class="code">PF_LOCAL</code> as the <var class="var">namespace</var> argument to <code class="code">socket</code> or
+<code class="code">socketpair</code>.  This constant is defined in <samp class="file">sys/socket.h</samp>.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-PF_005fLOCAL"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">PF_LOCAL</strong><a class="copiable-link" href="#index-PF_005fLOCAL"> &para;</a></span></dt>
+<dd>
+<p>This designates the local namespace, in which socket addresses are local
+names, and its associated family of protocols.  <code class="code">PF_LOCAL</code> is the
+macro used by POSIX.1g.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-PF_005fUNIX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">PF_UNIX</strong><a class="copiable-link" href="#index-PF_005fUNIX"> &para;</a></span></dt>
+<dd>
+<p>This is a synonym for <code class="code">PF_LOCAL</code>, for compatibility&rsquo;s sake.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-PF_005fFILE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">PF_FILE</strong><a class="copiable-link" href="#index-PF_005fFILE"> &para;</a></span></dt>
+<dd>
+<p>This is a synonym for <code class="code">PF_LOCAL</code>, for compatibility&rsquo;s sake.
+</p></dd></dl>
+
+<p>The structure for specifying socket names in the local namespace is
+defined in the header file <samp class="file">sys/un.h</samp>:
+<a class="index-entry-id" id="index-sys_002fun_002eh"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-sockaddr_005fun"><span class="category-def">Data Type: </span><span><strong class="def-name">struct sockaddr_un</strong><a class="copiable-link" href="#index-struct-sockaddr_005fun"> &para;</a></span></dt>
+<dd>
+<p>This structure is used to specify local namespace socket addresses.  It has
+the following members:
+</p>
+<dl class="table">
+<dt><code class="code">short int sun_family</code></dt>
+<dd><p>This identifies the address family or format of the socket address.
+You should store the value <code class="code">AF_LOCAL</code> to designate the local
+namespace.  See <a class="xref" href="Socket-Addresses.html">Socket Addresses</a>.
+</p>
+</dd>
+<dt><code class="code">char sun_path[108]</code></dt>
+<dd><p>This is the file name to use.
+</p>
+<p><strong class="strong">Incomplete:</strong>  Why is 108 a magic number?  RMS suggests making
+this a zero-length array and tweaking the following example to use
+<code class="code">alloca</code> to allocate an appropriate amount of storage based on
+the length of the filename.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>You should compute the <var class="var">length</var> parameter for a socket address in
+the local namespace as the sum of the size of the <code class="code">sun_family</code>
+component and the string length (<em class="emph">not</em> the allocation size!) of
+the file name string.  This can be done using the macro <code class="code">SUN_LEN</code>:
+</p>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-SUN_005fLEN"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SUN_LEN</strong> <code class="def-code-arguments">(<em class="emph">struct sockaddr_un *</em> <var class="var">ptr</var>)</code><a class="copiable-link" href="#index-SUN_005fLEN"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro computes the length of the socket address in the local namespace.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Local-Socket-Example.html">Example of Local-Namespace Sockets</a>, Previous: <a href="Local-Namespace-Concepts.html">Local Namespace Concepts</a>, Up: <a href="Local-Namespace.html">The Local Namespace</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

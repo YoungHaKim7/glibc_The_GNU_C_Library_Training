@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>General Limits (The GNU C Library)</title>
+
+<meta name="description" content="General Limits (The GNU C Library)">
+<meta name="keywords" content="General Limits (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="System-Configuration.html" rel="up" title="System Configuration">
+<link href="System-Options.html" rel="next" title="System Options">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="General-Limits">
+<div class="nav-panel">
+<p>
+Next: <a href="System-Options.html" accesskey="n" rel="next">Overall System Options</a>, Up: <a href="System-Configuration.html" accesskey="u" rel="up">System Configuration Parameters</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="General-Capacity-Limits"><span>33.1 General Capacity Limits<a class="copiable-link" href="#General-Capacity-Limits"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-POSIX-capacity-limits"></a>
+<a class="index-entry-id" id="index-limits_002c-POSIX"></a>
+<a class="index-entry-id" id="index-capacity-limits_002c-POSIX"></a>
+
+<p>The POSIX.1 and POSIX.2 standards specify a number of parameters that
+describe capacity limitations of the system.  These limits can be fixed
+constants for a given operating system, or they can vary from machine to
+machine.  For example, some limit values may be configurable by the
+system administrator, either at run time or by rebuilding the kernel,
+and this should not require recompiling application programs.
+</p>
+<a class="index-entry-id" id="index-limits_002eh-2"></a>
+<p>Each of the following limit parameters has a macro that is defined in
+<samp class="file">limits.h</samp> only if the system has a fixed, uniform limit for the
+parameter in question.  If the system allows different file systems or
+files to have different limits, then the macro is undefined; use
+<code class="code">sysconf</code> to find out the limit that applies at a particular time
+on a particular machine.  See <a class="xref" href="Sysconf.html">Using <code class="code">sysconf</code></a>.
+</p>
+<p>Each of these parameters also has another macro, with a name starting
+with &lsquo;<samp class="samp">_POSIX</samp>&rsquo;, which gives the lowest value that the limit is
+allowed to have on <em class="emph">any</em> POSIX system.  See <a class="xref" href="Minimums.html">Minimum Values for General Capacity Limits</a>.
+</p>
+<a class="index-entry-id" id="index-limits_002c-program-argument-size"></a>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ARG_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ARG_MAX</strong><a class="copiable-link" href="#index-ARG_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>If defined, the unvarying maximum combined length of the <var class="var">argv</var> and
+<var class="var">environ</var> arguments that can be passed to the <code class="code">exec</code> functions.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-limits_002c-number-of-processes"></a>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CHILD_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">CHILD_MAX</strong><a class="copiable-link" href="#index-CHILD_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>If defined, the unvarying maximum number of processes that can exist
+with the same real user ID at any one time.  In BSD and GNU, this is
+controlled by the <code class="code">RLIMIT_NPROC</code> resource limit; see <a class="pxref" href="Limits-on-Resources.html">Limiting Resource Usage</a>.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-limits_002c-number-of-open-files"></a>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-OPEN_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">OPEN_MAX</strong><a class="copiable-link" href="#index-OPEN_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>If defined, the unvarying maximum number of files that a single process
+can have open simultaneously.  In BSD and GNU, this is controlled
+by the <code class="code">RLIMIT_NOFILE</code> resource limit; see <a class="pxref" href="Limits-on-Resources.html">Limiting Resource Usage</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-STREAM_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">STREAM_MAX</strong><a class="copiable-link" href="#index-STREAM_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>If defined, the unvarying maximum number of streams that a single
+process can have open simultaneously.  See <a class="xref" href="Opening-Streams.html">Opening Streams</a>.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-limits_002c-time-zone-abbreviation-length"></a>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-TZNAME_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">TZNAME_MAX</strong><a class="copiable-link" href="#index-TZNAME_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>If defined, the unvarying maximum length of a time zone abbreviation.
+See <a class="xref" href="TZ-Variable.html">Specifying the Time Zone with <code class="env">TZ</code></a>.
+</p></dd></dl>
+
+<p>These limit macros are always defined in <samp class="file">limits.h</samp>.
+</p>
+<a class="index-entry-id" id="index-limits_002c-number-of-supplementary-group-IDs"></a>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-NGROUPS_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">NGROUPS_MAX</strong><a class="copiable-link" href="#index-NGROUPS_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The maximum number of supplementary group IDs that one process can have.
+</p>
+<p>The value of this macro is actually a lower bound for the maximum.  That
+is, you can count on being able to have that many supplementary group
+IDs, but a particular machine might let you have even more.  You can use
+<code class="code">sysconf</code> to see whether a particular machine will let you have
+more (see <a class="pxref" href="Sysconf.html">Using <code class="code">sysconf</code></a>).
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SSIZE_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">ssize_t</code> <strong class="def-name">SSIZE_MAX</strong><a class="copiable-link" href="#index-SSIZE_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The largest value that can fit in an object of type <code class="code">ssize_t</code>.
+Effectively, this is the limit on the number of bytes that can be read
+or written in a single operation.
+</p>
+<p>This macro is defined in all POSIX systems because this limit is never
+configurable.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-RE_005fDUP_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">RE_DUP_MAX</strong><a class="copiable-link" href="#index-RE_005fDUP_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The largest number of repetitions you are guaranteed is allowed in the
+construct &lsquo;<samp class="samp">\{<var class="var">min</var>,<var class="var">max</var>\}</samp>&rsquo; in a regular expression.
+</p>
+<p>The value of this macro is actually a lower bound for the maximum.  That
+is, you can count on being able to have that many repetitions, but a
+particular machine might let you have even more.  You can use
+<code class="code">sysconf</code> to see whether a particular machine will let you have
+more (see <a class="pxref" href="Sysconf.html">Using <code class="code">sysconf</code></a>).  And even the value that <code class="code">sysconf</code> tells
+you is just a lower bound&mdash;larger values might work.
+</p>
+<p>This macro is defined in all POSIX.2 systems, because POSIX.2 says it
+should always be defined even if there is no specific imposed limit.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="System-Options.html">Overall System Options</a>, Up: <a href="System-Configuration.html">System Configuration Parameters</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

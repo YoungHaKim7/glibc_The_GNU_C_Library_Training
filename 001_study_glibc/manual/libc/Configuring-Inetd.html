@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Configuring Inetd (The GNU C Library)</title>
+
+<meta name="description" content="Configuring Inetd (The GNU C Library)">
+<meta name="keywords" content="Configuring Inetd (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Inetd.html" rel="up" title="Inetd">
+<link href="Inetd-Servers.html" rel="prev" title="Inetd Servers">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Configuring-Inetd">
+<div class="nav-panel">
+<p>
+Previous: <a href="Inetd-Servers.html" accesskey="p" rel="prev"><code class="code">inetd</code> Servers</a>, Up: <a href="Inetd.html" accesskey="u" rel="up">The <code class="code">inetd</code> Daemon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Configuring-inetd"><span>16.11.2 Configuring <code class="code">inetd</code><a class="copiable-link" href="#Configuring-inetd"> &para;</a></span></h4>
+
+<p>The file <samp class="file">/etc/inetd.conf</samp> tells <code class="code">inetd</code> which ports to listen to
+and what server programs to run for them.  Normally each entry in the
+file is one line, but you can split it onto multiple lines provided
+all but the first line of the entry start with whitespace.  Lines that
+start with &lsquo;<samp class="samp">#</samp>&rsquo; are comments.
+</p>
+<p>Here are two standard entries in <samp class="file">/etc/inetd.conf</samp>:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">ftp	stream	tcp	nowait	root	/libexec/ftpd	ftpd
+talk	dgram	udp	wait	root	/libexec/talkd	talkd
+</pre></div>
+
+<p>An entry has this format:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted"><var class="var">service</var> <var class="var">style</var> <var class="var">protocol</var> <var class="var">wait</var> <var class="var">username</var> <var class="var">program</var> <var class="var">arguments</var>
+</pre></div>
+
+<p>The <var class="var">service</var> field says which service this program provides.  It
+should be the name of a service defined in <samp class="file">/etc/services</samp>.
+<code class="code">inetd</code> uses <var class="var">service</var> to decide which port to listen on for
+this entry.
+</p>
+<p>The fields <var class="var">style</var> and <var class="var">protocol</var> specify the communication
+style and the protocol to use for the listening socket.  The style
+should be the name of a communication style, converted to lower case
+and with &lsquo;<samp class="samp">SOCK_</samp>&rsquo; deleted&mdash;for example, &lsquo;<samp class="samp">stream</samp>&rsquo; or
+&lsquo;<samp class="samp">dgram</samp>&rsquo;.  <var class="var">protocol</var> should be one of the protocols listed in
+<samp class="file">/etc/protocols</samp>.  The typical protocol names are &lsquo;<samp class="samp">tcp</samp>&rsquo; for
+byte stream connections and &lsquo;<samp class="samp">udp</samp>&rsquo; for unreliable datagrams.
+</p>
+<p>The <var class="var">wait</var> field should be either &lsquo;<samp class="samp">wait</samp>&rsquo; or &lsquo;<samp class="samp">nowait</samp>&rsquo;.
+Use &lsquo;<samp class="samp">wait</samp>&rsquo; if <var class="var">style</var> is a connectionless style and the
+server, once started, handles multiple requests as they come in.
+Use &lsquo;<samp class="samp">nowait</samp>&rsquo; if <code class="code">inetd</code> should start a new process for each message
+or request that comes in.  If <var class="var">style</var> uses connections, then
+<var class="var">wait</var> <strong class="strong">must</strong> be &lsquo;<samp class="samp">nowait</samp>&rsquo;.
+</p>
+<p><var class="var">user</var> is the user name that the server should run as.  <code class="code">inetd</code> runs
+as root, so it can set the user ID of its children arbitrarily.  It&rsquo;s
+best to avoid using &lsquo;<samp class="samp">root</samp>&rsquo; for <var class="var">user</var> if you can; but some
+servers, such as Telnet and FTP, read a username and passphrase
+themselves.  These servers need to be root initially so they can log
+in as commanded by the data coming over the network.
+</p>
+<p><var class="var">program</var> together with <var class="var">arguments</var> specifies the command to
+run to start the server.  <var class="var">program</var> should be an absolute file
+name specifying the executable file to run.  <var class="var">arguments</var> consists
+of any number of whitespace-separated words, which become the
+command-line arguments of <var class="var">program</var>.  The first word in
+<var class="var">arguments</var> is argument zero, which should by convention be the
+program name itself (sans directories).
+</p>
+<p>If you edit <samp class="file">/etc/inetd.conf</samp>, you can tell <code class="code">inetd</code> to reread the
+file and obey its new contents by sending the <code class="code">inetd</code> process the
+<code class="code">SIGHUP</code> signal.  You&rsquo;ll have to use <code class="code">ps</code> to determine the
+process ID of the <code class="code">inetd</code> process as it is not fixed.
+</p>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Inetd-Servers.html"><code class="code">inetd</code> Servers</a>, Up: <a href="Inetd.html">The <code class="code">inetd</code> Daemon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

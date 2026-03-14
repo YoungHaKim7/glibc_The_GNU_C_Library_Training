@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>POSIX Threads Other APIs (The GNU C Library)</title>
+
+<meta name="description" content="POSIX Threads Other APIs (The GNU C Library)">
+<meta name="keywords" content="POSIX Threads Other APIs (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="POSIX-Threads.html" rel="up" title="POSIX Threads">
+<link href="Non_002dPOSIX-Extensions.html" rel="next" title="Non-POSIX Extensions">
+<link href="POSIX-Mutexes.html" rel="prev" title="POSIX Mutexes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="POSIX-Threads-Other-APIs">
+<div class="nav-panel">
+<p>
+Next: <a href="Non_002dPOSIX-Extensions.html" accesskey="n" rel="next">Non-POSIX Extensions</a>, Previous: <a href="POSIX-Mutexes.html" accesskey="p" rel="prev">POSIX Mutexes</a>, Up: <a href="POSIX-Threads.html" accesskey="u" rel="up">POSIX Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="POSIX-Threads-Other-APIs-1"><span>36.2.8 POSIX Threads Other APIs<a class="copiable-link" href="#POSIX-Threads-Other-APIs-1"> &para;</a></span></h4>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fequal"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_equal</strong> <code class="def-code-arguments">(pthread_t <var class="var">thread1</var>, pthread_t <var class="var">thread2</var>)</code><a class="copiable-link" href="#index-pthread_005fequal"> &para;</a></span></dt>
+<dd><p>Compares two thread IDs.  If they are the same, returns nonzero, else returns zero.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_equal.3.html">pthread_equal(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fgetcpuclockid"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_getcpuclockid</strong> <code class="def-code-arguments">(pthread_t <var class="var">th</var>, __clockid_t *<var class="var">clock_id</var>)</code><a class="copiable-link" href="#index-pthread_005fgetcpuclockid"> &para;</a></span></dt>
+<dd><p>Get the clock associated with <var class="var">th</var>.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_getcpuclockid.3.html">pthread_getcpuclockid(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fonce"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_once</strong> <code class="def-code-arguments">(pthread_once_t *<var class="var">once_control</var>, void (*<var class="var">init_routine</var>) (void))</code><a class="copiable-link" href="#index-pthread_005fonce"> &para;</a></span></dt>
+<dd><p>Calls <var class="var">init_routine</var> once for each <var class="var">once_control</var>, which must
+be statically initialized to <code class="code">PTHREAD_ONCE_INIT</code>.  Subsequent
+calls to <code class="code">pthread_once</code> with the same <var class="var">once_control</var> do not
+call <var class="var">init_routine</var>, even in multi-threaded environments.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_once.3.html">pthread_once(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fsigmask"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_sigmask</strong> <code class="def-code-arguments">(int <var class="var">how</var>, const __sigset_t *<var class="var">newmask</var>, __sigset_t *<var class="var">oldmask</var>)</code><a class="copiable-link" href="#index-pthread_005fsigmask"> &para;</a></span></dt>
+<dd><p>This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_sigmask.3.html">pthread_sigmask(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Non_002dPOSIX-Extensions.html">Non-POSIX Extensions</a>, Previous: <a href="POSIX-Mutexes.html">POSIX Mutexes</a>, Up: <a href="POSIX-Threads.html">POSIX Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

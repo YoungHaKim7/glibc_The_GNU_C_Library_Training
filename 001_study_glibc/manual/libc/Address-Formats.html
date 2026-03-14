@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Address Formats (The GNU C Library)</title>
+
+<meta name="description" content="Address Formats (The GNU C Library)">
+<meta name="keywords" content="Address Formats (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Socket-Addresses.html" rel="up" title="Socket Addresses">
+<link href="Setting-Address.html" rel="next" title="Setting Address">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Address-Formats">
+<div class="nav-panel">
+<p>
+Next: <a href="Setting-Address.html" accesskey="n" rel="next">Setting the Address of a Socket</a>, Up: <a href="Socket-Addresses.html" accesskey="u" rel="up">Socket Addresses</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Address-Formats-1"><span>16.3.1 Address Formats<a class="copiable-link" href="#Address-Formats-1"> &para;</a></span></h4>
+
+<p>The functions <code class="code">bind</code> and <code class="code">getsockname</code> use the generic data
+type <code class="code">struct sockaddr *</code> to represent a pointer to a socket
+address.  You can&rsquo;t use this data type effectively to interpret an
+address or construct one; for that, you must use the proper data type
+for the socket&rsquo;s namespace.
+</p>
+<p>Thus, the usual practice is to construct an address of the proper
+namespace-specific type, then cast a pointer to <code class="code">struct sockaddr *</code>
+when you call <code class="code">bind</code> or <code class="code">getsockname</code>.
+</p>
+<p>The one piece of information that you can get from the <code class="code">struct
+sockaddr</code> data type is the <em class="dfn">address format designator</em>.  This tells
+you which data type to use to understand the address fully.
+</p>
+<a class="index-entry-id" id="index-sys_002fsocket_002eh-1"></a>
+<p>The symbols in this section are defined in the header file
+<samp class="file">sys/socket.h</samp>.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-sockaddr"><span class="category-def">Data Type: </span><span><strong class="def-name">struct sockaddr</strong><a class="copiable-link" href="#index-struct-sockaddr"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">struct sockaddr</code> type itself has the following members:
+</p>
+<dl class="table">
+<dt><code class="code">short int sa_family</code></dt>
+<dd><p>This is the code for the address format of this address.  It
+identifies the format of the data which follows.
+</p>
+</dd>
+<dt><code class="code">char sa_data[14]</code></dt>
+<dd><p>This is the actual socket address data, which is format-dependent.  Its
+length also depends on the format, and may well be more than 14.  The
+length 14 of <code class="code">sa_data</code> is essentially arbitrary.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>Each address format has a symbolic name which starts with &lsquo;<samp class="samp">AF_</samp>&rsquo;.
+Each of them corresponds to a &lsquo;<samp class="samp">PF_</samp>&rsquo; symbol which designates the
+corresponding namespace.  Here is a list of address format names:
+</p>
+<dl class="vtable">
+<dt><a id="index-AF_005fLOCAL"></a><span><code class="code">AF_LOCAL</code><a class="copiable-link" href="#index-AF_005fLOCAL"> &para;</a></span></dt>
+<dd>
+<p>This designates the address format that goes with the local namespace.
+(<code class="code">PF_LOCAL</code> is the name of that namespace.)  See <a class="xref" href="Local-Namespace-Details.html">Details of Local Namespace</a>, for information about this address format.
+</p>
+</dd>
+<dt><a id="index-AF_005fUNIX"></a><span><code class="code">AF_UNIX</code><a class="copiable-link" href="#index-AF_005fUNIX"> &para;</a></span></dt>
+<dd>
+
+<p>This is a synonym for <code class="code">AF_LOCAL</code>.  Although <code class="code">AF_LOCAL</code> is
+mandated by POSIX.1g, <code class="code">AF_UNIX</code> is portable to more systems.
+<code class="code">AF_UNIX</code> was the traditional name stemming from BSD, so even most
+POSIX systems support it.  It is also the name of choice in the Unix98
+specification. (The same is true for <code class="code">PF_UNIX</code>
+vs. <code class="code">PF_LOCAL</code>).
+</p>
+</dd>
+<dt><a id="index-AF_005fFILE"></a><span><code class="code">AF_FILE</code><a class="copiable-link" href="#index-AF_005fFILE"> &para;</a></span></dt>
+<dd>
+<p>This is another synonym for <code class="code">AF_LOCAL</code>, for compatibility.
+(<code class="code">PF_FILE</code> is likewise a synonym for <code class="code">PF_LOCAL</code>.)
+</p>
+</dd>
+<dt><a id="index-AF_005fINET"></a><span><code class="code">AF_INET</code><a class="copiable-link" href="#index-AF_005fINET"> &para;</a></span></dt>
+<dd>
+<p>This designates the address format that goes with the Internet
+namespace.  (<code class="code">PF_INET</code> is the name of that namespace.)
+See <a class="xref" href="Internet-Address-Formats.html">Internet Socket Address Formats</a>.
+</p>
+</dd>
+<dt><a id="index-AF_005fINET6"></a><span><code class="code">AF_INET6</code><a class="copiable-link" href="#index-AF_005fINET6"> &para;</a></span></dt>
+<dd>
+<p>This is similar to <code class="code">AF_INET</code>, but refers to the IPv6 protocol.
+(<code class="code">PF_INET6</code> is the name of the corresponding namespace.)
+</p>
+</dd>
+<dt><a id="index-AF_005fUNSPEC"></a><span><code class="code">AF_UNSPEC</code><a class="copiable-link" href="#index-AF_005fUNSPEC"> &para;</a></span></dt>
+<dd>
+<p>This designates no particular address format.  It is used only in rare
+cases, such as to clear out the default destination address of a
+&ldquo;connected&rdquo; datagram socket.  See <a class="xref" href="Sending-Datagrams.html">Sending Datagrams</a>.
+</p>
+<p>The corresponding namespace designator symbol <code class="code">PF_UNSPEC</code> exists
+for completeness, but there is no reason to use it in a program.
+</p></dd>
+</dl>
+
+<p><samp class="file">sys/socket.h</samp> defines symbols starting with &lsquo;<samp class="samp">AF_</samp>&rsquo; for many
+different kinds of networks, most or all of which are not actually
+implemented.  We will document those that really work as we receive
+information about how to use them.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Setting-Address.html">Setting the Address of a Socket</a>, Up: <a href="Socket-Addresses.html">Socket Addresses</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

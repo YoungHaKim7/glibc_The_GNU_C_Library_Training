@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Utility Limits (The GNU C Library)</title>
+
+<meta name="description" content="Utility Limits (The GNU C Library)">
+<meta name="keywords" content="Utility Limits (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="System-Configuration.html" rel="up" title="System Configuration">
+<link href="Utility-Minimums.html" rel="next" title="Utility Minimums">
+<link href="Pathconf.html" rel="prev" title="Pathconf">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Utility-Limits">
+<div class="nav-panel">
+<p>
+Next: <a href="Utility-Minimums.html" accesskey="n" rel="next">Minimum Values for Utility Limits</a>, Previous: <a href="Pathconf.html" accesskey="p" rel="prev">Using <code class="code">pathconf</code></a>, Up: <a href="System-Configuration.html" accesskey="u" rel="up">System Configuration Parameters</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Utility-Program-Capacity-Limits"><span>33.10 Utility Program Capacity Limits<a class="copiable-link" href="#Utility-Program-Capacity-Limits"> &para;</a></span></h3>
+
+<p>The POSIX.2 standard specifies certain system limits that you can access
+through <code class="code">sysconf</code> that apply to utility behavior rather than the
+behavior of the library or the operating system.
+</p>
+<p>The GNU C Library defines macros for these limits, and <code class="code">sysconf</code>
+returns values for them if you ask; but these values convey no
+meaningful information.  They are simply the smallest values that
+POSIX.2 permits.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-BC_005fBASE_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">BC_BASE_MAX</strong><a class="copiable-link" href="#index-BC_005fBASE_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The largest value of <code class="code">obase</code> that the <code class="code">bc</code> utility is
+guaranteed to support.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-BC_005fDIM_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">BC_DIM_MAX</strong><a class="copiable-link" href="#index-BC_005fDIM_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The largest number of elements in one array that the <code class="code">bc</code> utility
+is guaranteed to support.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-BC_005fSCALE_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">BC_SCALE_MAX</strong><a class="copiable-link" href="#index-BC_005fSCALE_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The largest value of <code class="code">scale</code> that the <code class="code">bc</code> utility is
+guaranteed to support.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-BC_005fSTRING_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">BC_STRING_MAX</strong><a class="copiable-link" href="#index-BC_005fSTRING_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The largest number of characters in one string constant that the
+<code class="code">bc</code> utility is guaranteed to support.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-COLL_005fWEIGHTS_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">COLL_WEIGHTS_MAX</strong><a class="copiable-link" href="#index-COLL_005fWEIGHTS_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The largest number of weights that can necessarily be used in defining
+the collating sequence for a locale.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EXPR_005fNEST_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EXPR_NEST_MAX</strong><a class="copiable-link" href="#index-EXPR_005fNEST_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The maximum number of expressions that can be nested within parentheses
+by the <code class="code">expr</code> utility.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-LINE_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">LINE_MAX</strong><a class="copiable-link" href="#index-LINE_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The largest text line that the text-oriented POSIX.2 utilities can
+support.  (If you are using the GNU versions of these utilities, then
+there is no actual limit except that imposed by the available virtual
+memory, but there is no way that the library can tell you this.)
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EQUIV_005fCLASS_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EQUIV_CLASS_MAX</strong><a class="copiable-link" href="#index-EQUIV_005fCLASS_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The maximum number of weights that can be assigned to an entry of the
+<code class="code">LC_COLLATE</code> category &lsquo;<samp class="samp">order</samp>&rsquo; keyword in a locale definition.
+The GNU C Library does not presently support locale definitions.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Utility-Minimums.html">Minimum Values for Utility Limits</a>, Previous: <a href="Pathconf.html">Using <code class="code">pathconf</code></a>, Up: <a href="System-Configuration.html">System Configuration Parameters</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

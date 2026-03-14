@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Synchronizing I/O (The GNU C Library)</title>
+
+<meta name="description" content="Synchronizing I/O (The GNU C Library)">
+<meta name="keywords" content="Synchronizing I/O (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Low_002dLevel-I_002fO.html" rel="up" title="Low-Level I/O">
+<link href="Asynchronous-I_002fO.html" rel="next" title="Asynchronous I/O">
+<link href="Waiting-for-I_002fO.html" rel="prev" title="Waiting for I/O">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Synchronizing-I_002fO">
+<div class="nav-panel">
+<p>
+Next: <a href="Asynchronous-I_002fO.html" accesskey="n" rel="next">Perform I/O Operations in Parallel</a>, Previous: <a href="Waiting-for-I_002fO.html" accesskey="p" rel="prev">Waiting for Input or Output</a>, Up: <a href="Low_002dLevel-I_002fO.html" accesskey="u" rel="up">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Synchronizing-I_002fO-operations"><span>13.10 Synchronizing I/O operations<a class="copiable-link" href="#Synchronizing-I_002fO-operations"> &para;</a></span></h3>
+
+<a class="index-entry-id" id="index-synchronizing"></a>
+<p>In most modern operating systems, the normal I/O operations are not
+executed synchronously.  I.e., even if a <code class="code">write</code> system call
+returns, this does not mean the data is actually written to the media,
+e.g., the disk.
+</p>
+<p>In situations where synchronization points are necessary, you can use
+special functions which ensure that all operations finish before
+they return.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sync"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">sync</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-sync"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>A call to this function will not return as long as there is data which
+has not been written to the device.  All dirty buffers in the kernel will
+be written and so an overall consistent system can be achieved (if no
+other process in parallel writes data).
+</p>
+<p>A prototype for <code class="code">sync</code> can be found in <samp class="file">unistd.h</samp>.
+</p></dd></dl>
+
+<p>Programs more often want to ensure that data written to a given file is
+committed, rather than all data in the system.  For this, <code class="code">sync</code> is overkill.
+</p>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fsync"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fsync</strong> <code class="def-code-arguments">(int <var class="var">fildes</var>)</code><a class="copiable-link" href="#index-fsync"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fsync</code> function can be used to make sure all data associated with
+the open file <var class="var">fildes</var> is written to the device associated with the
+descriptor.  The function call does not return unless all actions have
+finished.
+</p>
+<p>A prototype for <code class="code">fsync</code> can be found in <samp class="file">unistd.h</samp>.
+</p>
+<p>This function is a cancellation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time <code class="code">fsync</code> is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this, calls to <code class="code">fsync</code> should be
+protected using cancellation handlers.
+</p>
+<p>The return value of the function is zero if no error occurred.  Otherwise
+it is <em class="math">-1</em> and the global variable <code class="code">errno</code> is set to the
+following values:
+</p><dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The descriptor <var class="var">fildes</var> is not valid.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>No synchronization is possible since the system does not implement this.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>Sometimes it is not even necessary to write all data associated with a
+file descriptor.  E.g., in database files which do not change in size it
+is enough to write all the file content data to the device.
+Meta-information, like the modification time etc., are not that important
+and leaving such information uncommitted does not prevent a successful
+recovery of the file in case of a problem.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fdatasync"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fdatasync</strong> <code class="def-code-arguments">(int <var class="var">fildes</var>)</code><a class="copiable-link" href="#index-fdatasync"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>When a call to the <code class="code">fdatasync</code> function returns, it is ensured
+that all of the file data is written to the device.  For all pending I/O
+operations, the parts guaranteeing data integrity finished.
+</p>
+<p>Not all systems implement the <code class="code">fdatasync</code> operation.  On systems
+missing this functionality <code class="code">fdatasync</code> is emulated by a call to
+<code class="code">fsync</code> since the performed actions are a superset of those
+required by <code class="code">fdatasync</code>.
+</p>
+<p>The prototype for <code class="code">fdatasync</code> is in <samp class="file">unistd.h</samp>.
+</p>
+<p>The return value of the function is zero if no error occurred.  Otherwise
+it is <em class="math">-1</em> and the global variable <code class="code">errno</code> is set to the
+following values:
+</p><dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The descriptor <var class="var">fildes</var> is not valid.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>No synchronization is possible since the system does not implement this.
+</p></dd>
+</dl>
+</dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Asynchronous-I_002fO.html">Perform I/O Operations in Parallel</a>, Previous: <a href="Waiting-for-I_002fO.html">Waiting for Input or Output</a>, Up: <a href="Low_002dLevel-I_002fO.html">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

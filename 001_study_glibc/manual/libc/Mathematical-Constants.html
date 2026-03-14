@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Mathematical Constants (The GNU C Library)</title>
+
+<meta name="description" content="Mathematical Constants (The GNU C Library)">
+<meta name="keywords" content="Mathematical Constants (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Mathematics.html" rel="up" title="Mathematics">
+<link href="Trig-Functions.html" rel="next" title="Trig Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Mathematical-Constants">
+<div class="nav-panel">
+<p>
+Next: <a href="Trig-Functions.html" accesskey="n" rel="next">Trigonometric Functions</a>, Up: <a href="Mathematics.html" accesskey="u" rel="up">Mathematics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Predefined-Mathematical-Constants"><span>19.1 Predefined Mathematical Constants<a class="copiable-link" href="#Predefined-Mathematical-Constants"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-constants-1"></a>
+<a class="index-entry-id" id="index-mathematical-constants"></a>
+
+<p>The header <samp class="file">math.h</samp> defines several useful mathematical constants.
+All values are defined as preprocessor macros starting with <code class="code">M_</code>.
+The values provided are:
+</p>
+<dl class="vtable">
+<dt><a id="index-M_005fE"></a><span><code class="code">M_E</code><a class="copiable-link" href="#index-M_005fE"> &para;</a></span></dt>
+<dd><p>The base of natural logarithms.
+</p></dd>
+<dt><a id="index-M_005fLOG2E"></a><span><code class="code">M_LOG2E</code><a class="copiable-link" href="#index-M_005fLOG2E"> &para;</a></span></dt>
+<dd><p>The logarithm to base <code class="code">2</code> of <code class="code">M_E</code>.
+</p></dd>
+<dt><a id="index-M_005fLOG10E"></a><span><code class="code">M_LOG10E</code><a class="copiable-link" href="#index-M_005fLOG10E"> &para;</a></span></dt>
+<dd><p>The logarithm to base <code class="code">10</code> of <code class="code">M_E</code>.
+</p></dd>
+<dt><a id="index-M_005fLN2"></a><span><code class="code">M_LN2</code><a class="copiable-link" href="#index-M_005fLN2"> &para;</a></span></dt>
+<dd><p>The natural logarithm of <code class="code">2</code>.
+</p></dd>
+<dt><a id="index-M_005fLN10"></a><span><code class="code">M_LN10</code><a class="copiable-link" href="#index-M_005fLN10"> &para;</a></span></dt>
+<dd><p>The natural logarithm of <code class="code">10</code>.
+</p></dd>
+<dt><a id="index-M_005fPI"></a><span><code class="code">M_PI</code><a class="copiable-link" href="#index-M_005fPI"> &para;</a></span></dt>
+<dd><p>Pi, the ratio of a circle&rsquo;s circumference to its diameter.
+</p></dd>
+<dt><a id="index-M_005fPI_005f2"></a><span><code class="code">M_PI_2</code><a class="copiable-link" href="#index-M_005fPI_005f2"> &para;</a></span></dt>
+<dd><p>Pi divided by two.
+</p></dd>
+<dt><a id="index-M_005fPI_005f4"></a><span><code class="code">M_PI_4</code><a class="copiable-link" href="#index-M_005fPI_005f4"> &para;</a></span></dt>
+<dd><p>Pi divided by four.
+</p></dd>
+<dt><a id="index-M_005f1_005fPI"></a><span><code class="code">M_1_PI</code><a class="copiable-link" href="#index-M_005f1_005fPI"> &para;</a></span></dt>
+<dd><p>The reciprocal of pi (1/pi)
+</p></dd>
+<dt><a id="index-M_005f2_005fPI"></a><span><code class="code">M_2_PI</code><a class="copiable-link" href="#index-M_005f2_005fPI"> &para;</a></span></dt>
+<dd><p>Two times the reciprocal of pi.
+</p></dd>
+<dt><a id="index-M_005f2_005fSQRTPI"></a><span><code class="code">M_2_SQRTPI</code><a class="copiable-link" href="#index-M_005f2_005fSQRTPI"> &para;</a></span></dt>
+<dd><p>Two times the reciprocal of the square root of pi.
+</p></dd>
+<dt><a id="index-M_005fSQRT2"></a><span><code class="code">M_SQRT2</code><a class="copiable-link" href="#index-M_005fSQRT2"> &para;</a></span></dt>
+<dd><p>The square root of two.
+</p></dd>
+<dt><a id="index-M_005fSQRT1_005f2"></a><span><code class="code">M_SQRT1_2</code><a class="copiable-link" href="#index-M_005fSQRT1_005f2"> &para;</a></span></dt>
+<dd><p>The reciprocal of the square root of two (also the square root of 1/2).
+</p></dd>
+</dl>
+
+<p>These constants come from the Unix98 standard and were also available in
+4.4BSD; therefore they are only defined if
+<code class="code">_XOPEN_SOURCE=500</code>, or a more general feature select macro, is
+defined.  The default set of features includes these constants.
+See <a class="xref" href="Feature-Test-Macros.html">Feature Test Macros</a>.
+</p>
+<p>All values are of type <code class="code">double</code>.  As an extension, the GNU C Library
+also defines these constants with type <code class="code">long double</code> and
+<code class="code">float</code>.  The <code class="code">long double</code> macros have a lowercase &lsquo;<samp class="samp">l</samp>&rsquo;
+while the <code class="code">float</code> macros have a lowercase &lsquo;<samp class="samp">f</samp>&rsquo; appended to
+their names: <code class="code">M_El</code>, <code class="code">M_PIl</code>, and so forth.  These are only
+available if <code class="code">_GNU_SOURCE</code> is defined.
+</p>
+<p>Likewise, the GNU C Library also defines these constants with the types
+<code class="code">_Float<var class="var">N</var></code> and <code class="code">_Float<var class="var">N</var>x</code> for the machines that
+have support for such types enabled (see <a class="pxref" href="Mathematics.html">Mathematics</a>) and if
+<code class="code">_GNU_SOURCE</code> is defined.  When available, the macros names are
+appended with &lsquo;<samp class="samp">f<var class="var">N</var></samp>&rsquo; or &lsquo;<samp class="samp">f<var class="var">N</var>x</samp>&rsquo;, such as &lsquo;<samp class="samp">f128</samp>&rsquo;
+for the type <code class="code">_Float128</code>.
+</p>
+<a class="index-entry-id" id="index-PI"></a>
+<p><em class="emph">Note:</em> Some programs use a constant named <code class="code">PI</code> which has the
+same value as <code class="code">M_PI</code>.  This constant is not standard; it may have
+appeared in some old AT&amp;T headers, and is mentioned in Stroustrup&rsquo;s book
+on C++.  It infringes on the user&rsquo;s name space, so the GNU C Library
+does not define it.  Fixing programs written to expect it is simple:
+replace <code class="code">PI</code> with <code class="code">M_PI</code> throughout, or put &lsquo;<samp class="samp">-DPI=M_PI</samp>&rsquo;
+on the compiler command line.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Trig-Functions.html">Trigonometric Functions</a>, Up: <a href="Mathematics.html">Mathematics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

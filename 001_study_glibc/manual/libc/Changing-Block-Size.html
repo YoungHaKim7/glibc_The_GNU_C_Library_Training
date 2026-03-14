@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Changing Block Size (The GNU C Library)</title>
+
+<meta name="description" content="Changing Block Size (The GNU C Library)">
+<meta name="keywords" content="Changing Block Size (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Unconstrained-Allocation.html" rel="up" title="Unconstrained Allocation">
+<link href="Allocating-Cleared-Space.html" rel="next" title="Allocating Cleared Space">
+<link href="Freeing-after-Malloc.html" rel="prev" title="Freeing after Malloc">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Changing-Block-Size">
+<div class="nav-panel">
+<p>
+Next: <a href="Allocating-Cleared-Space.html" accesskey="n" rel="next">Allocating Cleared Space</a>, Previous: <a href="Freeing-after-Malloc.html" accesskey="p" rel="prev">Freeing Memory Allocated with <code class="code">malloc</code></a>, Up: <a href="Unconstrained-Allocation.html" accesskey="u" rel="up">Unconstrained Allocation</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Changing-the-Size-of-a-Block"><span>3.2.3.5 Changing the Size of a Block<a class="copiable-link" href="#Changing-the-Size-of-a-Block"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-changing-the-size-of-a-block-_0028malloc_0029"></a>
+
+<p>Often you do not know for certain how big a block you will ultimately need
+at the time you must begin to use the block.  For example, the block might
+be a buffer that you use to hold a line being read from a file; no matter
+how long you make the buffer initially, you may encounter a line that is
+longer.
+</p>
+<p>You can make the block longer by calling <code class="code">realloc</code> or
+<code class="code">reallocarray</code>.  These functions are declared in <samp class="file">stdlib.h</samp>.
+<a class="index-entry-id" id="index-stdlib_002eh-2"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-realloc"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">realloc</strong> <code class="def-code-arguments">(void *<var class="var">ptr</var>, size_t <var class="var">newsize</var>)</code><a class="copiable-link" href="#index-realloc"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+
+<p>The <code class="code">realloc</code> function changes the size of the block whose address is
+<var class="var">ptr</var> to be <var class="var">newsize</var>.
+</p>
+<p>Since the space after the end of the block may be in use, <code class="code">realloc</code>
+may find it necessary to copy the block to a new address where more free
+space is available.  The value of <code class="code">realloc</code> is the new address of the
+block.  If the block needs to be moved, <code class="code">realloc</code> copies the old
+contents.
+</p>
+<p>If you pass a null pointer for <var class="var">ptr</var>, <code class="code">realloc</code> behaves just
+like &lsquo;<samp class="samp">malloc (<var class="var">newsize</var>)</samp>&rsquo;.
+Otherwise, if <var class="var">newsize</var> is zero
+<code class="code">realloc</code> frees the block and returns <code class="code">NULL</code>.
+Otherwise, if <code class="code">realloc</code> cannot reallocate the requested size
+it returns <code class="code">NULL</code> and sets <code class="code">errno</code>; the original block
+is left undisturbed.
+</p>
+<p>Any non-null pointer returned by <code class="code">realloc</code> satisfies the same
+alignment restrictions as a similar pointer returned by <code class="code">malloc</code>
+with the same size.
+Any special alignment created by <code class="code">aligned_alloc</code>
+and similar functions is lost after <code class="code">realloc</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-reallocarray"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">reallocarray</strong> <code class="def-code-arguments">(void *<var class="var">ptr</var>, size_t <var class="var">nmemb</var>, size_t <var class="var">size</var>)</code><a class="copiable-link" href="#index-reallocarray"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>The <code class="code">reallocarray</code> function changes the size of the block whose address
+is <var class="var">ptr</var> to be long enough to contain a vector of <var class="var">nmemb</var> elements,
+each of size <var class="var">size</var>.  It is equivalent to &lsquo;<samp class="samp">realloc (<var class="var">ptr</var>,
+<var class="var">nmemb</var> * <var class="var">size</var>)</samp>&rsquo;, except that <code class="code">reallocarray</code> fails safely if
+the multiplication overflows, by setting <code class="code">errno</code> to <code class="code">ENOMEM</code>,
+returning a null pointer, and leaving the original block unchanged.
+</p>
+<p><code class="code">reallocarray</code> should be used instead of <code class="code">realloc</code> when the new size
+of the allocated block is the result of a multiplication that might overflow.
+</p>
+<p>In the GNU C Library, the vector is aligned the same way that <code class="code">malloc</code>
+aligns its returned values.  In other implementations, it may be merely
+aligned suitably for any array of fundamentally-aligned elements each
+with size at most <code class="code">max (<var class="var">size</var>, 1)</code>.
+Any special alignment created by <code class="code">aligned_alloc</code>
+and similar functions is lost after <code class="code">reallocarray</code>.
+</p>
+<p>This function was originally derived from OpenBSD 5.6, but was added in
+POSIX.1-2024.
+</p></dd></dl>
+
+<p>Like <code class="code">malloc</code>, <code class="code">realloc</code> and <code class="code">reallocarray</code> may return a null
+pointer if no memory space is available to make the block bigger.  When this
+happens, the original block is untouched; it has not been modified or
+relocated.
+</p>
+<p>In most cases it makes no difference what happens to the original block
+when <code class="code">realloc</code> fails, because the application program cannot continue
+when it is out of memory, and the only thing to do is to give a fatal error
+message.  Often it is convenient to write and use subroutines,
+conventionally called <code class="code">xrealloc</code> and <code class="code">xreallocarray</code>,
+that take care of the error message
+as <code class="code">xmalloc</code> does for <code class="code">malloc</code>:
+<a class="index-entry-id" id="index-xrealloc-and-xreallocarray-functions"></a>
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">void *
+xreallocarray (void *ptr, size_t nmemb, size_t size)
+{
+  void *p = reallocarray (ptr, nmemb, size);
+  if (p == NULL)
+    fatal (&quot;Virtual memory exhausted&quot;);
+  return value;
+}
+
+void *
+xrealloc (void *ptr, size_t size)
+{
+  return xreallocarray (ptr, 1, size);
+}
+</pre></div>
+
+<p>You can also use <code class="code">realloc</code> or <code class="code">reallocarray</code> to make a block
+smaller.  The reason you would do this is to avoid tying up a lot of memory
+space when only a little is needed.
+In several allocation implementations, making a block smaller sometimes
+necessitates copying it, so it can fail if no other space is available.
+</p>
+<p><strong class="strong">Portability Notes:</strong>
+</p>
+<ul class="itemize mark-bullet">
+<li>Portable programs should not attempt to reallocate blocks to be size zero.
+On other implementations if <var class="var">ptr</var> is non-null, <code class="code">realloc (ptr, 0)</code>
+might free the block and return a non-null pointer to a size-zero
+object, or it might fail and return <code class="code">NULL</code> without freeing the block.
+The ISO C17 standard allows these variations.
+
+</li><li>In the GNU C Library, reallocation fails if the resulting block
+would exceed <code class="code">PTRDIFF_MAX</code> in size, to avoid problems with programs
+that subtract pointers or use signed indexes.  Other implementations may
+succeed, leading to undefined behavior later.
+
+</li><li>In the GNU C Library, if the new size is the same as the old, <code class="code">realloc</code> and
+<code class="code">reallocarray</code> are guaranteed to change nothing and return the same
+address that you gave.  However, POSIX and ISO C allow the functions
+to relocate the object or fail in this situation.
+</li></ul>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Allocating-Cleared-Space.html">Allocating Cleared Space</a>, Previous: <a href="Freeing-after-Malloc.html">Freeing Memory Allocated with <code class="code">malloc</code></a>, Up: <a href="Unconstrained-Allocation.html">Unconstrained Allocation</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Source Fortification (The GNU C Library)</title>
+
+<meta name="description" content="Source Fortification (The GNU C Library)">
+<meta name="keywords" content="Source Fortification (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Maintenance.html" rel="up" title="Maintenance">
+<link href="Symbol-handling.html" rel="next" title="Symbol handling">
+<link href="Source-Layout.html" rel="prev" title="Source Layout">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="appendixsec-level-extent" id="Source-Fortification">
+<div class="nav-panel">
+<p>
+Next: <a href="Symbol-handling.html" accesskey="n" rel="next">Symbol handling in the GNU C Library</a>, Previous: <a href="Source-Layout.html" accesskey="p" rel="prev">Adding New Functions</a>, Up: <a href="Maintenance.html" accesskey="u" rel="up">Library Maintenance</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="appendixsec" id="Fortification-of-function-calls"><span>D.2 Fortification of function calls<a class="copiable-link" href="#Fortification-of-function-calls"> &para;</a></span></h3>
+
+<p>This section contains implementation details of the GNU C Library and may not
+remain stable across releases.
+</p>
+<p>The <code class="code">_FORTIFY_SOURCE</code> macro may be defined by users to control
+hardening of calls into some functions in the GNU C Library.  The definition
+should be at the top of the source file before any headers are included
+or at the pre-processor commandline using the <code class="code">-D</code> switch.  The
+hardening primarily focuses on accesses to buffers passed to the
+functions but may also include checks for validity of other inputs to
+the functions.
+</p>
+<p>When the <code class="code">_FORTIFY_SOURCE</code> macro is defined, it enables code that
+validates inputs passed to some functions in the GNU C Library to determine if
+they are safe.  If the compiler is unable to determine that the inputs
+to the function call are safe, the call may be replaced by a call to its
+hardened variant that does additional safety checks at runtime.  Some
+hardened variants need the size of the buffer to perform access
+validation and this is provided by the <code class="code">__builtin_object_size</code> or
+the <code class="code">__builtin_dynamic_object_size</code> builtin functions.
+<code class="code">_FORTIFY_SOURCE</code> also enables additional compile time diagnostics,
+such as unchecked return values from some functions, to encourage
+developers to add error checking for those functions.
+</p>
+<p>At runtime, if any of those safety checks fail, the program will
+terminate with a <code class="code">SIGABRT</code> signal.  <code class="code">_FORTIFY_SOURCE</code> may be
+defined to one of the following values:
+</p>
+<ul class="itemize mark-bullet">
+<li><em class="math">1</em>: This enables buffer bounds checking using the value
+returned by the <code class="code">__builtin_object_size</code> compiler builtin function.
+If the function returns <code class="code">(size_t) -1</code>, the function call is left
+untouched.  Additionally, this level also enables validation of flags to
+the <code class="code">open</code>, <code class="code">open64</code>, <code class="code">openat</code> and <code class="code">openat64</code>
+functions.
+
+</li><li><em class="math">2</em>: This behaves like <em class="math">1</em>, with the addition of some
+checks that may trap code that is conforming but unsafe, e.g. accepting
+<code class="code">%n</code> only in read-only format strings.
+
+</li><li><em class="math">3</em>: This enables buffer bounds checking using the value
+returned by the <code class="code">__builtin_dynamic_object_size</code> compiler builtin
+function.  If the function returns <code class="code">(size_t) -1</code>, the function call
+is left untouched.  Fortification at this level may have a impact on
+program performance if the function call that is fortified is frequently
+encountered and the size expression returned by
+<code class="code">__builtin_dynamic_object_size</code> is complex.
+</li></ul>
+
+<p>In general, the fortified variants of the function calls use the name of
+the function with a <code class="code">__</code> prefix and a <code class="code">_chk</code> suffix.  There
+are some exceptions, e.g. the <code class="code">printf</code> family of functions where,
+depending on the architecture, one may also see fortified variants have
+the <code class="code">_chkieee128</code> suffix or the <code class="code">__nldbl___</code> prefix to their
+names.
+</p>
+<p>Another exception is the <code class="code">open</code> family of functions, where their
+fortified replacements have the <code class="code">__</code> prefix and a <code class="code">_2</code> suffix.
+The <code class="code">FD_SET</code>, <code class="code">FD_CLR</code> and <code class="code">FD_ISSET</code> macros use the
+<code class="code">__fdelt_chk</code> function on fortification.
+</p>
+<p>The following functions and macros are fortified in the GNU C Library:
+</p>
+<ul class="itemize mark-bullet">
+<li><code class="code">asprintf</code>
+
+</li><li><code class="code">confstr</code>
+
+</li><li><code class="code">dprintf</code>
+
+</li><li><code class="code">explicit_bzero</code>
+
+</li><li><code class="code">FD_SET</code>
+
+</li><li><code class="code">FD_CLR</code>
+
+</li><li><code class="code">FD_ISSET</code>
+
+</li><li><code class="code">fgets</code>
+
+</li><li><code class="code">fgets_unlocked</code>
+
+</li><li><code class="code">fgetws</code>
+
+</li><li><code class="code">fgetws_unlocked</code>
+
+</li><li><code class="code">fprintf</code>
+
+</li><li><code class="code">fread</code>
+
+</li><li><code class="code">fread_unlocked</code>
+
+</li><li><code class="code">fwprintf</code>
+
+</li><li><code class="code">getcwd</code>
+
+</li><li><code class="code">getdomainname</code>
+
+</li><li><code class="code">getgroups</code>
+
+</li><li><code class="code">gethostname</code>
+
+</li><li><code class="code">getlogin_r</code>
+
+</li><li><code class="code">gets</code>
+
+</li><li><code class="code">getwd</code>
+
+</li><li><code class="code">inet_ntop</code>
+
+</li><li><code class="code">inet_pton</code>
+
+</li><li><code class="code">longjmp</code>
+
+</li><li><code class="code">mbsnrtowcs</code>
+
+</li><li><code class="code">mbsrtowcs</code>
+
+</li><li><code class="code">mbstowcs</code>
+
+</li><li><code class="code">memcpy</code>
+
+</li><li><code class="code">memmove</code>
+
+</li><li><code class="code">mempcpy</code>
+
+</li><li><code class="code">memset</code>
+
+</li><li><code class="code">memset_explicit</code>
+
+</li><li><code class="code">mq_open</code>
+
+</li><li><code class="code">obstack_printf</code>
+
+</li><li><code class="code">obstack_vprintf</code>
+
+</li><li><code class="code">open</code>
+
+</li><li><code class="code">open64</code>
+
+</li><li><code class="code">openat</code>
+
+</li><li><code class="code">openat64</code>
+
+</li><li><code class="code">poll</code>
+
+</li><li><code class="code">ppoll64</code>
+
+</li><li><code class="code">ppoll</code>
+
+</li><li><code class="code">pread64</code>
+
+</li><li><code class="code">pread</code>
+
+</li><li><code class="code">printf</code>
+
+</li><li><code class="code">ptsname_r</code>
+
+</li><li><code class="code">read</code>
+
+</li><li><code class="code">readlinkat</code>
+
+</li><li><code class="code">readlink</code>
+
+</li><li><code class="code">realpath</code>
+
+</li><li><code class="code">recv</code>
+
+</li><li><code class="code">recvfrom</code>
+
+</li><li><code class="code">snprintf</code>
+
+</li><li><code class="code">sprintf</code>
+
+</li><li><code class="code">stpcpy</code>
+
+</li><li><code class="code">stpncpy</code>
+
+</li><li><code class="code">strcat</code>
+
+</li><li><code class="code">strcpy</code>
+
+</li><li><code class="code">strlcat</code>
+
+</li><li><code class="code">strlcpy</code>
+
+</li><li><code class="code">strncat</code>
+
+</li><li><code class="code">strncpy</code>
+
+</li><li><code class="code">swprintf</code>
+
+</li><li><code class="code">syslog</code>
+
+</li><li><code class="code">ttyname_r</code>
+
+</li><li><code class="code">vasprintf</code>
+
+</li><li><code class="code">vdprintf</code>
+
+</li><li><code class="code">vfprintf</code>
+
+</li><li><code class="code">vfwprintf</code>
+
+</li><li><code class="code">vprintf</code>
+
+</li><li><code class="code">vsnprintf</code>
+
+</li><li><code class="code">vsprintf</code>
+
+</li><li><code class="code">vswprintf</code>
+
+</li><li><code class="code">vsyslog</code>
+
+</li><li><code class="code">vwprintf</code>
+
+</li><li><code class="code">wcpcpy</code>
+
+</li><li><code class="code">wcpncpy</code>
+
+</li><li><code class="code">wcrtomb</code>
+
+</li><li><code class="code">wcscat</code>
+
+</li><li><code class="code">wcscpy</code>
+
+</li><li><code class="code">wcslcat</code>
+
+</li><li><code class="code">wcslcpy</code>
+
+</li><li><code class="code">wcsncat</code>
+
+</li><li><code class="code">wcsncpy</code>
+
+</li><li><code class="code">wcsnrtombs</code>
+
+</li><li><code class="code">wcsrtombs</code>
+
+</li><li><code class="code">wcstombs</code>
+
+</li><li><code class="code">wctomb</code>
+
+</li><li><code class="code">wmemcpy</code>
+
+</li><li><code class="code">wmemmove</code>
+
+</li><li><code class="code">wmempcpy</code>
+
+</li><li><code class="code">wmemset</code>
+
+</li><li><code class="code">wprintf</code>
+
+</li></ul>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Symbol-handling.html">Symbol handling in the GNU C Library</a>, Previous: <a href="Source-Layout.html">Adding New Functions</a>, Up: <a href="Maintenance.html">Library Maintenance</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Inetd Servers (The GNU C Library)</title>
+
+<meta name="description" content="Inetd Servers (The GNU C Library)">
+<meta name="keywords" content="Inetd Servers (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Inetd.html" rel="up" title="Inetd">
+<link href="Configuring-Inetd.html" rel="next" title="Configuring Inetd">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Inetd-Servers">
+<div class="nav-panel">
+<p>
+Next: <a href="Configuring-Inetd.html" accesskey="n" rel="next">Configuring <code class="code">inetd</code></a>, Up: <a href="Inetd.html" accesskey="u" rel="up">The <code class="code">inetd</code> Daemon</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="inetd-Servers"><span>16.11.1 <code class="code">inetd</code> Servers<a class="copiable-link" href="#inetd-Servers"> &para;</a></span></h4>
+
+<p>Writing a server program to be run by <code class="code">inetd</code> is very simple.  Each time
+someone requests a connection to the appropriate port, a new server
+process starts.  The connection already exists at this time; the
+socket is available as the standard input descriptor and as the
+standard output descriptor (descriptors 0 and 1) in the server
+process.  Thus the server program can begin reading and writing data
+right away.  Often the program needs only the ordinary I/O facilities;
+in fact, a general-purpose filter program that knows nothing about
+sockets can work as a byte stream server run by <code class="code">inetd</code>.
+</p>
+<p>You can also use <code class="code">inetd</code> for servers that use connectionless
+communication styles.  For these servers, <code class="code">inetd</code> does not try to accept
+a connection since no connection is possible.  It just starts the
+server program, which can read the incoming datagram packet from
+descriptor 0.  The server program can handle one request and then
+exit, or you can choose to write it to keep reading more requests
+until no more arrive, and then exit.  You must specify which of these
+two techniques the server uses when you configure <code class="code">inetd</code>.
+</p>
+</div>
+
+
+
+</body>
+</html>

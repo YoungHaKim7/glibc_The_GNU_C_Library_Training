@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Argp Helper Functions (The GNU C Library)</title>
+
+<meta name="description" content="Argp Helper Functions (The GNU C Library)">
+<meta name="keywords" content="Argp Helper Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Argp-Parser-Functions.html" rel="up" title="Argp Parser Functions">
+<link href="Argp-Parsing-State.html" rel="prev" title="Argp Parsing State">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Argp-Helper-Functions">
+<div class="nav-panel">
+<p>
+Previous: <a href="Argp-Parsing-State.html" accesskey="p" rel="prev">Argp Parsing State</a>, Up: <a href="Argp-Parser-Functions.html" accesskey="u" rel="up">Argp Parser Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Functions-For-Use-in-Argp-Parsers"><span>26.3.5.3 Functions For Use in Argp Parsers<a class="copiable-link" href="#Functions-For-Use-in-Argp-Parsers"> &para;</a></span></h4>
+
+<p>Argp provides a number of functions available to the user of argp
+(see <a class="pxref" href="Argp-Parser-Functions.html">Argp Parser Functions</a>), mostly for producing error messages.
+These take as their first argument the <var class="var">state</var> argument to the
+parser function.  See <a class="xref" href="Argp-Parsing-State.html">Argp Parsing State</a>.
+</p>
+
+<a class="index-entry-id" id="index-usage-messages_002c-in-argp"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argp_005fusage"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">argp_usage</strong> <code class="def-code-arguments">(const struct argp_state *<var class="var">state</var>)</code><a class="copiable-link" href="#index-argp_005fusage"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:argpbuf env locale
+| AS-Unsafe heap i18n corrupt
+| AC-Unsafe mem corrupt lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Outputs the standard usage message for the argp parser referred to by
+<var class="var">state</var> to <code class="code"><var class="var">state</var>-&gt;err_stream</code> and terminates the program
+with <code class="code">exit (argp_err_exit_status)</code>.  See <a class="xref" href="Argp-Global-Variables.html">Argp Global Variables</a>.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-syntax-error-messages_002c-in-argp"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argp_005ferror"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">argp_error</strong> <code class="def-code-arguments">(const struct argp_state *<var class="var">state</var>, const char *<var class="var">fmt</var>, &hellip;)</code><a class="copiable-link" href="#index-argp_005ferror"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:argpbuf env locale
+| AS-Unsafe heap i18n corrupt
+| AC-Unsafe mem corrupt lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Prints the printf format string <var class="var">fmt</var> and following args, preceded
+by the program name and &lsquo;<samp class="samp">:</samp>&rsquo;, and followed by a &lsquo;<samp class="samp">Try&nbsp;&hellip;&nbsp;--help</samp>&rsquo;<!-- /@w --> message, and terminates the program with an exit status of
+<code class="code">argp_err_exit_status</code>.  See <a class="xref" href="Argp-Global-Variables.html">Argp Global Variables</a>.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-error-messages_002c-in-argp"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argp_005ffailure"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">argp_failure</strong> <code class="def-code-arguments">(const struct argp_state *<var class="var">state</var>, int <var class="var">status</var>, int <var class="var">errnum</var>, const char *<var class="var">fmt</var>, &hellip;)</code><a class="copiable-link" href="#index-argp_005ffailure"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe corrupt heap
+| AC-Unsafe lock corrupt mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Similar to the standard GNU error-reporting function <code class="code">error</code>, this
+prints the program name and &lsquo;<samp class="samp">:</samp>&rsquo;, the printf format string
+<var class="var">fmt</var>, and the appropriate following args.  If it is non-zero, the
+standard unix error text for <var class="var">errnum</var> is printed.  If <var class="var">status</var> is
+non-zero, it terminates the program with that value as its exit status.
+</p>
+<p>The difference between <code class="code">argp_failure</code> and <code class="code">argp_error</code> is that
+<code class="code">argp_error</code> is for <em class="emph">parsing errors</em>, whereas
+<code class="code">argp_failure</code> is for other problems that occur during parsing but
+don&rsquo;t reflect a syntactic problem with the input, such as illegal values
+for options, bad phase of the moon, etc.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argp_005fstate_005fhelp"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">argp_state_help</strong> <code class="def-code-arguments">(const struct argp_state *<var class="var">state</var>, FILE *<var class="var">stream</var>, unsigned <var class="var">flags</var>)</code><a class="copiable-link" href="#index-argp_005fstate_005fhelp"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:argpbuf env locale
+| AS-Unsafe heap i18n corrupt
+| AC-Unsafe mem corrupt lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>Outputs a help message for the argp parser referred to by <var class="var">state</var>,
+to <var class="var">stream</var>.  The <var class="var">flags</var> argument determines what sort of help
+message is produced.  See <a class="xref" href="Argp-Help-Flags.html">Flags for the <code class="code">argp_help</code> Function</a>.
+</p></dd></dl>
+
+<p>Error output is sent to <code class="code"><var class="var">state</var>-&gt;err_stream</code>, and the program
+name printed is <code class="code"><var class="var">state</var>-&gt;name</code>.
+</p>
+<p>The output or program termination behavior of these functions may be
+suppressed if the <code class="code">ARGP_NO_EXIT</code> or <code class="code">ARGP_NO_ERRS</code> flags are
+passed to <code class="code">argp_parse</code>.  See <a class="xref" href="Argp-Flags.html">Flags for <code class="code">argp_parse</code></a>.
+</p>
+<p>This behavior is useful if an argp parser is exported for use by other
+programs (e.g., by a library), and may be used in a context where it is
+not desirable to terminate the program in response to parsing errors.  In
+argp parsers intended for such general use, and for the case where the
+program <em class="emph">doesn&rsquo;t</em> terminate, calls to any of these functions should
+be followed by code that returns the appropriate error code:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">if (<var class="var">bad argument syntax</var>)
+  {
+     argp_usage (<var class="var">state</var>);
+     return EINVAL;
+  }
+</pre></div>
+
+<p>If a parser function will <em class="emph">only</em> be used when <code class="code">ARGP_NO_EXIT</code>
+is not set, the return may be omitted.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Argp-Parsing-State.html">Argp Parsing State</a>, Up: <a href="Argp-Parser-Functions.html">Argp Parser Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Sleeping (The GNU C Library)</title>
+
+<meta name="description" content="Sleeping (The GNU C Library)">
+<meta name="keywords" content="Sleeping (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Date-and-Time.html" rel="up" title="Date and Time">
+<link href="Setting-an-Alarm.html" rel="prev" title="Setting an Alarm">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Sleeping">
+<div class="nav-panel">
+<p>
+Previous: <a href="Setting-an-Alarm.html" accesskey="p" rel="prev">Setting an Alarm</a>, Up: <a href="Date-and-Time.html" accesskey="u" rel="up">Date and Time</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Sleeping-1"><span>22.7 Sleeping<a class="copiable-link" href="#Sleeping-1"> &para;</a></span></h3>
+
+<p>The function <code class="code">sleep</code> gives a simple way to make the program wait
+for a short interval.  If your program doesn&rsquo;t use signals (except to
+terminate), then you can expect <code class="code">sleep</code> to wait reliably throughout
+the specified interval.  Otherwise, <code class="code">sleep</code> can return sooner if a
+signal arrives; if you want to wait for a given interval regardless of
+signals, use <code class="code">select</code> (see <a class="pxref" href="Waiting-for-I_002fO.html">Waiting for Input or Output</a>) and don&rsquo;t specify
+any descriptors to wait for.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sleep"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">sleep</strong> <code class="def-code-arguments">(unsigned int <var class="var">seconds</var>)</code><a class="copiable-link" href="#index-sleep"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe sig:SIGCHLD/linux
+| AS-Unsafe 
+| AC-Unsafe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">sleep</code> function waits for <var class="var">seconds</var> seconds or until a signal
+is delivered, whichever happens first.
+</p>
+<p>If <code class="code">sleep</code> returns because the requested interval is over,
+it returns a value of zero.  If it returns because of delivery of a
+signal, its return value is the remaining time in the sleep interval.
+</p>
+<p>The <code class="code">sleep</code> function is declared in <samp class="file">unistd.h</samp>.
+</p></dd></dl>
+
+<p>Resist the temptation to implement a sleep for a fixed amount of time by
+using the return value of <code class="code">sleep</code>, when nonzero, to call
+<code class="code">sleep</code> again.  This will work with a certain amount of accuracy as
+long as signals arrive infrequently.  But each signal can cause the
+eventual wakeup time to be off by an additional second or so.  Suppose a
+few signals happen to arrive in rapid succession by bad luck&mdash;there is
+no limit on how much this could shorten or lengthen the wait.
+</p>
+<p>Instead, compute the calendar time at which the program should stop
+waiting, and keep trying to wait until that calendar time.  This won&rsquo;t
+be off by more than a second.  With just a little more work, you can use
+<code class="code">select</code> and make the waiting period quite accurate.  (Of course,
+heavy system load can cause additional unavoidable delays&mdash;unless the
+machine is dedicated to one application, there is no way you can avoid
+this.)
+</p>
+<p>On some systems, <code class="code">sleep</code> can do strange things if your program uses
+<code class="code">SIGALRM</code> explicitly.  Even if <code class="code">SIGALRM</code> signals are being
+ignored or blocked when <code class="code">sleep</code> is called, <code class="code">sleep</code> might
+return prematurely on delivery of a <code class="code">SIGALRM</code> signal.  If you have
+established a handler for <code class="code">SIGALRM</code> signals and a <code class="code">SIGALRM</code>
+signal is delivered while the process is sleeping, the action taken
+might be just to cause <code class="code">sleep</code> to return instead of invoking your
+handler.  And, if <code class="code">sleep</code> is interrupted by delivery of a signal
+whose handler requests an alarm or alters the handling of <code class="code">SIGALRM</code>,
+this handler and <code class="code">sleep</code> will interfere.
+</p>
+<p>On GNU systems, it is safe to use <code class="code">sleep</code> and <code class="code">SIGALRM</code> in
+the same program, because <code class="code">sleep</code> does not work by means of
+<code class="code">SIGALRM</code>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-nanosleep"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">nanosleep</strong> <code class="def-code-arguments">(const struct timespec *<var class="var">requested_time</var>, struct timespec *<var class="var">remaining_time</var>)</code><a class="copiable-link" href="#index-nanosleep"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>If resolution to seconds is not enough, the <code class="code">nanosleep</code> function can
+be used.  As the name suggests the sleep interval can be specified in
+nanoseconds.  The actual elapsed time of the sleep interval might be
+longer since the system rounds the elapsed time you request up to the
+next integer multiple of the actual resolution the system can deliver.
+</p>
+<p><code class="code">*<var class="var">requested_time</var></code> is the elapsed time of the interval you
+want to sleep.
+</p>
+<p>If <var class="var">remaining_time</var> is not the null pointer, the function returns as
+<code class="code">*<var class="var">remaining_time</var></code> the elapsed time left in the interval for which
+you requested to sleep.  If the interval completed without getting
+interrupted by a signal, this is zero.
+</p>
+<p><code class="code">struct timespec</code> is described in <a class="ref" href="Time-Types.html">Time Types</a>.
+</p>
+<p>If the function returns because the interval is over, it returns zero.
+Otherwise it returns <em class="math">-1</em> and sets the global variable <code class="code">errno</code> to
+one of the following values:
+</p>
+<dl class="table">
+<dt><code class="code">EINTR</code></dt>
+<dd><p>The call was interrupted because a signal was delivered to the thread.
+If the <var class="var">remaining_time</var> parameter is not the null pointer, the structure
+pointed to by <var class="var">remaining_time</var> is updated to contain the remaining
+elapsed time.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The nanosecond value in the <var class="var">requested_time</var> parameter contains an
+invalid value.  Either the value is negative or greater than or equal to
+1000 million.
+</p></dd>
+</dl>
+
+<p>This function is a cancellation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time <code class="code">nanosleep</code> is
+called.  If the thread gets canceled, these resources stay allocated
+until the program ends.  To avoid this, calls to <code class="code">nanosleep</code> should
+be protected using cancellation handlers.
+</p>
+<p>The <code class="code">nanosleep</code> function is declared in <samp class="file">time.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-clock_005fnanosleep"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">clock_nanosleep</strong> <code class="def-code-arguments">(clockid_t <var class="var">clock</var>, int <var class="var">flags</var>, const struct timespec *<var class="var">requested_time</var>, struct timespec *<var class="var">remaining_time</var>)</code><a class="copiable-link" href="#index-clock_005fnanosleep"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">nanosleep</code> while additionally providing
+the caller with a way to specify the clock to be used to measure elapsed
+time and express the sleep interval in absolute or relative terms.  It
+returns zero when returning because the interval is over, and a positive
+error number corresponding to the error encountered otherwise.  This is
+different from <code class="code">nanosleep</code>, which returns <em class="math">-1</em> upon failure and
+sets the global variable <code class="code">errno</code> according to the error encountered
+instead.
+</p>
+<p>Except for the return value convention and the way to communicate an error
+condition the call:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">nanosleep (<var class="var">requested_time</var>, <var class="var">remaining_time</var>)
+</pre></div>
+
+<p>is analogous to:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">clock_nanosleep (CLOCK_REALTIME, 0, <var class="var">requested_time</var>, <var class="var">remaining_time</var>)
+</pre></div>
+
+<p>The <var class="var">clock</var> argument specifies the clock to use.
+See <a class="xref" href="Getting-the-Time.html">Getting the Time</a>, for the <code class="code">clockid_t</code> type and possible values
+of <var class="var">clock</var>.  Not all clocks listed are supported for use with
+<code class="code">clock_nanosleep</code>.  For details, see the manual page
+<a class="url" href="https://man7.org/linux/man-pages/man2/clock_nanosleep.2.html">clock_nanosleep(2)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p>
+<p>The <var class="var">flags</var> argument is either <code class="code">0</code> or <code class="code">TIMER_ABSTIME</code>.  If
+<var class="var">flags</var> is <code class="code">0</code>, then <code class="code">clock_nanosleep</code> interprets
+<var class="var">requested_time</var> as an interval relative to the current time specified
+by <var class="var">clock</var>.  If it is <code class="code">TIMER_ABSTIME</code> instead, <var class="var">requested_time</var>
+specifies an absolute time measured by <var class="var">clock</var>; if at the time of the
+call the value requested is less than or equal to the clock specified, then
+the function returns right away.  When <var class="var">flags</var> is <code class="code">TIMER_ABSTIME</code>,
+<var class="var">remaining_time</var> is not updated.
+</p>
+<p>The <code class="code">clock_nanosleep</code> function returns error codes as positive return
+values.  The error conditions for <code class="code">clock_nanosleep</code> are the same as for
+<code class="code">nanosleep</code>, with the following conditions additionally defined:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">clock</var> argument is not a valid clock.
+</p>
+</dd>
+<dt><code class="code">EOPNOTSUPP</code></dt>
+<dd><p>The <var class="var">clock</var> argument is not supported by the kernel for
+<code class="code">clock_nanosleep</code>.
+</p></dd>
+</dl>
+
+<p>The <code class="code">clock_nanosleep</code> function is declared in <samp class="file">time.h</samp>.
+</p></dd></dl>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Setting-an-Alarm.html">Setting an Alarm</a>, Up: <a href="Date-and-Time.html">Date and Time</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

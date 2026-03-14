@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Program Termination (The GNU C Library)</title>
+
+<meta name="description" content="Program Termination (The GNU C Library)">
+<meta name="keywords" content="Program Termination (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Program-Basics.html" rel="up" title="Program Basics">
+<link href="System-Calls.html" rel="prev" title="System Calls">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Program-Termination">
+<div class="nav-panel">
+<p>
+Previous: <a href="System-Calls.html" accesskey="p" rel="prev">System Calls</a>, Up: <a href="Program-Basics.html" accesskey="u" rel="up">The Basic Program/System Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Program-Termination-1"><span>26.7 Program Termination<a class="copiable-link" href="#Program-Termination-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-program-termination"></a>
+<a class="index-entry-id" id="index-process-termination"></a>
+
+<a class="index-entry-id" id="index-exit-status-value"></a>
+<p>The usual way for a program to terminate is simply for its <code class="code">main</code>
+function to return.  The <em class="dfn">exit status value</em> returned from the
+<code class="code">main</code> function is used to report information back to the process&rsquo;s
+parent process or shell.
+</p>
+<p>A program can also terminate normally by calling the <code class="code">exit</code>
+function.
+</p>
+<p>In addition, programs can be terminated by signals; this is discussed in
+more detail in <a class="ref" href="Signal-Handling.html">Signal Handling</a>.  The <code class="code">abort</code> function causes
+a signal that kills the program.
+</p>
+
+<ul class="mini-toc">
+<li><a href="Normal-Termination.html" accesskey="1">Normal Termination</a></li>
+<li><a href="Exit-Status.html" accesskey="2">Exit Status</a></li>
+<li><a href="Cleanups-on-Exit.html" accesskey="3">Cleanups on Exit</a></li>
+<li><a href="Aborting-a-Program.html" accesskey="4">Aborting a Program</a></li>
+<li><a href="Termination-Internals.html" accesskey="5">Termination Internals</a></li>
+</ul>
+</div>
+
+
+
+</body>
+</html>

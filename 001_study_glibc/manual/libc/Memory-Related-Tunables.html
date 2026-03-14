@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Memory Related Tunables (The GNU C Library)</title>
+
+<meta name="description" content="Memory Related Tunables (The GNU C Library)">
+<meta name="keywords" content="Memory Related Tunables (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Tunables.html" rel="up" title="Tunables">
+<link href="gmon-Tunables.html" rel="next" title="gmon Tunables">
+<link href="Hardware-Capability-Tunables.html" rel="prev" title="Hardware Capability Tunables">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Memory-Related-Tunables">
+<div class="nav-panel">
+<p>
+Next: <a href="gmon-Tunables.html" accesskey="n" rel="next">gmon Tunables</a>, Previous: <a href="Hardware-Capability-Tunables.html" accesskey="p" rel="prev">Hardware Capability Tunables</a>, Up: <a href="Tunables.html" accesskey="u" rel="up">Tunables</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Memory-Related-Tunables-1"><span>39.6 Memory Related Tunables<a class="copiable-link" href="#Memory-Related-Tunables-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-memory-related-tunables"></a>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-glibc_002emem"><span class="category-def">Tunable namespace: </span><span><strong class="def-name">glibc.mem</strong><a class="copiable-link" href="#index-glibc_002emem"> &para;</a></span></dt>
+<dd><p>This tunable namespace supports operations that affect the way the GNU C Library
+and the process manage memory.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-glibc_002emem_002etagging"><span class="category-def">Tunable: </span><span><strong class="def-name">glibc.mem.tagging</strong><a class="copiable-link" href="#index-glibc_002emem_002etagging"> &para;</a></span></dt>
+<dd><p>If the hardware supports memory tagging, this tunable can be used to
+control the way the GNU C Library uses this feature.  At present this is only
+supported on AArch64 systems with the MTE extension; it is ignored for
+all other systems.
+</p>
+<p>This tunable takes a value between 0 and 255 and acts as a bitmask
+that enables various capabilities.
+</p>
+<p>Bit 0 (the least significant bit) causes the <code class="code">malloc</code>
+subsystem to allocate
+tagged memory, with each allocation being assigned a random tag.
+</p>
+<p>Bit 1 enables precise faulting mode for tag violations on systems that
+support deferred tag violation reporting.  This may cause programs
+to run more slowly.
+</p>
+<p>Bit 2 enables either precise or deferred faulting mode for tag violations
+whichever is preferred by the system.
+</p>
+<p>Other bits are currently reserved.
+</p>
+<p>The GNU C Library startup code will automatically enable memory tagging
+support in the kernel if this tunable has any non-zero value.
+</p>
+<p>The default value is &lsquo;<samp class="samp">0</samp>&rsquo;, which disables all memory tagging.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-glibc_002emem_002edecorate_005fmaps"><span class="category-def">Tunable: </span><span><strong class="def-name">glibc.mem.decorate_maps</strong><a class="copiable-link" href="#index-glibc_002emem_002edecorate_005fmaps"> &para;</a></span></dt>
+<dd><p>If the kernel supports naming anonymous virtual memory areas (since
+Linux version 5.17, although not always enabled by some kernel
+configurations), this tunable can be used to control whether
+the GNU C Library decorates the underlying memory obtained from operating
+system with a string describing its usage (for instance, on the thread
+stack created by <code class="code">pthread_create</code> or memory allocated by
+<code class="code">malloc</code>).
+</p>
+<p>The process mappings can be obtained by reading the <code class="code">/proc/&lt;pid&gt;maps</code>
+(with <code class="code">pid</code> being either the <em class="dfn">process ID</em> or <code class="code">self</code> for the
+process own mapping).
+</p>
+<p>This tunable takes a value of 0 and 1, where 1 enables the feature.
+The default value is &lsquo;<samp class="samp">0</samp>&rsquo;, which disables the decoration.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="gmon-Tunables.html">gmon Tunables</a>, Previous: <a href="Hardware-Capability-Tunables.html">Hardware Capability Tunables</a>, Up: <a href="Tunables.html">Tunables</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>String Streams (The GNU C Library)</title>
+
+<meta name="description" content="String Streams (The GNU C Library)">
+<meta name="keywords" content="String Streams (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Other-Kinds-of-Streams.html" rel="up" title="Other Kinds of Streams">
+<link href="Custom-Streams.html" rel="next" title="Custom Streams">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="String-Streams">
+<div class="nav-panel">
+<p>
+Next: <a href="Custom-Streams.html" accesskey="n" rel="next">Programming Your Own Custom Streams</a>, Up: <a href="Other-Kinds-of-Streams.html" accesskey="u" rel="up">Other Kinds of Streams</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="String-Streams-1"><span>12.21.1 String Streams<a class="copiable-link" href="#String-Streams-1"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-stream_002c-for-I_002fO-to-a-string"></a>
+<a class="index-entry-id" id="index-string-stream"></a>
+<p>The <code class="code">fmemopen</code> and <code class="code">open_memstream</code> functions allow you to do
+I/O to a string or memory buffer.  These facilities are declared in
+<samp class="file">stdio.h</samp>.
+<a class="index-entry-id" id="index-stdio_002eh-13"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fmemopen"><span class="category-def">Function: </span><span><code class="def-type">FILE *</code> <strong class="def-name">fmemopen</strong> <code class="def-code-arguments">(void *<var class="var">buf</var>, size_t <var class="var">size</var>, const char *<var class="var">opentype</var>)</code><a class="copiable-link" href="#index-fmemopen"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap lock
+| AC-Unsafe mem lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function opens a stream that allows the access specified by the
+<var class="var">opentype</var> argument, that reads from or writes to the buffer specified
+by the argument <var class="var">buf</var>.  This array must be at least <var class="var">size</var> bytes long.
+</p>
+<p>If you specify a null pointer as the <var class="var">buf</var> argument, <code class="code">fmemopen</code>
+dynamically allocates an array <var class="var">size</var> bytes long (as with <code class="code">malloc</code>;
+see <a class="pxref" href="Unconstrained-Allocation.html">Unconstrained Allocation</a>).  This is really only useful
+if you are going to write things to the buffer and then read them back
+in again, because you have no way of actually getting a pointer to the
+buffer (for this, try <code class="code">open_memstream</code>, below).  The buffer is
+freed when the stream is closed.
+</p>
+<p>The argument <var class="var">opentype</var> is the same as in <code class="code">fopen</code>
+(see <a class="pxref" href="Opening-Streams.html">Opening Streams</a>).  If the <var class="var">opentype</var> specifies
+append mode, then the initial file position is set to the first null
+character in the buffer.  Otherwise the initial file position is at the
+beginning of the buffer.
+</p>
+<p>When a stream open for writing is flushed or closed, a null character
+(zero byte) is written at the end of the buffer if it fits.  You
+should add an extra byte to the <var class="var">size</var> argument to account for this.
+Attempts to write more than <var class="var">size</var> bytes to the buffer result
+in an error.
+</p>
+<p>For a stream open for reading, null characters (zero bytes) in the
+buffer do not count as &ldquo;end of file&rdquo;.  Read operations indicate end of
+file only when the file position advances past <var class="var">size</var> bytes.  So, if
+you want to read characters from a null-terminated string, you should
+supply the length of the string as the <var class="var">size</var> argument.
+</p></dd></dl>
+
+<p>Here is an example of using <code class="code">fmemopen</code> to create a stream for
+reading from a string:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+static char buffer[] = &quot;foobar&quot;;
+
+int
+main (void)
+{
+  int ch;
+  FILE *stream;
+
+  stream = fmemopen (buffer, strlen (buffer), &quot;r&quot;);
+  while ((ch = fgetc (stream)) != EOF)
+    printf (&quot;Got %c\n&quot;, ch);
+  fclose (stream);
+
+  return 0;
+}
+</pre></div>
+
+<p>This program produces the following output:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">Got f
+Got o
+Got o
+Got b
+Got a
+Got r
+</pre></div>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-open_005fmemstream"><span class="category-def">Function: </span><span><code class="def-type">FILE *</code> <strong class="def-name">open_memstream</strong> <code class="def-code-arguments">(char **<var class="var">ptr</var>, size_t *<var class="var">sizeloc</var>)</code><a class="copiable-link" href="#index-open_005fmemstream"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function opens a stream for writing to a buffer.  The buffer is
+allocated dynamically and grown as necessary, using <code class="code">malloc</code>.
+After you&rsquo;ve closed the stream, this buffer is your responsibility to
+clean up using <code class="code">free</code> or <code class="code">realloc</code>.  See <a class="xref" href="Unconstrained-Allocation.html">Unconstrained Allocation</a>.
+</p>
+<p>When the stream is closed with <code class="code">fclose</code> or flushed with
+<code class="code">fflush</code>, the locations <var class="var">ptr</var> and <var class="var">sizeloc</var> are updated to
+contain the pointer to the buffer and its size.  The values thus stored
+remain valid only as long as no further output on the stream takes
+place.  If you do more output, you must flush the stream again to store
+new values before you use them again.
+</p>
+<p>A null character is written at the end of the buffer when the stream
+is flushed, and at the current location when closed (these locations
+may be different if <code class="code">fseek</code> is used).  This null character is
+<em class="emph">not</em> included in the size value stored at <var class="var">sizeloc</var>.
+</p>
+<p>You can move the stream&rsquo;s file position with <code class="code">fseek</code> or
+<code class="code">fseeko</code> (see <a class="pxref" href="File-Positioning.html">File Positioning</a>).  Moving the file position
+past the end of the data already written fills the intervening space
+with zeroes.  Note that seeking backwards into existing written data
+will change the effective &ldquo;end of file&rdquo; used by <code class="code">fflush</code> and
+<code class="code">SEEK_END</code> (and where the trailing null character is written,
+when closed).  Thus, if you wish to do &ldquo;random-access&rdquo; I/O in a
+memstream, it&rsquo;s important to use <code class="code">fseek</code> to move the file
+position to the desired data end (using <code class="code">SEEK_POS</code>) before
+closing it.
+</p></dd></dl>
+
+<p>Here is an example of using <code class="code">open_memstream</code>:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int
+main (void)
+{
+  char *bp;
+  size_t size;
+  FILE *stream;
+
+  stream = open_memstream (&amp;bp, &amp;size);
+  fprintf (stream, &quot;hello&quot;);
+  fflush (stream);
+  printf (&quot;buf = `%s', size = %zu\n&quot;, bp, size);
+  fprintf (stream, &quot;, world&quot;);
+  fclose (stream);
+  printf (&quot;buf = `%s', size = %zu\n&quot;, bp, size);
+  free (bp);
+
+  return 0;
+}
+</pre></div>
+
+<p>This program produces the following output:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">buf = `hello', size = 5
+buf = `hello, world', size = 12
+</pre></div>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Custom-Streams.html">Programming Your Own Custom Streams</a>, Up: <a href="Other-Kinds-of-Streams.html">Other Kinds of Streams</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

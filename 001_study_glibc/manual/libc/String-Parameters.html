@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>String Parameters (The GNU C Library)</title>
+
+<meta name="description" content="String Parameters (The GNU C Library)">
+<meta name="keywords" content="String Parameters (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="System-Configuration.html" rel="up" title="System Configuration">
+<link href="Utility-Minimums.html" rel="prev" title="Utility Minimums">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="String-Parameters">
+<div class="nav-panel">
+<p>
+Previous: <a href="Utility-Minimums.html" accesskey="p" rel="prev">Minimum Values for Utility Limits</a>, Up: <a href="System-Configuration.html" accesskey="u" rel="up">System Configuration Parameters</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="String_002dValued-Parameters"><span>33.12 String-Valued Parameters<a class="copiable-link" href="#String_002dValued-Parameters"> &para;</a></span></h3>
+
+<p>POSIX.2 defines a way to get string-valued parameters from the operating
+system with the function <code class="code">confstr</code>:
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-confstr"><span class="category-def">Function: </span><span><code class="def-type">size_t</code> <strong class="def-name">confstr</strong> <code class="def-code-arguments">(int <var class="var">parameter</var>, char *<var class="var">buf</var>, size_t <var class="var">len</var>)</code><a class="copiable-link" href="#index-confstr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function reads the value of a string-valued system parameter,
+storing the string into <var class="var">len</var> bytes of memory space starting at
+<var class="var">buf</var>.  The <var class="var">parameter</var> argument should be one of the
+&lsquo;<samp class="samp">_CS_</samp>&rsquo; symbols listed below.
+</p>
+<p>The normal return value from <code class="code">confstr</code> is the length of the string
+value that you asked for.  If you supply a null pointer for <var class="var">buf</var>,
+then <code class="code">confstr</code> does not try to store the string; it just returns
+its length.  A value of <code class="code">0</code> indicates an error.
+</p>
+<p>If the string you asked for is too long for the buffer (that is, longer
+than <code class="code"><var class="var">len</var> - 1</code>), then <code class="code">confstr</code> stores just that much
+(leaving room for the terminating null character).  You can tell that
+this has happened because <code class="code">confstr</code> returns a value greater than or
+equal to <var class="var">len</var>.
+</p>
+<p>The following <code class="code">errno</code> error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The value of the <var class="var">parameter</var> is invalid.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>Currently there is just one parameter you can read with <code class="code">confstr</code>:
+</p>
+<dl class="vtable">
+<dt><a id="index-_005fCS_005fPATH"></a><span><code class="code">_CS_PATH</code><a class="copiable-link" href="#index-_005fCS_005fPATH"> &para;</a></span></dt>
+<dd>
+<p>This parameter&rsquo;s value is the recommended default path for searching for
+executable files.  This is the path that a user has by default just
+after logging in.
+</p>
+</dd>
+<dt><a id="index-_005fCS_005fLFS_005fCFLAGS"></a><span><code class="code">_CS_LFS_CFLAGS</code><a class="copiable-link" href="#index-_005fCS_005fLFS_005fCFLAGS"> &para;</a></span></dt>
+<dd>
+<p>The returned string specifies which additional flags must be given to
+the C compiler if a source is compiled using the
+<code class="code">_LARGEFILE_SOURCE</code> feature select macro; see <a class="pxref" href="Feature-Test-Macros.html">Feature Test Macros</a>.
+</p>
+</dd>
+<dt><a id="index-_005fCS_005fLFS_005fLDFLAGS"></a><span><code class="code">_CS_LFS_LDFLAGS</code><a class="copiable-link" href="#index-_005fCS_005fLFS_005fLDFLAGS"> &para;</a></span></dt>
+<dd>
+<p>The returned string specifies which additional flags must be given to
+the linker if a source is compiled using the
+<code class="code">_LARGEFILE_SOURCE</code> feature select macro; see <a class="pxref" href="Feature-Test-Macros.html">Feature Test Macros</a>.
+</p>
+</dd>
+<dt><a id="index-_005fCS_005fLFS_005fLIBS"></a><span><code class="code">_CS_LFS_LIBS</code><a class="copiable-link" href="#index-_005fCS_005fLFS_005fLIBS"> &para;</a></span></dt>
+<dd>
+<p>The returned string specifies which additional libraries must be linked
+to the application if a source is compiled using the
+<code class="code">_LARGEFILE_SOURCE</code> feature select macro; see <a class="pxref" href="Feature-Test-Macros.html">Feature Test Macros</a>.
+</p>
+</dd>
+<dt><a id="index-_005fCS_005fLFS_005fLINTFLAGS"></a><span><code class="code">_CS_LFS_LINTFLAGS</code><a class="copiable-link" href="#index-_005fCS_005fLFS_005fLINTFLAGS"> &para;</a></span></dt>
+<dd>
+<p>The returned string specifies which additional flags must be given to
+the lint tool if a source is compiled using the
+<code class="code">_LARGEFILE_SOURCE</code> feature select macro; see <a class="pxref" href="Feature-Test-Macros.html">Feature Test Macros</a>.
+</p>
+</dd>
+<dt><a id="index-_005fCS_005fLFS64_005fCFLAGS"></a><span><code class="code">_CS_LFS64_CFLAGS</code><a class="copiable-link" href="#index-_005fCS_005fLFS64_005fCFLAGS"> &para;</a></span></dt>
+<dd>
+<p>The returned string specifies which additional flags must be given to
+the C compiler if a source is compiled using the
+<code class="code">_LARGEFILE64_SOURCE</code> feature select macro; see <a class="pxref" href="Feature-Test-Macros.html">Feature Test Macros</a>.
+</p>
+</dd>
+<dt><a id="index-_005fCS_005fLFS64_005fLDFLAGS"></a><span><code class="code">_CS_LFS64_LDFLAGS</code><a class="copiable-link" href="#index-_005fCS_005fLFS64_005fLDFLAGS"> &para;</a></span></dt>
+<dd>
+<p>The returned string specifies which additional flags must be given to
+the linker if a source is compiled using the
+<code class="code">_LARGEFILE64_SOURCE</code> feature select macro; see <a class="pxref" href="Feature-Test-Macros.html">Feature Test Macros</a>.
+</p>
+</dd>
+<dt><a id="index-_005fCS_005fLFS64_005fLIBS"></a><span><code class="code">_CS_LFS64_LIBS</code><a class="copiable-link" href="#index-_005fCS_005fLFS64_005fLIBS"> &para;</a></span></dt>
+<dd>
+<p>The returned string specifies which additional libraries must be linked
+to the application if a source is compiled using the
+<code class="code">_LARGEFILE64_SOURCE</code> feature select macro; see <a class="pxref" href="Feature-Test-Macros.html">Feature Test Macros</a>.
+</p>
+</dd>
+<dt><a id="index-_005fCS_005fLFS64_005fLINTFLAGS"></a><span><code class="code">_CS_LFS64_LINTFLAGS</code><a class="copiable-link" href="#index-_005fCS_005fLFS64_005fLINTFLAGS"> &para;</a></span></dt>
+<dd>
+<p>The returned string specifies which additional flags must be given to
+the lint tool if a source is compiled using the
+<code class="code">_LARGEFILE64_SOURCE</code> feature select macro; see <a class="pxref" href="Feature-Test-Macros.html">Feature Test Macros</a>.
+</p></dd>
+</dl>
+
+<p>The way to use <code class="code">confstr</code> without any arbitrary limit on string size
+is to call it twice: first call it to get the length, allocate the
+buffer accordingly, and then call <code class="code">confstr</code> again to fill the
+buffer, like this:
+</p>
+<div class="example smallexample">
+<div class="group"><pre class="example-preformatted">char *
+get_default_path (void)
+{
+  size_t len = confstr (_CS_PATH, NULL, 0);
+  char *buffer = (char *) xmalloc (len);
+
+  if (confstr (_CS_PATH, buf, len + 1) == 0)
+    {
+      free (buffer);
+      return NULL;
+    }
+
+  return buffer;
+}
+</pre></div></div>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Utility-Minimums.html">Minimum Values for Utility Limits</a>, Up: <a href="System-Configuration.html">System Configuration Parameters</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

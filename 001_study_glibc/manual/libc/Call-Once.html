@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Call Once (The GNU C Library)</title>
+
+<meta name="description" content="Call Once (The GNU C Library)">
+<meta name="keywords" content="Call Once (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="ISO-C-Threads.html" rel="up" title="ISO C Threads">
+<link href="ISO-C-Mutexes.html" rel="next" title="ISO C Mutexes">
+<link href="ISO-C-Thread-Management.html" rel="prev" title="ISO C Thread Management">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Call-Once">
+<div class="nav-panel">
+<p>
+Next: <a href="ISO-C-Mutexes.html" accesskey="n" rel="next">Mutexes</a>, Previous: <a href="ISO-C-Thread-Management.html" accesskey="p" rel="prev">Creation and Control</a>, Up: <a href="ISO-C-Threads.html" accesskey="u" rel="up">ISO C Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Call-Once-1"><span>36.1.3 Call Once<a class="copiable-link" href="#Call-Once-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-call-once"></a>
+<a class="index-entry-id" id="index-single_002dcall-functions"></a>
+
+<p>In order to guarantee single access to a function, the GNU C Library
+implements a <em class="dfn">call once function</em> to ensure a function is only
+called once in the presence of multiple, potentially calling threads.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-once_005fflag"><span class="category-def">Data Type: </span><span><strong class="def-name">once_flag</strong><a class="copiable-link" href="#index-once_005fflag"> &para;</a></span></dt>
+<dd>
+<p>A complete object type capable of holding a flag used by <code class="code">call_once</code>.
+</p>
+<p>As of C23, <code class="code">once_flag</code> is also defined in <samp class="file">stdlib.h</samp>,
+but only for C, not for C++.
+</p></dd></dl>
+
+<dl class="first-defvr def-block">
+<dt class="defvr def-line" id="index-ONCE_005fFLAG_005fINIT"><span class="category-def">Macro: </span><span><strong class="def-name">ONCE_FLAG_INIT</strong><a class="copiable-link" href="#index-ONCE_005fFLAG_005fINIT"> &para;</a></span></dt>
+<dd>
+<p>This value is used to initialize an object of type <code class="code">once_flag</code>.
+</p>
+<p>As of C23, <code class="code">ONCE_FLAG_INIT</code> is also defined in <samp class="file">stdlib.h</samp>,
+but only for C, not for C++.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-call_005fonce"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">call_once</strong> <code class="def-code-arguments">(once_flag *<var class="var">flag</var>, void (*<var class="var">func</var>) (void))</code><a class="copiable-link" href="#index-call_005fonce"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">call_once</code> calls function <var class="var">func</var> exactly once, even if
+invoked from several threads.  The completion of the function
+<var class="var">func</var> synchronizes-with all previous or subsequent calls to
+<code class="code">call_once</code> with the same <code class="code">flag</code> variable.
+</p></dd></dl>
+
+<p>These definitions are from C11, where they appear in <samp class="file">threads.h</samp>.
+In C23, they appear in <samp class="file">stdlib.h</samp> as well as in <samp class="file">threads.h</samp>.
+</p>
+
+</div>
+
+
+
+</body>
+</html>

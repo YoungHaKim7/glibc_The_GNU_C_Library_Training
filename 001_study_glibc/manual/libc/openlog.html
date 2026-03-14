@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>openlog (The GNU C Library)</title>
+
+<meta name="description" content="openlog (The GNU C Library)">
+<meta name="keywords" content="openlog (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Submitting-Syslog-Messages.html" rel="up" title="Submitting Syslog Messages">
+<link href="syslog_003b-vsyslog.html" rel="next" title="syslog; vsyslog">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="openlog">
+<div class="nav-panel">
+<p>
+Next: <a href="syslog_003b-vsyslog.html" accesskey="n" rel="next">syslog, vsyslog</a>, Up: <a href="Submitting-Syslog-Messages.html" accesskey="u" rel="up">Submitting Syslog Messages</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="openlog-1"><span>18.2.1 openlog<a class="copiable-link" href="#openlog-1"> &para;</a></span></h4>
+
+<p>The symbols referred to in this section are declared in the file
+<samp class="file">syslog.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-openlog"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">openlog</strong> <code class="def-code-arguments">(const char *<var class="var">ident</var>, int <var class="var">option</var>, int <var class="var">facility</var>)</code><a class="copiable-link" href="#index-openlog"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p><code class="code">openlog</code> opens or reopens a connection to Syslog in preparation
+for submitting messages.
+</p>
+<p><var class="var">ident</var> is an arbitrary identification string which future
+<code class="code">syslog</code> invocations will prefix to each message.  This is intended
+to identify the source of the message, and people conventionally set it
+to the name of the program that will submit the messages.
+</p>
+<p>If <var class="var">ident</var> is NULL, or if <code class="code">openlog</code> is not called, the default
+identification string used in Syslog messages will be the program name,
+taken from argv[0].
+</p>
+<p>Please note that the string pointer <var class="var">ident</var> will be retained
+internally by the Syslog routines.  You must not free the memory that
+<var class="var">ident</var> points to.  It is also dangerous to pass a reference to an
+automatic variable since leaving the scope would mean ending the
+lifetime of the variable.  If you want to change the <var class="var">ident</var> string,
+you must call <code class="code">openlog</code> again; overwriting the string pointed to by
+<var class="var">ident</var> is not thread-safe.
+</p>
+<p>You can cause the Syslog routines to drop the reference to <var class="var">ident</var> and
+go back to the default string (the program name taken from argv[0]), by
+calling <code class="code">closelog</code>: See <a class="xref" href="closelog.html">closelog</a>.
+</p>
+<p>In particular, if you are writing code for a shared library that might get
+loaded and then unloaded (e.g. a PAM module), and you use <code class="code">openlog</code>,
+you must call <code class="code">closelog</code> before any point where your library might
+get unloaded, as in this example:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">#include &lt;syslog.h&gt;
+
+void
+shared_library_function (void)
+{
+  openlog (&quot;mylibrary&quot;, option, priority);
+
+  syslog (LOG_INFO, &quot;shared library has been invoked&quot;);
+
+  closelog ();
+}
+</pre></div>
+
+<p>Without the call to <code class="code">closelog</code>, future invocations of <code class="code">syslog</code>
+by the program using the shared library may crash, if the library gets
+unloaded and the memory containing the string <code class="code">&quot;mylibrary&quot;</code> becomes
+unmapped.  This is a limitation of the BSD syslog interface.
+</p>
+<p><code class="code">openlog</code> may or may not open the <samp class="file">/dev/log</samp> socket, depending
+on <var class="var">option</var>.  If it does, it tries to open it and connect it as a
+stream socket.  If that doesn&rsquo;t work, it tries to open it and connect it
+as a datagram socket.  The socket has the &ldquo;Close on Exec&rdquo; attribute,
+so the kernel will close it if the process performs an exec.
+</p>
+<p>You don&rsquo;t have to use <code class="code">openlog</code>.  If you call <code class="code">syslog</code> without
+having called <code class="code">openlog</code>, <code class="code">syslog</code> just opens the connection
+implicitly and uses defaults for the information in <var class="var">ident</var> and
+<var class="var">options</var>.
+</p>
+<p><var class="var">options</var> is a bit string, with the bits as defined by the following
+single bit masks:
+</p>
+<dl class="vtable">
+<dt><a id="index-LOG_005fPERROR"></a><span><code class="code">LOG_PERROR</code><a class="copiable-link" href="#index-LOG_005fPERROR"> &para;</a></span></dt>
+<dd><p>If on, <code class="code">openlog</code> sets up the connection so that any <code class="code">syslog</code>
+on this connection writes its message to the calling process&rsquo; Standard
+Error stream in addition to submitting it to Syslog.  If off, <code class="code">syslog</code>
+does not write the message to Standard Error.
+</p>
+</dd>
+<dt><a id="index-LOG_005fCONS"></a><span><code class="code">LOG_CONS</code><a class="copiable-link" href="#index-LOG_005fCONS"> &para;</a></span></dt>
+<dd><p>If on, <code class="code">openlog</code> sets up the connection so that a <code class="code">syslog</code> on
+this connection that fails to submit a message to Syslog writes the
+message instead to system console.  If off, <code class="code">syslog</code> does not write
+to the system console (but of course Syslog may write messages it
+receives to the console).
+</p>
+</dd>
+<dt><a id="index-LOG_005fPID"></a><span><code class="code">LOG_PID</code><a class="copiable-link" href="#index-LOG_005fPID"> &para;</a></span></dt>
+<dd><p>When on, <code class="code">openlog</code> sets up the connection so that a <code class="code">syslog</code>
+on this connection inserts the calling process&rsquo; Process ID (PID) into
+the message.  When off, <code class="code">openlog</code> does not insert the PID.
+</p>
+</dd>
+<dt><a id="index-LOG_005fNDELAY"></a><span><code class="code">LOG_NDELAY</code><a class="copiable-link" href="#index-LOG_005fNDELAY"> &para;</a></span></dt>
+<dd><p>When on, <code class="code">openlog</code> opens and connects the <samp class="file">/dev/log</samp> socket.
+When off, a future <code class="code">syslog</code> call must open and connect the socket.
+</p>
+<p><strong class="strong">Portability note:</strong>  In early systems, the sense of this bit was
+exactly the opposite.
+</p>
+</dd>
+<dt><a id="index-LOG_005fODELAY"></a><span><code class="code">LOG_ODELAY</code><a class="copiable-link" href="#index-LOG_005fODELAY"> &para;</a></span></dt>
+<dd><p>This bit does nothing.  It exists for backward compatibility.
+</p>
+</dd>
+</dl>
+
+<p>If any other bit in <var class="var">options</var> is on, the result is undefined.
+</p>
+<p><var class="var">facility</var> is the default facility code for this connection.  A
+<code class="code">syslog</code> on this connection that specifies default facility causes
+this facility to be associated with the message.  See <code class="code">syslog</code> for
+possible values.  A value of zero means the default, which is
+<code class="code">LOG_USER</code>.
+</p>
+<p>If a Syslog connection is already open when you call <code class="code">openlog</code>,
+<code class="code">openlog</code> &ldquo;reopens&rdquo; the connection.  Reopening is like opening
+except that if you specify zero for the default facility code, the
+default facility code simply remains unchanged and if you specify
+LOG_NDELAY and the socket is already open and connected, <code class="code">openlog</code>
+just leaves it that way.
+</p>
+
+</dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="syslog_003b-vsyslog.html">syslog, vsyslog</a>, Up: <a href="Submitting-Syslog-Messages.html">Submitting Syslog Messages</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

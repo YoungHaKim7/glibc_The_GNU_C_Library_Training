@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>User Database (The GNU C Library)</title>
+
+<meta name="description" content="User Database (The GNU C Library)">
+<meta name="keywords" content="User Database (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Users-and-Groups.html" rel="up" title="Users and Groups">
+<link href="Group-Database.html" rel="next" title="Group Database">
+<link href="User-Accounting-Database.html" rel="prev" title="User Accounting Database">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="User-Database">
+<div class="nav-panel">
+<p>
+Next: <a href="Group-Database.html" accesskey="n" rel="next">Group Database</a>, Previous: <a href="User-Accounting-Database.html" accesskey="p" rel="prev">The User Accounting Database</a>, Up: <a href="Users-and-Groups.html" accesskey="u" rel="up">Users and Groups</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="User-Database-1"><span>31.13 User Database<a class="copiable-link" href="#User-Database-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-user-database"></a>
+<a class="index-entry-id" id="index-password-database"></a>
+<a class="index-entry-id" id="index-_002fetc_002fpasswd"></a>
+
+<p>This section describes how to search and scan the database of registered
+users.  The database itself is kept in the file <samp class="file">/etc/passwd</samp> on
+most systems, but on some systems a special network server gives access
+to it.
+</p>
+<p>Historically, this database included one-way hashes of user
+passphrases, as well as public information about each user
+(such as their user ID and full name).  Many of the names of
+functions and data structures associated with this database, and the
+filename <samp class="file">/etc/passwd</samp> itself, reflect this history.  However,
+the information in this database is available to all users, and it is
+no longer considered safe to make passphrase hashes available to all
+users, so they have been moved to a &ldquo;shadow&rdquo; database that can only
+be accessed with special privileges.
+</p>
+
+<ul class="mini-toc">
+<li><a href="User-Data-Structure.html" accesskey="1">The Data Structure that Describes a User</a></li>
+<li><a href="Lookup-User.html" accesskey="2">Looking Up One User</a></li>
+<li><a href="Scanning-All-Users.html" accesskey="3">Scanning the List of All Users</a></li>
+<li><a href="Writing-a-User-Entry.html" accesskey="4">Writing a User Entry</a></li>
+</ul>
+</div>
+
+
+
+</body>
+</html>

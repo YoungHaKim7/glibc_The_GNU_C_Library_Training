@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Classification of Wide Characters (The GNU C Library)</title>
+
+<meta name="description" content="Classification of Wide Characters (The GNU C Library)">
+<meta name="keywords" content="Classification of Wide Characters (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Character-Handling.html" rel="up" title="Character Handling">
+<link href="Using-Wide-Char-Classes.html" rel="next" title="Using Wide Char Classes">
+<link href="Case-Conversion.html" rel="prev" title="Case Conversion">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Classification-of-Wide-Characters">
+<div class="nav-panel">
+<p>
+Next: <a href="Using-Wide-Char-Classes.html" accesskey="n" rel="next">Notes on using the wide character classes</a>, Previous: <a href="Case-Conversion.html" accesskey="p" rel="prev">Case Conversion</a>, Up: <a href="Character-Handling.html" accesskey="u" rel="up">Character Handling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Character-class-determination-for-wide-characters"><span>4.3 Character class determination for wide characters<a class="copiable-link" href="#Character-class-determination-for-wide-characters"> &para;</a></span></h3>
+
+<p>Amendment&nbsp;1<!-- /@w --> to ISO&nbsp;C90<!-- /@w --> defines functions to classify wide
+characters.  Although the original ISO&nbsp;C90<!-- /@w --> standard already defined
+the type <code class="code">wchar_t</code>, no functions operating on them were defined.
+</p>
+<p>The general design of the classification functions for wide characters
+is more general.  It allows extensions to the set of available
+classifications, beyond those which are always available.  The POSIX
+standard specifies how extensions can be made, and this is already
+implemented in the GNU C Library implementation of the <code class="code">localedef</code>
+program.
+</p>
+<p>The character class functions are normally implemented with bitsets,
+with a bitset per character.  For a given character, the appropriate
+bitset is read from a table and a test is performed as to whether a
+certain bit is set.  Which bit is tested for is determined by the
+class.
+</p>
+<p>For the wide character classification functions this is made visible.
+There is a type classification type defined, a function to retrieve this
+value for a given class, and a function to test whether a given
+character is in this class, using the classification value.  On top of
+this the normal character classification functions as used for
+<code class="code">char</code> objects can be defined.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-wctype_005ft"><span class="category-def">Data type: </span><span><strong class="def-name">wctype_t</strong><a class="copiable-link" href="#index-wctype_005ft"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">wctype_t</code> can hold a value which represents a character class.
+The only defined way to generate such a value is by using the
+<code class="code">wctype</code> function.
+</p>
+<a class="index-entry-id" id="index-wctype_002eh"></a>
+<p>This type is defined in <samp class="file">wctype.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wctype"><span class="category-def">Function: </span><span><code class="def-type">wctype_t</code> <strong class="def-name">wctype</strong> <code class="def-code-arguments">(const char *<var class="var">property</var>)</code><a class="copiable-link" href="#index-wctype"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">wctype</code> returns a value representing a class of wide
+characters which is identified by the string <var class="var">property</var>.  Besides
+some standard properties each locale can define its own ones.  In case
+no property with the given name is known for the current locale
+selected for the <code class="code">LC_CTYPE</code> category, the function returns zero.
+</p>
+<p>The properties known in every locale are:
+</p>
+<table class="multitable">
+<tbody><tr><td width="25%"><code class="code">&quot;alnum&quot;</code></td><td width="25%"><code class="code">&quot;alpha&quot;</code></td><td width="25%"><code class="code">&quot;cntrl&quot;</code></td><td width="25%"><code class="code">&quot;digit&quot;</code></td></tr>
+<tr><td width="25%"><code class="code">&quot;graph&quot;</code></td><td width="25%"><code class="code">&quot;lower&quot;</code></td><td width="25%"><code class="code">&quot;print&quot;</code></td><td width="25%"><code class="code">&quot;punct&quot;</code></td></tr>
+<tr><td width="25%"><code class="code">&quot;space&quot;</code></td><td width="25%"><code class="code">&quot;upper&quot;</code></td><td width="25%"><code class="code">&quot;xdigit&quot;</code></td></tr>
+</tbody>
+</table>
+
+<a class="index-entry-id" id="index-wctype_002eh-1"></a>
+<p>This function is declared in <samp class="file">wctype.h</samp>.
+</p></dd></dl>
+
+<p>To test the membership of a character to one of the non-standard classes
+the ISO&nbsp;C<!-- /@w --> standard defines a completely new function.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-iswctype"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">iswctype</strong> <code class="def-code-arguments">(wint_t <var class="var">wc</var>, wctype_t <var class="var">desc</var>)</code><a class="copiable-link" href="#index-iswctype"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns a nonzero value if <var class="var">wc</var> is in the character
+class specified by <var class="var">desc</var>.  <var class="var">desc</var> must previously be returned
+by a successful call to <code class="code">wctype</code>.
+</p>
+<a class="index-entry-id" id="index-wctype_002eh-2"></a>
+<p>This function is declared in <samp class="file">wctype.h</samp>.
+</p></dd></dl>
+
+<p>To make it easier to use the commonly-used classification functions,
+they are defined in the C library.  There is no need to use
+<code class="code">wctype</code> if the property string is one of the known character
+classes.  In some situations it is desirable to construct the property
+strings, and then it is important that <code class="code">wctype</code> can also handle the
+standard classes.
+</p>
+<a class="index-entry-id" id="index-alphanumeric-character-1"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-iswalnum"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">iswalnum</strong> <code class="def-code-arguments">(wint_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-iswalnum"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns a nonzero value if <var class="var">wc</var> is an alphanumeric
+character (a letter or number); in other words, if either <code class="code">iswalpha</code>
+or <code class="code">iswdigit</code> is true of a character, then <code class="code">iswalnum</code> is also
+true.
+</p>
+<p>This function can be implemented using
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">iswctype (wc, wctype (&quot;alnum&quot;))
+</pre></div>
+
+<a class="index-entry-id" id="index-wctype_002eh-3"></a>
+<p>It is declared in <samp class="file">wctype.h</samp>.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-alphabetic-character-1"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-iswalpha"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">iswalpha</strong> <code class="def-code-arguments">(wint_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-iswalpha"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">wc</var> is an alphabetic character (a letter).  If
+<code class="code">iswlower</code> or <code class="code">iswupper</code> is true of a character, then
+<code class="code">iswalpha</code> is also true.
+</p>
+<p>In some locales, there may be additional characters for which
+<code class="code">iswalpha</code> is true&mdash;letters which are neither upper case nor lower
+case.  But in the standard <code class="code">&quot;C&quot;</code> locale, there are no such
+additional characters.
+</p>
+<p>This function can be implemented using
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">iswctype (wc, wctype (&quot;alpha&quot;))
+</pre></div>
+
+<a class="index-entry-id" id="index-wctype_002eh-4"></a>
+<p>It is declared in <samp class="file">wctype.h</samp>.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-control-character-1"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-iswcntrl"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">iswcntrl</strong> <code class="def-code-arguments">(wint_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-iswcntrl"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">wc</var> is a control character (that is, a character that
+is not a printing character).
+</p>
+<p>This function can be implemented using
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">iswctype (wc, wctype (&quot;cntrl&quot;))
+</pre></div>
+
+<a class="index-entry-id" id="index-wctype_002eh-5"></a>
+<p>It is declared in <samp class="file">wctype.h</samp>.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-digit-character-1"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-iswdigit"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">iswdigit</strong> <code class="def-code-arguments">(wint_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-iswdigit"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">wc</var> is a digit (e.g., &lsquo;<samp class="samp">0</samp>&rsquo; through &lsquo;<samp class="samp">9</samp>&rsquo;).
+Please note that this function does not only return a nonzero value for
+<em class="emph">decimal</em> digits, but for all kinds of digits.  A consequence is
+that code like the following will <strong class="strong">not</strong> work unconditionally for
+wide characters:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">n = 0;
+while (iswdigit (*wc))
+  {
+    n *= 10;
+    n += *wc++ - L'0';
+  }
+</pre></div>
+
+<p>This function can be implemented using
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">iswctype (wc, wctype (&quot;digit&quot;))
+</pre></div>
+
+<a class="index-entry-id" id="index-wctype_002eh-6"></a>
+<p>It is declared in <samp class="file">wctype.h</samp>.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-graphic-character-1"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-iswgraph"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">iswgraph</strong> <code class="def-code-arguments">(wint_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-iswgraph"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">wc</var> is a graphic character; that is, a character
+that has a glyph associated with it.  The whitespace characters are not
+considered graphic.
+</p>
+<p>This function can be implemented using
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">iswctype (wc, wctype (&quot;graph&quot;))
+</pre></div>
+
+<a class="index-entry-id" id="index-wctype_002eh-7"></a>
+<p>It is declared in <samp class="file">wctype.h</samp>.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-lower_002dcase-character-1"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-iswlower"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">iswlower</strong> <code class="def-code-arguments">(wint_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-iswlower"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">wc</var> is a lower-case letter.  The letter need not be
+from the Latin alphabet, any alphabet representable is valid.
+</p>
+<p>This function can be implemented using
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">iswctype (wc, wctype (&quot;lower&quot;))
+</pre></div>
+
+<a class="index-entry-id" id="index-wctype_002eh-8"></a>
+<p>It is declared in <samp class="file">wctype.h</samp>.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-printing-character-1"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-iswprint"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">iswprint</strong> <code class="def-code-arguments">(wint_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-iswprint"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">wc</var> is a printing character.  Printing characters
+include all the graphic characters, plus the space (&lsquo;<samp class="samp"> </samp>&rsquo;) character.
+</p>
+<p>This function can be implemented using
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">iswctype (wc, wctype (&quot;print&quot;))
+</pre></div>
+
+<a class="index-entry-id" id="index-wctype_002eh-9"></a>
+<p>It is declared in <samp class="file">wctype.h</samp>.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-punctuation-character-1"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-iswpunct"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">iswpunct</strong> <code class="def-code-arguments">(wint_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-iswpunct"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">wc</var> is a punctuation character.
+This means any printing character that is not alphanumeric or a space
+character.
+</p>
+<p>This function can be implemented using
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">iswctype (wc, wctype (&quot;punct&quot;))
+</pre></div>
+
+<a class="index-entry-id" id="index-wctype_002eh-10"></a>
+<p>It is declared in <samp class="file">wctype.h</samp>.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-whitespace-character-1"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-iswspace"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">iswspace</strong> <code class="def-code-arguments">(wint_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-iswspace"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">wc</var> is a <em class="dfn">whitespace</em> character.  In the standard
+<code class="code">&quot;C&quot;</code> locale, <code class="code">iswspace</code> returns true for only the standard
+whitespace characters:
+</p>
+<dl class="table">
+<dt><code class="code">L' '</code></dt>
+<dd><p>space
+</p>
+</dd>
+<dt><code class="code">L'\f'</code></dt>
+<dd><p>formfeed
+</p>
+</dd>
+<dt><code class="code">L'\n'</code></dt>
+<dd><p>newline
+</p>
+</dd>
+<dt><code class="code">L'\r'</code></dt>
+<dd><p>carriage return
+</p>
+</dd>
+<dt><code class="code">L'\t'</code></dt>
+<dd><p>horizontal tab
+</p>
+</dd>
+<dt><code class="code">L'\v'</code></dt>
+<dd><p>vertical tab
+</p></dd>
+</dl>
+
+<p>This function can be implemented using
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">iswctype (wc, wctype (&quot;space&quot;))
+</pre></div>
+
+<a class="index-entry-id" id="index-wctype_002eh-11"></a>
+<p>It is declared in <samp class="file">wctype.h</samp>.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-upper_002dcase-character-1"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-iswupper"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">iswupper</strong> <code class="def-code-arguments">(wint_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-iswupper"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">wc</var> is an upper-case letter.  The letter need not be
+from the Latin alphabet, any alphabet representable is valid.
+</p>
+<p>This function can be implemented using
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">iswctype (wc, wctype (&quot;upper&quot;))
+</pre></div>
+
+<a class="index-entry-id" id="index-wctype_002eh-12"></a>
+<p>It is declared in <samp class="file">wctype.h</samp>.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-hexadecimal-digit-character-1"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-iswxdigit"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">iswxdigit</strong> <code class="def-code-arguments">(wint_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-iswxdigit"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">wc</var> is a hexadecimal digit.
+Hexadecimal digits include the normal decimal digits &lsquo;<samp class="samp">0</samp>&rsquo; through
+&lsquo;<samp class="samp">9</samp>&rsquo; and the letters &lsquo;<samp class="samp">A</samp>&rsquo; through &lsquo;<samp class="samp">F</samp>&rsquo; and
+&lsquo;<samp class="samp">a</samp>&rsquo; through &lsquo;<samp class="samp">f</samp>&rsquo;.
+</p>
+<p>This function can be implemented using
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">iswctype (wc, wctype (&quot;xdigit&quot;))
+</pre></div>
+
+<a class="index-entry-id" id="index-wctype_002eh-13"></a>
+<p>It is declared in <samp class="file">wctype.h</samp>.
+</p></dd></dl>
+
+<p>The GNU C Library also provides a function which is not defined in the
+ISO&nbsp;C<!-- /@w --> standard but which is available as a version for single byte
+characters as well.
+</p>
+<a class="index-entry-id" id="index-blank-character-1"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-iswblank"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">iswblank</strong> <code class="def-code-arguments">(wint_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-iswblank"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">wc</var> is a blank character; that is, a space or a tab.
+This function was originally a GNU extension, but was added in ISO&nbsp;C99<!-- /@w -->.
+It is declared in <samp class="file">wchar.h</samp>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Using-Wide-Char-Classes.html">Notes on using the wide character classes</a>, Previous: <a href="Case-Conversion.html">Case Conversion</a>, Up: <a href="Character-Handling.html">Character Handling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

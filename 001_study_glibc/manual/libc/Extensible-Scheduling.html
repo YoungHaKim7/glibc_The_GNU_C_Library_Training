@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Extensible Scheduling (The GNU C Library)</title>
+
+<meta name="description" content="Extensible Scheduling (The GNU C Library)">
+<meta name="keywords" content="Extensible Scheduling (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Priority.html" rel="up" title="Priority">
+<link href="Traditional-Scheduling.html" rel="next" title="Traditional Scheduling">
+<link href="Basic-Scheduling-Functions.html" rel="prev" title="Basic Scheduling Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Extensible-Scheduling">
+<div class="nav-panel">
+<p>
+Next: <a href="Traditional-Scheduling.html" accesskey="n" rel="next">Traditional Scheduling</a>, Previous: <a href="Basic-Scheduling-Functions.html" accesskey="p" rel="prev">Basic Scheduling Functions</a>, Up: <a href="Priority.html" accesskey="u" rel="up">Process CPU Priority And Scheduling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Extensible-Scheduling-1"><span>23.3.4 Extensible Scheduling<a class="copiable-link" href="#Extensible-Scheduling-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-scheduling_002c-extensible"></a>
+
+<p>The type <code class="code">struct sched_attr</code> and the functions <code class="code">sched_setattr</code>
+and <code class="code">sched_getattr</code> are used to implement scheduling policies with
+multiple parameters (not just priority and niceness).
+</p>
+<p>It is expected that these interfaces will be compatible with all future
+scheduling policies.
+</p>
+<p>For additional information about scheduling policies, consult
+the manual pages <a class="url" href="https://man7.org/linux/man-pages/man7/sched.7.html">sched(7)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a> and <a class="url" href="https://man7.org/linux/man-pages/man2/sched_setattr.2.html">sched_setattr(2)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p>
+<p><strong class="strong">Note:</strong> Calling the <code class="code">sched_setattr</code> function is incompatible
+with support for <code class="code">PTHREAD_PRIO_PROTECT</code> mutexes.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-sched_005fattr"><span class="category-def">Data Type: </span><span><strong class="def-name">struct sched_attr</strong><a class="copiable-link" href="#index-struct-sched_005fattr"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">sched_attr</code> structure describes a parameterized scheduling policy.
+</p>
+<p><strong class="strong">Portability note:</strong> In the future, additional fields can be added
+to <code class="code">struct sched_attr</code> at the end, so that the size of this data
+type changes.  Do not use it in places where this matters, such as
+structure fields in installed header files, where such a change could
+impact the application binary interface (ABI).
+</p>
+<p>The following generic fields are available.
+</p>
+<dl class="table">
+<dt><code class="code">size</code></dt>
+<dd><p>The actually used size of the data structure.  See the description of
+the functions <code class="code">sched_setattr</code> and <code class="code">sched_getattr</code> below how this
+field is used to support extension of <code class="code">struct sched_attr</code> with
+more fields.
+</p>
+</dd>
+<dt><code class="code">sched_policy</code></dt>
+<dd><p>The scheduling policy.  This field determines which fields in the
+structure are used, and how the <code class="code">sched_flags</code> field is interpreted.
+</p>
+</dd>
+<dt><code class="code">sched_flags</code></dt>
+<dd><p>Scheduling flags associated with the scheduling policy.
+</p></dd>
+</dl>
+
+<p>In addition to the generic fields, policy-specific fields are available.
+For additional information, consult the manual page
+<a class="url" href="https://man7.org/linux/man-pages/man2/sched_setattr.2.html">sched_setattr(2)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sched_005fsetattr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sched_setattr</strong> <code class="def-code-arguments">(pid_t <var class="var">tid</var>, struct sched_attr *<var class="var">attr</var>, unsigned int flags)</code><a class="copiable-link" href="#index-sched_005fsetattr"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This functions applies the scheduling policy described by
+<code class="code">*<var class="var">attr</var></code> to the thread <var class="var">tid</var> (the value zero denotes the
+current thread).
+</p>
+<p>It is recommended to initialize unused fields to zero, either using
+<code class="code">memset</code>, or using a structure initializer.  The
+<code class="code"><var class="var">attr-&gt;size</var></code> field should be set to <code class="code">sizeof (struct
+sched_attr)</code>, to inform the kernel of the structure version in use.
+</p>
+<p>The <var class="var">flags</var> argument must be zero.  Other values may become
+available in the future.
+</p>
+<p>On failure, <code class="code">sched_setattr</code> returns <em class="math">-1</em> and sets
+<code class="code">errno</code>.  The following errors are related the way
+extensibility is handled.
+</p><dl class="table">
+<dt><code class="code">E2BIG</code></dt>
+<dd><p>A field in <code class="code">*<var class="var">attr</var></code> has a non-zero value, but is unknown to
+the kernel.  The application could try to apply a modified policy, where
+more fields are zero.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The policy in <code class="code"><var class="var">attr</var>-&gt;sched_policy</code> is unknown to the kernel,
+or flags are set in <code class="code"><var class="var">attr</var>-&gt;sched_flags</code> that the kernel does
+not know how to interpret.  The application could try with fewer flags
+set, or a different scheduling policy.
+</p>
+<p>This error also occurs if <var class="var">attr</var> is <code class="code">NULL</code> or <var class="var">flags</var> is
+not zero.
+</p>
+</dd>
+<dt><code class="code">EPERM</code></dt>
+<dd><p>The current thread is not sufficiently privileged to assign the policy,
+either because access to the policy is restricted in general, or because
+the current thread does not have the rights to change the scheduling
+policy of the thread <var class="var">tid</var>.
+</p></dd>
+</dl>
+
+<p>Other error codes depend on the scheduling policy.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sched_005fgetattr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sched_getattr</strong> <code class="def-code-arguments">(pid_t <var class="var">tid</var>, struct sched_attr *<var class="var">attr</var>, unsigned int size, unsigned int flags)</code><a class="copiable-link" href="#index-sched_005fgetattr"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function obtains the scheduling policy of the thread <var class="var">tid</var>
+(zero denotes the current thread) and store it in <code class="code">*<var class="var">attr</var></code>,
+which must have space for at least <var class="var">size</var> bytes.
+</p>
+<p>The <var class="var">flags</var> argument must be zero.  Other values may become
+available in the future.
+</p>
+<p>Upon success, <code class="code"><var class="var">attr</var>-&gt;size</code> contains the size of the structure
+version used by the kernel.  Fields with offsets greater or equal to
+<code class="code"><var class="var">attr</var>-&gt;size</code> may not be overwritten by the kernel.  To obtain
+predictable values for unknown fields, use <code class="code">memset</code> to set all
+<var class="var">size</var> bytes to zero prior to calling <code class="code">sched_getattr</code>.
+</p>
+<p>On failure, <code class="code">sched_getattr</code> returns <em class="math">-1</em> and sets <code class="code">errno</code>.
+If <code class="code">errno</code> is <code class="code">E2BIG</code>, this means that the buffer is not large
+large enough, and the application could retry with a larger buffer.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Traditional-Scheduling.html">Traditional Scheduling</a>, Previous: <a href="Basic-Scheduling-Functions.html">Basic Scheduling Functions</a>, Up: <a href="Priority.html">Process CPU Priority And Scheduling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

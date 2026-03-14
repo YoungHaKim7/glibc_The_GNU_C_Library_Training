@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Case Conversion (The GNU C Library)</title>
+
+<meta name="description" content="Case Conversion (The GNU C Library)">
+<meta name="keywords" content="Case Conversion (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Character-Handling.html" rel="up" title="Character Handling">
+<link href="Classification-of-Wide-Characters.html" rel="next" title="Classification of Wide Characters">
+<link href="Classification-of-Characters.html" rel="prev" title="Classification of Characters">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Case-Conversion">
+<div class="nav-panel">
+<p>
+Next: <a href="Classification-of-Wide-Characters.html" accesskey="n" rel="next">Character class determination for wide characters</a>, Previous: <a href="Classification-of-Characters.html" accesskey="p" rel="prev">Classification of Characters</a>, Up: <a href="Character-Handling.html" accesskey="u" rel="up">Character Handling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Case-Conversion-1"><span>4.2 Case Conversion<a class="copiable-link" href="#Case-Conversion-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-character-case-conversion"></a>
+<a class="index-entry-id" id="index-case-conversion-of-characters"></a>
+<a class="index-entry-id" id="index-converting-case-of-characters"></a>
+
+<p>This section explains the library functions for performing conversions
+such as case mappings on characters.  For example, <code class="code">toupper</code>
+converts any character to upper case if possible.  If the character
+can&rsquo;t be converted, <code class="code">toupper</code> returns it unchanged.
+</p>
+<p>These functions take one argument of type <code class="code">int</code>, which is the
+character to convert, and return the converted character as an
+<code class="code">int</code>.  If the conversion is not applicable to the argument given,
+the argument is returned unchanged.
+</p>
+<p><strong class="strong">Compatibility Note:</strong> In pre-ISO&nbsp;C<!-- /@w --> dialects, instead of
+returning the argument unchanged, these functions may fail when the
+argument is not suitable for the conversion.  Thus for portability, you
+may need to write <code class="code">islower(c) ? toupper(c) : c</code> rather than just
+<code class="code">toupper(c)</code>.
+</p>
+<p>These functions are declared in the header file <samp class="file">ctype.h</samp>.
+<a class="index-entry-id" id="index-ctype_002eh-2"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-tolower"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">tolower</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-tolower"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>If <var class="var">c</var> is an upper-case letter, <code class="code">tolower</code> returns the corresponding
+lower-case letter.  If <var class="var">c</var> is not an upper-case letter,
+<var class="var">c</var> is returned unchanged.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-toupper"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">toupper</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-toupper"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>If <var class="var">c</var> is a lower-case letter, <code class="code">toupper</code> returns the corresponding
+upper-case letter.  Otherwise <var class="var">c</var> is returned unchanged.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-toascii"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">toascii</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-toascii"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function converts <var class="var">c</var> to a 7-bit <code class="code">unsigned char</code> value
+that fits into the US/UK ASCII character set, by clearing the high-order
+bits.  This function is a BSD extension and is also an SVID extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-_005ftolower"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">_tolower</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-_005ftolower"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is identical to <code class="code">tolower</code>, and is provided for compatibility
+with the SVID.  See <a class="xref" href="SVID.html">SVID (The System V Interface Description)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-_005ftoupper"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">_toupper</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-_005ftoupper"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is identical to <code class="code">toupper</code>, and is provided for compatibility
+with the SVID.
+</p></dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Classification-of-Wide-Characters.html">Character class determination for wide characters</a>, Previous: <a href="Classification-of-Characters.html">Classification of Characters</a>, Up: <a href="Character-Handling.html">Character Handling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

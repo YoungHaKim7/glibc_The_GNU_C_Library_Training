@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Duplicating Descriptors (The GNU C Library)</title>
+
+<meta name="description" content="Duplicating Descriptors (The GNU C Library)">
+<meta name="keywords" content="Duplicating Descriptors (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Low_002dLevel-I_002fO.html" rel="up" title="Low-Level I/O">
+<link href="Descriptor-Flags.html" rel="next" title="Descriptor Flags">
+<link href="Control-Operations.html" rel="prev" title="Control Operations">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Duplicating-Descriptors">
+<div class="nav-panel">
+<p>
+Next: <a href="Descriptor-Flags.html" accesskey="n" rel="next">File Descriptor Flags</a>, Previous: <a href="Control-Operations.html" accesskey="p" rel="prev">Control Operations on Files</a>, Up: <a href="Low_002dLevel-I_002fO.html" accesskey="u" rel="up">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Duplicating-Descriptors-1"><span>13.13 Duplicating Descriptors<a class="copiable-link" href="#Duplicating-Descriptors-1"> &para;</a></span></h3>
+
+<a class="index-entry-id" id="index-duplicating-file-descriptors"></a>
+<a class="index-entry-id" id="index-redirecting-input-and-output"></a>
+
+<p>You can <em class="dfn">duplicate</em> a file descriptor, or allocate another file
+descriptor that refers to the same open file as the original.  Duplicate
+descriptors share one file position and one set of file status flags
+(see <a class="pxref" href="File-Status-Flags.html">File Status Flags</a>), but each has its own set of file descriptor
+flags (see <a class="pxref" href="Descriptor-Flags.html">File Descriptor Flags</a>).
+</p>
+<p>The major use of duplicating a file descriptor is to implement
+<em class="dfn">redirection</em> of input or output:  that is, to change the
+file or pipe that a particular file descriptor corresponds to.
+</p>
+<p>You can perform this operation using the <code class="code">fcntl</code> function with the
+<code class="code">F_DUPFD</code> command, but there are also convenient functions
+<code class="code">dup</code> and <code class="code">dup2</code> for duplicating descriptors.
+</p>
+<a class="index-entry-id" id="index-unistd_002eh-3"></a>
+<a class="index-entry-id" id="index-fcntl_002eh-3"></a>
+<p>The <code class="code">fcntl</code> function and flags are declared in <samp class="file">fcntl.h</samp>,
+while prototypes for <code class="code">dup</code> and <code class="code">dup2</code> are in the header file
+<samp class="file">unistd.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-dup"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">dup</strong> <code class="def-code-arguments">(int <var class="var">old</var>)</code><a class="copiable-link" href="#index-dup"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function copies descriptor <var class="var">old</var> to the first available
+descriptor number (the first number not currently open).  It is
+equivalent to <code class="code">fcntl (<var class="var">old</var>, F_DUPFD, 0)</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-dup2"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">dup2</strong> <code class="def-code-arguments">(int <var class="var">old</var>, int <var class="var">new</var>)</code><a class="copiable-link" href="#index-dup2"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function copies the descriptor <var class="var">old</var> to descriptor number
+<var class="var">new</var>.
+</p>
+<p>If <var class="var">old</var> is an invalid descriptor, then <code class="code">dup2</code> does nothing; it
+does not close <var class="var">new</var>.  Otherwise, the new duplicate of <var class="var">old</var>
+replaces any previous meaning of descriptor <var class="var">new</var>, as if <var class="var">new</var>
+were closed first.
+</p>
+<p>If <var class="var">old</var> and <var class="var">new</var> are different numbers, and <var class="var">old</var> is a
+valid descriptor number, then <code class="code">dup2</code> is equivalent to:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">close (<var class="var">new</var>);
+fcntl (<var class="var">old</var>, F_DUPFD, <var class="var">new</var>)
+</pre></div>
+
+<p>However, <code class="code">dup2</code> does this atomically; there is no instant in the
+middle of calling <code class="code">dup2</code> at which <var class="var">new</var> is closed and not yet a
+duplicate of <var class="var">old</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-dup3"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">dup3</strong> <code class="def-code-arguments">(int <var class="var">old</var>, int <var class="var">new</var>, int <var class="var">flags</var>)</code><a class="copiable-link" href="#index-dup3"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is the same as <code class="code">dup2</code> but creates the new
+descriptor as if it had been opened with flags <var class="var">flags</var>.  The only
+allowed flag is <code class="code">O_CLOEXEC</code>.
+</p>
+<p>This function was originally a Linux extension, but was added in
+POSIX.1-2024.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-F_005fDUPFD-1"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">F_DUPFD</strong><a class="copiable-link" href="#index-F_005fDUPFD-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used as the <var class="var">command</var> argument to <code class="code">fcntl</code>, to
+copy the file descriptor given as the first argument.
+</p>
+<p>The form of the call in this case is:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">fcntl (<var class="var">old</var>, F_DUPFD, <var class="var">next-filedes</var>)
+</pre></div>
+
+<p>The <var class="var">next-filedes</var> argument is of type <code class="code">int</code> and specifies that
+the file descriptor returned should be the next available one greater
+than or equal to this value.
+</p>
+<p>The return value from <code class="code">fcntl</code> with this command is normally the value
+of the new file descriptor.  A return value of <em class="math">-1</em> indicates an
+error.  The following <code class="code">errno</code> error conditions are defined for
+this command:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">old</var> argument is invalid.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">next-filedes</var> argument is invalid.
+</p>
+</dd>
+<dt><code class="code">EMFILE</code></dt>
+<dd><p>There are no more file descriptors available&mdash;your program is already
+using the maximum.  In BSD and GNU, the maximum is controlled by a
+resource limit that can be changed; see <a class="pxref" href="Limits-on-Resources.html">Limiting Resource Usage</a>, for
+more information about the <code class="code">RLIMIT_NOFILE</code> limit.
+</p></dd>
+</dl>
+
+<p><code class="code">ENFILE</code> is not a possible error code for <code class="code">dup2</code> because
+<code class="code">dup2</code> does not create a new opening of a file; duplicate
+descriptors do not count toward the limit which <code class="code">ENFILE</code>
+indicates.  <code class="code">EMFILE</code> is possible because it refers to the limit on
+distinct descriptor numbers in use in one process.
+</p></dd></dl>
+
+<p>Here is an example showing how to use <code class="code">dup2</code> to do redirection.
+Typically, redirection of the standard streams (like <code class="code">stdin</code>) is
+done by a shell or shell-like program before calling one of the
+<code class="code">exec</code> functions (see <a class="pxref" href="Executing-a-File.html">Executing a File</a>) to execute a new
+program in a child process.  When the new program is executed, it
+creates and initializes the standard streams to point to the
+corresponding file descriptors, before its <code class="code">main</code> function is
+invoked.
+</p>
+<p>So, to redirect standard input to a file, the shell could do something
+like:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">pid = fork ();
+if (pid == 0)
+  {
+    char *filename;
+    char *program;
+    int file;
+    ...
+    file = TEMP_FAILURE_RETRY (open (filename, O_RDONLY));
+    dup2 (file, STDIN_FILENO);
+    TEMP_FAILURE_RETRY (close (file));
+    execv (program, NULL);
+  }
+</pre></div>
+
+<p>There is also a more detailed example showing how to implement redirection
+in the context of a pipeline of processes in <a class="ref" href="Launching-Jobs.html">Launching Jobs</a>.
+</p>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Descriptor-Flags.html">File Descriptor Flags</a>, Previous: <a href="Control-Operations.html">Control Operations on Files</a>, Up: <a href="Low_002dLevel-I_002fO.html">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

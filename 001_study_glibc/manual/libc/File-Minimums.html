@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>File Minimums (The GNU C Library)</title>
+
+<meta name="description" content="File Minimums (The GNU C Library)">
+<meta name="keywords" content="File Minimums (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="System-Configuration.html" rel="up" title="System Configuration">
+<link href="Pathconf.html" rel="next" title="Pathconf">
+<link href="Options-for-Files.html" rel="prev" title="Options for Files">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="File-Minimums">
+<div class="nav-panel">
+<p>
+Next: <a href="Pathconf.html" accesskey="n" rel="next">Using <code class="code">pathconf</code></a>, Previous: <a href="Options-for-Files.html" accesskey="p" rel="prev">Optional Features in File Support</a>, Up: <a href="System-Configuration.html" accesskey="u" rel="up">System Configuration Parameters</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Minimum-Values-for-File-System-Limits"><span>33.8 Minimum Values for File System Limits<a class="copiable-link" href="#Minimum-Values-for-File-System-Limits"> &para;</a></span></h3>
+
+<p>Here are the names for the POSIX minimum upper bounds for some of the
+above parameters.  The significance of these values is that you can
+safely push to these limits without checking whether the particular
+system you are using can go that far.  In most cases GNU systems do not
+have these strict limitations.  The actual limit should be requested if
+necessary.
+</p>
+<dl class="vtable">
+<dt><a id="index-_005fPOSIX_005fLINK_005fMAX"></a><span><code class="code">_POSIX_LINK_MAX</code><a class="copiable-link" href="#index-_005fPOSIX_005fLINK_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The most restrictive limit permitted by POSIX for the maximum value of a
+file&rsquo;s link count.  The value of this constant is <code class="code">8</code>; thus, you
+can always make up to eight names for a file without running into a
+system limit.
+</p>
+</dd>
+<dt><a id="index-_005fPOSIX_005fMAX_005fCANON"></a><span><code class="code">_POSIX_MAX_CANON</code><a class="copiable-link" href="#index-_005fPOSIX_005fMAX_005fCANON"> &para;</a></span></dt>
+<dd>
+<p>The most restrictive limit permitted by POSIX for the maximum number of
+bytes in a canonical input line from a terminal device.  The value of
+this constant is <code class="code">255</code>.
+</p>
+</dd>
+<dt><a id="index-_005fPOSIX_005fMAX_005fINPUT"></a><span><code class="code">_POSIX_MAX_INPUT</code><a class="copiable-link" href="#index-_005fPOSIX_005fMAX_005fINPUT"> &para;</a></span></dt>
+<dd>
+<p>The most restrictive limit permitted by POSIX for the maximum number of
+bytes in a terminal device input queue (or typeahead buffer).
+See <a class="xref" href="Input-Modes.html">Input Modes</a>.  The value of this constant is <code class="code">255</code>.
+</p>
+</dd>
+<dt><a id="index-_005fPOSIX_005fNAME_005fMAX"></a><span><code class="code">_POSIX_NAME_MAX</code><a class="copiable-link" href="#index-_005fPOSIX_005fNAME_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The most restrictive limit permitted by POSIX for the maximum number of
+bytes in a file name component.  The value of this constant is
+<code class="code">14</code>.
+</p>
+</dd>
+<dt><a id="index-_005fPOSIX_005fPATH_005fMAX"></a><span><code class="code">_POSIX_PATH_MAX</code><a class="copiable-link" href="#index-_005fPOSIX_005fPATH_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The most restrictive limit permitted by POSIX for the maximum number of
+bytes in a file name.  The value of this constant is <code class="code">256</code>.
+</p>
+</dd>
+<dt><a id="index-_005fPOSIX_005fPIPE_005fBUF"></a><span><code class="code">_POSIX_PIPE_BUF</code><a class="copiable-link" href="#index-_005fPOSIX_005fPIPE_005fBUF"> &para;</a></span></dt>
+<dd>
+<p>The most restrictive limit permitted by POSIX for the maximum number of
+bytes that can be written atomically to a pipe.  The value of this
+constant is <code class="code">512</code>.
+</p>
+</dd>
+<dt><a id="index-SYMLINK_005fMAX"></a><span><code class="code">SYMLINK_MAX</code><a class="copiable-link" href="#index-SYMLINK_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>Maximum number of bytes in a symbolic link.
+</p>
+</dd>
+<dt><a id="index-POSIX_005fREC_005fINCR_005fXFER_005fSIZE"></a><span><code class="code">POSIX_REC_INCR_XFER_SIZE</code><a class="copiable-link" href="#index-POSIX_005fREC_005fINCR_005fXFER_005fSIZE"> &para;</a></span></dt>
+<dd>
+<p>Recommended increment for file transfer sizes between the
+<code class="code">POSIX_REC_MIN_XFER_SIZE</code> and <code class="code">POSIX_REC_MAX_XFER_SIZE</code>
+values.
+</p>
+</dd>
+<dt><a id="index-POSIX_005fREC_005fMAX_005fXFER_005fSIZE"></a><span><code class="code">POSIX_REC_MAX_XFER_SIZE</code><a class="copiable-link" href="#index-POSIX_005fREC_005fMAX_005fXFER_005fSIZE"> &para;</a></span></dt>
+<dd>
+<p>Maximum recommended file transfer size.
+</p>
+</dd>
+<dt><a id="index-POSIX_005fREC_005fMIN_005fXFER_005fSIZE"></a><span><code class="code">POSIX_REC_MIN_XFER_SIZE</code><a class="copiable-link" href="#index-POSIX_005fREC_005fMIN_005fXFER_005fSIZE"> &para;</a></span></dt>
+<dd>
+<p>Minimum recommended file transfer size.
+</p>
+</dd>
+<dt><a id="index-POSIX_005fREC_005fXFER_005fALIGN"></a><span><code class="code">POSIX_REC_XFER_ALIGN</code><a class="copiable-link" href="#index-POSIX_005fREC_005fXFER_005fALIGN"> &para;</a></span></dt>
+<dd>
+<p>Recommended file transfer buffer alignment.
+</p></dd>
+</dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Pathconf.html">Using <code class="code">pathconf</code></a>, Previous: <a href="Options-for-Files.html">Optional Features in File Support</a>, Up: <a href="System-Configuration.html">System Configuration Parameters</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Bit Manipulation (The GNU C Library)</title>
+
+<meta name="description" content="Bit Manipulation (The GNU C Library)">
+<meta name="keywords" content="Bit Manipulation (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html" rel="up" title="Top">
+<link href="Date-and-Time.html" rel="next" title="Date and Time">
+<link href="Arithmetic.html" rel="prev" title="Arithmetic">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="chapter-level-extent" id="Bit-Manipulation">
+<div class="nav-panel">
+<p>
+Next: <a href="Date-and-Time.html" accesskey="n" rel="next">Date and Time</a>, Previous: <a href="Arithmetic.html" accesskey="p" rel="prev">Arithmetic Functions</a>, Up: <a href="index.html" accesskey="u" rel="up">Main Menu</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h2 class="chapter" id="Bit-Manipulation-1"><span>21 Bit Manipulation<a class="copiable-link" href="#Bit-Manipulation-1"> &para;</a></span></h2>
+
+<p>This chapter contains information about functions and macros for
+determining the endianness of integer types and manipulating the bits
+of unsigned integers.  These functions and macros are from ISO C23 and
+are declared in the header file <samp class="file">stdbit.h</samp>.
+</p>
+<p>The following macros describe the endianness of integer types.  They
+have values that are integer constant expressions.
+</p>
+<dl class="first-deffn first-defmac-alias-first-deffn def-block">
+<dt class="deffn defmac-alias-deffn def-line" id="index-_005f_005fSTDC_005fENDIAN_005fLITTLE_005f_005f"><span class="category-def">Macro: </span><span><strong class="def-name">__STDC_ENDIAN_LITTLE__</strong><a class="copiable-link" href="#index-_005f_005fSTDC_005fENDIAN_005fLITTLE_005f_005f"> &para;</a></span></dt>
+<dd><p>This macro represents little-endian storage.
+</p></dd></dl>
+
+<dl class="first-deffn first-defmac-alias-first-deffn def-block">
+<dt class="deffn defmac-alias-deffn def-line" id="index-_005f_005fSTDC_005fENDIAN_005fBIG_005f_005f"><span class="category-def">Macro: </span><span><strong class="def-name">__STDC_ENDIAN_BIG__</strong><a class="copiable-link" href="#index-_005f_005fSTDC_005fENDIAN_005fBIG_005f_005f"> &para;</a></span></dt>
+<dd><p>This macro represents big-endian storage.
+</p></dd></dl>
+
+<dl class="first-deffn first-defmac-alias-first-deffn def-block">
+<dt class="deffn defmac-alias-deffn def-line" id="index-_005f_005fSTDC_005fENDIAN_005fNATIVE_005f_005f"><span class="category-def">Macro: </span><span><strong class="def-name">__STDC_ENDIAN_NATIVE__</strong><a class="copiable-link" href="#index-_005f_005fSTDC_005fENDIAN_005fNATIVE_005f_005f"> &para;</a></span></dt>
+<dd><p>This macro equals <code class="code">__STDC_ENDIAN_LITTLE__</code> if integer types are
+stored in memory in little-endian format, and equals
+<code class="code">__STDC_ENDIAN_BIG__</code> if integer types are stored in memory in
+big-endian format.
+</p></dd></dl>
+
+<p>The following functions manipulate the bits of unsigned integers.
+Each function family has functions for the types <code class="code">unsigned char</code>,
+<code class="code">unsigned short</code>, <code class="code">unsigned int</code>, <code class="code">unsigned long int</code>
+and <code class="code">unsigned long long int</code>.  In addition, there is a
+corresponding type-generic macro (not listed below), named the same as
+the functions but without any suffix such as &lsquo;<samp class="samp">_uc</samp>&rsquo;.  The
+type-generic macro can only be used with an argument of an unsigned
+integer type with a width of 8, 16, 32 or 64 bits, or when using
+a compiler with support for
+<a class="uref" href="https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html"><code class="code">__builtin_stdc_bit_ceil</code></a>,
+etc., built-in functions such as GCC 14.1 or later
+any unsigned integer type those built-in functions support.
+In GCC 14.1 that includes support for <code class="code">unsigned __int128</code> and
+<code class="code">unsigned _BitInt(<var class="var">n</var>)</code> if supported by the target.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-stdc_005fleading_005fzeros_005fuc"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_leading_zeros_uc</strong> <code class="def-code-arguments">(unsigned char <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fleading_005fzeros_005fuc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fleading_005fzeros_005fus"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_leading_zeros_us</strong> <code class="def-code-arguments">(unsigned short <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fleading_005fzeros_005fus"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fleading_005fzeros_005fui"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_leading_zeros_ui</strong> <code class="def-code-arguments">(unsigned int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fleading_005fzeros_005fui"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fleading_005fzeros_005ful"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_leading_zeros_ul</strong> <code class="def-code-arguments">(unsigned long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fleading_005fzeros_005ful"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fleading_005fzeros_005full"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_leading_zeros_ull</strong> <code class="def-code-arguments">(unsigned long long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fleading_005fzeros_005full"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">stdc_leading_zeros</code> functions count the number of leading
+(most significant) zero bits in <var class="var">x</var>, starting from the most
+significant bit of the argument type.  If <var class="var">x</var> is zero, they return
+the width of <var class="var">x</var> in bits.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-stdc_005fleading_005fones_005fuc"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_leading_ones_uc</strong> <code class="def-code-arguments">(unsigned char <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fleading_005fones_005fuc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fleading_005fones_005fus"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_leading_ones_us</strong> <code class="def-code-arguments">(unsigned short <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fleading_005fones_005fus"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fleading_005fones_005fui"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_leading_ones_ui</strong> <code class="def-code-arguments">(unsigned int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fleading_005fones_005fui"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fleading_005fones_005ful"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_leading_ones_ul</strong> <code class="def-code-arguments">(unsigned long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fleading_005fones_005ful"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fleading_005fones_005full"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_leading_ones_ull</strong> <code class="def-code-arguments">(unsigned long long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fleading_005fones_005full"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">stdc_leading_ones</code> functions count the number of leading
+(most significant) one bits in <var class="var">x</var>, starting from the most
+significant bit of the argument type.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-stdc_005ftrailing_005fzeros_005fuc"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_trailing_zeros_uc</strong> <code class="def-code-arguments">(unsigned char <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ftrailing_005fzeros_005fuc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ftrailing_005fzeros_005fus"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_trailing_zeros_us</strong> <code class="def-code-arguments">(unsigned short <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ftrailing_005fzeros_005fus"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ftrailing_005fzeros_005fui"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_trailing_zeros_ui</strong> <code class="def-code-arguments">(unsigned int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ftrailing_005fzeros_005fui"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ftrailing_005fzeros_005ful"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_trailing_zeros_ul</strong> <code class="def-code-arguments">(unsigned long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ftrailing_005fzeros_005ful"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ftrailing_005fzeros_005full"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_trailing_zeros_ull</strong> <code class="def-code-arguments">(unsigned long long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ftrailing_005fzeros_005full"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">stdc_trailing_zeros</code> functions count the number of trailing
+(least significant) zero bits in <var class="var">x</var>, starting from the least
+significant bit of the argument type.  If <var class="var">x</var> is zero, they return
+the width of <var class="var">x</var> in bits.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-stdc_005ftrailing_005fones_005fuc"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_trailing_ones_uc</strong> <code class="def-code-arguments">(unsigned char <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ftrailing_005fones_005fuc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ftrailing_005fones_005fus"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_trailing_ones_us</strong> <code class="def-code-arguments">(unsigned short <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ftrailing_005fones_005fus"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ftrailing_005fones_005fui"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_trailing_ones_ui</strong> <code class="def-code-arguments">(unsigned int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ftrailing_005fones_005fui"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ftrailing_005fones_005ful"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_trailing_ones_ul</strong> <code class="def-code-arguments">(unsigned long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ftrailing_005fones_005ful"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ftrailing_005fones_005full"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_trailing_ones_ull</strong> <code class="def-code-arguments">(unsigned long long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ftrailing_005fones_005full"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">stdc_trailing_ones</code> functions count the number of trailing
+(least significant) one bits in <var class="var">x</var>, starting from the least
+significant bit of the argument type.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-stdc_005ffirst_005fleading_005fzero_005fuc"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_leading_zero_uc</strong> <code class="def-code-arguments">(unsigned char <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005fleading_005fzero_005fuc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005fleading_005fzero_005fus"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_leading_zero_us</strong> <code class="def-code-arguments">(unsigned short <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005fleading_005fzero_005fus"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005fleading_005fzero_005fui"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_leading_zero_ui</strong> <code class="def-code-arguments">(unsigned int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005fleading_005fzero_005fui"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005fleading_005fzero_005ful"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_leading_zero_ul</strong> <code class="def-code-arguments">(unsigned long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005fleading_005fzero_005ful"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005fleading_005fzero_005full"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_leading_zero_ull</strong> <code class="def-code-arguments">(unsigned long long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005fleading_005fzero_005full"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">stdc_first_leading_zero</code> functions return the position of
+the most significant zero bit in <var class="var">x</var>, counting from the most
+significant bit of <var class="var">x</var> as 1, or zero if there is no zero bit in
+<var class="var">x</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-stdc_005ffirst_005fleading_005fone_005fuc"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_leading_one_uc</strong> <code class="def-code-arguments">(unsigned char <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005fleading_005fone_005fuc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005fleading_005fone_005fus"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_leading_one_us</strong> <code class="def-code-arguments">(unsigned short <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005fleading_005fone_005fus"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005fleading_005fone_005fui"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_leading_one_ui</strong> <code class="def-code-arguments">(unsigned int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005fleading_005fone_005fui"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005fleading_005fone_005ful"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_leading_one_ul</strong> <code class="def-code-arguments">(unsigned long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005fleading_005fone_005ful"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005fleading_005fone_005full"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_leading_one_ull</strong> <code class="def-code-arguments">(unsigned long long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005fleading_005fone_005full"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">stdc_first_leading_one</code> functions return the position of the
+most significant one bit in <var class="var">x</var>, counting from the most
+significant bit of <var class="var">x</var> as 1, or zero if there is no one bit in
+<var class="var">x</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-stdc_005ffirst_005ftrailing_005fzero_005fuc"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_trailing_zero_uc</strong> <code class="def-code-arguments">(unsigned char <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005ftrailing_005fzero_005fuc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005ftrailing_005fzero_005fus"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_trailing_zero_us</strong> <code class="def-code-arguments">(unsigned short <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005ftrailing_005fzero_005fus"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005ftrailing_005fzero_005fui"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_trailing_zero_ui</strong> <code class="def-code-arguments">(unsigned int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005ftrailing_005fzero_005fui"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005ftrailing_005fzero_005ful"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_trailing_zero_ul</strong> <code class="def-code-arguments">(unsigned long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005ftrailing_005fzero_005ful"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005ftrailing_005fzero_005full"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_trailing_zero_ull</strong> <code class="def-code-arguments">(unsigned long long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005ftrailing_005fzero_005full"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">stdc_first_trailing_zero</code> functions return the position of
+the least significant zero bit in <var class="var">x</var>, counting from the least
+significant bit of <var class="var">x</var> as 1, or zero if there is no zero bit in
+<var class="var">x</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-stdc_005ffirst_005ftrailing_005fone_005fuc"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_trailing_one_uc</strong> <code class="def-code-arguments">(unsigned char <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005ftrailing_005fone_005fuc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005ftrailing_005fone_005fus"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_trailing_one_us</strong> <code class="def-code-arguments">(unsigned short <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005ftrailing_005fone_005fus"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005ftrailing_005fone_005fui"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_trailing_one_ui</strong> <code class="def-code-arguments">(unsigned int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005ftrailing_005fone_005fui"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005ftrailing_005fone_005ful"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_trailing_one_ul</strong> <code class="def-code-arguments">(unsigned long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005ftrailing_005fone_005ful"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005ffirst_005ftrailing_005fone_005full"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_first_trailing_one_ull</strong> <code class="def-code-arguments">(unsigned long long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005ffirst_005ftrailing_005fone_005full"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">stdc_first_trailing_one</code> functions return the position of
+the least significant one bit in <var class="var">x</var>, counting from the least
+significant bit of <var class="var">x</var> as 1, or zero if there is no one bit in
+<var class="var">x</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-stdc_005fcount_005fzeros_005fuc"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_count_zeros_uc</strong> <code class="def-code-arguments">(unsigned char <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fcount_005fzeros_005fuc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fcount_005fzeros_005fus"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_count_zeros_us</strong> <code class="def-code-arguments">(unsigned short <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fcount_005fzeros_005fus"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fcount_005fzeros_005fui"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_count_zeros_ui</strong> <code class="def-code-arguments">(unsigned int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fcount_005fzeros_005fui"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fcount_005fzeros_005ful"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_count_zeros_ul</strong> <code class="def-code-arguments">(unsigned long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fcount_005fzeros_005ful"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fcount_005fzeros_005full"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_count_zeros_ull</strong> <code class="def-code-arguments">(unsigned long long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fcount_005fzeros_005full"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">stdc_count_zeros</code> functions count the number of zero bits in
+<var class="var">x</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-stdc_005fcount_005fones_005fuc"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_count_ones_uc</strong> <code class="def-code-arguments">(unsigned char <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fcount_005fones_005fuc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fcount_005fones_005fus"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_count_ones_us</strong> <code class="def-code-arguments">(unsigned short <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fcount_005fones_005fus"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fcount_005fones_005fui"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_count_ones_ui</strong> <code class="def-code-arguments">(unsigned int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fcount_005fones_005fui"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fcount_005fones_005ful"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_count_ones_ul</strong> <code class="def-code-arguments">(unsigned long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fcount_005fones_005ful"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fcount_005fones_005full"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_count_ones_ull</strong> <code class="def-code-arguments">(unsigned long long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fcount_005fones_005full"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">stdc_count_ones</code> functions count the number of one bits in
+<var class="var">x</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-stdc_005fhas_005fsingle_005fbit_005fuc"><span class="category-def">Function: </span><span><code class="def-type">_Bool</code> <strong class="def-name">stdc_has_single_bit_uc</strong> <code class="def-code-arguments">(unsigned char <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fhas_005fsingle_005fbit_005fuc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fhas_005fsingle_005fbit_005fus"><span class="category-def">Function: </span><span><code class="def-type">_Bool</code> <strong class="def-name">stdc_has_single_bit_us</strong> <code class="def-code-arguments">(unsigned short <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fhas_005fsingle_005fbit_005fus"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fhas_005fsingle_005fbit_005fui"><span class="category-def">Function: </span><span><code class="def-type">_Bool</code> <strong class="def-name">stdc_has_single_bit_ui</strong> <code class="def-code-arguments">(unsigned int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fhas_005fsingle_005fbit_005fui"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fhas_005fsingle_005fbit_005ful"><span class="category-def">Function: </span><span><code class="def-type">_Bool</code> <strong class="def-name">stdc_has_single_bit_ul</strong> <code class="def-code-arguments">(unsigned long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fhas_005fsingle_005fbit_005ful"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fhas_005fsingle_005fbit_005full"><span class="category-def">Function: </span><span><code class="def-type">_Bool</code> <strong class="def-name">stdc_has_single_bit_ull</strong> <code class="def-code-arguments">(unsigned long long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fhas_005fsingle_005fbit_005full"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">stdc_has_single_bit</code> functions return whether <var class="var">x</var> has
+exactly one bit set to one.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-stdc_005fbit_005fwidth_005fuc"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_bit_width_uc</strong> <code class="def-code-arguments">(unsigned char <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005fwidth_005fuc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fbit_005fwidth_005fus"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_bit_width_us</strong> <code class="def-code-arguments">(unsigned short <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005fwidth_005fus"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fbit_005fwidth_005fui"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_bit_width_ui</strong> <code class="def-code-arguments">(unsigned int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005fwidth_005fui"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fbit_005fwidth_005ful"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_bit_width_ul</strong> <code class="def-code-arguments">(unsigned long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005fwidth_005ful"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fbit_005fwidth_005full"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_bit_width_ull</strong> <code class="def-code-arguments">(unsigned long long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005fwidth_005full"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">stdc_bit_width</code> functions return the minimum number of bits
+needed to store <var class="var">x</var>, not counting leading zero bits.  If <var class="var">x</var>
+is zero, they return zero.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-stdc_005fbit_005ffloor_005fuc"><span class="category-def">Function: </span><span><code class="def-type">unsigned char</code> <strong class="def-name">stdc_bit_floor_uc</strong> <code class="def-code-arguments">(unsigned char <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005ffloor_005fuc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fbit_005ffloor_005fus"><span class="category-def">Function: </span><span><code class="def-type">unsigned short</code> <strong class="def-name">stdc_bit_floor_us</strong> <code class="def-code-arguments">(unsigned short <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005ffloor_005fus"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fbit_005ffloor_005fui"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_bit_floor_ui</strong> <code class="def-code-arguments">(unsigned int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005ffloor_005fui"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fbit_005ffloor_005ful"><span class="category-def">Function: </span><span><code class="def-type">unsigned long int</code> <strong class="def-name">stdc_bit_floor_ul</strong> <code class="def-code-arguments">(unsigned long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005ffloor_005ful"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fbit_005ffloor_005full"><span class="category-def">Function: </span><span><code class="def-type">unsigned long long int</code> <strong class="def-name">stdc_bit_floor_ull</strong> <code class="def-code-arguments">(unsigned long long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005ffloor_005full"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">stdc_bit_floor</code> functions return the largest integer power
+of two that is less than or equal to <var class="var">x</var>.  If <var class="var">x</var> is zero,
+they return zero.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-stdc_005fbit_005fceil_005fuc"><span class="category-def">Function: </span><span><code class="def-type">unsigned char</code> <strong class="def-name">stdc_bit_ceil_uc</strong> <code class="def-code-arguments">(unsigned char <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005fceil_005fuc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fbit_005fceil_005fus"><span class="category-def">Function: </span><span><code class="def-type">unsigned short</code> <strong class="def-name">stdc_bit_ceil_us</strong> <code class="def-code-arguments">(unsigned short <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005fceil_005fus"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fbit_005fceil_005fui"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">stdc_bit_ceil_ui</strong> <code class="def-code-arguments">(unsigned int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005fceil_005fui"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fbit_005fceil_005ful"><span class="category-def">Function: </span><span><code class="def-type">unsigned long int</code> <strong class="def-name">stdc_bit_ceil_ul</strong> <code class="def-code-arguments">(unsigned long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005fceil_005ful"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-stdc_005fbit_005fceil_005full"><span class="category-def">Function: </span><span><code class="def-type">unsigned long long int</code> <strong class="def-name">stdc_bit_ceil_ull</strong> <code class="def-code-arguments">(unsigned long long int <var class="var">x</var>)</code><a class="copiable-link" href="#index-stdc_005fbit_005fceil_005full"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">stdc_bit_ceil</code> functions return the smallest integer power
+of two that is greater than or equal to <var class="var">x</var>.  If this cannot be
+represented in the return type, they return zero.
+</p></dd></dl>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Date-and-Time.html">Date and Time</a>, Previous: <a href="Arithmetic.html">Arithmetic Functions</a>, Up: <a href="index.html">Main Menu</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

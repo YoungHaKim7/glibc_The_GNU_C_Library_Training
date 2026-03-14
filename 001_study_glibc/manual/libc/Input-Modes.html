@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Input Modes (The GNU C Library)</title>
+
+<meta name="description" content="Input Modes (The GNU C Library)">
+<meta name="keywords" content="Input Modes (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Terminal-Modes.html" rel="up" title="Terminal Modes">
+<link href="Output-Modes.html" rel="next" title="Output Modes">
+<link href="Setting-Modes.html" rel="prev" title="Setting Modes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+kbd.key {font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Input-Modes">
+<div class="nav-panel">
+<p>
+Next: <a href="Output-Modes.html" accesskey="n" rel="next">Output Modes</a>, Previous: <a href="Setting-Modes.html" accesskey="p" rel="prev">Setting Terminal Modes Properly</a>, Up: <a href="Terminal-Modes.html" accesskey="u" rel="up">Terminal Modes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Input-Modes-1"><span>17.5.4 Input Modes<a class="copiable-link" href="#Input-Modes-1"> &para;</a></span></h4>
+
+<p>This section describes the terminal attribute flags that control
+fairly low-level aspects of input processing: handling of parity errors,
+break signals, flow control, and <kbd class="key">RET</kbd> and <kbd class="key">LFD</kbd> characters.
+</p>
+<p>All of these flags are bits in the <code class="code">c_iflag</code> member of the
+<code class="code">struct termios</code> structure.  The member is an integer, and you
+change flags using the operators <code class="code">&amp;</code>, <code class="code">|</code> and <code class="code">^</code>.  Don&rsquo;t
+try to specify the entire value for <code class="code">c_iflag</code>&mdash;instead, change
+only specific flags and leave the rest untouched (see <a class="pxref" href="Setting-Modes.html">Setting Terminal Modes Properly</a>).
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-INPCK"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">INPCK</strong><a class="copiable-link" href="#index-INPCK"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-parity-checking"></a>
+<p>If this bit is set, input parity checking is enabled.  If it is not set,
+no checking at all is done for parity errors on input; the
+characters are simply passed through to the application.
+</p>
+<p>Parity checking on input processing is independent of whether parity
+detection and generation on the underlying terminal hardware is enabled;
+see <a class="ref" href="Control-Modes.html">Control Modes</a>.  For example, you could clear the <code class="code">INPCK</code>
+input mode flag and set the <code class="code">PARENB</code> control mode flag to ignore
+parity errors on input, but still generate parity on output.
+</p>
+<p>If this bit is set, what happens when a parity error is detected depends
+on whether the <code class="code">IGNPAR</code> or <code class="code">PARMRK</code> bits are set.  If neither
+of these bits are set, a byte with a parity error is passed to the
+application as a <code class="code">'\0'</code> character.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-IGNPAR"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">IGNPAR</strong><a class="copiable-link" href="#index-IGNPAR"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, any byte with a framing or parity error is ignored.
+This is only useful if <code class="code">INPCK</code> is also set.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-PARMRK"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">PARMRK</strong><a class="copiable-link" href="#index-PARMRK"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, input bytes with parity or framing errors are marked
+when passed to the program.  This bit is meaningful only when
+<code class="code">INPCK</code> is set and <code class="code">IGNPAR</code> is not set.
+</p>
+<p>The way erroneous bytes are marked is with two preceding bytes,
+<code class="code">377</code> and <code class="code">0</code>.  Thus, the program actually reads three bytes
+for one erroneous byte received from the terminal.
+</p>
+<p>If a valid byte has the value <code class="code">0377</code>, and <code class="code">ISTRIP</code> (see below)
+is not set, the program might confuse it with the prefix that marks a
+parity error.  So a valid byte <code class="code">0377</code> is passed to the program as
+two bytes, <code class="code">0377</code> <code class="code">0377</code>, in this case.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ISTRIP"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">ISTRIP</strong><a class="copiable-link" href="#index-ISTRIP"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, valid input bytes are stripped to seven bits;
+otherwise, all eight bits are available for programs to read.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-IGNBRK"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">IGNBRK</strong><a class="copiable-link" href="#index-IGNBRK"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, break conditions are ignored.
+</p>
+<a class="index-entry-id" id="index-break-condition_002c-detecting"></a>
+<p>A <em class="dfn">break condition</em> is defined in the context of asynchronous
+serial data transmission as a series of zero-value bits longer than a
+single byte.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-BRKINT"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">BRKINT</strong><a class="copiable-link" href="#index-BRKINT"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set and <code class="code">IGNBRK</code> is not set, a break condition
+clears the terminal input and output queues and raises a <code class="code">SIGINT</code>
+signal for the foreground process group associated with the terminal.
+</p>
+<p>If neither <code class="code">BRKINT</code> nor <code class="code">IGNBRK</code> are set, a break condition is
+passed to the application as a single <code class="code">'\0'</code> character if
+<code class="code">PARMRK</code> is not set, or otherwise as a three-character sequence
+<code class="code">'\377'</code>, <code class="code">'\0'</code>, <code class="code">'\0'</code>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-IGNCR"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">IGNCR</strong><a class="copiable-link" href="#index-IGNCR"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, carriage return characters (<code class="code">'\r'</code>) are
+discarded on input.  Discarding carriage return may be useful on
+terminals that send both carriage return and linefeed when you type the
+<kbd class="key">RET</kbd> key.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ICRNL"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">ICRNL</strong><a class="copiable-link" href="#index-ICRNL"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set and <code class="code">IGNCR</code> is not set, carriage return characters
+(<code class="code">'\r'</code>) received as input are passed to the application as newline
+characters (<code class="code">'\n'</code>).
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-INLCR"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">INLCR</strong><a class="copiable-link" href="#index-INLCR"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, newline characters (<code class="code">'\n'</code>) received as input
+are passed to the application as carriage return characters (<code class="code">'\r'</code>).
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-IXOFF"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">IXOFF</strong><a class="copiable-link" href="#index-IXOFF"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, start/stop control on input is enabled.  In other
+words, the computer sends STOP and START characters as necessary to
+prevent input from coming in faster than programs are reading it.  The
+idea is that the actual terminal hardware that is generating the input
+data responds to a STOP character by suspending transmission, and to a
+START character by resuming transmission.  See <a class="xref" href="Start_002fStop-Characters.html">Special Characters for Flow Control</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-IXON"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">IXON</strong><a class="copiable-link" href="#index-IXON"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, start/stop control on output is enabled.  In other
+words, if the computer receives a STOP character, it suspends output
+until a START character is received.  In this case, the STOP and START
+characters are never passed to the application program.  If this bit is
+not set, then START and STOP can be read as ordinary characters.
+See <a class="xref" href="Start_002fStop-Characters.html">Special Characters for Flow Control</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-IXANY"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">IXANY</strong><a class="copiable-link" href="#index-IXANY"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, any input character restarts output when output has
+been suspended with the STOP character.  Otherwise, only the START
+character restarts output.
+</p>
+<p>This is a BSD extension; it exists only on BSD systems and
+GNU/Linux and GNU/Hurd systems.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-IMAXBEL"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">IMAXBEL</strong><a class="copiable-link" href="#index-IMAXBEL"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, then filling up the terminal input buffer sends a
+BEL character (code <code class="code">007</code>) to the terminal to ring the bell.
+</p>
+<p>This is a BSD extension.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Output-Modes.html">Output Modes</a>, Previous: <a href="Setting-Modes.html">Setting Terminal Modes Properly</a>, Up: <a href="Terminal-Modes.html">Terminal Modes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

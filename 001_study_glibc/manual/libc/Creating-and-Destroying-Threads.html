@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Creating and Destroying Threads (The GNU C Library)</title>
+
+<meta name="description" content="Creating and Destroying Threads (The GNU C Library)">
+<meta name="keywords" content="Creating and Destroying Threads (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="POSIX-Threads.html" rel="up" title="POSIX Threads">
+<link href="Thread_002dspecific-Data.html" rel="next" title="Thread-specific Data">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Creating-and-Destroying-Threads">
+<div class="nav-panel">
+<p>
+Next: <a href="Thread_002dspecific-Data.html" accesskey="n" rel="next">Thread-specific Data</a>, Up: <a href="POSIX-Threads.html" accesskey="u" rel="up">POSIX Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Creating-and-Destroying-Threads-1"><span>36.2.1 Creating and Destroying Threads<a class="copiable-link" href="#Creating-and-Destroying-Threads-1"> &para;</a></span></h4>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fcreate"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_create</strong> <code class="def-code-arguments">(pthread_t *<var class="var">newthread</var>, const pthread_attr_t *<var class="var">attr</var>, void *(*<var class="var">start_routine</var>) (void *), void *<var class="var">arg</var>)</code><a class="copiable-link" href="#index-pthread_005fcreate"> &para;</a></span></dt>
+<dd><p>This function creates a new thread with attributes <var class="var">attr</var>.  This
+thread will call <var class="var">start_routine</var> and pass it <var class="var">arg</var>.  If
+<var class="var">start_routine</var> returns, the thread will exit and the return value
+will become the thread&rsquo;s exit value.  The new thread&rsquo;s ID is stored in
+<var class="var">newthread</var>.  Returns 0 on success.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_create.3.html">pthread_create(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fdetach"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_detach</strong> <code class="def-code-arguments">(pthread_t <var class="var">th</var>)</code><a class="copiable-link" href="#index-pthread_005fdetach"> &para;</a></span></dt>
+<dd><p>Indicates that thread <var class="var">th</var> must clean up after itself
+automatically when it exits, as the parent thread will not call
+<code class="code">pthread_join</code> on it.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_detach.3.html">pthread_detach(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fjoin"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_join</strong> <code class="def-code-arguments">(pthread_t <var class="var">th</var>, void **<var class="var">thread_return</var>)</code><a class="copiable-link" href="#index-pthread_005fjoin"> &para;</a></span></dt>
+<dd><p>Waits for thread <var class="var">th</var> to exit, and stores its return value in
+<var class="var">thread_return</var>.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_join.3.html">pthread_join(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fkill"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_kill</strong> <code class="def-code-arguments">(pthread_t <var class="var">th</var>, int <var class="var">signal</var>)</code><a class="copiable-link" href="#index-pthread_005fkill"> &para;</a></span></dt>
+<dd><p>Sends signal <var class="var">signal</var> to thread <var class="var">th</var>.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_kill.3.html">pthread_kill(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fself"><span class="category-def">Function: </span><span><code class="def-type">pthread_t</code> <strong class="def-name">pthread_self</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-pthread_005fself"> &para;</a></span></dt>
+<dd><p>Returns the ID of the thread which performed the call.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_self.3.html">pthread_self(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<p>Each thread has a set of attributes which are passed to
+<code class="code">pthread_create</code> via the <code class="code">pthread_attr_t</code> type, which should
+be considered an opaque type.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fattr_005finit"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_attr_init</strong> <code class="def-code-arguments">(pthread_attr_t *<var class="var">attr</var>)</code><a class="copiable-link" href="#index-pthread_005fattr_005finit"> &para;</a></span></dt>
+<dd><p>Initializes <var class="var">attr</var> to its default values and allocates any
+resources required.  Once initialized, <var class="var">attr</var> can be modified by
+other <code class="code">pthread_attr_*</code> functions, or used by
+<code class="code">pthread_create</code>.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_attr_init.3.html">pthread_attr_init(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fattr_005fdestroy"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_attr_destroy</strong> <code class="def-code-arguments">(pthread_attr_t *<var class="var">attr</var>)</code><a class="copiable-link" href="#index-pthread_005fattr_005fdestroy"> &para;</a></span></dt>
+<dd><p>When no longer needed, <var class="var">attr</var> should be destroyed with this
+function, which releases any resources allocated.  Note that
+<var class="var">attr</var> is only needed for the <code class="code">pthread_create</code> call, not for
+the running thread itself.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_attr_destroy.3.html">pthread_attr_destroy(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fattr_005fsetdetachstate"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_attr_setdetachstate</strong> <code class="def-code-arguments">(pthread_attr_t *<var class="var">attr</var>, int <var class="var">detachstate</var>)</code><a class="copiable-link" href="#index-pthread_005fattr_005fsetdetachstate"> &para;</a></span></dt>
+<dd><p>Sets the detach state attribute for <var class="var">attr</var>.  This attribute may be one of the following:
+</p>
+<dl class="table">
+<dt><code class="code">PTHREAD_CREATE_DETACHED</code></dt>
+<dd><p>Causes the created thread to be detached, that is, as if
+<code class="code">pthread_detach</code> had been called on it.
+</p>
+</dd>
+<dt><code class="code">PTHREAD_CREATE_JOINABLE</code></dt>
+<dd><p>Causes the created thread to be joinable, that is, <code class="code">pthread_join</code>
+must be called on it.
+</p></dd>
+</dl>
+
+<p>This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_attr_setdetachstate.3.html">pthread_attr_setdetachstate(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fattr_005fgetdetachstate"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_attr_getdetachstate</strong> <code class="def-code-arguments">(const pthread_attr_t *<var class="var">attr</var>, int *<var class="var">detachstate</var>)</code><a class="copiable-link" href="#index-pthread_005fattr_005fgetdetachstate"> &para;</a></span></dt>
+<dd><p>Gets the detach state attribute from <var class="var">attr</var>.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_attr_getdetachstate.3.html">pthread_attr_getdetachstate(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Thread_002dspecific-Data.html">Thread-specific Data</a>, Up: <a href="POSIX-Threads.html">POSIX Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

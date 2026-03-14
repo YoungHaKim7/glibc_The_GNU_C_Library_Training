@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Process Completion (The GNU C Library)</title>
+
+<meta name="description" content="Process Completion (The GNU C Library)">
+<meta name="keywords" content="Process Completion (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Processes.html" rel="up" title="Processes">
+<link href="Process-Completion-Status.html" rel="next" title="Process Completion Status">
+<link href="Executing-a-File.html" rel="prev" title="Executing a File">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Process-Completion">
+<div class="nav-panel">
+<p>
+Next: <a href="Process-Completion-Status.html" accesskey="n" rel="next">Process Completion Status</a>, Previous: <a href="Executing-a-File.html" accesskey="p" rel="prev">Executing a File</a>, Up: <a href="Processes.html" accesskey="u" rel="up">Processes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Process-Completion-1"><span>27.7 Process Completion<a class="copiable-link" href="#Process-Completion-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-process-completion"></a>
+<a class="index-entry-id" id="index-waiting-for-completion-of-child-process"></a>
+<a class="index-entry-id" id="index-testing-exit-status-of-child-process"></a>
+
+<p>The functions described in this section are used to wait for a child
+process to terminate or stop, and determine its status.  These functions
+are declared in the header file <samp class="file">sys/wait.h</samp>.
+<a class="index-entry-id" id="index-sys_002fwait_002eh"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-waitpid"><span class="category-def">Function: </span><span><code class="def-type">pid_t</code> <strong class="def-name">waitpid</strong> <code class="def-code-arguments">(pid_t <var class="var">pid</var>, int *<var class="var">status-ptr</var>, int <var class="var">options</var>)</code><a class="copiable-link" href="#index-waitpid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">waitpid</code> function is used to request status information from a
+child process whose process ID is <var class="var">pid</var>.  Normally, the calling
+process is suspended until the child process makes status information
+available by terminating.
+</p>
+<p>Other values for the <var class="var">pid</var> argument have special interpretations.  A
+value of <code class="code">-1</code> or <code class="code">WAIT_ANY</code> requests status information for
+any child process; a value of <code class="code">0</code> or <code class="code">WAIT_MYPGRP</code> requests
+information for any child process in the same process group as the
+calling process; and any other negative value &minus; <var class="var">pgid</var>
+requests information for any child process whose process group ID is
+<var class="var">pgid</var>.
+</p>
+<p>If status information for a child process is available immediately, this
+function returns immediately without waiting.  If more than one eligible
+child process has status information available, one of them is chosen
+randomly, and its status is returned immediately.  To get the status
+from the other eligible child processes, you need to call <code class="code">waitpid</code>
+again.
+</p>
+<p>The <var class="var">options</var> argument is a bit mask.  Its value should be the
+bitwise OR (that is, the &lsquo;<samp class="samp">|</samp>&rsquo; operator) of zero or more of the
+<code class="code">WNOHANG</code> and <code class="code">WUNTRACED</code> flags.  You can use the
+<code class="code">WNOHANG</code> flag to indicate that the parent process shouldn&rsquo;t wait;
+and the <code class="code">WUNTRACED</code> flag to request status information from stopped
+processes as well as processes that have terminated.
+</p>
+<p>The status information from the child process is stored in the object
+that <var class="var">status-ptr</var> points to, unless <var class="var">status-ptr</var> is a null pointer.
+</p>
+<p>This function is a cancellation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time <code class="code">waitpid</code> is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this calls to <code class="code">waitpid</code> should be
+protected using cancellation handlers.
+</p>
+<p>The return value is normally the process ID of the child process whose
+status is reported.  If there are child processes but none of them is
+waiting to be noticed, <code class="code">waitpid</code> will block until one is.  However,
+if the <code class="code">WNOHANG</code> option was specified, <code class="code">waitpid</code> will return
+zero instead of blocking.
+</p>
+<p>If a specific PID to wait for was given to <code class="code">waitpid</code>, it will
+ignore all other children (if any).  Therefore if there are children
+waiting to be noticed but the child whose PID was specified is not one
+of them, <code class="code">waitpid</code> will block or return zero as described above.
+</p>
+<p>A value of <code class="code">-1</code> is returned in case of error.  The following
+<code class="code">errno</code> error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EINTR</code></dt>
+<dd><p>The function was interrupted by delivery of a signal to the calling
+process.  See <a class="xref" href="Interrupted-Primitives.html">Primitives Interrupted by Signals</a>.
+</p>
+</dd>
+<dt><code class="code">ECHILD</code></dt>
+<dd><p>There are no child processes to wait for, or the specified <var class="var">pid</var>
+is not a child of the calling process.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>An invalid value was provided for the <var class="var">options</var> argument.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>These symbolic constants are defined as values for the <var class="var">pid</var> argument
+to the <code class="code">waitpid</code> function.
+</p>
+<dl class="vtable">
+<dt><a id="index-WAIT_005fANY"></a><span><code class="code">WAIT_ANY</code><a class="copiable-link" href="#index-WAIT_005fANY"> &para;</a></span></dt>
+<dd>
+<p>This constant macro (whose value is <code class="code">-1</code>) specifies that
+<code class="code">waitpid</code> should return status information about any child process.
+</p>
+
+</dd>
+<dt><a id="index-WAIT_005fMYPGRP"></a><span><code class="code">WAIT_MYPGRP</code><a class="copiable-link" href="#index-WAIT_005fMYPGRP"> &para;</a></span></dt>
+<dd><p>This constant (with value <code class="code">0</code>) specifies that <code class="code">waitpid</code> should
+return status information about any child process in the same process
+group as the calling process.
+</p></dd>
+</dl>
+
+<p>These symbolic constants are defined as flags for the <var class="var">options</var>
+argument to the <code class="code">waitpid</code> function.  You can bitwise-OR the flags
+together to obtain a value to use as the argument.
+</p>
+<dl class="vtable">
+<dt><a id="index-WNOHANG"></a><span><code class="code">WNOHANG</code><a class="copiable-link" href="#index-WNOHANG"> &para;</a></span></dt>
+<dd>
+<p>This flag specifies that <code class="code">waitpid</code> should return immediately
+instead of waiting, if there is no child process ready to be noticed.
+</p>
+</dd>
+<dt><a id="index-WUNTRACED"></a><span><code class="code">WUNTRACED</code><a class="copiable-link" href="#index-WUNTRACED"> &para;</a></span></dt>
+<dd>
+<p>This flag specifies that <code class="code">waitpid</code> should report the status of any
+child processes that have been stopped as well as those that have
+terminated.
+</p></dd>
+</dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wait"><span class="category-def">Function: </span><span><code class="def-type">pid_t</code> <strong class="def-name">wait</strong> <code class="def-code-arguments">(int *<var class="var">status-ptr</var>)</code><a class="copiable-link" href="#index-wait"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is a simplified version of <code class="code">waitpid</code>, and is used to wait
+until any one child process terminates.  The call:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">wait (&amp;status)
+</pre></div>
+
+<p>is exactly equivalent to:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">waitpid (-1, &amp;status, 0)
+</pre></div>
+
+<p>This function is a cancellation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time <code class="code">wait</code> is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this calls to <code class="code">wait</code> should be
+protected using cancellation handlers.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wait4"><span class="category-def">Function: </span><span><code class="def-type">pid_t</code> <strong class="def-name">wait4</strong> <code class="def-code-arguments">(pid_t <var class="var">pid</var>, int *<var class="var">status-ptr</var>, int <var class="var">options</var>, struct rusage *<var class="var">usage</var>)</code><a class="copiable-link" href="#index-wait4"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>If <var class="var">usage</var> is a null pointer, <code class="code">wait4</code> is equivalent to
+<code class="code">waitpid (<var class="var">pid</var>, <var class="var">status-ptr</var>, <var class="var">options</var>)</code>.
+</p>
+<p>If <var class="var">usage</var> is not null, <code class="code">wait4</code> stores usage figures for the
+child process in <code class="code">*<var class="var">rusage</var></code> (but only if the child has
+terminated, not if it has stopped).  See <a class="xref" href="Resource-Usage.html">Resource Usage</a>.
+</p>
+<p>This function is a BSD extension.
+</p></dd></dl>
+
+<p>Here&rsquo;s an example of how to use <code class="code">waitpid</code> to get the status from
+all child processes that have terminated, without ever waiting.  This
+function is designed to be a handler for <code class="code">SIGCHLD</code>, the signal that
+indicates that at least one child process has terminated.
+</p>
+<div class="example smallexample">
+<div class="group"><pre class="example-preformatted">void
+sigchld_handler (int signum)
+{
+  int pid, status, serrno;
+  serrno = errno;
+  while (1)
+    {
+      pid = waitpid (WAIT_ANY, &amp;status, WNOHANG);
+      if (pid &lt; 0)
+        {
+          perror (&quot;waitpid&quot;);
+          break;
+        }
+      if (pid == 0)
+        break;
+      notice_termination (pid, status);
+    }
+  errno = serrno;
+}
+</pre></div></div>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Process-Completion-Status.html">Process Completion Status</a>, Previous: <a href="Executing-a-File.html">Executing a File</a>, Up: <a href="Processes.html">Processes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

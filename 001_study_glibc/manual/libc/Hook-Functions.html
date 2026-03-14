@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Hook Functions (The GNU C Library)</title>
+
+<meta name="description" content="Hook Functions (The GNU C Library)">
+<meta name="keywords" content="Hook Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Custom-Streams.html" rel="up" title="Custom Streams">
+<link href="Streams-and-Cookies.html" rel="prev" title="Streams and Cookies">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Hook-Functions">
+<div class="nav-panel">
+<p>
+Previous: <a href="Streams-and-Cookies.html" accesskey="p" rel="prev">Custom Streams and Cookies</a>, Up: <a href="Custom-Streams.html" accesskey="u" rel="up">Programming Your Own Custom Streams</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Custom-Stream-Hook-Functions"><span>12.21.2.2 Custom Stream Hook Functions<a class="copiable-link" href="#Custom-Stream-Hook-Functions"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-hook-functions-_0028of-custom-streams_0029"></a>
+
+<p>Here are more details on how you should define the four hook functions
+that a custom stream needs.
+</p>
+<p>You should define the function to read data from the cookie as:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">ssize_t <var class="var">reader</var> (void *<var class="var">cookie</var>, char *<var class="var">buffer</var>, size_t <var class="var">size</var>)
+</pre></div>
+
+<p>This is very similar to the <code class="code">read</code> function; see <a class="ref" href="I_002fO-Primitives.html">Input and Output Primitives</a>.  Your function should transfer up to <var class="var">size</var> bytes into
+the <var class="var">buffer</var>, and return the number of bytes read, or zero to
+indicate end-of-file.  You can return a value of <code class="code">-1</code> to indicate
+an error.
+</p>
+<p>You should define the function to write data to the cookie as:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">ssize_t <var class="var">writer</var> (void *<var class="var">cookie</var>, const char *<var class="var">buffer</var>, size_t <var class="var">size</var>)
+</pre></div>
+
+<p>This is very similar to the <code class="code">write</code> function; see <a class="ref" href="I_002fO-Primitives.html">Input and Output Primitives</a>.  Your function should transfer up to <var class="var">size</var> bytes from
+the buffer, and return the number of bytes written.  You can return a
+value of <code class="code">0</code> to indicate an error.  You must not return any
+negative value.
+</p>
+<p>You should define the function to perform seek operations on the cookie
+as:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">int <var class="var">seeker</var> (void *<var class="var">cookie</var>, off64_t *<var class="var">position</var>, int <var class="var">whence</var>)
+</pre></div>
+
+<p>For this function, the <var class="var">position</var> and <var class="var">whence</var> arguments are
+interpreted as for <code class="code">fgetpos</code>; see <a class="ref" href="Portable-Positioning.html">Portable File-Position Functions</a>.
+</p>
+<p>After doing the seek operation, your function should store the resulting
+file position relative to the beginning of the file in <var class="var">position</var>.
+Your function should return a value of <code class="code">0</code> on success and <code class="code">-1</code>
+to indicate an error.
+</p>
+<p>You should define the function to do cleanup operations on the cookie
+appropriate for closing the stream as:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">int <var class="var">cleaner</var> (void *<var class="var">cookie</var>)
+</pre></div>
+
+<p>Your function should return <code class="code">-1</code> to indicate an error, and <code class="code">0</code>
+otherwise.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-cookie_005fread_005ffunction_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">cookie_read_function_t</strong><a class="copiable-link" href="#index-cookie_005fread_005ffunction_005ft"> &para;</a></span></dt>
+<dd>
+<p>This is the data type that the read function for a custom stream should have.
+If you declare the function as shown above, this is the type it will have.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-cookie_005fwrite_005ffunction_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">cookie_write_function_t</strong><a class="copiable-link" href="#index-cookie_005fwrite_005ffunction_005ft"> &para;</a></span></dt>
+<dd>
+<p>The data type of the write function for a custom stream.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-cookie_005fseek_005ffunction_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">cookie_seek_function_t</strong><a class="copiable-link" href="#index-cookie_005fseek_005ffunction_005ft"> &para;</a></span></dt>
+<dd>
+<p>The data type of the seek function for a custom stream.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-cookie_005fclose_005ffunction_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">cookie_close_function_t</strong><a class="copiable-link" href="#index-cookie_005fclose_005ffunction_005ft"> &para;</a></span></dt>
+<dd>
+<p>The data type of the close function for a custom stream.
+</p></dd></dl>
+
+
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Streams-and-Cookies.html">Custom Streams and Cookies</a>, Up: <a href="Custom-Streams.html">Programming Your Own Custom Streams</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

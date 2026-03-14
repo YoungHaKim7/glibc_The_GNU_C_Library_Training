@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Cleanups on Exit (The GNU C Library)</title>
+
+<meta name="description" content="Cleanups on Exit (The GNU C Library)">
+<meta name="keywords" content="Cleanups on Exit (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Program-Termination.html" rel="up" title="Program Termination">
+<link href="Aborting-a-Program.html" rel="next" title="Aborting a Program">
+<link href="Exit-Status.html" rel="prev" title="Exit Status">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Cleanups-on-Exit">
+<div class="nav-panel">
+<p>
+Next: <a href="Aborting-a-Program.html" accesskey="n" rel="next">Aborting a Program</a>, Previous: <a href="Exit-Status.html" accesskey="p" rel="prev">Exit Status</a>, Up: <a href="Program-Termination.html" accesskey="u" rel="up">Program Termination</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Cleanups-on-Exit-1"><span>26.7.3 Cleanups on Exit<a class="copiable-link" href="#Cleanups-on-Exit-1"> &para;</a></span></h4>
+
+<p>Your program can arrange to run its own cleanup functions if normal
+termination happens.  If you are writing a library for use in various
+application programs, then it is unreliable to insist that all
+applications call the library&rsquo;s cleanup functions explicitly before
+exiting.  It is much more robust to make the cleanup invisible to the
+application, by setting up a cleanup function in the library itself
+using <code class="code">atexit</code> or <code class="code">on_exit</code>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-atexit"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">atexit</strong> <code class="def-code-arguments">(void (*<var class="var">function</var>) (void))</code><a class="copiable-link" href="#index-atexit"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap lock
+| AC-Unsafe lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">atexit</code> function registers the function <var class="var">function</var> to be
+called at normal program termination.  The <var class="var">function</var> is called with
+no arguments.
+</p>
+<p>The return value from <code class="code">atexit</code> is zero on success and nonzero if
+the function cannot be registered.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-on_005fexit"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">on_exit</strong> <code class="def-code-arguments">(void (*<var class="var">function</var>)(int <var class="var">status</var>, void *<var class="var">arg</var>), void *<var class="var">arg</var>)</code><a class="copiable-link" href="#index-on_005fexit"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap lock
+| AC-Unsafe lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is a somewhat more powerful variant of <code class="code">atexit</code>.  It
+accepts two arguments, a function <var class="var">function</var> and an arbitrary
+pointer <var class="var">arg</var>.  At normal program termination, the <var class="var">function</var> is
+called with two arguments:  the <var class="var">status</var> value passed to <code class="code">exit</code>,
+and the <var class="var">arg</var>.
+</p>
+<p>This function is included in the GNU C Library only for compatibility
+for SunOS, and may not be supported by other implementations.
+</p></dd></dl>
+
+<p>Here&rsquo;s a trivial program that illustrates the use of <code class="code">exit</code> and
+<code class="code">atexit</code>:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+void
+bye (void)
+{
+  puts (&quot;Goodbye, cruel world....&quot;);
+}
+
+int
+main (void)
+{
+  atexit (bye);
+  exit (EXIT_SUCCESS);
+}
+</pre></div>
+
+<p>When this program is executed, it just prints the message and exits.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Aborting-a-Program.html">Aborting a Program</a>, Previous: <a href="Exit-Status.html">Exit Status</a>, Up: <a href="Program-Termination.html">Program Termination</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

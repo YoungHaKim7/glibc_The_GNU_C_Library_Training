@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Printf Extension Example (The GNU C Library)</title>
+
+<meta name="description" content="Printf Extension Example (The GNU C Library)">
+<meta name="keywords" content="Printf Extension Example (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Customizing-Printf.html" rel="up" title="Customizing Printf">
+<link href="Predefined-Printf-Handlers.html" rel="next" title="Predefined Printf Handlers">
+<link href="Defining-the-Output-Handler.html" rel="prev" title="Defining the Output Handler">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Printf-Extension-Example">
+<div class="nav-panel">
+<p>
+Next: <a href="Predefined-Printf-Handlers.html" accesskey="n" rel="next">Predefined <code class="code">printf</code> Handlers</a>, Previous: <a href="Defining-the-Output-Handler.html" accesskey="p" rel="prev">Defining the Output Handler</a>, Up: <a href="Customizing-Printf.html" accesskey="u" rel="up">Customizing <code class="code">printf</code></a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="printf-Extension-Example"><span>12.13.4 <code class="code">printf</code> Extension Example<a class="copiable-link" href="#printf-Extension-Example"> &para;</a></span></h4>
+
+<p>Here is an example showing how to define a <code class="code">printf</code> handler function.
+This program defines a data structure called a <code class="code">Widget</code> and
+defines the &lsquo;<samp class="samp">%W</samp>&rsquo; conversion to print information about <code class="code">Widget&nbsp;*</code><!-- /@w -->
+arguments, including the pointer value and the name stored in the data
+structure.  The &lsquo;<samp class="samp">%W</samp>&rsquo; conversion supports the minimum field width and
+left-justification options, but ignores everything else.
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;printf.h&gt;
+
+</pre><div class="group"><pre class="example-preformatted">typedef struct
+{
+  char *name;
+}
+Widget;
+</pre></div><pre class="example-preformatted">
+
+int
+print_widget (FILE *stream,
+              const struct printf_info *info,
+              const void *const *args)
+{
+  const Widget *w;
+  char *buffer;
+  int len;
+
+  /* <span class="r">Format the output into a string.</span> */
+  w = *((const Widget **) (args[0]));
+  len = asprintf (&amp;buffer, &quot;&lt;Widget %p: %s&gt;&quot;, w, w-&gt;name);
+  if (len == -1)
+    return -1;
+
+  /* <span class="r">Pad to the minimum field width and print to the stream.</span> */
+  len = fprintf (stream, &quot;%*s&quot;,
+                 (info-&gt;left ? -info-&gt;width : info-&gt;width),
+                 buffer);
+
+  /* <span class="r">Clean up and return.</span> */
+  free (buffer);
+  return len;
+}
+
+
+int
+print_widget_arginfo (const struct printf_info *info, size_t n,
+                      int *argtypes)
+{
+  /* <span class="r">We always take exactly one argument and this is a pointer to the
+     structure..</span> */
+  if (n &gt; 0)
+    argtypes[0] = PA_POINTER;
+  return 1;
+}
+
+
+int
+main (void)
+{
+  /* <span class="r">Make a widget to print.</span> */
+  Widget mywidget;
+  mywidget.name = &quot;mywidget&quot;;
+
+  /* <span class="r">Register the print function for widgets.</span> */
+  register_printf_function ('W', print_widget, print_widget_arginfo);
+
+  /* <span class="r">Now print the widget.</span> */
+  printf (&quot;|%W|\n&quot;, &amp;mywidget);
+  printf (&quot;|%35W|\n&quot;, &amp;mywidget);
+  printf (&quot;|%-35W|\n&quot;, &amp;mywidget);
+
+  return 0;
+}
+</pre></div>
+
+<p>The output produced by this program looks like:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">|&lt;Widget 0xffeffb7c: mywidget&gt;|
+|      &lt;Widget 0xffeffb7c: mywidget&gt;|
+|&lt;Widget 0xffeffb7c: mywidget&gt;      |
+</pre></div>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Predefined-Printf-Handlers.html">Predefined <code class="code">printf</code> Handlers</a>, Previous: <a href="Defining-the-Output-Handler.html">Defining the Output Handler</a>, Up: <a href="Customizing-Printf.html">Customizing <code class="code">printf</code></a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

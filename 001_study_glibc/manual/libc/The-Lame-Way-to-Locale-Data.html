@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>The Lame Way to Locale Data (The GNU C Library)</title>
+
+<meta name="description" content="The Lame Way to Locale Data (The GNU C Library)">
+<meta name="keywords" content="The Lame Way to Locale Data (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Locale-Information.html" rel="up" title="Locale Information">
+<link href="The-Elegant-and-Fast-Way.html" rel="next" title="The Elegant and Fast Way">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="The-Lame-Way-to-Locale-Data">
+<div class="nav-panel">
+<p>
+Next: <a href="The-Elegant-and-Fast-Way.html" accesskey="n" rel="next">Pinpoint Access to Locale Data</a>, Up: <a href="Locale-Information.html" accesskey="u" rel="up">Accessing Locale Information</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="localeconv_003a-It-is-portable-but-_002e_002e_002e"><span>7.7.1 <code class="code">localeconv</code>: It is portable but &hellip;<a class="copiable-link" href="#localeconv_003a-It-is-portable-but-_002e_002e_002e"> &para;</a></span></h4>
+
+<p>Together with the <code class="code">setlocale</code> function the ISO&nbsp;C<!-- /@w --> people
+invented the <code class="code">localeconv</code> function.  It is a masterpiece of poor
+design.  It is expensive to use, not extensible, and not generally
+usable as it provides access to only <code class="code">LC_MONETARY</code> and
+<code class="code">LC_NUMERIC</code> related information.  Nevertheless, if it is
+applicable to a given situation it should be used since it is very
+portable.  The function <code class="code">strfmon</code> formats monetary amounts
+according to the selected locale using this information.
+<a class="index-entry-id" id="index-locale_002eh-1"></a>
+<a class="index-entry-id" id="index-monetary-value-formatting"></a>
+<a class="index-entry-id" id="index-numeric-value-formatting"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-localeconv"><span class="category-def">Function: </span><span><code class="def-type">struct lconv *</code> <strong class="def-name">localeconv</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-localeconv"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:localeconv locale
+| AS-Unsafe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">localeconv</code> function returns a pointer to a structure whose
+components contain information about how numeric and monetary values
+should be formatted in the current locale.
+</p>
+<p>You should not modify the structure or its contents.  The structure might
+be overwritten by subsequent calls to <code class="code">localeconv</code>, or by calls to
+<code class="code">setlocale</code>, but no other function in the library overwrites this
+value.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-lconv"><span class="category-def">Data Type: </span><span><strong class="def-name">struct lconv</strong><a class="copiable-link" href="#index-struct-lconv"> &para;</a></span></dt>
+<dd>
+<p><code class="code">localeconv</code>&rsquo;s return value is of this data type.  Its elements are
+described in the following subsections.
+</p></dd></dl>
+
+<p>If a member of the structure <code class="code">struct lconv</code> has type <code class="code">char</code>,
+and the value is <code class="code">CHAR_MAX</code>, it means that the current locale has
+no value for that parameter.
+</p>
+
+<ul class="mini-toc">
+<li><a href="General-Numeric.html" accesskey="1">Generic Numeric Formatting Parameters</a></li>
+<li><a href="Currency-Symbol.html" accesskey="2">Printing the Currency Symbol</a></li>
+<li><a href="Sign-of-Money-Amount.html" accesskey="3">Printing the Sign of a Monetary Amount</a></li>
+</ul>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="The-Elegant-and-Fast-Way.html">Pinpoint Access to Locale Data</a>, Up: <a href="Locale-Information.html">Accessing Locale Information</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

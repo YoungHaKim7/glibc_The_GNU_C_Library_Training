@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Descriptor Flags (The GNU C Library)</title>
+
+<meta name="description" content="Descriptor Flags (The GNU C Library)">
+<meta name="keywords" content="Descriptor Flags (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Low_002dLevel-I_002fO.html" rel="up" title="Low-Level I/O">
+<link href="File-Status-Flags.html" rel="next" title="File Status Flags">
+<link href="Duplicating-Descriptors.html" rel="prev" title="Duplicating Descriptors">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Descriptor-Flags">
+<div class="nav-panel">
+<p>
+Next: <a href="File-Status-Flags.html" accesskey="n" rel="next">File Status Flags</a>, Previous: <a href="Duplicating-Descriptors.html" accesskey="p" rel="prev">Duplicating Descriptors</a>, Up: <a href="Low_002dLevel-I_002fO.html" accesskey="u" rel="up">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="File-Descriptor-Flags"><span>13.14 File Descriptor Flags<a class="copiable-link" href="#File-Descriptor-Flags"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-file-descriptor-flags"></a>
+
+<p><em class="dfn">File descriptor flags</em> are miscellaneous attributes of a file
+descriptor.  These flags are associated with particular file
+descriptors, so that if you have created duplicate file descriptors
+from a single opening of a file, each descriptor has its own set of flags.
+</p>
+<p>Currently there is just one file descriptor flag: <code class="code">FD_CLOEXEC</code>,
+which causes the descriptor to be closed if you use any of the
+<code class="code">exec&hellip;</code> functions (see <a class="pxref" href="Executing-a-File.html">Executing a File</a>).
+</p>
+<p>The symbols in this section are defined in the header file
+<samp class="file">fcntl.h</samp>.
+<a class="index-entry-id" id="index-fcntl_002eh-4"></a>
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-F_005fGETFD-1"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">F_GETFD</strong><a class="copiable-link" href="#index-F_005fGETFD-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used as the <var class="var">command</var> argument to <code class="code">fcntl</code>, to
+specify that it should return the file descriptor flags associated
+with the <var class="var">filedes</var> argument.
+</p>
+<p>The normal return value from <code class="code">fcntl</code> with this command is a
+nonnegative number which can be interpreted as the bitwise OR of the
+individual flags (except that currently there is only one flag to use).
+</p>
+<p>In case of an error, <code class="code">fcntl</code> returns <em class="math">-1</em>.  The following
+<code class="code">errno</code> error conditions are defined for this command:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">filedes</var> argument is invalid.
+</p></dd>
+</dl>
+</dd></dl>
+
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-F_005fSETFD-1"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">F_SETFD</strong><a class="copiable-link" href="#index-F_005fSETFD-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used as the <var class="var">command</var> argument to <code class="code">fcntl</code>, to
+specify that it should set the file descriptor flags associated with the
+<var class="var">filedes</var> argument.  This requires a third <code class="code">int</code> argument to
+specify the new flags, so the form of the call is:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">fcntl (<var class="var">filedes</var>, F_SETFD, <var class="var">new-flags</var>)
+</pre></div>
+
+<p>The normal return value from <code class="code">fcntl</code> with this command is an
+unspecified value other than <em class="math">-1</em>, which indicates an error.
+The flags and error conditions are the same as for the <code class="code">F_GETFD</code>
+command.
+</p></dd></dl>
+
+<p>The following macro is defined for use as a file descriptor flag with
+the <code class="code">fcntl</code> function.  The value is an integer constant usable
+as a bit mask value.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-FD_005fCLOEXEC"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">FD_CLOEXEC</strong><a class="copiable-link" href="#index-FD_005fCLOEXEC"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-close_002don_002dexec-_0028file-descriptor-flag_0029"></a>
+<p>This flag specifies that the file descriptor should be closed when
+an <code class="code">exec</code> function is invoked; see <a class="ref" href="Executing-a-File.html">Executing a File</a>.  When
+a file descriptor is allocated (as with <code class="code">open</code> or <code class="code">dup</code>),
+this bit is initially cleared on the new file descriptor, meaning that
+descriptor will survive into the new program after <code class="code">exec</code>.
+</p></dd></dl>
+
+<p>If you want to modify the file descriptor flags, you should get the
+current flags with <code class="code">F_GETFD</code> and modify the value.  Don&rsquo;t assume
+that the flags listed here are the only ones that are implemented; your
+program may be run years from now and more flags may exist then.  For
+example, here is a function to set or clear the flag <code class="code">FD_CLOEXEC</code>
+without altering any other flags:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">/* <span class="r">Set the <code class="code">FD_CLOEXEC</code> flag of <var class="var">desc</var> if <var class="var">value</var> is nonzero,</span>
+   <span class="r">or clear the flag if <var class="var">value</var> is 0.</span>
+   <span class="r">Return 0 on success, or -1 on error with <code class="code">errno</code> set.</span> */
+
+int
+set_cloexec_flag (int desc, int value)
+{
+  int oldflags = fcntl (desc, F_GETFD, 0);
+  /* <span class="r">If reading the flags failed, return error indication now.</span> */
+  if (oldflags &lt; 0)
+    return oldflags;
+  /* <span class="r">Set just the flag we want to set.</span> */
+  if (value != 0)
+    oldflags |= FD_CLOEXEC;
+  else
+    oldflags &amp;= ~FD_CLOEXEC;
+  /* <span class="r">Store modified flag word in the descriptor.</span> */
+  return fcntl (desc, F_SETFD, oldflags);
+}
+</pre></div>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="File-Status-Flags.html">File Status Flags</a>, Previous: <a href="Duplicating-Descriptors.html">Duplicating Descriptors</a>, Up: <a href="Low_002dLevel-I_002fO.html">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

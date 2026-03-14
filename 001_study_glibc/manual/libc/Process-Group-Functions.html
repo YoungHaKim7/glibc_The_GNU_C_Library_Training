@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Process Group Functions (The GNU C Library)</title>
+
+<meta name="description" content="Process Group Functions (The GNU C Library)">
+<meta name="keywords" content="Process Group Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Functions-for-Job-Control.html" rel="up" title="Functions for Job Control">
+<link href="Terminal-Access-Functions.html" rel="next" title="Terminal Access Functions">
+<link href="Identifying-the-Terminal.html" rel="prev" title="Identifying the Terminal">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Process-Group-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Terminal-Access-Functions.html" accesskey="n" rel="next">Functions for Controlling Terminal Access</a>, Previous: <a href="Identifying-the-Terminal.html" accesskey="p" rel="prev">Identifying the Controlling Terminal</a>, Up: <a href="Functions-for-Job-Control.html" accesskey="u" rel="up">Functions for Job Control</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Process-Group-Functions-1"><span>29.6.2 Process Group Functions<a class="copiable-link" href="#Process-Group-Functions-1"> &para;</a></span></h4>
+
+<p>Here are descriptions of the functions for manipulating process groups.
+Your program should include the header files <samp class="file">sys/types.h</samp> and
+<samp class="file">unistd.h</samp> to use these functions.
+<a class="index-entry-id" id="index-unistd_002eh-20"></a>
+<a class="index-entry-id" id="index-sys_002ftypes_002eh-1"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setsid"><span class="category-def">Function: </span><span><code class="def-type">pid_t</code> <strong class="def-name">setsid</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-setsid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">setsid</code> function creates a new session.  The calling process
+becomes the session leader, and is put in a new process group whose
+process group ID is the same as the process ID of that process.  There
+are initially no other processes in the new process group, and no other
+process groups in the new session.
+</p>
+<p>This function also makes the calling process have no controlling terminal.
+</p>
+<p>The <code class="code">setsid</code> function returns the new process group ID of the
+calling process if successful.  A return value of <code class="code">-1</code> indicates an
+error.  The following <code class="code">errno</code> error conditions are defined for this
+function:
+</p>
+<dl class="table">
+<dt><code class="code">EPERM</code></dt>
+<dd><p>The calling process is already a process group leader, or there is
+already another process group around that has the same process group ID.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getsid"><span class="category-def">Function: </span><span><code class="def-type">pid_t</code> <strong class="def-name">getsid</strong> <code class="def-code-arguments">(pid_t <var class="var">pid</var>)</code><a class="copiable-link" href="#index-getsid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>The <code class="code">getsid</code> function returns the process group ID of the session
+leader of the specified process.  If a <var class="var">pid</var> is <code class="code">0</code>, the
+process group ID of the session leader of the current process is
+returned.
+</p>
+<p>In case of error <code class="code">-1</code> is returned and <code class="code">errno</code> is set.  The
+following <code class="code">errno</code> error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">ESRCH</code></dt>
+<dd><p>There is no process with the given process ID <var class="var">pid</var>.
+</p></dd>
+<dt><code class="code">EPERM</code></dt>
+<dd><p>The calling process and the process specified by <var class="var">pid</var> are in
+different sessions, and the implementation doesn&rsquo;t allow to access the
+process group ID of the session leader of the process with ID <var class="var">pid</var>
+from the calling process.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getpgrp"><span class="category-def">Function: </span><span><code class="def-type">pid_t</code> <strong class="def-name">getpgrp</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-getpgrp"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">getpgrp</code> function returns the process group ID of
+the calling process.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getpgid"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getpgid</strong> <code class="def-code-arguments">(pid_t <var class="var">pid</var>)</code><a class="copiable-link" href="#index-getpgid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>The <code class="code">getpgid</code> function
+returns the process group ID of the process <var class="var">pid</var>.  You can supply a
+value of <code class="code">0</code> for the <var class="var">pid</var> argument to get information about
+the calling process.
+</p>
+<p>In case of error <code class="code">-1</code> is returned and <code class="code">errno</code> is set.  The
+following <code class="code">errno</code> error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">ESRCH</code></dt>
+<dd><p>There is no process with the given process ID <var class="var">pid</var>.
+</p></dd>
+<dt><code class="code">EPERM</code></dt>
+<dd><p>The calling process and the process specified by <var class="var">pid</var> are in
+different sessions, and the implementation doesn&rsquo;t allow to access the
+process group ID of the process with ID <var class="var">pid</var> from the calling
+process.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setpgid"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setpgid</strong> <code class="def-code-arguments">(pid_t <var class="var">pid</var>, pid_t <var class="var">pgid</var>)</code><a class="copiable-link" href="#index-setpgid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">setpgid</code> function puts the process <var class="var">pid</var> into the process
+group <var class="var">pgid</var>.  As a special case, either <var class="var">pid</var> or <var class="var">pgid</var> can
+be zero to indicate the process ID of the calling process.
+</p>
+<p>If the operation is successful, <code class="code">setpgid</code> returns zero.  Otherwise
+it returns <code class="code">-1</code>.  The following <code class="code">errno</code> error conditions are
+defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EACCES</code></dt>
+<dd><p>The child process named by <var class="var">pid</var> has executed an <code class="code">exec</code>
+function since it was forked.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The value of the <var class="var">pgid</var> is not valid.
+</p>
+</dd>
+<dt><code class="code">ENOSYS</code></dt>
+<dd><p>The system doesn&rsquo;t support job control.
+</p>
+</dd>
+<dt><code class="code">EPERM</code></dt>
+<dd><p>The process indicated by the <var class="var">pid</var> argument is a session leader,
+or is not in the same session as the calling process, or the value of
+the <var class="var">pgid</var> argument doesn&rsquo;t match a process group ID in the same
+session as the calling process.
+</p>
+</dd>
+<dt><code class="code">ESRCH</code></dt>
+<dd><p>The process indicated by the <var class="var">pid</var> argument is not the calling
+process or a child of the calling process.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setpgrp"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setpgrp</strong> <code class="def-code-arguments">(pid_t <var class="var">pid</var>, pid_t <var class="var">pgid</var>)</code><a class="copiable-link" href="#index-setpgrp"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is the BSD Unix name for <code class="code">setpgid</code>.  Both functions do exactly
+the same thing.
+</p></dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Terminal-Access-Functions.html">Functions for Controlling Terminal Access</a>, Previous: <a href="Identifying-the-Terminal.html">Identifying the Controlling Terminal</a>, Up: <a href="Functions-for-Job-Control.html">Functions for Job Control</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

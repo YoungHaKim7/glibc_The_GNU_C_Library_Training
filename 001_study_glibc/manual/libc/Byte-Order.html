@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Byte Order (The GNU C Library)</title>
+
+<meta name="description" content="Byte Order (The GNU C Library)">
+<meta name="keywords" content="Byte Order (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Internet-Namespace.html" rel="up" title="Internet Namespace">
+<link href="Protocols-Database.html" rel="next" title="Protocols Database">
+<link href="Services-Database.html" rel="prev" title="Services Database">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Byte-Order">
+<div class="nav-panel">
+<p>
+Next: <a href="Protocols-Database.html" accesskey="n" rel="next">Protocols Database</a>, Previous: <a href="Services-Database.html" accesskey="p" rel="prev">The Services Database</a>, Up: <a href="Internet-Namespace.html" accesskey="u" rel="up">The Internet Namespace</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Byte-Order-Conversion"><span>16.6.5 Byte Order Conversion<a class="copiable-link" href="#Byte-Order-Conversion"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-byte-order-conversion_002c-for-socket"></a>
+<a class="index-entry-id" id="index-converting-byte-order"></a>
+
+<a class="index-entry-id" id="index-big_002dendian"></a>
+<a class="index-entry-id" id="index-little_002dendian"></a>
+<p>Different kinds of computers use different conventions for the
+ordering of bytes within a word.  Some computers put the most
+significant byte within a word first (this is called &ldquo;big-endian&rdquo;
+order), and others put it last (&ldquo;little-endian&rdquo; order).
+</p>
+<a class="index-entry-id" id="index-network-byte-order"></a>
+<p>So that machines with different byte order conventions can
+communicate, the Internet protocols specify a canonical byte order
+convention for data transmitted over the network.  This is known
+as <em class="dfn">network byte order</em>.
+</p>
+<p>When establishing an Internet socket connection, you must make sure that
+the data in the <code class="code">sin_port</code> and <code class="code">sin_addr</code> members of the
+<code class="code">sockaddr_in</code> structure are represented in network byte order.
+If you are encoding integer data in the messages sent through the
+socket, you should convert this to network byte order too.  If you don&rsquo;t
+do this, your program may fail when running on or talking to other kinds
+of machines.
+</p>
+<p>If you use <code class="code">getservbyname</code> and <code class="code">gethostbyname</code> or
+<code class="code">inet_addr</code> to get the port number and host address, the values are
+already in network byte order, and you can copy them directly into
+the <code class="code">sockaddr_in</code> structure.
+</p>
+<p>Otherwise, you have to convert the values explicitly.  Use <code class="code">htons</code>
+and <code class="code">ntohs</code> to convert values for the <code class="code">sin_port</code> member.  Use
+<code class="code">htonl</code> and <code class="code">ntohl</code> to convert IPv4 addresses for the
+<code class="code">sin_addr</code> member.  (Remember, <code class="code">struct in_addr</code> is equivalent
+to <code class="code">uint32_t</code>.)  These functions are declared in
+<samp class="file">netinet/in.h</samp>.
+<a class="index-entry-id" id="index-netinet_002fin_002eh-3"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-htons"><span class="category-def">Function: </span><span><code class="def-type">uint16_t</code> <strong class="def-name">htons</strong> <code class="def-code-arguments">(uint16_t <var class="var">hostshort</var>)</code><a class="copiable-link" href="#index-htons"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function converts the <code class="code">uint16_t</code> integer <var class="var">hostshort</var> from
+host byte order to network byte order.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ntohs"><span class="category-def">Function: </span><span><code class="def-type">uint16_t</code> <strong class="def-name">ntohs</strong> <code class="def-code-arguments">(uint16_t <var class="var">netshort</var>)</code><a class="copiable-link" href="#index-ntohs"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function converts the <code class="code">uint16_t</code> integer <var class="var">netshort</var> from
+network byte order to host byte order.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-htonl"><span class="category-def">Function: </span><span><code class="def-type">uint32_t</code> <strong class="def-name">htonl</strong> <code class="def-code-arguments">(uint32_t <var class="var">hostlong</var>)</code><a class="copiable-link" href="#index-htonl"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function converts the <code class="code">uint32_t</code> integer <var class="var">hostlong</var> from
+host byte order to network byte order.
+</p>
+<p>This is used for IPv4 Internet addresses.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ntohl"><span class="category-def">Function: </span><span><code class="def-type">uint32_t</code> <strong class="def-name">ntohl</strong> <code class="def-code-arguments">(uint32_t <var class="var">netlong</var>)</code><a class="copiable-link" href="#index-ntohl"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function converts the <code class="code">uint32_t</code> integer <var class="var">netlong</var> from
+network byte order to host byte order.
+</p>
+<p>This is used for IPv4 Internet addresses.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Protocols-Database.html">Protocols Database</a>, Previous: <a href="Services-Database.html">The Services Database</a>, Up: <a href="Internet-Namespace.html">The Internet Namespace</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

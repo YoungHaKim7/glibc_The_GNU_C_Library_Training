@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Setting User ID (The GNU C Library)</title>
+
+<meta name="description" content="Setting User ID (The GNU C Library)">
+<meta name="keywords" content="Setting User ID (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Users-and-Groups.html" rel="up" title="Users and Groups">
+<link href="Setting-Groups.html" rel="next" title="Setting Groups">
+<link href="Reading-Persona.html" rel="prev" title="Reading Persona">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Setting-User-ID">
+<div class="nav-panel">
+<p>
+Next: <a href="Setting-Groups.html" accesskey="n" rel="next">Setting the Group IDs</a>, Previous: <a href="Reading-Persona.html" accesskey="p" rel="prev">Reading the Persona of a Process</a>, Up: <a href="Users-and-Groups.html" accesskey="u" rel="up">Users and Groups</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Setting-the-User-ID"><span>31.6 Setting the User ID<a class="copiable-link" href="#Setting-the-User-ID"> &para;</a></span></h3>
+
+<p>This section describes the functions for altering the user ID (real
+and/or effective) of a process.  To use these facilities, you must
+include the header files <samp class="file">sys/types.h</samp> and <samp class="file">unistd.h</samp>.
+<a class="index-entry-id" id="index-unistd_002eh-23"></a>
+<a class="index-entry-id" id="index-sys_002ftypes_002eh-4"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-seteuid"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">seteuid</strong> <code class="def-code-arguments">(uid_t <var class="var">neweuid</var>)</code><a class="copiable-link" href="#index-seteuid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function sets the effective user ID of a process to <var class="var">neweuid</var>,
+provided that the process is allowed to change its effective user ID.  A
+privileged process (effective user ID zero) can change its effective
+user ID to any legal value.  An unprivileged process with a file user ID
+can change its effective user ID to its real user ID or to its file user
+ID.  Otherwise, a process may not change its effective user ID at all.
+</p>
+<p>The <code class="code">seteuid</code> function returns a value of <code class="code">0</code> to indicate
+successful completion, and a value of <code class="code">-1</code> to indicate an error.
+The following <code class="code">errno</code> error conditions are defined for this
+function:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The value of the <var class="var">neweuid</var> argument is invalid.
+</p>
+</dd>
+<dt><code class="code">EPERM</code></dt>
+<dd><p>The process may not change to the specified ID.
+</p></dd>
+</dl>
+
+<p>Older systems (those without the <code class="code">_POSIX_SAVED_IDS</code> feature) do not
+have this function.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setuid"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setuid</strong> <code class="def-code-arguments">(uid_t <var class="var">newuid</var>)</code><a class="copiable-link" href="#index-setuid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>If the calling process is privileged, this function sets both the real
+and effective user IDs of the process to <var class="var">newuid</var>.  It also deletes
+the file user ID of the process, if any.  <var class="var">newuid</var> may be any
+legal value.  (Once this has been done, there is no way to recover the
+old effective user ID.)
+</p>
+<p>If the process is not privileged, and the system supports the
+<code class="code">_POSIX_SAVED_IDS</code> feature, then this function behaves like
+<code class="code">seteuid</code>.
+</p>
+<p>The return values and error conditions are the same as for <code class="code">seteuid</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setreuid"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setreuid</strong> <code class="def-code-arguments">(uid_t <var class="var">ruid</var>, uid_t <var class="var">euid</var>)</code><a class="copiable-link" href="#index-setreuid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function sets the real user ID of the process to <var class="var">ruid</var> and the
+effective user ID to <var class="var">euid</var>.  If <var class="var">ruid</var> is <code class="code">-1</code>, it means
+not to change the real user ID; likewise if <var class="var">euid</var> is <code class="code">-1</code>, it
+means not to change the effective user ID.
+</p>
+<p>The <code class="code">setreuid</code> function exists for compatibility with 4.3 BSD Unix,
+which does not support file IDs.  You can use this function to swap the
+effective and real user IDs of the process.  (Privileged processes are
+not limited to this particular usage.)  If file IDs are supported, you
+should use that feature instead of this function.  See <a class="xref" href="Enable_002fDisable-Setuid.html">Enabling and Disabling Setuid Access</a>.
+</p>
+<p>The return value is <code class="code">0</code> on success and <code class="code">-1</code> on failure.
+The following <code class="code">errno</code> error conditions are defined for this
+function:
+</p>
+<dl class="table">
+<dt><code class="code">EPERM</code></dt>
+<dd><p>The process does not have the appropriate privileges; you do not
+have permission to change to the specified ID.
+</p></dd>
+</dl>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Setting-Groups.html">Setting the Group IDs</a>, Previous: <a href="Reading-Persona.html">Reading the Persona of a Process</a>, Up: <a href="Users-and-Groups.html">Users and Groups</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

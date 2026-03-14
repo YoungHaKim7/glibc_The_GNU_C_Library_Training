@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Thread CPU Affinity (The GNU C Library)</title>
+
+<meta name="description" content="Thread CPU Affinity (The GNU C Library)">
+<meta name="keywords" content="Thread CPU Affinity (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Non_002dPOSIX-Extensions.html" rel="up" title="Non-POSIX Extensions">
+<link href="Joining-Threads.html" rel="next" title="Joining Threads">
+<link href="Initial-Thread-Signal-Mask.html" rel="prev" title="Initial Thread Signal Mask">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Thread-CPU-Affinity">
+<div class="nav-panel">
+<p>
+Next: <a href="Joining-Threads.html" accesskey="n" rel="next">Wait for a thread to terminate</a>, Previous: <a href="Initial-Thread-Signal-Mask.html" accesskey="p" rel="prev">Controlling the Initial Signal Mask of a New Thread</a>, Up: <a href="Non_002dPOSIX-Extensions.html" accesskey="u" rel="up">Non-POSIX Extensions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Thread-CPU-Affinity-1"><span>36.2.9.3 Thread CPU Affinity<a class="copiable-link" href="#Thread-CPU-Affinity-1"> &para;</a></span></h4>
+
+<p>Processes and threads normally run on any available CPU.  However,
+they can be given an <em class="emph">affinity</em> to one or more CPUs, which limits
+them to the CPU set specified.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fattr_005fsetaffinity_005fnp"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_attr_setaffinity_np</strong> <code class="def-code-arguments">(pthread_attr_t *<var class="var">attr</var>, size_t <var class="var">cpusetsize</var>, const cpu_set_t *<var class="var">cpuset</var>)</code><a class="copiable-link" href="#index-pthread_005fattr_005fsetaffinity_005fnp"> &para;</a></span></dt>
+<dd><p>Sets the CPU affinity in <var class="var">attr</var>.  The CPU affinity
+controls which CPUs a thread may execute on.  See <a class="xref" href="CPU-Affinity.html">Limiting execution to certain CPUs</a>.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_attr_setaffinity_np.3.html">pthread_attr_setaffinity_np(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fattr_005fgetaffinity_005fnp"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_attr_getaffinity_np</strong> <code class="def-code-arguments">(const pthread_attr_t *<var class="var">attr</var>, size_t <var class="var">cpusetsize</var>, cpu_set_t *<var class="var">cpuset</var>)</code><a class="copiable-link" href="#index-pthread_005fattr_005fgetaffinity_005fnp"> &para;</a></span></dt>
+<dd><p>Gets the CPU affinity settings from <var class="var">attr</var>.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_attr_getaffinity_np.3.html">pthread_attr_getaffinity_np(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fsetaffinity_005fnp"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_setaffinity_np</strong> <code class="def-code-arguments">(pthread_t *<var class="var">th</var>, size_t <var class="var">cpusetsize</var>, const cpu_set_t *<var class="var">cpuset</var>)</code><a class="copiable-link" href="#index-pthread_005fsetaffinity_005fnp"> &para;</a></span></dt>
+<dd><p>Sets the CPU affinity for thread <var class="var">th</var>.  The CPU affinity controls
+which CPUs a thread may execute on.  See <a class="xref" href="CPU-Affinity.html">Limiting execution to certain CPUs</a>.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_setaffinity_np.3.html">pthread_setaffinity_np(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fgetaffinity_005fnp"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_getaffinity_np</strong> <code class="def-code-arguments">(const pthread_t *<var class="var">th</var>, size_t <var class="var">cpusetsize</var>, cpu_set_t *<var class="var">cpuset</var>)</code><a class="copiable-link" href="#index-pthread_005fgetaffinity_005fnp"> &para;</a></span></dt>
+<dd><p>Gets the CPU affinity for thread <var class="var">th</var>.  The CPU affinity controls
+which CPUs a thread may execute on.  See <a class="xref" href="CPU-Affinity.html">Limiting execution to certain CPUs</a>.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_getaffinity_np.3.html">pthread_getaffinity_np(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Joining-Threads.html">Wait for a thread to terminate</a>, Previous: <a href="Initial-Thread-Signal-Mask.html">Controlling the Initial Signal Mask of a New Thread</a>, Up: <a href="Non_002dPOSIX-Extensions.html">Non-POSIX Extensions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

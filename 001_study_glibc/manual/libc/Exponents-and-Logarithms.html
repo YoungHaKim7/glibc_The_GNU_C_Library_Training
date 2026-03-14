@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Exponents and Logarithms (The GNU C Library)</title>
+
+<meta name="description" content="Exponents and Logarithms (The GNU C Library)">
+<meta name="keywords" content="Exponents and Logarithms (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Mathematics.html" rel="up" title="Mathematics">
+<link href="Hyperbolic-Functions.html" rel="next" title="Hyperbolic Functions">
+<link href="Inverse-Trig-Functions.html" rel="prev" title="Inverse Trig Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Exponents-and-Logarithms">
+<div class="nav-panel">
+<p>
+Next: <a href="Hyperbolic-Functions.html" accesskey="n" rel="next">Hyperbolic Functions</a>, Previous: <a href="Inverse-Trig-Functions.html" accesskey="p" rel="prev">Inverse Trigonometric Functions</a>, Up: <a href="Mathematics.html" accesskey="u" rel="up">Mathematics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Exponentiation-and-Logarithms"><span>19.4 Exponentiation and Logarithms<a class="copiable-link" href="#Exponentiation-and-Logarithms"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-exponentiation-functions"></a>
+<a class="index-entry-id" id="index-power-functions"></a>
+<a class="index-entry-id" id="index-logarithm-functions"></a>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-exp"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">exp</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-expf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">expf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-expf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-expl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">expl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-expl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-expfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">expfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-expfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-expfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">expfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-expfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions compute <code class="code">e</code> (the base of natural logarithms) raised
+to the power <var class="var">x</var>.
+</p>
+<p>If the magnitude of the result is too large to be representable,
+<code class="code">exp</code> signals overflow.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-exp2"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">exp2</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp2"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp2f"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">exp2f</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp2f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp2l"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">exp2l</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp2l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp2fN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">exp2fN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp2fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp2fNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">exp2fNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp2fNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions compute <code class="code">2</code> raised to the power <var class="var">x</var>.
+Mathematically, <code class="code">exp2 (x)</code> is the same as <code class="code">exp (x * log (2))</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-exp10"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">exp10</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp10"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp10f"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">exp10f</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp10f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp10l"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">exp10l</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp10l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp10fN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">exp10fN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp10fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp10fNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">exp10fNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp10fNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions compute <code class="code">10</code> raised to the power <var class="var">x</var>.
+Mathematically, <code class="code">exp10 (x)</code> is the same as <code class="code">exp (x * log (10))</code>.
+</p>
+<p>The <code class="code">exp10</code> functions are from TS 18661-4:2015.
+</p></dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-log"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">log</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-log"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-logf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">logf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-logf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-logl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">logl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-logl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-logfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">logfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-logfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-logfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">logfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-logfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions compute the natural logarithm of <var class="var">x</var>.  <code class="code">exp (log
+(<var class="var">x</var>))</code> equals <var class="var">x</var>, exactly in mathematics and approximately in
+C.
+</p>
+<p>If <var class="var">x</var> is negative, <code class="code">log</code> signals a domain error.  If <var class="var">x</var>
+is zero, it returns negative infinity; if <var class="var">x</var> is too close to zero,
+it may signal overflow.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-log10"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">log10</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-log10"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log10f"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">log10f</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-log10f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log10l"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">log10l</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-log10l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log10fN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">log10fN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-log10fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log10fNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">log10fNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-log10fNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the base-10 logarithm of <var class="var">x</var>.
+<code class="code">log10 (<var class="var">x</var>)</code> equals <code class="code">log (<var class="var">x</var>) / log (10)</code>.
+</p>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-log2"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">log2</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-log2"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log2f"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">log2f</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-log2f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log2l"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">log2l</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-log2l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log2fN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">log2fN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-log2fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log2fNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">log2fNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-log2fNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the base-2 logarithm of <var class="var">x</var>.
+<code class="code">log2 (<var class="var">x</var>)</code> equals <code class="code">log (<var class="var">x</var>) / log (2)</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-logb"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">logb</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-logb"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-logbf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">logbf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-logbf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-logbl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">logbl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-logbl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-logbfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">logbfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-logbfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-logbfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">logbfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-logbfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions extract the exponent of <var class="var">x</var> and return it as a
+floating-point value.
+If <code class="code">FLT_RADIX</code> is two,
+<code class="code">logb (x)</code> is similar to <code class="code">floor (log2 (fabs (x)))</code>,
+except that the latter may give an incorrect integer
+due to intermediate rounding.
+</p>
+<p>If <var class="var">x</var> is de-normalized, <code class="code">logb</code> returns the exponent <var class="var">x</var>
+would have if it were normalized.  If <var class="var">x</var> is infinity (positive or
+negative), <code class="code">logb</code> returns <em class="math">&#x221E;</em>.  If <var class="var">x</var> is zero,
+<code class="code">logb</code> returns <em class="math">&#x221E;</em>.  It does not signal.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ilogb"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">ilogb</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-ilogb"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ilogbf"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">ilogbf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-ilogbf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ilogbl"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">ilogbl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-ilogbl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ilogbfN"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">ilogbfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-ilogbfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ilogbfNx"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">ilogbfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-ilogbfNx"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-llogb"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">llogb</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-llogb"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-llogbf"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">llogbf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-llogbf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-llogbl"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">llogbl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-llogbl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-llogbfN"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">llogbfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-llogbfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-llogbfNx"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">llogbfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-llogbfNx"> &para;</a></span></dt>
+<dd>
+
+
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions are equivalent to the corresponding <code class="code">logb</code>
+functions except that they return signed integer values.  The
+<code class="code">ilogb</code>, <code class="code">ilogbf</code>, and <code class="code">ilogbl</code> functions are from ISO
+C99; the <code class="code">llogb</code>, <code class="code">llogbf</code>, <code class="code">llogbl</code> functions are from
+TS 18661-1:2014; the <code class="code">ilogbfN</code>, <code class="code">ilogbfNx</code>, <code class="code">llogbfN</code>,
+and <code class="code">llogbfNx</code> functions are from TS 18661-3:2015.
+</p></dd></dl>
+
+<p>Since integers cannot represent infinity and NaN, <code class="code">ilogb</code> instead
+returns an integer that can&rsquo;t be the exponent of a normal floating-point
+number.  <samp class="file">math.h</samp> defines constants so you can check for this.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-FP_005fILOGB0"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">FP_ILOGB0</strong><a class="copiable-link" href="#index-FP_005fILOGB0"> &para;</a></span></dt>
+<dd>
+<p><code class="code">ilogb</code> returns this value if its argument is <code class="code">0</code>.  The
+numeric value is either <code class="code">INT_MIN</code> or <code class="code">-INT_MAX</code>.
+</p>
+<p>This macro is defined in ISO&nbsp;C99<!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-FP_005fLLOGB0"><span class="category-def">Macro: </span><span><code class="def-type">long int</code> <strong class="def-name">FP_LLOGB0</strong><a class="copiable-link" href="#index-FP_005fLLOGB0"> &para;</a></span></dt>
+<dd>
+<p><code class="code">llogb</code> returns this value if its argument is <code class="code">0</code>.  The
+numeric value is either <code class="code">LONG_MIN</code> or <code class="code">-LONG_MAX</code>.
+</p>
+<p>This macro is defined in TS 18661-1:2014.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-FP_005fILOGBNAN"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">FP_ILOGBNAN</strong><a class="copiable-link" href="#index-FP_005fILOGBNAN"> &para;</a></span></dt>
+<dd>
+<p><code class="code">ilogb</code> returns this value if its argument is <code class="code">NaN</code>.  The
+numeric value is either <code class="code">INT_MIN</code> or <code class="code">INT_MAX</code>.
+</p>
+<p>This macro is defined in ISO&nbsp;C99<!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-FP_005fLLOGBNAN"><span class="category-def">Macro: </span><span><code class="def-type">long int</code> <strong class="def-name">FP_LLOGBNAN</strong><a class="copiable-link" href="#index-FP_005fLLOGBNAN"> &para;</a></span></dt>
+<dd>
+<p><code class="code">llogb</code> returns this value if its argument is <code class="code">NaN</code>.  The
+numeric value is either <code class="code">LONG_MIN</code> or <code class="code">LONG_MAX</code>.
+</p>
+<p>This macro is defined in TS 18661-1:2014.
+</p></dd></dl>
+
+<p>These values are system specific.  They might even be the same.  The
+proper way to test the result of <code class="code">ilogb</code> is as follows:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">i = ilogb (f);
+if (i == FP_ILOGB0 || i == FP_ILOGBNAN)
+  {
+    if (isnan (f))
+      {
+        /* <span class="r">Handle NaN.</span>  */
+      }
+    else if (f  == 0.0)
+      {
+        /* <span class="r">Handle 0.0.</span>  */
+      }
+    else
+      {
+        /* <span class="r">Some other value with large exponent,</span>
+           <span class="r">perhaps +Inf.</span>  */
+      }
+  }
+</pre></div>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pow"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">pow</strong> <code class="def-code-arguments">(double <var class="var">base</var>, double <var class="var">power</var>)</code><a class="copiable-link" href="#index-pow"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-powf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">powf</strong> <code class="def-code-arguments">(float <var class="var">base</var>, float <var class="var">power</var>)</code><a class="copiable-link" href="#index-powf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-powl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">powl</strong> <code class="def-code-arguments">(long double <var class="var">base</var>, long double <var class="var">power</var>)</code><a class="copiable-link" href="#index-powl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-powfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">powfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">base</var>, _Float<var class="var">N</var> <var class="var">power</var>)</code><a class="copiable-link" href="#index-powfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-powfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">powfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">base</var>, _Float<var class="var">N</var>x <var class="var">power</var>)</code><a class="copiable-link" href="#index-powfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These are general exponentiation functions, returning <var class="var">base</var> raised
+to <var class="var">power</var>.
+</p>
+<p>Mathematically, <code class="code">pow</code> would return a complex number when <var class="var">base</var>
+is negative and <var class="var">power</var> is not an integral value.  <code class="code">pow</code> can&rsquo;t
+do that, so instead it signals a domain error. <code class="code">pow</code> may also
+underflow or overflow the destination type.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-powr"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">powr</strong> <code class="def-code-arguments">(double <var class="var">base</var>, double <var class="var">power</var>)</code><a class="copiable-link" href="#index-powr"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-powrf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">powrf</strong> <code class="def-code-arguments">(float <var class="var">base</var>, float <var class="var">power</var>)</code><a class="copiable-link" href="#index-powrf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-powrl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">powrl</strong> <code class="def-code-arguments">(long double <var class="var">base</var>, long double <var class="var">power</var>)</code><a class="copiable-link" href="#index-powrl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-powrfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">powrfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">base</var>, _Float<var class="var">N</var> <var class="var">power</var>)</code><a class="copiable-link" href="#index-powrfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-powrfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">powrfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">base</var>, _Float<var class="var">N</var>x <var class="var">power</var>)</code><a class="copiable-link" href="#index-powrfNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These return <var class="var">base</var> raised to <var class="var">power</var>, but with special cases
+based on <code class="code">exp (power * log (base))</code>.  For example, if <var class="var">base</var>
+is negative, the <code class="code">powr</code> functions always signal a domain error,
+but this is valid for <code class="code">pow</code> if <var class="var">power</var> is an integer.
+</p>
+<p>The <code class="code">powr</code> functions are from TS 18661-4:2015.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pown"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">pown</strong> <code class="def-code-arguments">(double <var class="var">base</var>, long long int <var class="var">power</var>)</code><a class="copiable-link" href="#index-pown"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-pownf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">pownf</strong> <code class="def-code-arguments">(float <var class="var">base</var>, long long int <var class="var">power</var>)</code><a class="copiable-link" href="#index-pownf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-pownl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">pownl</strong> <code class="def-code-arguments">(long double <var class="var">base</var>, long long int <var class="var">power</var>)</code><a class="copiable-link" href="#index-pownl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-pownfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">pownfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">base</var>, long long int <var class="var">power</var>)</code><a class="copiable-link" href="#index-pownfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-pownfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">pownfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">base</var>, long long int <var class="var">power</var>)</code><a class="copiable-link" href="#index-pownfNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These return <var class="var">base</var> raised to <var class="var">power</var> (an integer).
+</p>
+<p>The <code class="code">pown</code> functions are from TS 18661-4:2015 (which used
+<code class="code">intmax_t</code> as the type of <var class="var">power</var>; the type changed to
+<code class="code">long long int</code> in C23).
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-compoundn"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">compoundn</strong> <code class="def-code-arguments">(double <var class="var">x</var>, long long int <var class="var">power</var>)</code><a class="copiable-link" href="#index-compoundn"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-compoundnf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">compoundnf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, long long int <var class="var">power</var>)</code><a class="copiable-link" href="#index-compoundnf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-compoundnl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">compoundnl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long long int <var class="var">power</var>)</code><a class="copiable-link" href="#index-compoundnl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-compoundnfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">compoundnfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, long long int <var class="var">power</var>)</code><a class="copiable-link" href="#index-compoundnfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-compoundnfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">compoundnfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, long long int <var class="var">power</var>)</code><a class="copiable-link" href="#index-compoundnfNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These return <code class="code">1 + <var class="var">x</var></code> raised to <var class="var">power</var> (an integer).
+If <var class="var">x</var> is less than &minus;1, <code class="code">compoundn</code> signals a domain
+error.
+</p>
+<p>The <code class="code">compoundn</code> functions are from TS 18661-4:2015 (which used
+<code class="code">intmax_t</code> as the type of <var class="var">power</var>; the type changed to
+<code class="code">long long int</code> in C23).
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-square-root-function"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sqrt"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">sqrt</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-sqrt"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sqrtf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">sqrtf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-sqrtf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sqrtl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">sqrtl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-sqrtl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sqrtfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">sqrtfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-sqrtfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sqrtfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">sqrtfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-sqrtfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the nonnegative square root of <var class="var">x</var>.
+</p>
+<p>If <var class="var">x</var> is negative, <code class="code">sqrt</code> signals a domain error.
+Mathematically, it should return a complex number.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-rsqrt"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">rsqrt</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-rsqrt"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-rsqrtf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">rsqrtf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-rsqrtf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-rsqrtl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">rsqrtl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-rsqrtl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-rsqrtfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">rsqrtfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-rsqrtfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-rsqrtfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">rsqrtfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-rsqrtfNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the reciprocal of the nonnegative square root of <var class="var">x</var>.
+If <var class="var">x</var> is negative, <code class="code">rsqrt</code> signals a domain error.
+</p>
+<p>The <code class="code">rsqrt</code> functions are from TS 18661-4:2015.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-cube-root-function"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cbrt"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">cbrt</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-cbrt"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cbrtf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">cbrtf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-cbrtf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cbrtl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">cbrtl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-cbrtl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cbrtfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">cbrtfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-cbrtfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cbrtfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">cbrtfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-cbrtfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the cube root of <var class="var">x</var>.
+They cannot fail;
+every representable real value
+has a real cube root,
+and rounding it to a representable value
+never causes overflow nor underflow.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-hypot"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">hypot</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-hypot"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-hypotf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">hypotf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-hypotf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-hypotl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">hypotl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-hypotl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-hypotfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">hypotfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-hypotfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-hypotfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">hypotfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-hypotfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return <code class="code">sqrt (<var class="var">x</var>*<var class="var">x</var> +
+<var class="var">y</var>*<var class="var">y</var>)</code>.  This is the length of the hypotenuse of a right
+triangle with sides of length <var class="var">x</var> and <var class="var">y</var>, or the distance
+of the point (<var class="var">x</var>, <var class="var">y</var>) from the origin.  Using this function
+instead of the direct formula is wise, since the error is
+much smaller.  See also the function <code class="code">cabs</code> in <a class="ref" href="Absolute-Value.html">Absolute Value</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-rootn"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">rootn</strong> <code class="def-code-arguments">(double <var class="var">x</var>, long long int <var class="var">n</var>)</code><a class="copiable-link" href="#index-rootn"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-rootnf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">rootnf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, long long int <var class="var">n</var>)</code><a class="copiable-link" href="#index-rootnf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-rootnl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">rootnl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long long int <var class="var">n</var>)</code><a class="copiable-link" href="#index-rootnl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-rootnfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">rootnfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, long long int <var class="var">n</var>)</code><a class="copiable-link" href="#index-rootnfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-rootnfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">rootnfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, long long int <var class="var">n</var>)</code><a class="copiable-link" href="#index-rootnfNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These return the <var class="var">n</var>th root of <var class="var">x</var>.  If <var class="var">n</var> is zero, or if
+<var class="var">x</var> is negative and <var class="var">n</var> is even, <code class="code">rootn</code> signals a domain
+error.
+</p>
+<p>The <code class="code">rootn</code> functions are from TS 18661-4:2015 (which used
+<code class="code">intmax_t</code> as the type of <var class="var">n</var>; the type changed to
+<code class="code">long long int</code> in C23).
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-expm1"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">expm1</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-expm1"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-expm1f"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">expm1f</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-expm1f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-expm1l"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">expm1l</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-expm1l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-expm1fN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">expm1fN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-expm1fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-expm1fNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">expm1fNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-expm1fNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return a value equivalent to <code class="code">exp (<var class="var">x</var>) - 1</code>.
+They are computed in a way that is accurate even if <var class="var">x</var> is
+near zero&mdash;a case where <code class="code">exp (<var class="var">x</var>) - 1</code> would be inaccurate owing
+to subtraction of two numbers that are nearly equal.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-exp2m1"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">exp2m1</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp2m1"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp2m1f"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">exp2m1f</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp2m1f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp2m1l"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">exp2m1l</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp2m1l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp2m1fN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">exp2m1fN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp2m1fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp2m1fNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">exp2m1fNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp2m1fNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return a value equivalent to <code class="code">exp2 (<var class="var">x</var>) - 1</code>.
+They are computed in a way that is accurate even if <var class="var">x</var> is
+near zero&mdash;a case where <code class="code">exp2 (<var class="var">x</var>) - 1</code> would be inaccurate owing
+to subtraction of two numbers that are nearly equal.
+</p>
+<p>The <code class="code">exp2m1</code> functions are from TS 18661-4:2015.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-exp10m1"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">exp10m1</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp10m1"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp10m1f"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">exp10m1f</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp10m1f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp10m1l"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">exp10m1l</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp10m1l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp10m1fN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">exp10m1fN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp10m1fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-exp10m1fNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">exp10m1fNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-exp10m1fNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return a value equivalent to <code class="code">exp10 (<var class="var">x</var>) - 1</code>.
+They are computed in a way that is accurate even if <var class="var">x</var> is
+near zero&mdash;a case where <code class="code">exp10 (<var class="var">x</var>) - 1</code> would be inaccurate owing
+to subtraction of two numbers that are nearly equal.
+</p>
+<p>The <code class="code">exp10m1</code> functions are from TS 18661-4:2015.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-log1p"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">log1p</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-log1p"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log1pf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">log1pf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-log1pf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log1pl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">log1pl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-log1pl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log1pfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">log1pfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-log1pfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log1pfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">log1pfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-log1pfNx"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-logp1"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">logp1</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-logp1"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-logp1f"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">logp1f</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-logp1f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-logp1l"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">logp1l</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-logp1l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-logp1fN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">logp1fN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-logp1fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-logp1fNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">logp1fNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-logp1fNx"> &para;</a></span></dt>
+<dd>
+
+
+
+
+
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return a value equivalent to <code class="code">log&nbsp;(1&nbsp;+&nbsp;<var class="var">x</var>)</code><!-- /@w -->.
+They are computed in a way that is accurate even if <var class="var">x</var> is
+near zero.
+</p>
+<p>The <code class="code">logp1</code> names for these functions are from TS 18661-4:2015.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-log2p1"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">log2p1</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-log2p1"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log2p1f"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">log2p1f</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-log2p1f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log2p1l"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">log2p1l</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-log2p1l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log2p1fN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">log2p1fN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-log2p1fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log2p1fNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">log2p1fNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-log2p1fNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return a value equivalent to <code class="code">log2&nbsp;(1&nbsp;+&nbsp;<var class="var">x</var>)</code><!-- /@w -->.
+They are computed in a way that is accurate even if <var class="var">x</var> is
+near zero.
+</p>
+<p>The <code class="code">log2p1</code> functions are from TS 18661-4:2015.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-log10p1"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">log10p1</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-log10p1"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log10p1f"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">log10p1f</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-log10p1f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log10p1l"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">log10p1l</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-log10p1l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log10p1fN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">log10p1fN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-log10p1fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-log10p1fNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">log10p1fNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-log10p1fNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return a value equivalent to <code class="code">log10&nbsp;(1&nbsp;+&nbsp;<var class="var">x</var>)</code><!-- /@w -->.
+They are computed in a way that is accurate even if <var class="var">x</var> is
+near zero.
+</p>
+<p>The <code class="code">log10p1</code> functions are from TS 18661-4:2015.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-complex-exponentiation-functions"></a>
+<a class="index-entry-id" id="index-complex-logarithm-functions"></a>
+
+<p>ISO&nbsp;C99<!-- /@w --> defines complex variants of some of the exponentiation and
+logarithm functions.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cexp"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">cexp</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-cexp"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cexpf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">cexpf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-cexpf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cexpl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">cexpl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-cexpl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cexpfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">cexpfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-cexpfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cexpfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">cexpfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-cexpfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return <code class="code">e</code> (the base of natural
+logarithms) raised to the power of <var class="var">z</var>.
+Mathematically, this corresponds to the value
+</p>
+<p><em class="math">exp (z) = exp (creal (z)) * (cos (cimag (z)) + I * sin (cimag (z)))</em>
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-clog"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">clog</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-clog"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-clogf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">clogf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-clogf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-clogl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">clogl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-clogl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-clogfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">clogfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-clogfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-clogfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">clogfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-clogfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the natural logarithm of <var class="var">z</var>.
+Mathematically, this corresponds to the value
+</p>
+<p><em class="math">log (z) = log (cabs (z)) + I * carg (z)</em>
+</p>
+<p><code class="code">clog</code> has a pole at 0, and will signal overflow if <var class="var">z</var> equals
+or is very close to 0.  It is well-defined for all other values of
+<var class="var">z</var>.
+</p></dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-clog10"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">clog10</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-clog10"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-clog10f"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">clog10f</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-clog10f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-clog10l"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">clog10l</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-clog10l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-clog10fN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">clog10fN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-clog10fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-clog10fNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">clog10fNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-clog10fNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the base 10 logarithm of the complex value
+<var class="var">z</var>.  Mathematically, this corresponds to the value
+</p>
+<p><em class="math">log10 (z) = log10 (cabs (z)) + I * carg (z) / log (10)</em>
+</p>
+<p>All these functions, including the <code class="code">_Float<var class="var">N</var></code> and
+<code class="code">_Float<var class="var">N</var>x</code> variants, are GNU extensions.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-csqrt"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">csqrt</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-csqrt"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-csqrtf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">csqrtf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-csqrtf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-csqrtl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">csqrtl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-csqrtl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-csqrtfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">csqrtfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-csqrtfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-csqrtfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">csqrtfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-csqrtfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the complex square root of the argument <var class="var">z</var>.  Unlike
+the real-valued functions, they are defined for all values of <var class="var">z</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cpow"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">cpow</strong> <code class="def-code-arguments">(complex double <var class="var">base</var>, complex double <var class="var">power</var>)</code><a class="copiable-link" href="#index-cpow"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cpowf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">cpowf</strong> <code class="def-code-arguments">(complex float <var class="var">base</var>, complex float <var class="var">power</var>)</code><a class="copiable-link" href="#index-cpowf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cpowl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">cpowl</strong> <code class="def-code-arguments">(complex long double <var class="var">base</var>, complex long double <var class="var">power</var>)</code><a class="copiable-link" href="#index-cpowl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cpowfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">cpowfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">base</var>, complex _Float<var class="var">N</var> <var class="var">power</var>)</code><a class="copiable-link" href="#index-cpowfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cpowfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">cpowfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">base</var>, complex _Float<var class="var">N</var>x <var class="var">power</var>)</code><a class="copiable-link" href="#index-cpowfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return <var class="var">base</var> raised to the power of
+<var class="var">power</var>.  This is equivalent to <code class="code">cexp&nbsp;(y&nbsp;*&nbsp;clog&nbsp;(x))</code><!-- /@w -->
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Hyperbolic-Functions.html">Hyperbolic Functions</a>, Previous: <a href="Inverse-Trig-Functions.html">Inverse Trigonometric Functions</a>, Up: <a href="Mathematics.html">Mathematics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

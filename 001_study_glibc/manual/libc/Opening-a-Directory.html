@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Opening a Directory (The GNU C Library)</title>
+
+<meta name="description" content="Opening a Directory (The GNU C Library)">
+<meta name="keywords" content="Opening a Directory (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Accessing-Directories.html" rel="up" title="Accessing Directories">
+<link href="Reading_002fClosing-Directory.html" rel="next" title="Reading/Closing Directory">
+<link href="Directory-Entries.html" rel="prev" title="Directory Entries">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Opening-a-Directory">
+<div class="nav-panel">
+<p>
+Next: <a href="Reading_002fClosing-Directory.html" accesskey="n" rel="next">Reading and Closing a Directory Stream</a>, Previous: <a href="Directory-Entries.html" accesskey="p" rel="prev">Format of a Directory Entry</a>, Up: <a href="Accessing-Directories.html" accesskey="u" rel="up">Accessing Directories</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Opening-a-Directory-Stream"><span>14.3.2 Opening a Directory Stream<a class="copiable-link" href="#Opening-a-Directory-Stream"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-dirent_002eh-2"></a>
+<p>This section describes how to open a directory stream.  All the symbols
+are declared in the header file <samp class="file">dirent.h</samp>.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-DIR"><span class="category-def">Data Type: </span><span><strong class="def-name">DIR</strong><a class="copiable-link" href="#index-DIR"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">DIR</code> data type represents a directory stream.
+</p></dd></dl>
+
+<p>You shouldn&rsquo;t ever allocate objects of the <code class="code">struct dirent</code> or
+<code class="code">DIR</code> data types, since the directory access functions do that for
+you.  Instead, you refer to these objects using the pointers returned by
+the following functions.
+</p>
+<p>Directory streams are a high-level interface.  On Linux, alternative
+interfaces for accessing directories using file descriptors are
+available.  See <a class="xref" href="Low_002dlevel-Directory-Access.html">Low-level Directory Access</a>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-opendir"><span class="category-def">Function: </span><span><code class="def-type">DIR *</code> <strong class="def-name">opendir</strong> <code class="def-code-arguments">(const char *<var class="var">dirname</var>)</code><a class="copiable-link" href="#index-opendir"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">opendir</code> function opens and returns a directory stream for
+reading the directory whose file name is <var class="var">dirname</var>.  The stream has
+type <code class="code">DIR *</code>.
+</p>
+<p>If unsuccessful, <code class="code">opendir</code> returns a null pointer.  In addition to
+the usual file name errors (see <a class="pxref" href="File-Name-Errors.html">File Name Errors</a>), the
+following <code class="code">errno</code> error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EACCES</code></dt>
+<dd><p>Read permission is denied for the directory named by <code class="code">dirname</code>.
+</p>
+</dd>
+<dt><code class="code">EMFILE</code></dt>
+<dd><p>The process has too many files open.
+</p>
+</dd>
+<dt><code class="code">ENFILE</code></dt>
+<dd><p>The entire system, or perhaps the file system which contains the
+directory, cannot support any additional open files at the moment.
+(This problem cannot happen on GNU/Hurd systems.)
+</p>
+</dd>
+<dt><code class="code">ENOMEM</code></dt>
+<dd><p>Not enough memory available.
+</p></dd>
+</dl>
+
+<p>The <code class="code">DIR</code> type is typically implemented using a file descriptor,
+and the <code class="code">opendir</code> function in terms of the <code class="code">open</code> function.
+See <a class="xref" href="Low_002dLevel-I_002fO.html">Low-Level Input/Output</a>.  Directory streams and the underlying
+file descriptors are closed on <code class="code">exec</code> (see <a class="pxref" href="Executing-a-File.html">Executing a File</a>).
+</p></dd></dl>
+
+<p>The directory which is opened for reading by <code class="code">opendir</code> is
+identified by the name.  In some situations this is not sufficient.
+Or the way <code class="code">opendir</code> implicitly creates a file descriptor for the
+directory is not the way a program might want it.  In these cases an
+alternative interface can be used.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fdopendir"><span class="category-def">Function: </span><span><code class="def-type">DIR *</code> <strong class="def-name">fdopendir</strong> <code class="def-code-arguments">(int <var class="var">fd</var>)</code><a class="copiable-link" href="#index-fdopendir"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fdopendir</code> function works just like <code class="code">opendir</code> but
+instead of taking a file name and opening a file descriptor for the
+directory the caller is required to provide a file descriptor.  This
+file descriptor is then used in subsequent uses of the returned
+directory stream object.
+</p>
+<p>The caller must make sure the file descriptor is associated with a
+directory and it allows reading.
+</p>
+<p>If the <code class="code">fdopendir</code> call returns successfully the file descriptor
+is now under the control of the system.  It can be used in the same
+way the descriptor implicitly created by <code class="code">opendir</code> can be used
+but the program must not close the descriptor.
+</p>
+<p>In case the function is unsuccessful it returns a null pointer and the
+file descriptor remains to be usable by the program.  The following
+<code class="code">errno</code> error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The file descriptor is not valid.
+</p>
+</dd>
+<dt><code class="code">ENOTDIR</code></dt>
+<dd><p>The file descriptor is not associated with a directory.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The descriptor does not allow reading the directory content.
+</p>
+</dd>
+<dt><code class="code">ENOMEM</code></dt>
+<dd><p>Not enough memory available.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>In some situations it can be desirable to get hold of the file
+descriptor which is created by the <code class="code">opendir</code> call.  For instance,
+to switch the current working directory to the directory just read the
+<code class="code">fchdir</code> function could be used.  Historically the <code class="code">DIR</code> type
+was exposed and programs could access the fields.  This does not happen
+in the GNU C Library.  Instead a separate function is provided to allow
+access.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-dirfd"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">dirfd</strong> <code class="def-code-arguments">(DIR *<var class="var">dirstream</var>)</code><a class="copiable-link" href="#index-dirfd"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">dirfd</code> returns the file descriptor associated with
+the directory stream <var class="var">dirstream</var>.  This descriptor can be used until
+the directory is closed with <code class="code">closedir</code>.  If the directory stream
+implementation is not using file descriptors the return value is
+<code class="code">-1</code>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Reading_002fClosing-Directory.html">Reading and Closing a Directory Stream</a>, Previous: <a href="Directory-Entries.html">Format of a Directory Entry</a>, Up: <a href="Accessing-Directories.html">Accessing Directories</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

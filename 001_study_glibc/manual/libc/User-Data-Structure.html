@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>User Data Structure (The GNU C Library)</title>
+
+<meta name="description" content="User Data Structure (The GNU C Library)">
+<meta name="keywords" content="User Data Structure (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="User-Database.html" rel="up" title="User Database">
+<link href="Lookup-User.html" rel="next" title="Lookup User">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="User-Data-Structure">
+<div class="nav-panel">
+<p>
+Next: <a href="Lookup-User.html" accesskey="n" rel="next">Looking Up One User</a>, Up: <a href="User-Database.html" accesskey="u" rel="up">User Database</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="The-Data-Structure-that-Describes-a-User"><span>31.13.1 The Data Structure that Describes a User<a class="copiable-link" href="#The-Data-Structure-that-Describes-a-User"> &para;</a></span></h4>
+
+<p>The functions and data structures for accessing the system user database
+are declared in the header file <samp class="file">pwd.h</samp>.
+<a class="index-entry-id" id="index-pwd_002eh-1"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-passwd"><span class="category-def">Data Type: </span><span><strong class="def-name">struct passwd</strong><a class="copiable-link" href="#index-struct-passwd"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">passwd</code> data structure is used to hold information about
+entries in the system user data base.  It has at least the following members:
+</p>
+<dl class="table">
+<dt><code class="code">char *pw_name</code></dt>
+<dd><p>The user&rsquo;s login name.
+</p>
+</dd>
+<dt><code class="code">char *pw_passwd</code></dt>
+<dd><p>Historically, this field would hold the one-way hash of the user&rsquo;s
+passphrase.  Nowadays, it will almost always be the single character
+&lsquo;<samp class="samp">x</samp>&rsquo;, indicating that the hash is in the shadow database.
+</p>
+</dd>
+<dt><code class="code">uid_t pw_uid</code></dt>
+<dd><p>The user ID number.
+</p>
+</dd>
+<dt><code class="code">gid_t pw_gid</code></dt>
+<dd><p>The user&rsquo;s default group ID number.
+</p>
+</dd>
+<dt><code class="code">char *pw_gecos</code></dt>
+<dd><p>A string typically containing the user&rsquo;s real name, and possibly other
+information such as a phone number.
+</p>
+</dd>
+<dt><code class="code">char *pw_dir</code></dt>
+<dd><p>The user&rsquo;s home directory, or initial working directory.  This might be
+a null pointer, in which case the interpretation is system-dependent.
+</p>
+</dd>
+<dt><code class="code">char *pw_shell</code></dt>
+<dd><p>The user&rsquo;s default shell, or the initial program run when the user logs in.
+This might be a null pointer, indicating that the system default should
+be used.
+</p></dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+
+</body>
+</html>

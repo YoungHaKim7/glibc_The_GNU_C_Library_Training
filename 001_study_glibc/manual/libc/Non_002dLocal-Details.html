@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Non-Local Details (The GNU C Library)</title>
+
+<meta name="description" content="Non-Local Details (The GNU C Library)">
+<meta name="keywords" content="Non-Local Details (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Non_002dLocal-Exits.html" rel="up" title="Non-Local Exits">
+<link href="Non_002dLocal-Exits-and-Signals.html" rel="next" title="Non-Local Exits and Signals">
+<link href="Non_002dLocal-Intro.html" rel="prev" title="Non-Local Intro">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Non_002dLocal-Details">
+<div class="nav-panel">
+<p>
+Next: <a href="Non_002dLocal-Exits-and-Signals.html" accesskey="n" rel="next">Non-Local Exits and Signals</a>, Previous: <a href="Non_002dLocal-Intro.html" accesskey="p" rel="prev">Introduction to Non-Local Exits</a>, Up: <a href="Non_002dLocal-Exits.html" accesskey="u" rel="up">Non-Local Exits</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Details-of-Non_002dLocal-Exits"><span>24.2 Details of Non-Local Exits<a class="copiable-link" href="#Details-of-Non_002dLocal-Exits"> &para;</a></span></h3>
+
+<p>Here are the details on the functions and data structures used for
+performing non-local exits.  These facilities are declared in
+<samp class="file">setjmp.h</samp>.
+<a class="index-entry-id" id="index-setjmp_002eh"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-jmp_005fbuf"><span class="category-def">Data Type: </span><span><strong class="def-name">jmp_buf</strong><a class="copiable-link" href="#index-jmp_005fbuf"> &para;</a></span></dt>
+<dd>
+<p>Objects of type <code class="code">jmp_buf</code> hold the state information to
+be restored by a non-local exit.  The contents of a <code class="code">jmp_buf</code>
+identify a specific place to return to.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-setjmp"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">setjmp</strong> <code class="def-code-arguments">(jmp_buf <var class="var">state</var>)</code><a class="copiable-link" href="#index-setjmp"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>When called normally, <code class="code">setjmp</code> stores information about the
+execution state of the program in <var class="var">state</var> and returns zero.  If
+<code class="code">longjmp</code> is later used to perform a non-local exit to this
+<var class="var">state</var>, <code class="code">setjmp</code> returns a nonzero value.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-longjmp-1"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">longjmp</strong> <code class="def-code-arguments">(jmp_buf <var class="var">state</var>, int <var class="var">value</var>)</code><a class="copiable-link" href="#index-longjmp-1"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe plugin corrupt lock/hurd
+| AC-Unsafe corrupt lock/hurd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function restores current execution to the state saved in
+<var class="var">state</var>, and continues execution from the call to <code class="code">setjmp</code> that
+established that return point.  Returning from <code class="code">setjmp</code> by means of
+<code class="code">longjmp</code> returns the <var class="var">value</var> argument that was passed to
+<code class="code">longjmp</code>, rather than <code class="code">0</code>.  (But if <var class="var">value</var> is given as
+<code class="code">0</code>, <code class="code">setjmp</code> returns <code class="code">1</code>).
+</p></dd></dl>
+
+<p>There are a lot of obscure but important restrictions on the use of
+<code class="code">setjmp</code> and <code class="code">longjmp</code>.  Most of these restrictions are
+present because non-local exits require a fair amount of magic on the
+part of the C compiler and can interact with other parts of the language
+in strange ways.
+</p>
+<p>The <code class="code">setjmp</code> function is actually a macro without an actual
+function definition, so you shouldn&rsquo;t try to &lsquo;<samp class="samp">#undef</samp>&rsquo; it or take
+its address.  In addition, calls to <code class="code">setjmp</code> are safe in only the
+following contexts:
+</p>
+<ul class="itemize mark-bullet">
+<li>As the test expression of a selection or iteration
+statement (such as &lsquo;<samp class="samp">if</samp>&rsquo;, &lsquo;<samp class="samp">switch</samp>&rsquo;, or &lsquo;<samp class="samp">while</samp>&rsquo;).
+
+</li><li>As one operand of an equality or comparison operator that appears as the
+test expression of a selection or iteration statement.  The other
+operand must be an integer constant expression.
+
+</li><li>As the operand of a unary &lsquo;<samp class="samp">!</samp>&rsquo; operator, that appears as the
+test expression of a selection or iteration statement.
+
+</li><li>By itself as an expression statement.
+</li></ul>
+
+<p>Return points are valid only during the dynamic extent of the function
+that called <code class="code">setjmp</code> to establish them.  If you <code class="code">longjmp</code> to
+a return point that was established in a function that has already
+returned, unpredictable and disastrous things are likely to happen.
+</p>
+<p>You should use a nonzero <var class="var">value</var> argument to <code class="code">longjmp</code>.  While
+<code class="code">longjmp</code> refuses to pass back a zero argument as the return value
+from <code class="code">setjmp</code>, this is intended as a safety net against accidental
+misuse and is not really good programming style.
+</p>
+<p>When you perform a non-local exit, accessible objects generally retain
+whatever values they had at the time <code class="code">longjmp</code> was called.  The
+exception is that the values of automatic variables local to the
+function containing the <code class="code">setjmp</code> call that have been changed since
+the call to <code class="code">setjmp</code> are indeterminate, unless you have declared
+them <code class="code">volatile</code>.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Non_002dLocal-Exits-and-Signals.html">Non-Local Exits and Signals</a>, Previous: <a href="Non_002dLocal-Intro.html">Introduction to Non-Local Exits</a>, Up: <a href="Non_002dLocal-Exits.html">Non-Local Exits</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

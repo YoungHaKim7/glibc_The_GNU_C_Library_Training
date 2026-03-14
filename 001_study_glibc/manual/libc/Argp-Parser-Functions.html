@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Argp Parser Functions (The GNU C Library)</title>
+
+<meta name="description" content="Argp Parser Functions (The GNU C Library)">
+<meta name="keywords" content="Argp Parser Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Argp-Parsers.html" rel="up" title="Argp Parsers">
+<link href="Argp-Children.html" rel="next" title="Argp Children">
+<link href="Argp-Option-Vectors.html" rel="prev" title="Argp Option Vectors">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Argp-Parser-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Argp-Children.html" accesskey="n" rel="next">Combining Multiple Argp Parsers</a>, Previous: <a href="Argp-Option-Vectors.html" accesskey="p" rel="prev">Specifying Options in an Argp Parser</a>, Up: <a href="Argp-Parsers.html" accesskey="u" rel="up">Specifying Argp Parsers</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Argp-Parser-Functions-1"><span>26.3.5 Argp Parser Functions<a class="copiable-link" href="#Argp-Parser-Functions-1"> &para;</a></span></h4>
+
+<p>The function pointed to by the <code class="code">parser</code> field in a <code class="code">struct
+argp</code> (see <a class="pxref" href="Argp-Parsers.html">Specifying Argp Parsers</a>) defines what actions take place in response
+to each option or argument parsed.  It is also used as a hook, allowing a
+parser to perform tasks at certain other points during parsing.
+</p>
+<p>Argp parser functions have the following type signature:
+</p>
+<a class="index-entry-id" id="index-argp-parser-functions"></a>
+<div class="example smallexample">
+<pre class="example-preformatted">error_t <var class="var">parser</var> (int <var class="var">key</var>, char *<var class="var">arg</var>, struct argp_state *<var class="var">state</var>)
+</pre></div>
+
+<p>where the arguments are as follows:
+</p>
+<dl class="table">
+<dt><var class="var">key</var></dt>
+<dd><p>For each option that is parsed, <var class="var">parser</var> is called with a value of
+<var class="var">key</var> from that option&rsquo;s <code class="code">key</code> field in the option
+vector.  See <a class="xref" href="Argp-Option-Vectors.html">Specifying Options in an Argp Parser</a>.  <var class="var">parser</var> is also called at
+other times with special reserved keys, such as <code class="code">ARGP_KEY_ARG</code> for
+non-option arguments.  See <a class="xref" href="Argp-Special-Keys.html">Special Keys for Argp Parser Functions</a>.
+</p>
+</dd>
+<dt><var class="var">arg</var></dt>
+<dd><p>If <var class="var">key</var> is an option, <var class="var">arg</var> is its given value.  This defaults
+to zero if no value is specified.  Only options that have a non-zero
+<code class="code">arg</code> field can ever have a value.  These must <em class="emph">always</em> have a
+value unless the <code class="code">OPTION_ARG_OPTIONAL</code> flag is specified.  If the
+input being parsed specifies a value for an option that doesn&rsquo;t allow
+one, an error results before <var class="var">parser</var> ever gets called.
+</p>
+<p>If <var class="var">key</var> is <code class="code">ARGP_KEY_ARG</code>, <var class="var">arg</var> is a non-option
+argument.  Other special keys always have a zero <var class="var">arg</var>.
+</p>
+</dd>
+<dt><var class="var">state</var></dt>
+<dd><p><var class="var">state</var> points to a <code class="code">struct argp_state</code>, containing useful
+information about the current parsing state for use by
+<var class="var">parser</var>.  See <a class="xref" href="Argp-Parsing-State.html">Argp Parsing State</a>.
+</p></dd>
+</dl>
+
+<p>When <var class="var">parser</var> is called, it should perform whatever action is
+appropriate for <var class="var">key</var>, and return <code class="code">0</code> for success,
+<code class="code">ARGP_ERR_UNKNOWN</code> if the value of <var class="var">key</var> is not handled by this
+parser function, or a unix error code if a real error
+occurred.  See <a class="xref" href="Error-Codes.html">Error Codes</a>.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ARGP_005fERR_005fUNKNOWN"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ARGP_ERR_UNKNOWN</strong><a class="copiable-link" href="#index-ARGP_005fERR_005fUNKNOWN"> &para;</a></span></dt>
+<dd>
+<p>Argp parser functions should return <code class="code">ARGP_ERR_UNKNOWN</code> for any
+<var class="var">key</var> value they do not recognize, or for non-option arguments
+(<code class="code"><var class="var">key</var> == ARGP_KEY_ARG</code>) that they are not equipped to handle.
+</p></dd></dl>
+
+<p>A typical parser function uses a switch statement on <var class="var">key</var>:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">error_t
+parse_opt (int key, char *arg, struct argp_state *state)
+{
+  switch (key)
+    {
+    case <var class="var">option_key</var>:
+      <var class="var">action</var>
+      break;
+    ...
+    default:
+      return ARGP_ERR_UNKNOWN;
+    }
+  return 0;
+}
+</pre></div>
+
+
+<ul class="mini-toc">
+<li><a href="Argp-Special-Keys.html" accesskey="1">Special Keys for Argp Parser Functions</a></li>
+<li><a href="Argp-Parsing-State.html" accesskey="2">Argp Parsing State</a></li>
+<li><a href="Argp-Helper-Functions.html" accesskey="3">Functions For Use in Argp Parsers</a></li>
+</ul>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Argp-Children.html">Combining Multiple Argp Parsers</a>, Previous: <a href="Argp-Option-Vectors.html">Specifying Options in an Argp Parser</a>, Up: <a href="Argp-Parsers.html">Specifying Argp Parsers</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

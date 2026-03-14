@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Using Pause (The GNU C Library)</title>
+
+<meta name="description" content="Using Pause (The GNU C Library)">
+<meta name="keywords" content="Using Pause (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Waiting-for-a-Signal.html" rel="up" title="Waiting for a Signal">
+<link href="Pause-Problems.html" rel="next" title="Pause Problems">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Using-Pause">
+<div class="nav-panel">
+<p>
+Next: <a href="Pause-Problems.html" accesskey="n" rel="next">Problems with <code class="code">pause</code></a>, Up: <a href="Waiting-for-a-Signal.html" accesskey="u" rel="up">Waiting for a Signal</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Using-pause"><span>25.8.1 Using <code class="code">pause</code><a class="copiable-link" href="#Using-pause"> &para;</a></span></h4>
+
+<p>The simple way to wait until a signal arrives is to call <code class="code">pause</code>.
+Please read about its disadvantages, in the following section, before
+you use it.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pause"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pause</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-pause"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:sigprocmask/!bsd!linux
+| AS-Unsafe lock/hurd
+| AC-Unsafe lock/hurd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">pause</code> function suspends program execution until a signal
+arrives whose action is either to execute a handler function, or to
+terminate the process.
+</p>
+<p>If the signal causes a handler function to be executed, then
+<code class="code">pause</code> returns.  This is considered an unsuccessful return (since
+&ldquo;successful&rdquo; behavior would be to suspend the program forever), so the
+return value is <code class="code">-1</code>.  Even if you specify that other primitives
+should resume when a system handler returns (see <a class="pxref" href="Interrupted-Primitives.html">Primitives Interrupted by Signals</a>), this has no effect on <code class="code">pause</code>; it always fails when a
+signal is handled.
+</p>
+<p>The following <code class="code">errno</code> error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EINTR</code></dt>
+<dd><p>The function was interrupted by delivery of a signal.
+</p></dd>
+</dl>
+
+<p>If the signal causes program termination, <code class="code">pause</code> doesn&rsquo;t return
+(obviously).
+</p>
+<p>This function is a cancellation point in multithreaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time <code class="code">pause</code> is
+called.  If the thread gets cancelled these resources stay allocated
+until the program ends.  To avoid this calls to <code class="code">pause</code> should be
+protected using cancellation handlers.
+</p>
+<p>The <code class="code">pause</code> function is declared in  <samp class="file">unistd.h</samp>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Pause-Problems.html">Problems with <code class="code">pause</code></a>, Up: <a href="Waiting-for-a-Signal.html">Waiting for a Signal</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

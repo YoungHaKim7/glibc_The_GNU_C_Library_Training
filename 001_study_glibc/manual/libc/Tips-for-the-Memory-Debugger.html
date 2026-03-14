@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Tips for the Memory Debugger (The GNU C Library)</title>
+
+<meta name="description" content="Tips for the Memory Debugger (The GNU C Library)">
+<meta name="keywords" content="Tips for the Memory Debugger (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Allocation-Debugging.html" rel="up" title="Allocation Debugging">
+<link href="Interpreting-the-traces.html" rel="next" title="Interpreting the traces">
+<link href="Using-the-Memory-Debugger.html" rel="prev" title="Using the Memory Debugger">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Tips-for-the-Memory-Debugger">
+<div class="nav-panel">
+<p>
+Next: <a href="Interpreting-the-traces.html" accesskey="n" rel="next">Interpreting the traces</a>, Previous: <a href="Using-the-Memory-Debugger.html" accesskey="p" rel="prev">Example program excerpts</a>, Up: <a href="Allocation-Debugging.html" accesskey="u" rel="up">Allocation Debugging</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Some-more-or-less-clever-ideas"><span>3.2.4.3 Some more or less clever ideas<a class="copiable-link" href="#Some-more-or-less-clever-ideas"> &para;</a></span></h4>
+
+<p>You know the situation.  The program is prepared for debugging and in
+all debugging sessions it runs well.  But once it is started without
+debugging the error shows up.  A typical example is a memory leak that
+becomes visible only when we turn off the debugging.  If you foresee
+such situations you can still win.  Simply use something equivalent to
+the following little program:
+</p>
+<div class="example">
+<pre class="example-preformatted">#include &lt;mcheck.h&gt;
+#include &lt;signal.h&gt;
+
+static void
+enable (int sig)
+{
+  mtrace ();
+  signal (SIGUSR1, enable);
+}
+
+static void
+disable (int sig)
+{
+  muntrace ();
+  signal (SIGUSR2, disable);
+}
+
+int
+main (int argc, char *argv[])
+{
+  ...
+
+  signal (SIGUSR1, enable);
+  signal (SIGUSR2, disable);
+
+  ...
+}
+</pre></div>
+
+<p>I.e., the user can start the memory debugger any time s/he wants if the
+program was started with <code class="code">MALLOC_TRACE</code> set in the environment.
+The output will of course not show the allocations which happened before
+the first signal but if there is a memory leak this will show up
+nevertheless.
+</p>
+</div>
+
+
+
+</body>
+</html>

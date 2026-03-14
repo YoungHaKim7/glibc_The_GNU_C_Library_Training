@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>System V Number Conversion (The GNU C Library)</title>
+
+<meta name="description" content="System V Number Conversion (The GNU C Library)">
+<meta name="keywords" content="System V Number Conversion (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Arithmetic.html" rel="up" title="Arithmetic">
+<link href="Printing-of-Floats.html" rel="prev" title="Printing of Floats">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="System-V-Number-Conversion">
+<div class="nav-panel">
+<p>
+Previous: <a href="Printing-of-Floats.html" accesskey="p" rel="prev">Printing of Floats</a>, Up: <a href="Arithmetic.html" accesskey="u" rel="up">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Old_002dfashioned-System-V-number_002dto_002dstring-functions"><span>20.13 Old-fashioned System V number-to-string functions<a class="copiable-link" href="#Old_002dfashioned-System-V-number_002dto_002dstring-functions"> &para;</a></span></h3>
+
+<p>The old System&nbsp;V<!-- /@w --> C library provided three functions to convert
+numbers to strings, with unusual and hard-to-use semantics.  The GNU C Library
+also provides these functions and some natural extensions.
+</p>
+<p>These functions are only available in the GNU C Library and on systems descended
+from AT&amp;T Unix.  Therefore, unless these functions do precisely what you
+need, it is better to use <code class="code">sprintf</code>, which is standard.
+</p>
+<p>All these functions are defined in <samp class="file">stdlib.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ecvt"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">ecvt</strong> <code class="def-code-arguments">(double <var class="var">value</var>, int <var class="var">ndigit</var>, int *<var class="var">decpt</var>, int *<var class="var">neg</var>)</code><a class="copiable-link" href="#index-ecvt"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Unsafe race:ecvt
+| AS-Unsafe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">ecvt</code> converts the floating-point number <var class="var">value</var>
+to a string with at most <var class="var">ndigit</var> decimal digits.  The
+returned string contains no decimal point or sign.  The first digit of
+the string is non-zero (unless <var class="var">value</var> is actually zero) and the
+last digit is rounded to nearest.  <code class="code">*<var class="var">decpt</var></code> is set to the
+index in the string of the first digit after the decimal point.
+<code class="code">*<var class="var">neg</var></code> is set to a nonzero value if <var class="var">value</var> is negative,
+zero otherwise.
+</p>
+<p>If <var class="var">ndigit</var> decimal digits would exceed the precision of a
+<code class="code">double</code> it is reduced to a system-specific value.
+</p>
+<p>The returned string is statically allocated and overwritten by each call
+to <code class="code">ecvt</code>.
+</p>
+<p>If <var class="var">value</var> is zero, it is implementation defined whether
+<code class="code">*<var class="var">decpt</var></code> is <code class="code">0</code> or <code class="code">1</code>.
+</p>
+<p>For example: <code class="code">ecvt (12.3, 5, &amp;d, &amp;n)</code> returns <code class="code">&quot;12300&quot;</code>
+and sets <var class="var">d</var> to <code class="code">2</code> and <var class="var">n</var> to <code class="code">0</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fcvt"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">fcvt</strong> <code class="def-code-arguments">(double <var class="var">value</var>, int <var class="var">ndigit</var>, int *<var class="var">decpt</var>, int *<var class="var">neg</var>)</code><a class="copiable-link" href="#index-fcvt"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Unsafe race:fcvt
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">fcvt</code> is like <code class="code">ecvt</code>, but <var class="var">ndigit</var> specifies
+the number of digits after the decimal point.  If <var class="var">ndigit</var> is less
+than zero, <var class="var">value</var> is rounded to the <em class="math"><var class="var">ndigit</var>+1</em>&rsquo;th place to the
+left of the decimal point.  For example, if <var class="var">ndigit</var> is <code class="code">-1</code>,
+<var class="var">value</var> will be rounded to the nearest 10.  If <var class="var">ndigit</var> is
+negative and larger than the number of digits to the left of the decimal
+point in <var class="var">value</var>, <var class="var">value</var> will be rounded to one significant digit.
+</p>
+<p>If <var class="var">ndigit</var> decimal digits would exceed the precision of a
+<code class="code">double</code> it is reduced to a system-specific value.
+</p>
+<p>The returned string is statically allocated and overwritten by each call
+to <code class="code">fcvt</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-gcvt"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">gcvt</strong> <code class="def-code-arguments">(double <var class="var">value</var>, int <var class="var">ndigit</var>, char *<var class="var">buf</var>)</code><a class="copiable-link" href="#index-gcvt"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">gcvt</code> is functionally equivalent to &lsquo;<samp class="samp">sprintf(buf, &quot;%*g&quot;,
+ndigit, value)</samp>&rsquo;.  It is provided only for compatibility&rsquo;s sake.  It
+returns <var class="var">buf</var>.
+</p>
+<p>If <var class="var">ndigit</var> decimal digits would exceed the precision of a
+<code class="code">double</code> it is reduced to a system-specific value.
+</p></dd></dl>
+
+<p>As extensions, the GNU C Library provides versions of these three
+functions that take <code class="code">long double</code> arguments.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-qecvt"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">qecvt</strong> <code class="def-code-arguments">(long double <var class="var">value</var>, int <var class="var">ndigit</var>, int *<var class="var">decpt</var>, int *<var class="var">neg</var>)</code><a class="copiable-link" href="#index-qecvt"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:qecvt
+| AS-Unsafe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is equivalent to <code class="code">ecvt</code> except that it takes a
+<code class="code">long double</code> for the first parameter and that <var class="var">ndigit</var> is
+restricted by the precision of a <code class="code">long double</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-qfcvt"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">qfcvt</strong> <code class="def-code-arguments">(long double <var class="var">value</var>, int <var class="var">ndigit</var>, int *<var class="var">decpt</var>, int *<var class="var">neg</var>)</code><a class="copiable-link" href="#index-qfcvt"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:qfcvt
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is equivalent to <code class="code">fcvt</code> except that it
+takes a <code class="code">long double</code> for the first parameter and that <var class="var">ndigit</var> is
+restricted by the precision of a <code class="code">long double</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-qgcvt"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">qgcvt</strong> <code class="def-code-arguments">(long double <var class="var">value</var>, int <var class="var">ndigit</var>, char *<var class="var">buf</var>)</code><a class="copiable-link" href="#index-qgcvt"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is equivalent to <code class="code">gcvt</code> except that it takes a
+<code class="code">long double</code> for the first parameter and that <var class="var">ndigit</var> is
+restricted by the precision of a <code class="code">long double</code>.
+</p></dd></dl>
+
+
+<a class="index-entry-id" id="index-gcvt_005fr"></a>
+<p>The <code class="code">ecvt</code> and <code class="code">fcvt</code> functions, and their <code class="code">long double</code>
+equivalents, all return a string located in a static buffer which is
+overwritten by the next call to the function.  The GNU C Library
+provides another set of extended functions which write the converted
+string into a user-supplied buffer.  These have the conventional
+<code class="code">_r</code> suffix.
+</p>
+<p><code class="code">gcvt_r</code> is not necessary, because <code class="code">gcvt</code> already uses a
+user-supplied buffer.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ecvt_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">ecvt_r</strong> <code class="def-code-arguments">(double <var class="var">value</var>, int <var class="var">ndigit</var>, int *<var class="var">decpt</var>, int *<var class="var">neg</var>, char *<var class="var">buf</var>, size_t <var class="var">len</var>)</code><a class="copiable-link" href="#index-ecvt_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">ecvt_r</code> function is the same as <code class="code">ecvt</code>, except
+that it places its result into the user-specified buffer pointed to by
+<var class="var">buf</var>, with length <var class="var">len</var>.  The return value is <code class="code">-1</code> in
+case of an error and zero otherwise.
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fcvt_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fcvt_r</strong> <code class="def-code-arguments">(double <var class="var">value</var>, int <var class="var">ndigit</var>, int *<var class="var">decpt</var>, int *<var class="var">neg</var>, char *<var class="var">buf</var>, size_t <var class="var">len</var>)</code><a class="copiable-link" href="#index-fcvt_005fr"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fcvt_r</code> function is the same as <code class="code">fcvt</code>, except that it
+places its result into the user-specified buffer pointed to by
+<var class="var">buf</var>, with length <var class="var">len</var>.  The return value is <code class="code">-1</code> in
+case of an error and zero otherwise.
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-qecvt_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">qecvt_r</strong> <code class="def-code-arguments">(long double <var class="var">value</var>, int <var class="var">ndigit</var>, int *<var class="var">decpt</var>, int *<var class="var">neg</var>, char *<var class="var">buf</var>, size_t <var class="var">len</var>)</code><a class="copiable-link" href="#index-qecvt_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">qecvt_r</code> function is the same as <code class="code">qecvt</code>, except
+that it places its result into the user-specified buffer pointed to by
+<var class="var">buf</var>, with length <var class="var">len</var>.  The return value is <code class="code">-1</code> in
+case of an error and zero otherwise.
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-qfcvt_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">qfcvt_r</strong> <code class="def-code-arguments">(long double <var class="var">value</var>, int <var class="var">ndigit</var>, int *<var class="var">decpt</var>, int *<var class="var">neg</var>, char *<var class="var">buf</var>, size_t <var class="var">len</var>)</code><a class="copiable-link" href="#index-qfcvt_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">qfcvt_r</code> function is the same as <code class="code">qfcvt</code>, except
+that it places its result into the user-specified buffer pointed to by
+<var class="var">buf</var>, with length <var class="var">len</var>.  The return value is <code class="code">-1</code> in
+case of an error and zero otherwise.
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Printing-of-Floats.html">Printing of Floats</a>, Up: <a href="Arithmetic.html">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

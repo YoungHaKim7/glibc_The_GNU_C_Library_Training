@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Table of Input Conversions (The GNU C Library)</title>
+
+<meta name="description" content="Table of Input Conversions (The GNU C Library)">
+<meta name="keywords" content="Table of Input Conversions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Formatted-Input.html" rel="up" title="Formatted Input">
+<link href="Numeric-Input-Conversions.html" rel="next" title="Numeric Input Conversions">
+<link href="Input-Conversion-Syntax.html" rel="prev" title="Input Conversion Syntax">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Table-of-Input-Conversions">
+<div class="nav-panel">
+<p>
+Next: <a href="Numeric-Input-Conversions.html" accesskey="n" rel="next">Numeric Input Conversions</a>, Previous: <a href="Input-Conversion-Syntax.html" accesskey="p" rel="prev">Input Conversion Syntax</a>, Up: <a href="Formatted-Input.html" accesskey="u" rel="up">Formatted Input</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Table-of-Input-Conversions-1"><span>12.14.3 Table of Input Conversions<a class="copiable-link" href="#Table-of-Input-Conversions-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-input-conversions_002c-for-scanf"></a>
+
+<p>Here is a table that summarizes the various conversion specifications:
+</p>
+<dl class="table">
+<dt>&lsquo;<samp class="samp">%d</samp>&rsquo;</dt>
+<dd><p>Matches an optionally signed integer written in decimal.  See <a class="xref" href="Numeric-Input-Conversions.html">Numeric Input Conversions</a>.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">%i</samp>&rsquo;</dt>
+<dd><p>Matches an optionally signed integer in any of the formats that the C
+language defines for specifying an integer constant.  See <a class="xref" href="Numeric-Input-Conversions.html">Numeric Input Conversions</a>.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">%b</samp>&rsquo;</dt>
+<dd><p>Matches an unsigned integer written in binary radix.  This is an ISO
+C23 feature.  See <a class="xref" href="Numeric-Input-Conversions.html">Numeric Input Conversions</a>.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">%o</samp>&rsquo;</dt>
+<dd><p>Matches an unsigned integer written in octal radix.
+See <a class="xref" href="Numeric-Input-Conversions.html">Numeric Input Conversions</a>.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">%u</samp>&rsquo;</dt>
+<dd><p>Matches an unsigned integer written in decimal radix.
+See <a class="xref" href="Numeric-Input-Conversions.html">Numeric Input Conversions</a>.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">%x</samp>&rsquo;, &lsquo;<samp class="samp">%X</samp>&rsquo;</dt>
+<dd><p>Matches an unsigned integer written in hexadecimal radix.
+See <a class="xref" href="Numeric-Input-Conversions.html">Numeric Input Conversions</a>.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">%e</samp>&rsquo;, &lsquo;<samp class="samp">%f</samp>&rsquo;, &lsquo;<samp class="samp">%g</samp>&rsquo;, &lsquo;<samp class="samp">%E</samp>&rsquo;, &lsquo;<samp class="samp">%F</samp>&rsquo;, &lsquo;<samp class="samp">%G</samp>&rsquo;</dt>
+<dd><p>Matches an optionally signed floating-point number.  See <a class="xref" href="Numeric-Input-Conversions.html">Numeric Input Conversions</a>.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">%s</samp>&rsquo;</dt>
+<dd>
+<p>Matches a string containing only non-whitespace characters.
+See <a class="xref" href="String-Input-Conversions.html">String Input Conversions</a>.  The presence of the &lsquo;<samp class="samp">l</samp>&rsquo; modifier
+determines whether the output is stored as a wide character string or a
+multibyte string.  If &lsquo;<samp class="samp">%s</samp>&rsquo; is used in a wide character function the
+string is converted as with multiple calls to <code class="code">wcrtomb</code> into a
+multibyte string.  This means that the buffer must provide room for
+<code class="code">MB_CUR_MAX</code> bytes for each wide character read.  In case
+&lsquo;<samp class="samp">%ls</samp>&rsquo; is used in a multibyte function the result is converted into
+wide characters as with multiple calls of <code class="code">mbrtowc</code> before being
+stored in the user provided buffer.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">%S</samp>&rsquo;</dt>
+<dd><p>This is an alias for &lsquo;<samp class="samp">%ls</samp>&rsquo; which is supported for compatibility
+with the Unix standard.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">%[</samp>&rsquo;</dt>
+<dd><p>Matches a string of characters that belong to a specified set.
+See <a class="xref" href="String-Input-Conversions.html">String Input Conversions</a>.  The presence of the &lsquo;<samp class="samp">l</samp>&rsquo; modifier
+determines whether the output is stored as a wide character string or a
+multibyte string.  If &lsquo;<samp class="samp">%[</samp>&rsquo; is used in a wide character function the
+string is converted as with multiple calls to <code class="code">wcrtomb</code> into a
+multibyte string.  This means that the buffer must provide room for
+<code class="code">MB_CUR_MAX</code> bytes for each wide character read.  In case
+&lsquo;<samp class="samp">%l[</samp>&rsquo; is used in a multibyte function the result is converted into
+wide characters as with multiple calls of <code class="code">mbrtowc</code> before being
+stored in the user provided buffer.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">%c</samp>&rsquo;</dt>
+<dd><p>Matches a string of one or more characters; the number of characters
+read is controlled by the maximum field width given for the conversion.
+See <a class="xref" href="String-Input-Conversions.html">String Input Conversions</a>.
+</p>
+<p>If &lsquo;<samp class="samp">%c</samp>&rsquo; is used in a wide stream function the read value is
+converted from a wide character to the corresponding multibyte character
+before storing it.  Note that this conversion can produce more than one
+byte of output and therefore the provided buffer must be large enough for up
+to <code class="code">MB_CUR_MAX</code> bytes for each character.  If &lsquo;<samp class="samp">%lc</samp>&rsquo; is used in
+a multibyte function the input is treated as a multibyte sequence (and
+not bytes) and the result is converted as with calls to <code class="code">mbrtowc</code>.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">%C</samp>&rsquo;</dt>
+<dd><p>This is an alias for &lsquo;<samp class="samp">%lc</samp>&rsquo; which is supported for compatibility
+with the Unix standard.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">%p</samp>&rsquo;</dt>
+<dd><p>Matches a pointer value in the same implementation-defined format used
+by the &lsquo;<samp class="samp">%p</samp>&rsquo; output conversion for <code class="code">printf</code>.  See <a class="xref" href="Other-Input-Conversions.html">Other Input Conversions</a>.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">%n</samp>&rsquo;</dt>
+<dd><p>This conversion doesn&rsquo;t read any characters; it records the number of
+characters read so far by this call.  See <a class="xref" href="Other-Input-Conversions.html">Other Input Conversions</a>.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">%%</samp>&rsquo;</dt>
+<dd><p>This matches a literal &lsquo;<samp class="samp">%</samp>&rsquo; character in the input stream.  No
+corresponding argument is used.  See <a class="xref" href="Other-Input-Conversions.html">Other Input Conversions</a>.
+</p></dd>
+</dl>
+
+<p>If the syntax of a conversion specification is invalid, the behavior is
+undefined.  If there aren&rsquo;t enough function arguments provided to supply
+addresses for all the conversion specifications in the template strings
+that perform assignments, or if the arguments are not of the correct
+types, the behavior is also undefined.  On the other hand, extra
+arguments are simply ignored.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Numeric-Input-Conversions.html">Numeric Input Conversions</a>, Previous: <a href="Input-Conversion-Syntax.html">Input Conversion Syntax</a>, Up: <a href="Formatted-Input.html">Formatted Input</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

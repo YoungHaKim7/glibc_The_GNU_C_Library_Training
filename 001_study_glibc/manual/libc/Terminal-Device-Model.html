@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Terminal Device Model (The GNU C Library)</title>
+
+<meta name="description" content="Terminal Device Model (The GNU C Library)">
+<meta name="keywords" content="Terminal Device Model (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Low_002dLevel-Terminal-Interface.html" rel="up" title="Low-Level Terminal Interface">
+<link href="Is-It-a-Terminal.html" rel="next" title="Is It a Terminal">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Terminal-Device-Model">
+<div class="nav-panel">
+<p>
+Next: <a href="Is-It-a-Terminal.html" accesskey="n" rel="next">Identifying Terminals</a>, Up: <a href="Low_002dLevel-Terminal-Interface.html" accesskey="u" rel="up">Low-Level Terminal Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Terminal-Device-Model-1"><span>17.1 Terminal Device Model<a class="copiable-link" href="#Terminal-Device-Model-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-terminal-model"></a>
+
+<p>A <em class="dfn">terminal device</em>, abbreviated <code class="code">tty</code> (for <em class="dfn">teletype</em>), is
+a character device which implements a set of functionality appropriate
+for communications devices, and which can host an interactive login
+session.  Conceptually, a terminal device implements an RS232
+asynchronous serial interface, but the actual hardware implementation
+may be entirely different, or it may be entirely virtual, notably
+see <a class="pxref" href="Pseudo_002dTerminals.html">Pseudo-Terminals</a>.
+</p>
+<p>For a true conventional asynchronous serial port, such as RS232/V.24,
+RS422/V.11, RS423, or RS485, the functionality is generally as
+described, whereas for other devices, the meaning of serial port
+specific functionality such as modem control signals, BREAK, and line
+speed is device specific.
+</p>
+<p>The rest of this section is described in terms of a physical RS232
+interface.
+</p>
+<p>The RS232 specification assumes the host (Data Terminal Equipment, DTE)
+connects to a modem (Data Communications Equipment, DCE), regardless of
+if a physical modem is present or not.
+</p>
+<p>In addition to the serial data, the DTE provides a set of control
+signals to the DCE, and the DCE a set of status signals to the DTE.  The
+full RS232 and V.24 specifications provide a large number of signals,
+but the ones that are typically implemented in contemporary hardware and
+are relevant to the terminal device interface are:
+</p>
+<dl class="table">
+<dt>DTR - Data Terminal Ready (control)</dt>
+<dd>
+<p>If asserted (true), the DTE is ready to accept/continue an incoming
+communications session.  If deasserted (false), this is a
+<em class="dfn">modem disconnect request</em> to the DCE.  The DCE may, but is not
+required to, trigger a modem disconnect in response.
+<a class="index-entry-id" id="index-modem-disconnect-request"></a>
+</p>
+</dd>
+<dt>RTS - Request To Send (control)</dt>
+<dd>
+<p>This signal is also referred to as Ready To Receive (RTR).
+</p>
+<p>If asserted, the DTE is ready to accept data.  If deasserted, the DCE is
+requested to hold data temporarily without disconnecting.  This is known
+as hardware or RTS/CTS <em class="dfn">flow control</em> and can be handled
+automatically if the appropriate terminal mode flags are set.
+</p>
+</dd>
+<dt>DSR - Data Set Ready (status)</dt>
+<dd>
+<p>If asserted, the DCE is ready to communicate, but may or may not have a
+connection to a remote peer.
+</p>
+</dd>
+<dt>DCD - Data Carrier Detect (status)</dt>
+<dd>
+<p>If asserted, the DCE has a connection to the remote peer.  If
+deasserted, this is a <em class="dfn">modem disconnect</em> signal to the DTE.  A modem
+disconnect may be triggered in response to the DTR control signal being
+deasserted, or it may be caused by an external event.
+<a class="index-entry-id" id="index-modem-disconnect"></a>
+</p>
+</dd>
+<dt>CTS - Clear To Send (status)</dt>
+<dd>
+<p>If asserted, the DCE is ready to accept data.  If deasserted, the DTE is
+requested to hold data temporarily but should not interpret it as a
+disconnect.  This is the DCE to DTE part of RTS/CTS flow
+control.
+</p>
+</dd>
+<dt>RI - Ring Indicator (status)</dt>
+<dd>
+<p>If asserted, this indicates that a remote peer is requesting to connect
+(&ldquo;the phone is ringing&rdquo;).  Depending on how the DCE is configured, the
+DTE may need to assert the DTR control signal before the DCE will accept
+the incoming connection.
+</p></dd>
+</dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Is-It-a-Terminal.html">Identifying Terminals</a>, Up: <a href="Low_002dLevel-Terminal-Interface.html">Low-Level Terminal Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

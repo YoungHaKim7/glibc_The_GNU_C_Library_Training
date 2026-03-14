@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Simple Directory Lister (The GNU C Library)</title>
+
+<meta name="description" content="Simple Directory Lister (The GNU C Library)">
+<meta name="keywords" content="Simple Directory Lister (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Accessing-Directories.html" rel="up" title="Accessing Directories">
+<link href="Random-Access-Directory.html" rel="next" title="Random Access Directory">
+<link href="Reading_002fClosing-Directory.html" rel="prev" title="Reading/Closing Directory">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Simple-Directory-Lister">
+<div class="nav-panel">
+<p>
+Next: <a href="Random-Access-Directory.html" accesskey="n" rel="next">Random Access in a Directory Stream</a>, Previous: <a href="Reading_002fClosing-Directory.html" accesskey="p" rel="prev">Reading and Closing a Directory Stream</a>, Up: <a href="Accessing-Directories.html" accesskey="u" rel="up">Accessing Directories</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Simple-Program-to-List-a-Directory"><span>14.3.4 Simple Program to List a Directory<a class="copiable-link" href="#Simple-Program-to-List-a-Directory"> &para;</a></span></h4>
+
+<p>Here&rsquo;s a simple program that prints the names of the files in
+the current working directory:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">
+
+</pre><div class="group"><pre class="example-preformatted">#include &lt;stdio.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;dirent.h&gt;
+</pre></div><pre class="example-preformatted">
+
+int
+main (void)
+{
+  DIR *dp;
+  struct dirent *ep;
+
+  dp = opendir (&quot;./&quot;);
+  if (dp != NULL)
+    {
+      while (ep = readdir (dp))
+        puts (ep-&gt;d_name);
+      (void) closedir (dp);
+    }
+  else
+    perror (&quot;Couldn't open the directory&quot;);
+
+  return 0;
+}
+</pre></div>
+
+<p>The order in which files appear in a directory tends to be fairly
+random.  A more useful program would sort the entries (perhaps by
+alphabetizing them) before printing them; see
+<a class="ref" href="Scanning-Directory-Content.html">Scanning the Content of a Directory</a>, and <a class="ref" href="Array-Sort-Function.html">Array Sort Function</a>.
+</p>
+
+</div>
+
+
+
+</body>
+</html>

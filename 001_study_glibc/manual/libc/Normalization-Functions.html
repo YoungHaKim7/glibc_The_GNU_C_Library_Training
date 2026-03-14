@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Normalization Functions (The GNU C Library)</title>
+
+<meta name="description" content="Normalization Functions (The GNU C Library)">
+<meta name="keywords" content="Normalization Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Arithmetic-Functions.html" rel="up" title="Arithmetic Functions">
+<link href="Rounding-Functions.html" rel="next" title="Rounding Functions">
+<link href="Absolute-Value.html" rel="prev" title="Absolute Value">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Normalization-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Rounding-Functions.html" accesskey="n" rel="next">Rounding Functions</a>, Previous: <a href="Absolute-Value.html" accesskey="p" rel="prev">Absolute Value</a>, Up: <a href="Arithmetic-Functions.html" accesskey="u" rel="up">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Normalization-Functions-1"><span>20.8.2 Normalization Functions<a class="copiable-link" href="#Normalization-Functions-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-normalization-functions-_0028floating_002dpoint_0029"></a>
+
+<p>The functions described in this section are primarily provided as a way
+to efficiently perform certain low-level manipulations on floating point
+numbers that are represented internally using a binary radix;
+see <a class="ref" href="Floating-Point-Concepts.html">Floating Point Representation Concepts</a>.  These functions are required to
+have equivalent behavior even if the representation does not use a radix
+of 2, but of course they are unlikely to be particularly efficient in
+those cases.
+</p>
+<a class="index-entry-id" id="index-math_002eh-3"></a>
+<p>All these functions are declared in <samp class="file">math.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-frexp"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">frexp</strong> <code class="def-code-arguments">(double <var class="var">value</var>, int *<var class="var">exponent</var>)</code><a class="copiable-link" href="#index-frexp"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-frexpf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">frexpf</strong> <code class="def-code-arguments">(float <var class="var">value</var>, int *<var class="var">exponent</var>)</code><a class="copiable-link" href="#index-frexpf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-frexpl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">frexpl</strong> <code class="def-code-arguments">(long double <var class="var">value</var>, int *<var class="var">exponent</var>)</code><a class="copiable-link" href="#index-frexpl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-frexpfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">frexpfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">value</var>, int *<var class="var">exponent</var>)</code><a class="copiable-link" href="#index-frexpfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-frexpfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">frexpfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">value</var>, int *<var class="var">exponent</var>)</code><a class="copiable-link" href="#index-frexpfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions are used to split the number <var class="var">value</var>
+into a normalized fraction and an exponent.
+</p>
+<p>If the argument <var class="var">value</var> is not zero, the return value is <var class="var">value</var>
+times a power of two, and its magnitude is always in the range 1/2
+(inclusive) to 1 (exclusive).  The corresponding exponent is stored in
+<code class="code">*<var class="var">exponent</var></code>; the return value multiplied by 2 raised to this
+exponent equals the original number <var class="var">value</var>.
+</p>
+<p>For example, <code class="code">frexp (12.8, &amp;exponent)</code> returns <code class="code">0.8</code> and
+stores <code class="code">4</code> in <code class="code">exponent</code>.
+</p>
+<p>If <var class="var">value</var> is zero, then the return value is zero and
+zero is stored in <code class="code">*<var class="var">exponent</var></code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ldexp"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">ldexp</strong> <code class="def-code-arguments">(double <var class="var">value</var>, int <var class="var">exponent</var>)</code><a class="copiable-link" href="#index-ldexp"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ldexpf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">ldexpf</strong> <code class="def-code-arguments">(float <var class="var">value</var>, int <var class="var">exponent</var>)</code><a class="copiable-link" href="#index-ldexpf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ldexpl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">ldexpl</strong> <code class="def-code-arguments">(long double <var class="var">value</var>, int <var class="var">exponent</var>)</code><a class="copiable-link" href="#index-ldexpl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ldexpfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">ldexpfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">value</var>, int <var class="var">exponent</var>)</code><a class="copiable-link" href="#index-ldexpfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ldexpfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">ldexpfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">value</var>, int <var class="var">exponent</var>)</code><a class="copiable-link" href="#index-ldexpfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the result of multiplying the floating-point
+number <var class="var">value</var> by 2 raised to the power <var class="var">exponent</var>.  (It can
+be used to reassemble floating-point numbers that were taken apart
+by <code class="code">frexp</code>.)
+</p>
+<p>For example, <code class="code">ldexp (0.8, 4)</code> returns <code class="code">12.8</code>.
+</p></dd></dl>
+
+<p>The following functions, which come from BSD, provide facilities
+equivalent to those of <code class="code">ldexp</code> and <code class="code">frexp</code>.  See also the
+ISO&nbsp;C<!-- /@w --> function <code class="code">logb</code> which originally also appeared in BSD.
+The <code class="code">_Float<var class="var">N</var></code> and <code class="code">_Float<var class="var">N</var></code> variants of the
+following functions come from TS 18661-3:2015.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-scalb"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">scalb</strong> <code class="def-code-arguments">(double <var class="var">value</var>, double <var class="var">exponent</var>)</code><a class="copiable-link" href="#index-scalb"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-scalbf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">scalbf</strong> <code class="def-code-arguments">(float <var class="var">value</var>, float <var class="var">exponent</var>)</code><a class="copiable-link" href="#index-scalbf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-scalbl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">scalbl</strong> <code class="def-code-arguments">(long double <var class="var">value</var>, long double <var class="var">exponent</var>)</code><a class="copiable-link" href="#index-scalbl"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">scalb</code> function is the BSD name for <code class="code">ldexp</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-scalbn"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">scalbn</strong> <code class="def-code-arguments">(double <var class="var">x</var>, int <var class="var">n</var>)</code><a class="copiable-link" href="#index-scalbn"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-scalbnf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">scalbnf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, int <var class="var">n</var>)</code><a class="copiable-link" href="#index-scalbnf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-scalbnl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">scalbnl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, int <var class="var">n</var>)</code><a class="copiable-link" href="#index-scalbnl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-scalbnfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">scalbnfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, int <var class="var">n</var>)</code><a class="copiable-link" href="#index-scalbnfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-scalbnfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">scalbnfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, int <var class="var">n</var>)</code><a class="copiable-link" href="#index-scalbnfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">scalbn</code> is identical to <code class="code">scalb</code>, except that the exponent
+<var class="var">n</var> is an <code class="code">int</code> instead of a floating-point number.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-scalbln"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">scalbln</strong> <code class="def-code-arguments">(double <var class="var">x</var>, long int <var class="var">n</var>)</code><a class="copiable-link" href="#index-scalbln"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-scalblnf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">scalblnf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, long int <var class="var">n</var>)</code><a class="copiable-link" href="#index-scalblnf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-scalblnl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">scalblnl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long int <var class="var">n</var>)</code><a class="copiable-link" href="#index-scalblnl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-scalblnfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">scalblnfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, long int <var class="var">n</var>)</code><a class="copiable-link" href="#index-scalblnfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-scalblnfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">scalblnfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, long int <var class="var">n</var>)</code><a class="copiable-link" href="#index-scalblnfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">scalbln</code> is identical to <code class="code">scalb</code>, except that the exponent
+<var class="var">n</var> is a <code class="code">long int</code> instead of a floating-point number.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-significand"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">significand</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-significand"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-significandf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">significandf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-significandf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-significandl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">significandl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-significandl"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">significand</code> returns the mantissa of <var class="var">x</var> scaled to the range
+<em class="math">[1, <code class="code">FLT_RADIX</code>)</em>.
+It is equivalent to <code class="code">scalb&nbsp;(<var class="var">x</var>,&nbsp;(double)&nbsp;-ilogb&nbsp;(<var class="var">x</var>))</code><!-- /@w -->.
+</p>
+<p>This function exists mainly for use in certain standardized tests
+of IEEE&nbsp;754<!-- /@w --> conformance.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Rounding-Functions.html">Rounding Functions</a>, Previous: <a href="Absolute-Value.html">Absolute Value</a>, Up: <a href="Arithmetic-Functions.html">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

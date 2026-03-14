@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Signal and Sigaction (The GNU C Library)</title>
+
+<meta name="description" content="Signal and Sigaction (The GNU C Library)">
+<meta name="keywords" content="Signal and Sigaction (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Signal-Actions.html" rel="up" title="Signal Actions">
+<link href="Sigaction-Function-Example.html" rel="next" title="Sigaction Function Example">
+<link href="Advanced-Signal-Handling.html" rel="prev" title="Advanced Signal Handling">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Signal-and-Sigaction">
+<div class="nav-panel">
+<p>
+Next: <a href="Sigaction-Function-Example.html" accesskey="n" rel="next"><code class="code">sigaction</code> Function Example</a>, Previous: <a href="Advanced-Signal-Handling.html" accesskey="p" rel="prev">Advanced Signal Handling</a>, Up: <a href="Signal-Actions.html" accesskey="u" rel="up">Specifying Signal Actions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Interaction-of-signal-and-sigaction"><span>25.3.3 Interaction of <code class="code">signal</code> and <code class="code">sigaction</code><a class="copiable-link" href="#Interaction-of-signal-and-sigaction"> &para;</a></span></h4>
+
+<p>It&rsquo;s possible to use both the <code class="code">signal</code> and <code class="code">sigaction</code>
+functions within a single program, but you have to be careful because
+they can interact in slightly strange ways.
+</p>
+<p>The <code class="code">sigaction</code> function specifies more information than the
+<code class="code">signal</code> function, so the return value from <code class="code">signal</code> cannot
+express the full range of <code class="code">sigaction</code> possibilities.  Therefore, if
+you use <code class="code">signal</code> to save and later reestablish an action, it may
+not be able to reestablish properly a handler that was established with
+<code class="code">sigaction</code>.
+</p>
+<p>To avoid having problems as a result, always use <code class="code">sigaction</code> to
+save and restore a handler if your program uses <code class="code">sigaction</code> at all.
+Since <code class="code">sigaction</code> is more general, it can properly save and
+reestablish any action, regardless of whether it was established
+originally with <code class="code">signal</code> or <code class="code">sigaction</code>.
+</p>
+<p>On some systems if you establish an action with <code class="code">signal</code> and then
+examine it with <code class="code">sigaction</code>, the handler address that you get may
+not be the same as what you specified with <code class="code">signal</code>.  It may not
+even be suitable for use as an action argument with <code class="code">signal</code>.  But
+you can rely on using it as an argument to <code class="code">sigaction</code>.  This
+problem never happens on GNU systems.
+</p>
+<p>So, you&rsquo;re better off using one or the other of the mechanisms
+consistently within a single program.
+</p>
+<p><strong class="strong">Portability Note:</strong> The basic <code class="code">signal</code> function is a feature
+of ISO&nbsp;C<!-- /@w -->, while <code class="code">sigaction</code> is part of the POSIX.1 standard.  If
+you are concerned about portability to non-POSIX systems, then you
+should use the <code class="code">signal</code> function instead.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Sigaction-Function-Example.html"><code class="code">sigaction</code> Function Example</a>, Previous: <a href="Advanced-Signal-Handling.html">Advanced Signal Handling</a>, Up: <a href="Signal-Actions.html">Specifying Signal Actions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

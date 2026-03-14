@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Processor Time (The GNU C Library)</title>
+
+<meta name="description" content="Processor Time (The GNU C Library)">
+<meta name="keywords" content="Processor Time (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Processor-And-CPU-Time.html" rel="up" title="Processor And CPU Time">
+<link href="CPU-Time.html" rel="prev" title="CPU Time">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Processor-Time">
+<div class="nav-panel">
+<p>
+Previous: <a href="CPU-Time.html" accesskey="p" rel="prev">CPU Time Inquiry</a>, Up: <a href="Processor-And-CPU-Time.html" accesskey="u" rel="up">Processor And CPU Time</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Processor-Time-Inquiry"><span>22.4.2 Processor Time Inquiry<a class="copiable-link" href="#Processor-Time-Inquiry"> &para;</a></span></h4>
+
+<p>The <code class="code">times</code> function returns information about a process&rsquo;
+consumption of processor time in a <code class="code">struct&nbsp;tms</code><!-- /@w --> object, in
+addition to the process&rsquo; CPU time.  See <a class="xref" href="Time-Basics.html">Time Basics</a>.  You should
+include the header file <samp class="file">sys/times.h</samp> to use this facility.
+<a class="index-entry-id" id="index-processor-time-1"></a>
+<a class="index-entry-id" id="index-CPU-time-2"></a>
+<a class="index-entry-id" id="index-sys_002ftimes_002eh-1"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-tms"><span class="category-def">Data Type: </span><span><strong class="def-name">struct tms</strong><a class="copiable-link" href="#index-struct-tms"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">tms</code> structure is used to return information about process
+times.  It contains at least the following members:
+</p>
+<dl class="table">
+<dt><code class="code">clock_t tms_utime</code></dt>
+<dd><p>This is the total processor time the calling process has used in
+executing the instructions of its program.
+</p>
+</dd>
+<dt><code class="code">clock_t tms_stime</code></dt>
+<dd><p>This is the processor time the system has used on behalf of the calling
+process.
+</p>
+</dd>
+<dt><code class="code">clock_t tms_cutime</code></dt>
+<dd><p>This is the sum of the <code class="code">tms_utime</code> values and the <code class="code">tms_cutime</code>
+values of all terminated child processes of the calling process, whose
+status has been reported to the parent process by <code class="code">wait</code> or
+<code class="code">waitpid</code>; see <a class="ref" href="Process-Completion.html">Process Completion</a>.  In other words, it
+represents the total processor time used in executing the instructions
+of all the terminated child processes of the calling process, excluding
+child processes which have not yet been reported by <code class="code">wait</code> or
+<code class="code">waitpid</code>.
+<a class="index-entry-id" id="index-child-process"></a>
+</p>
+</dd>
+<dt><code class="code">clock_t tms_cstime</code></dt>
+<dd><p>This is similar to <code class="code">tms_cutime</code>, but represents the total processor
+time the system has used on behalf of all the terminated child processes
+of the calling process.
+</p></dd>
+</dl>
+
+<p>All of the times are given in numbers of clock ticks.  Unlike CPU time,
+these are the actual amounts of time; not relative to any event.
+See <a class="xref" href="Creating-a-Process.html">Creating a Process</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CLK_005fTCK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">CLK_TCK</strong><a class="copiable-link" href="#index-CLK_005fTCK"> &para;</a></span></dt>
+<dd>
+<p>This is an obsolete name for the number of clock ticks per second.  Use
+<code class="code">sysconf (_SC_CLK_TCK)</code> instead.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-times"><span class="category-def">Function: </span><span><code class="def-type">clock_t</code> <strong class="def-name">times</strong> <code class="def-code-arguments">(struct tms *<var class="var">buffer</var>)</code><a class="copiable-link" href="#index-times"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">times</code> function stores the processor time information for
+the calling process in <var class="var">buffer</var>.
+</p>
+<p>The return value is the number of clock ticks since an arbitrary point
+in the past, e.g. since system start-up.  <code class="code">times</code> returns
+<code class="code">(clock_t)(-1)</code> to indicate failure.
+</p></dd></dl>
+
+<p><strong class="strong">Portability Note:</strong> The <code class="code">clock</code> function described in
+<a class="ref" href="CPU-Time.html">CPU Time Inquiry</a> is specified by the ISO&nbsp;C<!-- /@w --> standard.  The
+<code class="code">times</code> function is a feature of POSIX.1.  On GNU systems, the
+CPU time is defined to be equivalent to the sum of the <code class="code">tms_utime</code>
+and <code class="code">tms_stime</code> fields returned by <code class="code">times</code>.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="CPU-Time.html">CPU Time Inquiry</a>, Up: <a href="Processor-And-CPU-Time.html">Processor And CPU Time</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

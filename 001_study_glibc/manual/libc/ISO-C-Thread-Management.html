@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>ISO C Thread Management (The GNU C Library)</title>
+
+<meta name="description" content="ISO C Thread Management (The GNU C Library)">
+<meta name="keywords" content="ISO C Thread Management (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="ISO-C-Threads.html" rel="up" title="ISO C Threads">
+<link href="Call-Once.html" rel="next" title="Call Once">
+<link href="ISO-C-Threads-Return-Values.html" rel="prev" title="ISO C Threads Return Values">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="ISO-C-Thread-Management">
+<div class="nav-panel">
+<p>
+Next: <a href="Call-Once.html" accesskey="n" rel="next">Call Once</a>, Previous: <a href="ISO-C-Threads-Return-Values.html" accesskey="p" rel="prev">Return Values</a>, Up: <a href="ISO-C-Threads.html" accesskey="u" rel="up">ISO C Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Creation-and-Control"><span>36.1.2 Creation and Control<a class="copiable-link" href="#Creation-and-Control"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-thread-creation"></a>
+<a class="index-entry-id" id="index-thread-control"></a>
+<a class="index-entry-id" id="index-thread-management"></a>
+
+<p>The GNU C Library implements a set of functions that allow the user to easily
+create and use threads.  Additional functionality is provided to control
+the behavior of threads.
+</p>
+<p>The following data types are defined for managing threads:
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-thrd_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">thrd_t</strong><a class="copiable-link" href="#index-thrd_005ft"> &para;</a></span></dt>
+<dd>
+<p>A unique object that identifies a thread.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-thrd_005fstart_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">thrd_start_t</strong><a class="copiable-link" href="#index-thrd_005fstart_005ft"> &para;</a></span></dt>
+<dd>
+<p>This data type is an <code class="code">int (*) (void *)</code> typedef that is passed to
+<code class="code">thrd_create</code> when creating a new thread.  It should point to the
+first function that thread will run.
+</p></dd></dl>
+
+<p>The following functions are used for working with threads:
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-thrd_005fcreate"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">thrd_create</strong> <code class="def-code-arguments">(thrd_t *<var class="var">thr</var>, thrd_start_t <var class="var">func</var>, void *<var class="var">arg</var>)</code><a class="copiable-link" href="#index-thrd_005fcreate"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">thrd_create</code> creates a new thread that will execute the function
+<var class="var">func</var>.  The object pointed to by <var class="var">arg</var> will be used as the
+argument to <var class="var">func</var>.  If successful, <var class="var">thr</var> is set to the new
+thread identifier.
+</p>
+<p>This function may return <code class="code">thrd_success</code>, <code class="code">thrd_nomem</code>, or
+<code class="code">thrd_error</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-thrd_005fcurrent"><span class="category-def">Function: </span><span><code class="def-type">thrd_t</code> <strong class="def-name">thrd_current</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-thrd_005fcurrent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns the identifier of the calling thread.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-thrd_005fequal"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">thrd_equal</strong> <code class="def-code-arguments">(thrd_t <var class="var">lhs</var>, thrd_t <var class="var">rhs</var>)</code><a class="copiable-link" href="#index-thrd_005fequal"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">thrd_equal</code> checks whether <var class="var">lhs</var> and <var class="var">rhs</var> refer to the
+same thread.  If <var class="var">lhs</var> and <var class="var">rhs</var> are different threads, this
+function returns <em class="math">0</em>; otherwise, the return value is non-zero.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-thrd_005fsleep"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">thrd_sleep</strong> <code class="def-code-arguments">(const struct timespec *<var class="var">time_point</var>, struct timespec *<var class="var">remaining</var>)</code><a class="copiable-link" href="#index-thrd_005fsleep"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">thrd_sleep</code> blocks the execution of the current thread for at
+least until the elapsed time pointed to by <var class="var">time_point</var> has been
+reached.  This function does not take an absolute time, but a duration
+that the thread is required to be blocked.  See <a class="xref" href="Time-Basics.html">Time Basics</a>, and
+<a class="ref" href="Time-Types.html">Time Types</a>.
+</p>
+<p>The thread may wake early if a signal that is not ignored is received.
+In such a case, if <code class="code">remaining</code> is not NULL, the remaining time
+duration is stored in the object pointed to by
+<var class="var">remaining</var>.
+</p>
+<p><code class="code">thrd_sleep</code> returns <em class="math">0</em> if it blocked for at least the
+amount of time in <code class="code">time_point</code>, <em class="math">-1</em> if it was interrupted
+by a signal, or a negative number on failure.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-thrd_005fyield"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">thrd_yield</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-thrd_005fyield"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">thrd_yield</code> provides a hint to the implementation to reschedule
+the execution of the current thread, allowing other threads to run.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-thrd_005fexit"><span class="category-def">Function: </span><span><code class="def-type">_Noreturn void</code> <strong class="def-name">thrd_exit</strong> <code class="def-code-arguments">(int <var class="var">res</var>)</code><a class="copiable-link" href="#index-thrd_005fexit"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">thrd_exit</code> terminates execution of the calling thread and sets
+its result code to <var class="var">res</var>.
+</p>
+<p>If this function is called from a single-threaded process, the call is
+equivalent to calling <code class="code">exit</code> with <code class="code">EXIT_SUCCESS</code>
+(see <a class="pxref" href="Normal-Termination.html">Normal Termination</a>).  Also note that returning from a
+function that started a thread is equivalent to calling
+<code class="code">thrd_exit</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-thrd_005fdetach"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">thrd_detach</strong> <code class="def-code-arguments">(thrd_t <var class="var">thr</var>)</code><a class="copiable-link" href="#index-thrd_005fdetach"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">thrd_detach</code> detaches the thread identified by <code class="code">thr</code> from
+the current control thread.  The resources held by the detached thread
+will be freed automatically once the thread exits.  The parent thread
+will never be notified by any <var class="var">thr</var> signal.
+</p>
+<p>Calling <code class="code">thrd_detach</code> on a thread that was previously detached or
+joined by another thread results in undefined behavior.
+</p>
+<p>This function returns either <code class="code">thrd_success</code> or <code class="code">thrd_error</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-thrd_005fjoin"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">thrd_join</strong> <code class="def-code-arguments">(thrd_t <var class="var">thr</var>, int *<var class="var">res</var>)</code><a class="copiable-link" href="#index-thrd_005fjoin"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">thrd_join</code> blocks the current thread until the thread identified
+by <code class="code">thr</code> finishes execution.  If <code class="code">res</code> is not NULL, the
+result code of the thread is put into the location pointed to by
+<var class="var">res</var>.  The termination of the thread <em class="dfn">synchronizes-with</em> the
+completion of this function, meaning both threads have arrived at a
+common point in their execution.
+</p>
+<p>Calling <code class="code">thrd_join</code> on a thread that was previously detached or
+joined by another thread results in undefined behavior.
+</p>
+<p>This function returns either <code class="code">thrd_success</code> or <code class="code">thrd_error</code>.
+</p></dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Call-Once.html">Call Once</a>, Previous: <a href="ISO-C-Threads-Return-Values.html">Return Values</a>, Up: <a href="ISO-C-Threads.html">ISO C Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Operations on Complex (The GNU C Library)</title>
+
+<meta name="description" content="Operations on Complex (The GNU C Library)">
+<meta name="keywords" content="Operations on Complex (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Arithmetic.html" rel="up" title="Arithmetic">
+<link href="Parsing-of-Numbers.html" rel="next" title="Parsing of Numbers">
+<link href="Complex-Numbers.html" rel="prev" title="Complex Numbers">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Operations-on-Complex">
+<div class="nav-panel">
+<p>
+Next: <a href="Parsing-of-Numbers.html" accesskey="n" rel="next">Parsing of Numbers</a>, Previous: <a href="Complex-Numbers.html" accesskey="p" rel="prev">Complex Numbers</a>, Up: <a href="Arithmetic.html" accesskey="u" rel="up">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Projections_002c-Conjugates_002c-and-Decomposing-of-Complex-Numbers"><span>20.10 Projections, Conjugates, and Decomposing of Complex Numbers<a class="copiable-link" href="#Projections_002c-Conjugates_002c-and-Decomposing-of-Complex-Numbers"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-project-complex-numbers"></a>
+<a class="index-entry-id" id="index-conjugate-complex-numbers"></a>
+<a class="index-entry-id" id="index-decompose-complex-numbers"></a>
+<a class="index-entry-id" id="index-complex_002eh-2"></a>
+
+<p>ISO&nbsp;C99<!-- /@w --> also defines functions that perform basic operations on
+complex numbers, such as decomposition and conjugation.  The prototypes
+for all these functions are in <samp class="file">complex.h</samp>.  All functions are
+available in three variants, one for each of the three complex types.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-creal"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">creal</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-creal"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-crealf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">crealf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-crealf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-creall"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">creall</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-creall"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-crealfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">crealfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-crealfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-crealfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">crealfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-crealfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the real part of the complex number <var class="var">z</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cimag"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">cimag</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-cimag"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cimagf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">cimagf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-cimagf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cimagl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">cimagl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-cimagl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cimagfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">cimagfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-cimagfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cimagfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">cimagfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-cimagfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the imaginary part of the complex number <var class="var">z</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-conj"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">conj</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-conj"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-conjf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">conjf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-conjf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-conjl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">conjl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-conjl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-conjfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">conjfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-conjfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-conjfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">conjfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-conjfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the conjugate value of the complex number
+<var class="var">z</var>.  The conjugate of a complex number has the same real part and a
+negated imaginary part.  In other words, &lsquo;<samp class="samp">conj(a + bi) = a + -bi</samp>&rsquo;.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-carg"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">carg</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-carg"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cargf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">cargf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-cargf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cargl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">cargl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-cargl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cargfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">cargfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-cargfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cargfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">cargfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-cargfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the argument of the complex number <var class="var">z</var>.
+The argument of a complex number is the angle in the complex plane
+between the positive real axis and a line passing through zero and the
+number.  This angle is measured in the usual fashion and ranges from
+<em class="math">-&#x03C0;</em> to <em class="math">&#x03C0;</em>.
+</p>
+<p><code class="code">carg</code> has a branch cut along the negative real axis.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cproj"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">cproj</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-cproj"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cprojf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">cprojf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-cprojf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cprojl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">cprojl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-cprojl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cprojfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">cprojfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-cprojfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cprojfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">cprojfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-cprojfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the projection of the complex value <var class="var">z</var> onto
+the Riemann sphere.  Values with an infinite imaginary part are projected
+to positive infinity on the real axis, even if the real part is NaN.  If
+the real part is infinite, the result is equivalent to
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">INFINITY + I * copysign (0.0, cimag (z))
+</pre></div>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Parsing-of-Numbers.html">Parsing of Numbers</a>, Previous: <a href="Complex-Numbers.html">Complex Numbers</a>, Up: <a href="Arithmetic.html">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

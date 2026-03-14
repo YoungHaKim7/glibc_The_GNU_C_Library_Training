@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Obstack Chunks (The GNU C Library)</title>
+
+<meta name="description" content="Obstack Chunks (The GNU C Library)">
+<meta name="keywords" content="Obstack Chunks (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Obstacks.html" rel="up" title="Obstacks">
+<link href="Summary-of-Obstacks.html" rel="next" title="Summary of Obstacks">
+<link href="Obstacks-Data-Alignment.html" rel="prev" title="Obstacks Data Alignment">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Obstack-Chunks">
+<div class="nav-panel">
+<p>
+Next: <a href="Summary-of-Obstacks.html" accesskey="n" rel="next">Summary of Obstack Functions</a>, Previous: <a href="Obstacks-Data-Alignment.html" accesskey="p" rel="prev">Alignment of Data in Obstacks</a>, Up: <a href="Obstacks.html" accesskey="u" rel="up">Obstacks</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Obstack-Chunks-1"><span>3.2.6.10 Obstack Chunks<a class="copiable-link" href="#Obstack-Chunks-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-efficiency-of-chunks"></a>
+<a class="index-entry-id" id="index-chunks"></a>
+
+<p>Obstacks work by allocating space for themselves in large chunks, and
+then parceling out space in the chunks to satisfy your requests.  Chunks
+are normally 4096 bytes long unless you specify a different chunk size.
+The chunk size includes 8 bytes of overhead that are not actually used
+for storing objects.  Regardless of the specified size, longer chunks
+will be allocated when necessary for long objects.
+</p>
+<p>The obstack library allocates chunks by calling the function
+<code class="code">obstack_chunk_alloc</code>, which you must define.  When a chunk is no
+longer needed because you have freed all the objects in it, the obstack
+library frees the chunk by calling <code class="code">obstack_chunk_free</code>, which you
+must also define.
+</p>
+<p>These two must be defined (as macros) or declared (as functions) in each
+source file that uses <code class="code">obstack_init</code> (see <a class="pxref" href="Creating-Obstacks.html">Creating Obstacks</a>).
+Most often they are defined as macros like this:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">#define obstack_chunk_alloc malloc
+#define obstack_chunk_free free
+</pre></div>
+
+<p>Note that these are simple macros (no arguments).  Macro definitions with
+arguments will not work!  It is necessary that <code class="code">obstack_chunk_alloc</code>
+or <code class="code">obstack_chunk_free</code>, alone, expand into a function name if it is
+not itself a function name.
+</p>
+<p>If you allocate chunks with <code class="code">malloc</code>, the chunk size should be a
+power of 2.  The default chunk size, 4096, was chosen because it is long
+enough to satisfy many typical requests on the obstack yet short enough
+not to waste too much memory in the portion of the last chunk not yet used.
+</p>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-obstack_005fchunk_005fsize"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">obstack_chunk_size</strong> <code class="def-code-arguments">(struct obstack *<var class="var">obstack-ptr</var>)</code><a class="copiable-link" href="#index-obstack_005fchunk_005fsize"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This returns the chunk size of the given obstack.
+</p></dd></dl>
+
+<p>Since this macro expands to an lvalue, you can specify a new chunk size by
+assigning it a new value.  Doing so does not affect the chunks already
+allocated, but will change the size of chunks allocated for that particular
+obstack in the future.  It is unlikely to be useful to make the chunk size
+smaller, but making it larger might improve efficiency if you are
+allocating many objects whose size is comparable to the chunk size.  Here
+is how to do so cleanly:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">if (obstack_chunk_size (obstack_ptr) &lt; <var class="var">new-chunk-size</var>)
+  obstack_chunk_size (obstack_ptr) = <var class="var">new-chunk-size</var>;
+</pre></div>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Summary-of-Obstacks.html">Summary of Obstack Functions</a>, Previous: <a href="Obstacks-Data-Alignment.html">Alignment of Data in Obstacks</a>, Up: <a href="Obstacks.html">Obstacks</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

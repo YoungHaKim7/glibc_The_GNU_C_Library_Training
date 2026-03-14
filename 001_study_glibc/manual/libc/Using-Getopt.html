@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Using Getopt (The GNU C Library)</title>
+
+<meta name="description" content="Using Getopt (The GNU C Library)">
+<meta name="keywords" content="Using Getopt (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Getopt.html" rel="up" title="Getopt">
+<link href="Example-of-Getopt.html" rel="next" title="Example of Getopt">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Using-Getopt">
+<div class="nav-panel">
+<p>
+Next: <a href="Example-of-Getopt.html" accesskey="n" rel="next">Example of Parsing Arguments with <code class="code">getopt</code></a>, Up: <a href="Getopt.html" accesskey="u" rel="up">Parsing program options using <code class="code">getopt</code></a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Using-the-getopt-function"><span>26.2.1 Using the <code class="code">getopt</code> function<a class="copiable-link" href="#Using-the-getopt-function"> &para;</a></span></h4>
+
+<p>Here are the details about how to call the <code class="code">getopt</code> function.  To
+use this facility, your program must include the header file
+<samp class="file">unistd.h</samp>.
+<a class="index-entry-id" id="index-unistd_002eh-15"></a>
+</p>
+<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr def-block">
+<dt class="deftypevr deftypevar-alias-deftypevr def-line" id="index-opterr"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">opterr</strong><a class="copiable-link" href="#index-opterr"> &para;</a></span></dt>
+<dd>
+<p>If the value of this variable is nonzero, then <code class="code">getopt</code> prints an
+error message to the standard error stream if it encounters an unknown
+option character or an option with a missing required argument.  This is
+the default behavior.  If you set this variable to zero, <code class="code">getopt</code>
+does not print any messages, but it still returns the character <code class="code">?</code>
+to indicate an error.
+</p></dd></dl>
+
+<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr def-block">
+<dt class="deftypevr deftypevar-alias-deftypevr def-line" id="index-optopt"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">optopt</strong><a class="copiable-link" href="#index-optopt"> &para;</a></span></dt>
+<dd>
+<p>When <code class="code">getopt</code> encounters an unknown option character or an option
+with a missing required argument, it stores that option character in
+this variable.  You can use this for providing your own diagnostic
+messages.
+</p></dd></dl>
+
+<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr def-block">
+<dt class="deftypevr deftypevar-alias-deftypevr def-line" id="index-optind"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">optind</strong><a class="copiable-link" href="#index-optind"> &para;</a></span></dt>
+<dd>
+<p>This variable is set by <code class="code">getopt</code> to the index of the next element
+of the <var class="var">argv</var> array to be processed.  Once <code class="code">getopt</code> has found
+all of the option arguments, you can use this variable to determine
+where the remaining non-option arguments begin.  The initial value of
+this variable is <code class="code">1</code>.
+</p></dd></dl>
+
+<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr def-block">
+<dt class="deftypevr deftypevar-alias-deftypevr def-line" id="index-optarg"><span class="category-def">Variable: </span><span><code class="def-type">char *</code> <strong class="def-name">optarg</strong><a class="copiable-link" href="#index-optarg"> &para;</a></span></dt>
+<dd>
+<p>This variable is set by <code class="code">getopt</code> to point at the value of the
+option argument, for those options that accept arguments.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getopt"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getopt</strong> <code class="def-code-arguments">(int <var class="var">argc</var>, char *const *<var class="var">argv</var>, const char *<var class="var">options</var>)</code><a class="copiable-link" href="#index-getopt"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:getopt env
+| AS-Unsafe heap i18n lock corrupt
+| AC-Unsafe mem lock corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">getopt</code> function gets the next option argument from the
+argument list specified by the <var class="var">argv</var> and <var class="var">argc</var> arguments.
+Normally these values come directly from the arguments received by
+<code class="code">main</code>.
+</p>
+<p>The <var class="var">options</var> argument is a string that specifies the option
+characters that are valid for this program.  An option character in this
+string can be followed by a colon (&lsquo;<samp class="samp">:</samp>&rsquo;) to indicate that it takes a
+required argument.  If an option character is followed by two colons
+(&lsquo;<samp class="samp">::</samp>&rsquo;), its argument is optional; this is a GNU extension.
+</p>
+<p><code class="code">getopt</code> has three ways to deal with options that follow
+non-options <var class="var">argv</var> elements.  The special argument &lsquo;<samp class="samp">--</samp>&rsquo; forces
+in all cases the end of option scanning.
+</p>
+<ul class="itemize mark-bullet">
+<li>The default is to permute the contents of <var class="var">argv</var> while scanning it
+so that eventually all the non-options are at the end.  This allows
+options to be given in any order, even with programs that were not
+written to expect this.
+
+</li><li>If the <var class="var">options</var> argument string begins with a hyphen (&lsquo;<samp class="samp">-</samp>&rsquo;), this
+is treated specially.  It permits arguments that are not options to be
+returned as if they were associated with option character &lsquo;<samp class="samp">\1</samp>&rsquo;.
+
+</li><li>POSIX demands the following behavior: the first non-option stops option
+processing.  This mode is selected by either setting the environment
+variable <code class="code">POSIXLY_CORRECT</code> or beginning the <var class="var">options</var> argument
+string with a plus sign (&lsquo;<samp class="samp">+</samp>&rsquo;).
+</li></ul>
+
+<p>The <code class="code">getopt</code> function returns the option character for the next
+command line option.  When no more option arguments are available, it
+returns <code class="code">-1</code>.  There may still be more non-option arguments; you
+must compare the external variable <code class="code">optind</code> against the <var class="var">argc</var>
+parameter to check this.
+</p>
+<p>If the option has an argument, <code class="code">getopt</code> returns the argument by
+storing it in the variable <var class="var">optarg</var>.  You don&rsquo;t ordinarily need to
+copy the <code class="code">optarg</code> string, since it is a pointer into the original
+<var class="var">argv</var> array, not into a static area that might be overwritten.
+</p>
+<p>If <code class="code">getopt</code> finds an option character in <var class="var">argv</var> that was not
+included in <var class="var">options</var>, or a missing option argument, it returns
+&lsquo;<samp class="samp">?</samp>&rsquo; and sets the external variable <code class="code">optopt</code> to the actual
+option character.  If the first character of <var class="var">options</var> is a colon
+(&lsquo;<samp class="samp">:</samp>&rsquo;), then <code class="code">getopt</code> returns &lsquo;<samp class="samp">:</samp>&rsquo; instead of &lsquo;<samp class="samp">?</samp>&rsquo; to
+indicate a missing option argument.  In addition, if the external
+variable <code class="code">opterr</code> is nonzero (which is the default), <code class="code">getopt</code>
+prints an error message.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Example-of-Getopt.html">Example of Parsing Arguments with <code class="code">getopt</code></a>, Up: <a href="Getopt.html">Parsing program options using <code class="code">getopt</code></a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>POSIX (The GNU C Library)</title>
+
+<meta name="description" content="POSIX (The GNU C Library)">
+<meta name="keywords" content="POSIX (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Standards-and-Portability.html" rel="up" title="Standards and Portability">
+<link href="Berkeley-Unix.html" rel="next" title="Berkeley Unix">
+<link href="ISO-C.html" rel="prev" title="ISO C">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="POSIX">
+<div class="nav-panel">
+<p>
+Next: <a href="Berkeley-Unix.html" accesskey="n" rel="next">Berkeley Unix</a>, Previous: <a href="ISO-C.html" accesskey="p" rel="prev">ISO C</a>, Up: <a href="Standards-and-Portability.html" accesskey="u" rel="up">Standards and Portability</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="POSIX-_0028The-Portable-Operating-System-Interface_0029"><span>1.2.2 POSIX (The Portable Operating System Interface)<a class="copiable-link" href="#POSIX-_0028The-Portable-Operating-System-Interface_0029"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-POSIX"></a>
+<a class="index-entry-id" id="index-POSIX_002e1"></a>
+<a class="index-entry-id" id="index-IEEE-Std-1003_002e1"></a>
+<a class="index-entry-id" id="index-ISO_002fIEC-9945_002d1"></a>
+<a class="index-entry-id" id="index-POSIX_002e2"></a>
+<a class="index-entry-id" id="index-IEEE-Std-1003_002e2"></a>
+<a class="index-entry-id" id="index-ISO_002fIEC-9945_002d2"></a>
+
+<p>The GNU C Library is also compatible with the ISO <em class="dfn">POSIX</em> family of
+standards, known more formally as the <em class="dfn">Portable Operating System
+Interface for Computer Environments</em> (ISO/IEC 9945).  They were also
+published as ANSI/IEEE Std 1003.  POSIX is derived mostly from various
+versions of the Unix operating system.
+</p>
+<p>The library facilities specified by the POSIX standards are a superset
+of those required by ISO&nbsp;C<!-- /@w -->; POSIX specifies additional features for
+ISO&nbsp;C<!-- /@w --> functions, as well as specifying new additional functions.  In
+general, the additional requirements and functionality defined by the
+POSIX standards are aimed at providing lower-level support for a
+particular kind of operating system environment, rather than general
+programming language support which can run in many diverse operating
+system environments.
+</p>
+<p>The GNU C Library implements all of the functions specified in
+<cite class="cite">ISO/IEC 9945-1:1996, the POSIX System Application Program
+Interface</cite>, commonly referred to as POSIX.1.  The primary extensions to
+the ISO&nbsp;C<!-- /@w --> facilities specified by this standard include file system
+interface primitives (see <a class="pxref" href="File-System-Interface.html">File System Interface</a>), device-specific
+terminal control functions (see <a class="pxref" href="Low_002dLevel-Terminal-Interface.html">Low-Level Terminal Interface</a>), and
+process control functions (see <a class="pxref" href="Processes.html">Processes</a>).
+</p>
+<p>Some facilities from <cite class="cite">ISO/IEC 9945-2:1993, the POSIX Shell and
+Utilities standard</cite> (POSIX.2) are also implemented in the GNU C Library.
+These include utilities for dealing with regular expressions and other
+pattern matching facilities (see <a class="pxref" href="Pattern-Matching.html">Pattern Matching</a>).
+</p>
+
+
+<ul class="mini-toc">
+<li><a href="POSIX-Safety-Concepts.html" accesskey="1">POSIX Safety Concepts</a></li>
+<li><a href="Unsafe-Features.html" accesskey="2">Unsafe Features</a></li>
+<li><a href="Conditionally-Safe-Features.html" accesskey="3">Conditionally Safe Features</a></li>
+<li><a href="Other-Safety-Remarks.html" accesskey="4">Other Safety Remarks</a></li>
+</ul>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Berkeley-Unix.html">Berkeley Unix</a>, Previous: <a href="ISO-C.html">ISO C</a>, Up: <a href="Standards-and-Portability.html">Standards and Portability</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Replacing malloc (The GNU C Library)</title>
+
+<meta name="description" content="Replacing malloc (The GNU C Library)">
+<meta name="keywords" content="Replacing malloc (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Memory-Allocation.html" rel="up" title="Memory Allocation">
+<link href="Obstacks.html" rel="next" title="Obstacks">
+<link href="Allocation-Debugging.html" rel="prev" title="Allocation Debugging">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Replacing-malloc">
+<div class="nav-panel">
+<p>
+Next: <a href="Obstacks.html" accesskey="n" rel="next">Obstacks</a>, Previous: <a href="Allocation-Debugging.html" accesskey="p" rel="prev">Allocation Debugging</a>, Up: <a href="Memory-Allocation.html" accesskey="u" rel="up">Allocating Storage For Program Data</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Replacing-malloc-1"><span>3.2.5 Replacing <code class="code">malloc</code><a class="copiable-link" href="#Replacing-malloc-1"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-malloc-replacement"></a>
+<a class="index-entry-id" id="index-LD_005fPRELOAD-and-malloc"></a>
+<a class="index-entry-id" id="index-alternative-malloc-implementations"></a>
+<a class="index-entry-id" id="index-customizing-malloc"></a>
+<a class="index-entry-id" id="index-interposing-malloc"></a>
+<a class="index-entry-id" id="index-preempting-malloc"></a>
+<a class="index-entry-id" id="index-replacing-malloc"></a>
+<p>The GNU C Library supports replacing the built-in <code class="code">malloc</code> implementation
+with a different allocator with the same interface.  For dynamically
+linked programs, this happens through ELF symbol interposition, either
+using shared object dependencies or <code class="code">LD_PRELOAD</code>.  For static
+linking, the <code class="code">malloc</code> replacement library must be linked in before
+linking against <code class="code">libc.a</code> (explicitly or implicitly).
+</p>
+<p>Care must be taken not to use functionality from the GNU C Library that uses
+<code class="code">malloc</code> internally.  For example, the <code class="code">fopen</code>,
+<code class="code">opendir</code>, <code class="code">dlopen</code>, and <code class="code">pthread_setspecific</code> functions
+currently use the <code class="code">malloc</code> subsystem internally.  If the
+replacement <code class="code">malloc</code> or its dependencies use thread-local storage
+(TLS), it must use the initial-exec TLS model, and not one of the
+dynamic TLS variants.
+</p>
+<p><strong class="strong">Note:</strong> Failure to provide a complete set of replacement
+functions (that is, all the functions used by the application,
+the GNU C Library, and other linked-in libraries) can lead to static linking
+failures, and, at run time, to heap corruption and application crashes.
+Replacement functions should implement the behavior documented for
+their counterparts in the GNU C Library; for example, the replacement
+<code class="code">malloc</code> should return a null pointer only when failing,
+it should return pointers aligned to <code class="code">alignof (max_align_t)</code>,
+and the replacement <code class="code">free</code> should preserve <code class="code">errno</code>.
+</p>
+<p>The minimum set of functions which has to be provided by a custom
+<code class="code">malloc</code> is given in the table below.
+</p>
+<dl class="table">
+<dt><code class="code">malloc</code></dt>
+<dt><code class="code">free</code></dt>
+<dt><code class="code">calloc</code></dt>
+<dt><code class="code">realloc</code></dt>
+</dl>
+
+<p>These <code class="code">malloc</code>-related functions are required for the GNU C Library to
+work.<a class="footnote" id="DOCF1" href="#FOOT1"><sup>1</sup></a>
+</p>
+<p>The <code class="code">malloc</code> implementation in the GNU C Library provides additional
+functionality not used by the library itself, but which is often used by
+other system libraries and applications.  A general-purpose replacement
+<code class="code">malloc</code> implementation should provide definitions of these
+functions, too.  Their names are listed in the following table.
+</p>
+<dl class="table">
+<dt><code class="code">aligned_alloc</code></dt>
+<dt><code class="code">free_aligned_sized</code></dt>
+<dt><code class="code">free_sized</code></dt>
+<dt><code class="code">malloc_usable_size</code></dt>
+<dt><code class="code">memalign</code></dt>
+<dt><code class="code">posix_memalign</code></dt>
+<dt><code class="code">pvalloc</code></dt>
+<dt><code class="code">valloc</code></dt>
+</dl>
+
+<p>In addition, very old applications may use the obsolete <code class="code">cfree</code>
+function.
+</p>
+<p>Further <code class="code">malloc</code>-related functions such as <code class="code">mallopt</code> or
+<code class="code">mallinfo2</code> will not have any effect or return incorrect statistics
+when a replacement <code class="code">malloc</code> is in use.  However, failure to replace
+these functions typically does not result in crashes or other incorrect
+application behavior, but may result in static linking failures.
+</p>
+<p>There are other functions (<code class="code">reallocarray</code>, <code class="code">strdup</code>, etc.) in
+the GNU C Library that are not listed above but return newly allocated memory to
+callers.  Replacement of these functions is not supported and may produce
+incorrect results.  The GNU C Library implementations of these functions call
+the replacement allocator functions whenever available, so they will work
+correctly with <code class="code">malloc</code> replacement.
+</p>
+</div>
+<div class="footnotes-segment">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h5 class="footnote-body-heading"><a id="FOOT1" href="#DOCF1">(1)</a></h5>
+<p>Versions of the GNU C Library before 2.25 required that a
+custom <code class="code">malloc</code> defines <code class="code">__libc_memalign</code> (with the same
+interface as the <code class="code">memalign</code> function).</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Obstacks.html">Obstacks</a>, Previous: <a href="Allocation-Debugging.html">Allocation Debugging</a>, Up: <a href="Memory-Allocation.html">Allocating Storage For Program Data</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

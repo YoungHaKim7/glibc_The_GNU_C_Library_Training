@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Expansion Stages (The GNU C Library)</title>
+
+<meta name="description" content="Expansion Stages (The GNU C Library)">
+<meta name="keywords" content="Expansion Stages (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Word-Expansion.html" rel="up" title="Word Expansion">
+<link href="Calling-Wordexp.html" rel="next" title="Calling Wordexp">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Expansion-Stages">
+<div class="nav-panel">
+<p>
+Next: <a href="Calling-Wordexp.html" accesskey="n" rel="next">Calling <code class="code">wordexp</code></a>, Up: <a href="Word-Expansion.html" accesskey="u" rel="up">Shell-Style Word Expansion</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="The-Stages-of-Word-Expansion"><span>10.4.1 The Stages of Word Expansion<a class="copiable-link" href="#The-Stages-of-Word-Expansion"> &para;</a></span></h4>
+
+<p>When word expansion is applied to a sequence of words, it performs the
+following transformations in the order shown here:
+</p>
+<ol class="enumerate">
+<li> <a class="index-entry-id" id="index-tilde-expansion"></a>
+<em class="dfn">Tilde expansion</em>: Replacement of &lsquo;<samp class="samp">~foo</samp>&rsquo; with the name of
+the home directory of &lsquo;<samp class="samp">foo</samp>&rsquo;.
+
+</li><li> Next, three different transformations are applied in the same step,
+from left to right:
+
+<ul class="itemize mark-bullet">
+<li><a class="index-entry-id" id="index-variable-substitution"></a>
+<a class="index-entry-id" id="index-substitution-of-variables-and-commands"></a>
+<em class="dfn">Variable substitution</em>: Environment variables are substituted for
+references such as &lsquo;<samp class="samp">$foo</samp>&rsquo;.
+
+</li><li><a class="index-entry-id" id="index-command-substitution"></a>
+<em class="dfn">Command substitution</em>: Constructs such as &lsquo;<samp class="samp">`cat&nbsp;foo`</samp>&rsquo;<!-- /@w --> and
+the equivalent &lsquo;<samp class="samp">$(cat&nbsp;foo)</samp>&rsquo;<!-- /@w --> are replaced with the output from
+the inner command.
+
+</li><li><a class="index-entry-id" id="index-arithmetic-expansion"></a>
+<em class="dfn">Arithmetic expansion</em>: Constructs such as &lsquo;<samp class="samp">$(($x-1))</samp>&rsquo; are
+replaced with the result of the arithmetic computation.
+</li></ul>
+
+</li><li> <a class="index-entry-id" id="index-field-splitting"></a>
+<em class="dfn">Field splitting</em>: subdivision of the text into <em class="dfn">words</em>.
+
+</li><li> <a class="index-entry-id" id="index-wildcard-expansion"></a>
+<em class="dfn">Wildcard expansion</em>: The replacement of a construct such as &lsquo;<samp class="samp">*.c</samp>&rsquo;
+with a list of &lsquo;<samp class="samp">.c</samp>&rsquo; file names.  Wildcard expansion applies to an
+entire word at a time, and replaces that word with 0 or more file names
+that are themselves words.
+
+</li><li> <a class="index-entry-id" id="index-quote-removal"></a>
+<a class="index-entry-id" id="index-removal-of-quotes"></a>
+<em class="dfn">Quote removal</em>: The deletion of string-quotes, now that they have
+done their job by inhibiting the above transformations when appropriate.
+</li></ol>
+
+<p>For the details of these transformations, and how to write the constructs
+that use them, see <cite class="cite">The&nbsp;BASH&nbsp;Manual</cite><!-- /@w --> (to appear).
+</p>
+</div>
+
+
+
+</body>
+</html>

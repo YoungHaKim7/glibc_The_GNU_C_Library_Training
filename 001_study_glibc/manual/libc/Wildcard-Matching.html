@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Wildcard Matching (The GNU C Library)</title>
+
+<meta name="description" content="Wildcard Matching (The GNU C Library)">
+<meta name="keywords" content="Wildcard Matching (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Pattern-Matching.html" rel="up" title="Pattern Matching">
+<link href="Globbing.html" rel="next" title="Globbing">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Wildcard-Matching">
+<div class="nav-panel">
+<p>
+Next: <a href="Globbing.html" accesskey="n" rel="next">Globbing</a>, Up: <a href="Pattern-Matching.html" accesskey="u" rel="up">Pattern Matching</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Wildcard-Matching-1"><span>10.1 Wildcard Matching<a class="copiable-link" href="#Wildcard-Matching-1"> &para;</a></span></h3>
+
+<a class="index-entry-id" id="index-fnmatch_002eh"></a>
+<p>This section describes how to match a wildcard pattern against a
+particular string.  The result is a yes or no answer: does the
+string fit the pattern or not.  The symbols described here are all
+declared in <samp class="file">fnmatch.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fnmatch"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fnmatch</strong> <code class="def-code-arguments">(const char *<var class="var">pattern</var>, const char *<var class="var">string</var>, int <var class="var">flags</var>)</code><a class="copiable-link" href="#index-fnmatch"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe env locale
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function tests whether the string <var class="var">string</var> matches the pattern
+<var class="var">pattern</var>.  It returns <code class="code">0</code> if they do match; otherwise, it
+returns the nonzero value <code class="code">FNM_NOMATCH</code>.  The arguments
+<var class="var">pattern</var> and <var class="var">string</var> are both strings.
+</p>
+<p>The argument <var class="var">flags</var> is a combination of flag bits that alter the
+details of matching.  See below for a list of the defined flags.
+</p>
+<p>In the GNU C Library, <code class="code">fnmatch</code> might sometimes report &ldquo;errors&rdquo; by
+returning nonzero values that are not equal to <code class="code">FNM_NOMATCH</code>.
+</p></dd></dl>
+
+<p>These are the available flags for the <var class="var">flags</var> argument:
+</p>
+<dl class="vtable">
+<dt><a id="index-FNM_005fFILE_005fNAME"></a><span><code class="code">FNM_FILE_NAME</code><a class="copiable-link" href="#index-FNM_005fFILE_005fNAME"> &para;</a></span></dt>
+<dd>
+<p>Treat the &lsquo;<samp class="samp">/</samp>&rsquo; character specially, for matching file names.  If
+this flag is set, wildcard constructs in <var class="var">pattern</var> cannot match
+&lsquo;<samp class="samp">/</samp>&rsquo; in <var class="var">string</var>.  Thus, the only way to match &lsquo;<samp class="samp">/</samp>&rsquo; is with
+an explicit &lsquo;<samp class="samp">/</samp>&rsquo; in <var class="var">pattern</var>.
+</p>
+</dd>
+<dt><a id="index-FNM_005fPATHNAME"></a><span><code class="code">FNM_PATHNAME</code><a class="copiable-link" href="#index-FNM_005fPATHNAME"> &para;</a></span></dt>
+<dd>
+<p>This is an alias for <code class="code">FNM_FILE_NAME</code>; it comes from POSIX.2.  We
+don&rsquo;t recommend this name because we don&rsquo;t use the term &ldquo;pathname&rdquo; for
+file names.
+</p>
+</dd>
+<dt><a id="index-FNM_005fPERIOD"></a><span><code class="code">FNM_PERIOD</code><a class="copiable-link" href="#index-FNM_005fPERIOD"> &para;</a></span></dt>
+<dd>
+<p>Treat the &lsquo;<samp class="samp">.</samp>&rsquo; character specially if it appears at the beginning of
+<var class="var">string</var>.  If this flag is set, wildcard constructs in <var class="var">pattern</var>
+cannot match &lsquo;<samp class="samp">.</samp>&rsquo; as the first character of <var class="var">string</var>.
+</p>
+<p>If you set both <code class="code">FNM_PERIOD</code> and <code class="code">FNM_FILE_NAME</code>, then the
+special treatment applies to &lsquo;<samp class="samp">.</samp>&rsquo; following &lsquo;<samp class="samp">/</samp>&rsquo; as well as to
+&lsquo;<samp class="samp">.</samp>&rsquo; at the beginning of <var class="var">string</var>.  (The shell uses the
+<code class="code">FNM_PERIOD</code> and <code class="code">FNM_FILE_NAME</code> flags together for matching
+file names.)
+</p>
+</dd>
+<dt><a id="index-FNM_005fNOESCAPE"></a><span><code class="code">FNM_NOESCAPE</code><a class="copiable-link" href="#index-FNM_005fNOESCAPE"> &para;</a></span></dt>
+<dd>
+<p>Don&rsquo;t treat the &lsquo;<samp class="samp">\</samp>&rsquo; character specially in patterns.  Normally,
+&lsquo;<samp class="samp">\</samp>&rsquo; quotes the following character, turning off its special meaning
+(if any) so that it matches only itself.  When quoting is enabled, the
+pattern &lsquo;<samp class="samp">\?</samp>&rsquo; matches only the string &lsquo;<samp class="samp">?</samp>&rsquo;, because the question
+mark in the pattern acts like an ordinary character.
+</p>
+<p>If you use <code class="code">FNM_NOESCAPE</code>, then &lsquo;<samp class="samp">\</samp>&rsquo; is an ordinary character.
+</p>
+</dd>
+<dt><a id="index-FNM_005fLEADING_005fDIR"></a><span><code class="code">FNM_LEADING_DIR</code><a class="copiable-link" href="#index-FNM_005fLEADING_005fDIR"> &para;</a></span></dt>
+<dd>
+<p>Ignore a trailing sequence of characters starting with a &lsquo;<samp class="samp">/</samp>&rsquo; in
+<var class="var">string</var>; that is to say, test whether <var class="var">string</var> starts with a
+directory name that <var class="var">pattern</var> matches.
+</p>
+<p>If this flag is set, either &lsquo;<samp class="samp">foo*</samp>&rsquo; or &lsquo;<samp class="samp">foobar</samp>&rsquo; as a pattern
+would match the string &lsquo;<samp class="samp">foobar/frobozz</samp>&rsquo;.
+</p>
+</dd>
+<dt><a id="index-FNM_005fCASEFOLD"></a><span><code class="code">FNM_CASEFOLD</code><a class="copiable-link" href="#index-FNM_005fCASEFOLD"> &para;</a></span></dt>
+<dd>
+<p>Ignore case in comparing <var class="var">string</var> to <var class="var">pattern</var>.
+</p>
+<p>This macro was originally a GNU extension, but was added in
+POSIX.1-2024.
+</p>
+</dd>
+<dt><a id="index-FNM_005fEXTMATCH"></a><span><code class="code">FNM_EXTMATCH</code><a class="copiable-link" href="#index-FNM_005fEXTMATCH"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Korn-Shell"></a>
+<a class="index-entry-id" id="index-ksh"></a>
+<p>Besides the normal patterns, also recognize the extended patterns
+introduced in <samp class="file">ksh</samp>.  The patterns are written in the form
+explained in the following table where <var class="var">pattern-list</var> is a <code class="code">|</code>
+separated list of patterns.
+</p>
+<dl class="table">
+<dt><code class="code">?(<var class="var">pattern-list</var>)</code></dt>
+<dd><p>The pattern matches if zero or one occurrences of any of the patterns
+in the <var class="var">pattern-list</var> allow matching the input string.
+</p>
+</dd>
+<dt><code class="code">*(<var class="var">pattern-list</var>)</code></dt>
+<dd><p>The pattern matches if zero or more occurrences of any of the patterns
+in the <var class="var">pattern-list</var> allow matching the input string.
+</p>
+</dd>
+<dt><code class="code">+(<var class="var">pattern-list</var>)</code></dt>
+<dd><p>The pattern matches if one or more occurrences of any of the patterns
+in the <var class="var">pattern-list</var> allow matching the input string.
+</p>
+</dd>
+<dt><code class="code">@(<var class="var">pattern-list</var>)</code></dt>
+<dd><p>The pattern matches if exactly one occurrence of any of the patterns in
+the <var class="var">pattern-list</var> allows matching the input string.
+</p>
+</dd>
+<dt><code class="code">!(<var class="var">pattern-list</var>)</code></dt>
+<dd><p>The pattern matches if the input string cannot be matched with any of
+the patterns in the <var class="var">pattern-list</var>.
+</p></dd>
+</dl>
+</dd>
+</dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Globbing.html">Globbing</a>, Up: <a href="Pattern-Matching.html">Pattern Matching</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

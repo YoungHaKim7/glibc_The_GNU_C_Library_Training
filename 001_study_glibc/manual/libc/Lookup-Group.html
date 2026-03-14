@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Lookup Group (The GNU C Library)</title>
+
+<meta name="description" content="Lookup Group (The GNU C Library)">
+<meta name="keywords" content="Lookup Group (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Group-Database.html" rel="up" title="Group Database">
+<link href="Scanning-All-Groups.html" rel="next" title="Scanning All Groups">
+<link href="Group-Data-Structure.html" rel="prev" title="Group Data Structure">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Lookup-Group">
+<div class="nav-panel">
+<p>
+Next: <a href="Scanning-All-Groups.html" accesskey="n" rel="next">Scanning the List of All Groups</a>, Previous: <a href="Group-Data-Structure.html" accesskey="p" rel="prev">The Data Structure for a Group</a>, Up: <a href="Group-Database.html" accesskey="u" rel="up">Group Database</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Looking-Up-One-Group"><span>31.14.2 Looking Up One Group<a class="copiable-link" href="#Looking-Up-One-Group"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-converting-group-name-to-group-ID"></a>
+<a class="index-entry-id" id="index-converting-group-ID-to-group-name"></a>
+
+<p>You can search the group database for information about a specific
+group using <code class="code">getgrgid</code> or <code class="code">getgrnam</code>.  These functions are
+declared in <samp class="file">grp.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getgrgid"><span class="category-def">Function: </span><span><code class="def-type">struct group *</code> <strong class="def-name">getgrgid</strong> <code class="def-code-arguments">(gid_t <var class="var">gid</var>)</code><a class="copiable-link" href="#index-getgrgid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:grgid locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns a pointer to a statically-allocated structure
+containing information about the group whose group ID is <var class="var">gid</var>.
+This structure may be overwritten by subsequent calls to
+<code class="code">getgrgid</code>.
+</p>
+<p>A null pointer indicates there is no group with ID <var class="var">gid</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getgrgid_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getgrgid_r</strong> <code class="def-code-arguments">(gid_t <var class="var">gid</var>, struct group *<var class="var">result_buf</var>, char *<var class="var">buffer</var>, size_t <var class="var">buflen</var>, struct group **<var class="var">result</var>)</code><a class="copiable-link" href="#index-getgrgid_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">getgrgid</code> in that it returns
+information about the group whose group ID is <var class="var">gid</var>.  However, it
+fills the user supplied structure pointed to by <var class="var">result_buf</var> with
+the information instead of using a static buffer.  The first
+<var class="var">buflen</var> bytes of the additional buffer pointed to by <var class="var">buffer</var>
+are used to contain additional information, normally strings which are
+pointed to by the elements of the result structure.
+</p>
+<p>If a group with ID <var class="var">gid</var> is found, the pointer returned in
+<var class="var">result</var> points to the record which contains the wanted data (i.e.,
+<var class="var">result</var> contains the value <var class="var">result_buf</var>).  If no group is found
+or if an error occurred, the pointer returned in <var class="var">result</var> is a null
+pointer.  The function returns zero or an error code.  If the buffer
+<var class="var">buffer</var> is too small to contain all the needed information, the
+error code <code class="code">ERANGE</code> is returned and <code class="code">errno</code> is set to
+<code class="code">ERANGE</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getgrnam"><span class="category-def">Function: </span><span><code class="def-type">struct group *</code> <strong class="def-name">getgrnam</strong> <code class="def-code-arguments">(const char *<var class="var">name</var>)</code><a class="copiable-link" href="#index-getgrnam"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Unsafe race:grnam locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns a pointer to a statically-allocated structure
+containing information about the group whose group name is <var class="var">name</var>.
+This structure may be overwritten by subsequent calls to
+<code class="code">getgrnam</code>.
+</p>
+<p>A null pointer indicates there is no group named <var class="var">name</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getgrnam_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getgrnam_r</strong> <code class="def-code-arguments">(const char *<var class="var">name</var>, struct group *<var class="var">result_buf</var>, char *<var class="var">buffer</var>, size_t <var class="var">buflen</var>, struct group **<var class="var">result</var>)</code><a class="copiable-link" href="#index-getgrnam_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">getgrnam</code> in that it returns
+information about the group whose group name is <var class="var">name</var>.  Like
+<code class="code">getgrgid_r</code>, it uses the user supplied buffers in
+<var class="var">result_buf</var> and <var class="var">buffer</var>, not a static buffer.
+</p>
+<p>The return values are the same as for <code class="code">getgrgid_r</code>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Scanning-All-Groups.html">Scanning the List of All Groups</a>, Previous: <a href="Group-Data-Structure.html">The Data Structure for a Group</a>, Up: <a href="Group-Database.html">Group Database</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

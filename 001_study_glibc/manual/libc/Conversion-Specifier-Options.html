@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Conversion Specifier Options (The GNU C Library)</title>
+
+<meta name="description" content="Conversion Specifier Options (The GNU C Library)">
+<meta name="keywords" content="Conversion Specifier Options (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Customizing-Printf.html" rel="up" title="Customizing Printf">
+<link href="Defining-the-Output-Handler.html" rel="next" title="Defining the Output Handler">
+<link href="Registering-New-Conversions.html" rel="prev" title="Registering New Conversions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Conversion-Specifier-Options">
+<div class="nav-panel">
+<p>
+Next: <a href="Defining-the-Output-Handler.html" accesskey="n" rel="next">Defining the Output Handler</a>, Previous: <a href="Registering-New-Conversions.html" accesskey="p" rel="prev">Registering New Conversions</a>, Up: <a href="Customizing-Printf.html" accesskey="u" rel="up">Customizing <code class="code">printf</code></a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Conversion-Specifier-Options-1"><span>12.13.2 Conversion Specifier Options<a class="copiable-link" href="#Conversion-Specifier-Options-1"> &para;</a></span></h4>
+
+<p>If you define a meaning for &lsquo;<samp class="samp">%A</samp>&rsquo;, what if the template contains
+&lsquo;<samp class="samp">%+23A</samp>&rsquo; or &lsquo;<samp class="samp">%-#A</samp>&rsquo;?  To implement a sensible meaning for these,
+the handler when called needs to be able to get the options specified in
+the template.
+</p>
+<p>Both the <var class="var">handler-function</var> and <var class="var">arginfo-function</var> accept an
+argument that points to a <code class="code">struct printf_info</code>, which contains
+information about the options appearing in an instance of the conversion
+specifier.  This data type is declared in the header file
+<samp class="file">printf.h</samp>.
+<a class="index-entry-id" id="index-printf_002eh-1"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-printf_005finfo"><span class="category-def">Type: </span><span><strong class="def-name">struct printf_info</strong><a class="copiable-link" href="#index-struct-printf_005finfo"> &para;</a></span></dt>
+<dd>
+<p>This structure is used to pass information about the options appearing
+in an instance of a conversion specifier in a <code class="code">printf</code> template
+string to the handler and arginfo functions for that specifier.  It
+contains the following members:
+</p>
+<dl class="table">
+<dt><code class="code">int prec</code></dt>
+<dd><p>This is the precision specified.  The value is <code class="code">-1</code> if no precision
+was specified.  If the precision was given as &lsquo;<samp class="samp">*</samp>&rsquo;, the
+<code class="code">printf_info</code> structure passed to the handler function contains the
+actual value retrieved from the argument list.  But the structure passed
+to the arginfo function contains a value of <code class="code">INT_MIN</code>, since the
+actual value is not known.
+</p>
+</dd>
+<dt><code class="code">int width</code></dt>
+<dd><p>This is the minimum field width specified.  The value is <code class="code">0</code> if no
+width was specified.  If the field width was given as &lsquo;<samp class="samp">*</samp>&rsquo;, the
+<code class="code">printf_info</code> structure passed to the handler function contains the
+actual value retrieved from the argument list.  But the structure passed
+to the arginfo function contains a value of <code class="code">INT_MIN</code>, since the
+actual value is not known.
+</p>
+</dd>
+<dt><code class="code">wchar_t spec</code></dt>
+<dd><p>This is the conversion specifier character specified.  It&rsquo;s stored in
+the structure so that you can register the same handler function for
+multiple characters, but still have a way to tell them apart when the
+handler function is called.
+</p>
+</dd>
+<dt><code class="code">unsigned int is_long_double</code></dt>
+<dd><p>This is a boolean that is true if the &lsquo;<samp class="samp">L</samp>&rsquo;, &lsquo;<samp class="samp">ll</samp>&rsquo;, or &lsquo;<samp class="samp">q</samp>&rsquo;
+type modifier was specified.  For integer conversions, this indicates
+<code class="code">long long int</code>, as opposed to <code class="code">long double</code> for floating
+point conversions.
+</p>
+</dd>
+<dt><code class="code">unsigned int is_char</code></dt>
+<dd><p>This is a boolean that is true if the &lsquo;<samp class="samp">hh</samp>&rsquo; type modifier was specified.
+</p>
+</dd>
+<dt><code class="code">unsigned int is_short</code></dt>
+<dd><p>This is a boolean that is true if the &lsquo;<samp class="samp">h</samp>&rsquo; type modifier was specified.
+</p>
+</dd>
+<dt><code class="code">unsigned int is_long</code></dt>
+<dd><p>This is a boolean that is true if the &lsquo;<samp class="samp">l</samp>&rsquo; type modifier was specified.
+</p>
+</dd>
+<dt><code class="code">unsigned int alt</code></dt>
+<dd><p>This is a boolean that is true if the &lsquo;<samp class="samp">#</samp>&rsquo; flag was specified.
+</p>
+</dd>
+<dt><code class="code">unsigned int space</code></dt>
+<dd><p>This is a boolean that is true if the &lsquo;<samp class="samp"> </samp>&rsquo; flag was specified.
+</p>
+</dd>
+<dt><code class="code">unsigned int left</code></dt>
+<dd><p>This is a boolean that is true if the &lsquo;<samp class="samp">-</samp>&rsquo; flag was specified.
+</p>
+</dd>
+<dt><code class="code">unsigned int showsign</code></dt>
+<dd><p>This is a boolean that is true if the &lsquo;<samp class="samp">+</samp>&rsquo; flag was specified.
+</p>
+</dd>
+<dt><code class="code">unsigned int group</code></dt>
+<dd><p>This is a boolean that is true if the &lsquo;<samp class="samp">'</samp>&rsquo; flag was specified.
+</p>
+</dd>
+<dt><code class="code">unsigned int extra</code></dt>
+<dd><p>This flag has a special meaning depending on the context.  It could
+be used freely by the user-defined handlers but when called from
+the <code class="code">printf</code> function this variable always contains the value
+<code class="code">0</code>.
+</p>
+</dd>
+<dt><code class="code">unsigned int wide</code></dt>
+<dd><p>This flag is set if the stream is wide oriented.
+</p>
+</dd>
+<dt><code class="code">wchar_t pad</code></dt>
+<dd><p>This is the character to use for padding the output to the minimum field
+width.  The value is <code class="code">'0'</code> if the &lsquo;<samp class="samp">0</samp>&rsquo; flag was specified, and
+<code class="code">' '</code> otherwise.
+</p></dd>
+</dl>
+</dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Defining-the-Output-Handler.html">Defining the Output Handler</a>, Previous: <a href="Registering-New-Conversions.html">Registering New Conversions</a>, Up: <a href="Customizing-Printf.html">Customizing <code class="code">printf</code></a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

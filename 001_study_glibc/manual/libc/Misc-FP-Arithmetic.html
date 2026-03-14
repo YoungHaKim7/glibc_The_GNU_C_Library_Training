@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Misc FP Arithmetic (The GNU C Library)</title>
+
+<meta name="description" content="Misc FP Arithmetic (The GNU C Library)">
+<meta name="keywords" content="Misc FP Arithmetic (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Arithmetic-Functions.html" rel="up" title="Arithmetic Functions">
+<link href="FP-Comparison-Functions.html" rel="prev" title="FP Comparison Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Misc-FP-Arithmetic">
+<div class="nav-panel">
+<p>
+Previous: <a href="FP-Comparison-Functions.html" accesskey="p" rel="prev">Floating-Point Comparison Functions</a>, Up: <a href="Arithmetic-Functions.html" accesskey="u" rel="up">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Miscellaneous-FP-arithmetic-functions"><span>20.8.7 Miscellaneous FP arithmetic functions<a class="copiable-link" href="#Miscellaneous-FP-arithmetic-functions"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-minimum"></a>
+<a class="index-entry-id" id="index-maximum"></a>
+<a class="index-entry-id" id="index-positive-difference"></a>
+<a class="index-entry-id" id="index-multiply_002dadd"></a>
+
+<p>The functions in this section perform miscellaneous but common
+operations that are awkward to express with C operators.  On some
+processors these functions can use special machine instructions to
+perform these operations faster than the equivalent C code.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fmin"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fmin</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmin"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fminf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fminl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fminfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fminfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fmin</code> function returns the lesser of the two values <var class="var">x</var>
+and <var class="var">y</var> respecting the order signed zeros.  It is similar to the
+expression
+</p><div class="example smallexample">
+<pre class="example-preformatted">if (x == y)
+  return signbit (x) ? x : y;
+return ((x) &lt; (y) ? (x) : (y))
+</pre></div>
+<p>except that <var class="var">x</var> and <var class="var">y</var> are only evaluated once.
+</p>
+<p>If an argument is a quiet NaN, the other argument is returned.  If both arguments
+are NaN, or either is a signaling NaN, NaN is returned.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fmax"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fmax</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmax"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaxf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fmaxf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaxf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaxl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fmaxl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaxl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaxfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fmaxfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaxfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaxfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fmaxfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaxfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fmax</code> function returns the greater of the two values <var class="var">x</var>
+and <var class="var">y</var>.
+</p>
+<p>If an argument is a quiet NaN, the other argument is returned.  If both arguments
+are NaN, or either is a signaling NaN, NaN is returned.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fminimum"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fminimum</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimumf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fminimumf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimumf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimuml"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fminimuml</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimuml"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimumfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fminimumfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimumfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimumfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fminimumfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimumfNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fminimum</code> function returns the lesser of the two values <var class="var">x</var>
+and <var class="var">y</var>.  Unlike <code class="code">fmin</code>, if either argument is a NaN, NaN is returned.
+Positive zero is treated as greater than negative zero.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fmaximum"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fmaximum</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximumf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fmaximumf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximumf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximuml"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fmaximuml</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximuml"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximumfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fmaximumfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximumfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximumfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fmaximumfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximumfNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fmaximum</code> function returns the greater of the two values <var class="var">x</var>
+and <var class="var">y</var>.  Unlike <code class="code">fmax</code>, if either argument is a NaN, NaN is returned.
+Positive zero is treated as greater than negative zero.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fminimum_005fnum"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fminimum_num</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fnum"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimum_005fnumf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fminimum_numf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fnumf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimum_005fnuml"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fminimum_numl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fnuml"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimum_005fnumfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fminimum_numfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fnumfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimum_005fnumfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fminimum_numfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fnumfNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fminimum_num</code> function returns the lesser of the two values
+<var class="var">x</var> and <var class="var">y</var>.  If one argument is a number and the other is a
+NaN, even a signaling NaN, the number is returned.  Positive zero is
+treated as greater than negative zero.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fmaximum_005fnum"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fmaximum_num</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fnum"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximum_005fnumf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fmaximum_numf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fnumf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximum_005fnuml"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fmaximum_numl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fnuml"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximum_005fnumfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fmaximum_numfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fnumfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximum_005fnumfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fmaximum_numfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fnumfNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fmaximum_num</code> function returns the greater of the two values
+<var class="var">x</var> and <var class="var">y</var>.  If one argument is a number and the other is a
+NaN, even a signaling NaN, the number is returned.  Positive zero is
+treated as greater than negative zero.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fminmag"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fminmag</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminmag"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminmagf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fminmagf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminmagf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminmagl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fminmagl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminmagl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminmagfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fminmagfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminmagfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminmagfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fminmagfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminmagfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions, from TS 18661-1:2014 and TS 18661-3:2015, return
+whichever of the two values <var class="var">x</var> and <var class="var">y</var> has the smaller absolute
+value.  If both have the same absolute value, or either is NaN, they
+behave the same as the <code class="code">fmin</code> functions (including the order of
+signed zeros).
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fmaxmag"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fmaxmag</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaxmag"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaxmagf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fmaxmagf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaxmagf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaxmagl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fmaxmagl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaxmagl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaxmagfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fmaxmagfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaxmagfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaxmagfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fmaxmagfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaxmagfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions, from TS 18661-1:2014, return whichever of the two
+values <var class="var">x</var> and <var class="var">y</var> has the greater absolute value.  If both
+have the same absolute value, or either is NaN, they behave the same
+as the <code class="code">fmax</code> functions.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fminimum_005fmag"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fminimum_mag</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fmag"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimum_005fmagf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fminimum_magf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fmagf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimum_005fmagl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fminimum_magl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fmagl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimum_005fmagfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fminimum_magfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fmagfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimum_005fmagfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fminimum_magfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fmagfNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return whichever of the two values <var class="var">x</var> and <var class="var">y</var>
+has the smaller absolute value.  If both have the same absolute value,
+or either is NaN, they behave the same as the <code class="code">fminimum</code>
+functions.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fmaximum_005fmag"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fmaximum_mag</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fmag"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximum_005fmagf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fmaximum_magf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fmagf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximum_005fmagl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fmaximum_magl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fmagl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximum_005fmagfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fmaximum_magfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fmagfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximum_005fmagfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fmaximum_magfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fmagfNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return whichever of the two values <var class="var">x</var> and <var class="var">y</var>
+has the greater absolute value.  If both have the same absolute value,
+or either is NaN, they behave the same as the <code class="code">fmaximum</code>
+functions.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fminimum_005fmag_005fnum"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fminimum_mag_num</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fmag_005fnum"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimum_005fmag_005fnumf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fminimum_mag_numf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fmag_005fnumf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimum_005fmag_005fnuml"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fminimum_mag_numl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fmag_005fnuml"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimum_005fmag_005fnumfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fminimum_mag_numfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fmag_005fnumfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fminimum_005fmag_005fnumfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fminimum_mag_numfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fminimum_005fmag_005fnumfNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return whichever of the two values <var class="var">x</var> and <var class="var">y</var>
+has the smaller absolute value.  If both have the same absolute value,
+or either is NaN, they behave the same as the <code class="code">fminimum_num</code>
+functions.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fmaximum_005fmag_005fnum"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fmaximum_mag_num</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fmag_005fnum"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximum_005fmag_005fnumf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fmaximum_mag_numf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fmag_005fnumf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximum_005fmag_005fnuml"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fmaximum_mag_numl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fmag_005fnuml"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximum_005fmag_005fnumfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fmaximum_mag_numfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fmag_005fnumfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaximum_005fmag_005fnumfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fmaximum_mag_numfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmaximum_005fmag_005fnumfNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return whichever of the two values <var class="var">x</var> and <var class="var">y</var>
+has the greater absolute value.  If both have the same absolute value,
+or either is NaN, they behave the same as the <code class="code">fmaximum_num</code>
+functions.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fdim"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fdim</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fdim"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fdimf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fdimf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-fdimf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fdiml"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fdiml</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fdiml"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fdimfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fdimfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fdimfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fdimfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fdimfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fdimfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fdim</code> function returns the positive difference between
+<var class="var">x</var> and <var class="var">y</var>.  The positive difference is <em class="math"><var class="var">x</var> -
+<var class="var">y</var></em> if <var class="var">x</var> is greater than <var class="var">y</var>, and <em class="math">0</em> otherwise.
+</p>
+<p>If <var class="var">x</var>, <var class="var">y</var>, or both are NaN, NaN is returned.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fma"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fma</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>, double <var class="var">z</var>)</code><a class="copiable-link" href="#index-fma"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmaf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fmaf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>, float <var class="var">z</var>)</code><a class="copiable-link" href="#index-fmaf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmal"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fmal</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>, long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-fmal"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmafN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fmafN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>, _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-fmafN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmafNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fmafNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>, _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-fmafNx"> &para;</a></span></dt>
+<dd>
+
+
+<a class="index-entry-id" id="index-butterfly"></a>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fma</code> function performs floating-point multiply-add.  This is
+the operation <em class="math">(<var class="var">x</var> &#x00B7; <var class="var">y</var>) + <var class="var">z</var></em>, but the
+intermediate result is not rounded to the destination type.  This can
+sometimes improve the precision of a calculation.
+</p>
+<p>This function was introduced because some processors have a special
+instruction to perform multiply-add.  The C compiler cannot use it
+directly, because the expression &lsquo;<samp class="samp">x*y + z</samp>&rsquo; is defined to round the
+intermediate result.  <code class="code">fma</code> lets you choose when you want to round
+only once.
+</p>
+<a class="index-entry-id" id="index-FP_005fFAST_005fFMA"></a>
+<p>On processors which do not implement multiply-add in hardware,
+<code class="code">fma</code> can be very slow since it must avoid intermediate rounding.
+<samp class="file">math.h</samp> defines the symbols <code class="code">FP_FAST_FMA</code>,
+<code class="code">FP_FAST_FMAF</code>, and <code class="code">FP_FAST_FMAL</code> when the corresponding
+version of <code class="code">fma</code> is no slower than the expression &lsquo;<samp class="samp">x*y + z</samp>&rsquo;.
+In the GNU C Library, this always means the operation is implemented in
+hardware.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fadd"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fadd</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fadd"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-faddl"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">faddl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-faddl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-daddl"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">daddl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-daddl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMaddfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatM</code> <strong class="def-name">fMaddfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMaddfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMaddfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatM</code> <strong class="def-name">fMaddfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMaddfNx"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMxaddfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatMx</code> <strong class="def-name">fMxaddfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMxaddfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMxaddfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatMx</code> <strong class="def-name">fMxaddfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMxaddfNx"> &para;</a></span></dt>
+<dd>
+
+
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions, from TS 18661-1:2014 and TS 18661-3:2015, return
+<em class="math"><var class="var">x</var> + <var class="var">y</var></em>, rounded once to the return type of the
+function without any intermediate rounding to the type of the
+arguments.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fsub"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fsub</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fsub"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fsubl"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fsubl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fsubl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-dsubl"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">dsubl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-dsubl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMsubfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatM</code> <strong class="def-name">fMsubfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMsubfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMsubfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatM</code> <strong class="def-name">fMsubfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMsubfNx"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMxsubfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatMx</code> <strong class="def-name">fMxsubfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMxsubfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMxsubfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatMx</code> <strong class="def-name">fMxsubfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMxsubfNx"> &para;</a></span></dt>
+<dd>
+
+
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions, from TS 18661-1:2014 and TS 18661-3:2015, return
+<em class="math"><var class="var">x</var> - <var class="var">y</var></em>, rounded once to the return type of the
+function without any intermediate rounding to the type of the
+arguments.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fmul"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fmul</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmul"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmull"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fmull</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fmull"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-dmull"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">dmull</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-dmull"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMmulfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatM</code> <strong class="def-name">fMmulfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMmulfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMmulfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatM</code> <strong class="def-name">fMmulfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMmulfNx"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMxmulfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatMx</code> <strong class="def-name">fMxmulfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMxmulfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMxmulfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatMx</code> <strong class="def-name">fMxmulfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMxmulfNx"> &para;</a></span></dt>
+<dd>
+
+
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions, from TS 18661-1:2014 and TS 18661-3:2015, return
+<em class="math"><var class="var">x</var> * <var class="var">y</var></em>, rounded once to the return type of the
+function without any intermediate rounding to the type of the
+arguments.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fdiv"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fdiv</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fdiv"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fdivl"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fdivl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-fdivl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ddivl"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">ddivl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-ddivl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMdivfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatM</code> <strong class="def-name">fMdivfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMdivfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMdivfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatM</code> <strong class="def-name">fMdivfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMdivfNx"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMxdivfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatMx</code> <strong class="def-name">fMxdivfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMxdivfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMxdivfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatMx</code> <strong class="def-name">fMxdivfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-fMxdivfNx"> &para;</a></span></dt>
+<dd>
+
+
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions, from TS 18661-1:2014 and TS 18661-3:2015, return
+<em class="math"><var class="var">x</var> / <var class="var">y</var></em>, rounded once to the return type of the
+function without any intermediate rounding to the type of the
+arguments.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fsqrt"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fsqrt</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-fsqrt"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fsqrtl"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fsqrtl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-fsqrtl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-dsqrtl"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">dsqrtl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-dsqrtl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMsqrtfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatM</code> <strong class="def-name">fMsqrtfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-fMsqrtfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMsqrtfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatM</code> <strong class="def-name">fMsqrtfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-fMsqrtfNx"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMxsqrtfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatMx</code> <strong class="def-name">fMxsqrtfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-fMxsqrtfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMxsqrtfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatMx</code> <strong class="def-name">fMxsqrtfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-fMxsqrtfNx"> &para;</a></span></dt>
+<dd>
+
+
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions, from TS 18661-1:2014 and TS 18661-3:2015, return the
+square root of <var class="var">x</var>, rounded once to the return type of the
+function without any intermediate rounding to the type of the
+arguments.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ffma"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">ffma</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>, double <var class="var">z</var>)</code><a class="copiable-link" href="#index-ffma"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ffmal"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">ffmal</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>, long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-ffmal"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-dfmal"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">dfmal</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>, long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-dfmal"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMfmafN"><span class="category-def">Function: </span><span><code class="def-type">_FloatM</code> <strong class="def-name">fMfmafN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>, _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-fMfmafN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMfmafNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatM</code> <strong class="def-name">fMfmafNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>, _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-fMfmafNx"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMxfmafN"><span class="category-def">Function: </span><span><code class="def-type">_FloatMx</code> <strong class="def-name">fMxfmafN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>, _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-fMxfmafN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fMxfmafNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatMx</code> <strong class="def-name">fMxfmafNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>, _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-fMxfmafNx"> &para;</a></span></dt>
+<dd>
+
+
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>These functions, from TS 18661-1:2014 and TS 18661-3:2015, return
+<em class="math">(<var class="var">x</var> &#x00B7; <var class="var">y</var>) + <var class="var">z</var></em>, rounded once to the return
+type of the function without any intermediate rounding to the type of
+the arguments and without any intermediate rounding of result of the
+multiplication.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="FP-Comparison-Functions.html">Floating-Point Comparison Functions</a>, Up: <a href="Arithmetic-Functions.html">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

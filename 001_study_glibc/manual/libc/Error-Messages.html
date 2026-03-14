@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Error Messages (The GNU C Library)</title>
+
+<meta name="description" content="Error Messages (The GNU C Library)">
+<meta name="keywords" content="Error Messages (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Error-Reporting.html" rel="up" title="Error Reporting">
+<link href="Error-Codes.html" rel="prev" title="Error Codes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Error-Messages">
+<div class="nav-panel">
+<p>
+Previous: <a href="Error-Codes.html" accesskey="p" rel="prev">Error Codes</a>, Up: <a href="Error-Reporting.html" accesskey="u" rel="up">Error Reporting</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Error-Messages-1"><span>2.3 Error Messages<a class="copiable-link" href="#Error-Messages-1"> &para;</a></span></h3>
+
+<p>The library has functions and variables designed to make it easy for
+your program to report informative error messages in the customary
+format about the failure of a library call.  The functions
+<code class="code">strerror</code> and <code class="code">perror</code> give you the standard error message
+for a given error code; the variable
+<code class="code">program_invocation_short_name</code><!-- /@w --> gives you convenient access to the
+name of the program that encountered the error.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strerror"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">strerror</strong> <code class="def-code-arguments">(int <var class="var">errnum</var>)</code><a class="copiable-link" href="#index-strerror"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap i18n
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">strerror</code> function maps the error code (see <a class="pxref" href="Checking-for-Errors.html">Checking for Errors</a>) specified by the <var class="var">errnum</var> argument to a descriptive error
+message string.  The string is translated according to the current
+locale.  The return value is a pointer to this string.
+</p>
+<p>The value <var class="var">errnum</var> normally comes from the variable <code class="code">errno</code>.
+</p>
+<p>You should not modify the string returned by <code class="code">strerror</code>.  Also, if
+you make subsequent calls to <code class="code">strerror</code> or <code class="code">strerror_l</code>, or
+the thread that obtained the string exits, the returned pointer will be
+invalidated.
+</p>
+<p>As there is no way to restore the previous state after calling
+<code class="code">strerror</code>, library code should not call this function because it
+may interfere with application use of <code class="code">strerror</code>, invalidating the
+string pointer before the application is done using it.  Instead,
+<code class="code">strerror_r</code>, <code class="code">snprintf</code> with the &lsquo;<samp class="samp">%m</samp>&rsquo; or &lsquo;<samp class="samp">%#m</samp>&rsquo;
+specifiers, <code class="code">strerrorname_np</code>, or <code class="code">strerrordesc_np</code> can be
+used instead.
+</p>
+<p>The <code class="code">strerror</code> function preserves the value of <code class="code">errno</code> and
+cannot fail.
+</p>
+<p>The function <code class="code">strerror</code> is declared in <samp class="file">string.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strerror_005fl"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">strerror_l</strong> <code class="def-code-arguments">(int <var class="var">errnum</var>, locale_t <var class="var">locale</var>)</code><a class="copiable-link" href="#index-strerror_005fl"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap i18n
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is like <code class="code">strerror</code>, except that the returned string
+is translated according to <var class="var">locale</var> (instead of the current locale
+used by <code class="code">strerror</code>).  Note that calling <code class="code">strerror_l</code>
+invalidates the pointer returned by <code class="code">strerror</code> and vice versa.
+</p>
+<p>The function <code class="code">strerror_l</code> is defined by POSIX and is declared in
+<samp class="file">string.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strerror_005fr"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">strerror_r</strong> <code class="def-code-arguments">(int <var class="var">errnum</var>, char *<var class="var">buf</var>, size_t <var class="var">n</var>)</code><a class="copiable-link" href="#index-strerror_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe i18n
+| AC-Unsafe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The following description is for the GNU variant of the function,
+used if <code class="code">_GNU_SOURCE</code> is defined.  See <a class="xref" href="Feature-Test-Macros.html">Feature Test Macros</a>.
+</p>
+<p>The <code class="code">strerror_r</code> function works like <code class="code">strerror</code> but instead of
+returning a pointer to a string that is managed by the GNU C Library, it can
+use the user supplied buffer starting at <var class="var">buf</var> for storing the
+string.
+</p>
+<p>At most <var class="var">n</var> characters are written (including the NUL byte) to
+<var class="var">buf</var>, so it is up to the user to select a buffer large enough.
+Whether returned pointer points to the <var class="var">buf</var> array or not depends on
+the <var class="var">errnum</var> argument.  If the result string is not stored in
+<var class="var">buf</var>, the string will not change for the remaining execution
+of the program.
+</p>
+<p>The function <code class="code">strerror_r</code> as described above is a GNU extension and
+it is declared in <samp class="file">string.h</samp>.  There is a POSIX variant of this
+function, described next.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strerror_005fr-1"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">strerror_r</strong> <code class="def-code-arguments">(int <var class="var">errnum</var>, char *<var class="var">buf</var>, size_t <var class="var">n</var>)</code><a class="copiable-link" href="#index-strerror_005fr-1"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe i18n
+| AC-Unsafe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This variant of the <code class="code">strerror_r</code> function is used if a standard is
+selected that includes <code class="code">strerror_r</code>, but <code class="code">_GNU_SOURCE</code> is not
+defined.  This POSIX variant of the function always writes the error
+message to the specified buffer <var class="var">buf</var> of size <var class="var">n</var> bytes.
+</p>
+<p>Upon success, <code class="code">strerror_r</code> returns 0.  Two more return values are
+used to indicate failure.
+</p>
+<dl class="vtable">
+<dt><a id="index-EINVAL-1"></a><span><code class="code">EINVAL</code><a class="copiable-link" href="#index-EINVAL-1"> &para;</a></span></dt>
+<dd><p>The <var class="var">errnum</var> argument does not correspond to a known error constant.
+</p>
+</dd>
+<dt><a id="index-ERANGE-1"></a><span><code class="code">ERANGE</code><a class="copiable-link" href="#index-ERANGE-1"> &para;</a></span></dt>
+<dd><p>The buffer size <var class="var">n</var> is not large enough to store the entire error message.
+</p></dd>
+</dl>
+
+<p>Even if an error is reported, <code class="code">strerror_r</code> still writes as much of
+the error message to the output buffer as possible.  After a call to
+<code class="code">strerror_r</code>, the value of <code class="code">errno</code> is unspecified.
+</p>
+<p>If you want to use the always-copying POSIX semantics of
+<code class="code">strerror_r</code> in a program that is potentially compiled with
+<code class="code">_GNU_SOURCE</code> defined, you can use <code class="code">snprintf</code> with the
+&lsquo;<samp class="samp">%m</samp>&rsquo; conversion specifier, like this:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">int saved_errno = errno;
+errno = errnum;
+int ret = snprintf (buf, n, &quot;%m&quot;);
+errno = saved_errno;
+if (strerrorname_np (errnum) == NULL)
+  return EINVAL;
+if (ret &gt;= n)
+  return ERANGE:
+return 0;
+</pre></div>
+
+<p>This function is declared in <samp class="file">string.h</samp> if it is declared at all.
+It is a POSIX extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-perror"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">perror</strong> <code class="def-code-arguments">(const char *<var class="var">message</var>)</code><a class="copiable-link" href="#index-perror"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:stderr
+| AS-Unsafe corrupt i18n heap lock
+| AC-Unsafe corrupt lock mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function prints an error message to the stream <code class="code">stderr</code>;
+see <a class="ref" href="Standard-Streams.html">Standard Streams</a>.  The orientation of <code class="code">stderr</code> is not
+changed.
+</p>
+<p>If you call <code class="code">perror</code> with a <var class="var">message</var> that is either a null
+pointer or an empty string, <code class="code">perror</code> just prints the error message
+corresponding to <code class="code">errno</code>, adding a trailing newline.
+</p>
+<p>If you supply a non-null <var class="var">message</var> argument, then <code class="code">perror</code>
+prefixes its output with this string.  It adds a colon and a space
+character to separate the <var class="var">message</var> from the error string corresponding
+to <code class="code">errno</code>.
+</p>
+<p>The function <code class="code">perror</code> is declared in <samp class="file">stdio.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strerrorname_005fnp"><span class="category-def">Function: </span><span><code class="def-type">const char *</code> <strong class="def-name">strerrorname_np</strong> <code class="def-code-arguments">(int <var class="var">errnum</var>)</code><a class="copiable-link" href="#index-strerrorname_005fnp"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns the name describing the error <var class="var">errnum</var> or
+<code class="code">NULL</code> if there is no known constant with this value (e.g &quot;EINVAL&quot;
+for <code class="code">EINVAL</code>).  The returned string does not change for the
+remaining execution of the program.
+</p>
+<a class="index-entry-id" id="index-string_002eh"></a>
+<p>This function is a GNU extension, declared in the header file <samp class="file">string.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strerrordesc_005fnp"><span class="category-def">Function: </span><span><code class="def-type">const char *</code> <strong class="def-name">strerrordesc_np</strong> <code class="def-code-arguments">(int <var class="var">errnum</var>)</code><a class="copiable-link" href="#index-strerrordesc_005fnp"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns the message describing the error <var class="var">errnum</var> or
+<code class="code">NULL</code> if there is no known constant with this value (e.g &quot;Invalid
+argument&quot; for <code class="code">EINVAL</code>).  Different than <code class="code">strerror</code> the
+returned description is not translated, and the returned string does not
+change for the remaining execution of the program.
+</p>
+<a class="index-entry-id" id="index-string_002eh-1"></a>
+<p>This function is a GNU extension, declared in the header file <samp class="file">string.h</samp>.
+</p></dd></dl>
+
+<p><code class="code">strerror</code> and <code class="code">perror</code> produce the exact same message for any
+given error code under the same locale; the precise text varies from
+system to system.  With the GNU C Library, the messages are fairly short;
+there are no multi-line messages or embedded newlines.  Each error
+message begins with a capital letter and does not include any
+terminating punctuation.
+</p>
+<a class="index-entry-id" id="index-program-name"></a>
+<a class="index-entry-id" id="index-name-of-running-program"></a>
+<p>Many programs that don&rsquo;t read input from the terminal are designed to
+exit if any system call fails.  By convention, the error message from
+such a program should start with the program&rsquo;s name, sans directories.
+You can find that name in the variable
+<code class="code">program_invocation_short_name</code>; the full file name is stored the
+variable <code class="code">program_invocation_name</code>.
+</p>
+<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr def-block">
+<dt class="deftypevr deftypevar-alias-deftypevr def-line" id="index-program_005finvocation_005fname"><span class="category-def">Variable: </span><span><code class="def-type">char *</code> <strong class="def-name">program_invocation_name</strong><a class="copiable-link" href="#index-program_005finvocation_005fname"> &para;</a></span></dt>
+<dd>
+<p>This variable&rsquo;s value is the name that was used to invoke the program
+running in the current process.  It is the same as <code class="code">argv[0]</code>.  Note
+that this is not necessarily a useful file name; often it contains no
+directory names.  See <a class="xref" href="Program-Arguments.html">Program Arguments</a>.
+</p>
+<p>This variable is a GNU extension and is declared in <samp class="file">errno.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr def-block">
+<dt class="deftypevr deftypevar-alias-deftypevr def-line" id="index-program_005finvocation_005fshort_005fname"><span class="category-def">Variable: </span><span><code class="def-type">char *</code> <strong class="def-name">program_invocation_short_name</strong><a class="copiable-link" href="#index-program_005finvocation_005fshort_005fname"> &para;</a></span></dt>
+<dd>
+<p>This variable&rsquo;s value is the name that was used to invoke the program
+running in the current process, with directory names removed.  (That is
+to say, it is the same as <code class="code">program_invocation_name</code> minus
+everything up to the last slash, if any.)
+</p>
+<p>This variable is a GNU extension and is declared in <samp class="file">errno.h</samp>.
+</p></dd></dl>
+
+<p>The library initialization code sets up both of these variables before
+calling <code class="code">main</code>.
+</p>
+<p><strong class="strong">Portability Note:</strong> If you want your program to work with
+non-GNU libraries, you must save the value of <code class="code">argv[0]</code> in
+<code class="code">main</code>, and then strip off the directory names yourself.  We
+added these extensions to make it possible to write self-contained
+error-reporting subroutines that require no explicit cooperation from
+<code class="code">main</code>.
+</p>
+<p>Here is an example showing how to handle failure to open a file
+correctly.  The function <code class="code">open_sesame</code> tries to open the named file
+for reading and returns a stream if successful.  The <code class="code">fopen</code>
+library function returns a null pointer if it couldn&rsquo;t open the file for
+some reason.  In that situation, <code class="code">open_sesame</code> constructs an
+appropriate error message using the <code class="code">strerror</code> function, and
+terminates the program.  If we were going to make some other library
+calls before passing the error code to <code class="code">strerror</code>, we&rsquo;d have to
+save it in a local variable instead, because those other library
+functions might overwrite <code class="code">errno</code> in the meantime.
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">#define _GNU_SOURCE
+
+#include &lt;errno.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+FILE *
+open_sesame (char *name)
+{
+  FILE *stream;
+
+  errno = 0;
+  stream = fopen (name, &quot;r&quot;);
+  if (stream == NULL)
+    {
+      fprintf (stderr, &quot;%s: Couldn't open file %s; %s\n&quot;,
+               program_invocation_short_name, name, strerror (errno));
+      exit (EXIT_FAILURE);
+    }
+  else
+    return stream;
+}
+</pre></div>
+
+<p>Using <code class="code">perror</code> has the advantage that the function is portable and
+available on all systems implementing ISO&nbsp;C<!-- /@w -->.  But often the text
+<code class="code">perror</code> generates is not what is wanted and there is no way to
+extend or change what <code class="code">perror</code> does.  The GNU coding standard, for
+instance, requires error messages to be preceded by the program name and
+programs which read some input files should provide information
+about the input file name and the line number in case an error is
+encountered while reading the file.  For these occasions there are two
+functions available which are widely used throughout the GNU project.
+These functions are declared in <samp class="file">error.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-error"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">error</strong> <code class="def-code-arguments">(int <var class="var">status</var>, int <var class="var">errnum</var>, const char *<var class="var">format</var>, &hellip;)</code><a class="copiable-link" href="#index-error"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe corrupt heap i18n
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">error</code> function can be used to report general problems during
+program execution.  The <var class="var">format</var> argument is a format string just
+like those given to the <code class="code">printf</code> family of functions.  The
+arguments required for the format can follow the <var class="var">format</var> parameter.
+Just like <code class="code">perror</code>, <code class="code">error</code> also can report an error code in
+textual form.  But unlike <code class="code">perror</code> the error value is explicitly
+passed to the function in the <var class="var">errnum</var> parameter.  This eliminates
+the problem mentioned above that the error reporting function must be
+called immediately after the function causing the error since otherwise
+<code class="code">errno</code> might have a different value.
+</p>
+<p><code class="code">error</code> prints first the program name.  If the application
+defined a global variable <code class="code">error_print_progname</code> and points it to a
+function this function will be called to print the program name.
+Otherwise the string from the global variable <code class="code">program_name</code> is
+used.  The program name is followed by a colon and a space which in turn
+is followed by the output produced by the format string.  If the
+<var class="var">errnum</var> parameter is non-zero the format string output is followed
+by a colon and a space, followed by the error message for the error code
+<var class="var">errnum</var>.  In any case is the output terminated with a newline.
+</p>
+<p>The output is directed to the <code class="code">stderr</code> stream.  If the
+<code class="code">stderr</code> wasn&rsquo;t oriented before the call it will be narrow-oriented
+afterwards.
+</p>
+<p>The function will return unless the <var class="var">status</var> parameter has a
+non-zero value.  In this case the function will call <code class="code">exit</code> with
+the <var class="var">status</var> value for its parameter and therefore never return.  If
+<code class="code">error</code> returns, the global variable <code class="code">error_message_count</code> is
+incremented by one to keep track of the number of errors reported.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-error_005fat_005fline"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">error_at_line</strong> <code class="def-code-arguments">(int <var class="var">status</var>, int <var class="var">errnum</var>, const char *<var class="var">fname</var>, unsigned int <var class="var">lineno</var>, const char *<var class="var">format</var>, &hellip;)</code><a class="copiable-link" href="#index-error_005fat_005fline"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:error_at_line/error_one_per_line locale
+| AS-Unsafe corrupt heap i18n
+| AC-Unsafe corrupt/error_one_per_line
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>The <code class="code">error_at_line</code> function is very similar to the <code class="code">error</code>
+function.  The only differences are the additional parameters <var class="var">fname</var>
+and <var class="var">lineno</var>.  The handling of the other parameters is identical to
+that of <code class="code">error</code> except that between the program name and the string
+generated by the format string additional text is inserted.
+</p>
+<p>Directly following the program name a colon, followed by the file name
+pointed to by <var class="var">fname</var>, another colon, and the value of <var class="var">lineno</var> is
+printed.
+</p>
+<p>This additional output of course is meant to be used to locate an error
+in an input file (like a programming language source code file etc).
+</p>
+<p>If the global variable <code class="code">error_one_per_line</code> is set to a non-zero
+value <code class="code">error_at_line</code> will avoid printing consecutive messages for
+the same file and line.  Repetition which are not directly following
+each other are not caught.
+</p>
+<p>Just like <code class="code">error</code> this function only returns if <var class="var">status</var> is
+zero.  Otherwise <code class="code">exit</code> is called with the non-zero value.  If
+<code class="code">error</code> returns, the global variable <code class="code">error_message_count</code> is
+incremented by one to keep track of the number of errors reported.
+</p></dd></dl>
+
+<p>As mentioned above, the <code class="code">error</code> and <code class="code">error_at_line</code> functions
+can be customized by defining a variable named
+<code class="code">error_print_progname</code>.
+</p>
+<a class="index-entry-id" id="index-error_005fprint_005fprogname"></a>
+<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr def-block">
+<dt class="deftypevr deftypevar-alias-deftypevr def-line" id="index-_0028void_0029"><span class="category-def">Variable: </span><span><code class="def-type">void (*error_print_progname)</code> <strong class="def-name">(void)</strong><a class="copiable-link" href="#index-_0028void_0029"> &para;</a></span></dt>
+<dd>
+<p>If the <code class="code">error_print_progname</code> variable is defined to a non-zero
+value the function pointed to is called by <code class="code">error</code> or
+<code class="code">error_at_line</code>.  It is expected to print the program name or do
+something similarly useful.
+</p>
+<p>The function is expected to print to the <code class="code">stderr</code> stream and
+must be able to handle whatever orientation the stream has.
+</p>
+<p>The variable is global and shared by all threads.
+</p></dd></dl>
+
+<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr def-block">
+<dt class="deftypevr deftypevar-alias-deftypevr def-line" id="index-error_005fmessage_005fcount"><span class="category-def">Variable: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">error_message_count</strong><a class="copiable-link" href="#index-error_005fmessage_005fcount"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">error_message_count</code> variable is incremented whenever one of
+the functions <code class="code">error</code> or <code class="code">error_at_line</code> returns.  The
+variable is global and shared by all threads.
+</p></dd></dl>
+
+<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr def-block">
+<dt class="deftypevr deftypevar-alias-deftypevr def-line" id="index-error_005fone_005fper_005fline"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">error_one_per_line</strong><a class="copiable-link" href="#index-error_005fone_005fper_005fline"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">error_one_per_line</code> variable influences only
+<code class="code">error_at_line</code>.  Normally the <code class="code">error_at_line</code> function
+creates output for every invocation.  If <code class="code">error_one_per_line</code> is
+set to a non-zero value <code class="code">error_at_line</code> keeps track of the last
+file name and line number for which an error was reported and avoids
+directly following messages for the same file and line.  This variable
+is global and shared by all threads.
+</p></dd></dl>
+
+<p>A program which read some input file and reports errors in it could look
+like this:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">{
+  char *line = NULL;
+  size_t len = 0;
+  unsigned int lineno = 0;
+
+  error_message_count = 0;
+  while (! feof_unlocked (fp))
+    {
+      ssize_t n = getline (&amp;line, &amp;len, fp);
+      if (n &lt;= 0)
+        /* <span class="r">End of file or error.</span>  */
+        break;
+      ++lineno;
+
+      /* <span class="r">Process the line.</span>  */
+      ...
+
+      if (<span class="r">Detect error in line</span>)
+        error_at_line (0, errval, filename, lineno,
+                       &quot;some error text %s&quot;, some_variable);
+    }
+
+  if (error_message_count != 0)
+    error (EXIT_FAILURE, 0, &quot;%u errors found&quot;, error_message_count);
+}
+</pre></div>
+
+<p><code class="code">error</code> and <code class="code">error_at_line</code> are clearly the functions of
+choice and enable the programmer to write applications which follow the
+GNU coding standard.  The GNU C Library additionally contains functions which
+are used in BSD for the same purpose.  These functions are declared in
+<samp class="file">err.h</samp>.  It is generally advised to not use these functions.  They
+are included only for compatibility.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-warn"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">warn</strong> <code class="def-code-arguments">(const char *<var class="var">format</var>, &hellip;)</code><a class="copiable-link" href="#index-warn"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe corrupt heap i18n
+| AC-Unsafe corrupt lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">warn</code> function is roughly equivalent to a call like
+</p><div class="example smallexample">
+<pre class="example-preformatted">  error (0, errno, format, <span class="r">the parameters</span>)
+</pre></div>
+<p>except that the global variables <code class="code">error</code> respects and modifies
+are not used.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-vwarn"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">vwarn</strong> <code class="def-code-arguments">(const char *<var class="var">format</var>, va_list <var class="var">ap</var>)</code><a class="copiable-link" href="#index-vwarn"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe corrupt heap i18n
+| AC-Unsafe corrupt lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">vwarn</code> function is just like <code class="code">warn</code> except that the
+parameters for the handling of the format string <var class="var">format</var> are passed
+in as a value of type <code class="code">va_list</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-warnx"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">warnx</strong> <code class="def-code-arguments">(const char *<var class="var">format</var>, &hellip;)</code><a class="copiable-link" href="#index-warnx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe corrupt heap
+| AC-Unsafe corrupt lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">warnx</code> function is roughly equivalent to a call like
+</p><div class="example smallexample">
+<pre class="example-preformatted">  error (0, 0, format, <span class="r">the parameters</span>)
+</pre></div>
+<p>except that the global variables <code class="code">error</code> respects and modifies
+are not used.  The difference to <code class="code">warn</code> is that no error number
+string is printed.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-vwarnx"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">vwarnx</strong> <code class="def-code-arguments">(const char *<var class="var">format</var>, va_list <var class="var">ap</var>)</code><a class="copiable-link" href="#index-vwarnx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe corrupt heap
+| AC-Unsafe corrupt lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">vwarnx</code> function is just like <code class="code">warnx</code> except that the
+parameters for the handling of the format string <var class="var">format</var> are passed
+in as a value of type <code class="code">va_list</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-err"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">err</strong> <code class="def-code-arguments">(int <var class="var">status</var>, const char *<var class="var">format</var>, &hellip;)</code><a class="copiable-link" href="#index-err"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe corrupt heap i18n
+| AC-Unsafe corrupt lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">err</code> function is roughly equivalent to a call like
+</p><div class="example smallexample">
+<pre class="example-preformatted">  error (status, errno, format, <span class="r">the parameters</span>)
+</pre></div>
+<p>except that the global variables <code class="code">error</code> respects and modifies
+are not used and that the program is exited even if <var class="var">status</var> is zero.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-verr"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">verr</strong> <code class="def-code-arguments">(int <var class="var">status</var>, const char *<var class="var">format</var>, va_list <var class="var">ap</var>)</code><a class="copiable-link" href="#index-verr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe corrupt heap i18n
+| AC-Unsafe corrupt lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">verr</code> function is just like <code class="code">err</code> except that the
+parameters for the handling of the format string <var class="var">format</var> are passed
+in as a value of type <code class="code">va_list</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-errx"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">errx</strong> <code class="def-code-arguments">(int <var class="var">status</var>, const char *<var class="var">format</var>, &hellip;)</code><a class="copiable-link" href="#index-errx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe corrupt heap
+| AC-Unsafe corrupt lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">errx</code> function is roughly equivalent to a call like
+</p><div class="example smallexample">
+<pre class="example-preformatted">  error (status, 0, format, <span class="r">the parameters</span>)
+</pre></div>
+<p>except that the global variables <code class="code">error</code> respects and modifies
+are not used and that the program is exited even if <var class="var">status</var>
+is zero.  The difference to <code class="code">err</code> is that no error number
+string is printed.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-verrx"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">verrx</strong> <code class="def-code-arguments">(int <var class="var">status</var>, const char *<var class="var">format</var>, va_list <var class="var">ap</var>)</code><a class="copiable-link" href="#index-verrx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe corrupt heap
+| AC-Unsafe corrupt lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">verrx</code> function is just like <code class="code">errx</code> except that the
+parameters for the handling of the format string <var class="var">format</var> are passed
+in as a value of type <code class="code">va_list</code>.
+</p></dd></dl>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Error-Codes.html">Error Codes</a>, Up: <a href="Error-Reporting.html">Error Reporting</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

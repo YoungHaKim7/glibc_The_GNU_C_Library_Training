@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Linked Channels (The GNU C Library)</title>
+
+<meta name="description" content="Linked Channels (The GNU C Library)">
+<meta name="keywords" content="Linked Channels (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Stream_002fDescriptor-Precautions.html" rel="up" title="Stream/Descriptor Precautions">
+<link href="Independent-Channels.html" rel="next" title="Independent Channels">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Linked-Channels">
+<div class="nav-panel">
+<p>
+Next: <a href="Independent-Channels.html" accesskey="n" rel="next">Independent Channels</a>, Up: <a href="Stream_002fDescriptor-Precautions.html" accesskey="u" rel="up">Dangers of Mixing Streams and Descriptors</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Linked-Channels-1"><span>13.5.1 Linked Channels<a class="copiable-link" href="#Linked-Channels-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-linked-channels"></a>
+
+<p>Channels that come from a single opening share the same file position;
+we call them <em class="dfn">linked</em> channels.  Linked channels result when you
+make a stream from a descriptor using <code class="code">fdopen</code>, when you get a
+descriptor from a stream with <code class="code">fileno</code>, when you copy a descriptor
+with <code class="code">dup</code> or <code class="code">dup2</code>, and when descriptors are inherited
+during <code class="code">fork</code>.  For files that don&rsquo;t support random access, such as
+terminals and pipes, <em class="emph">all</em> channels are effectively linked.  On
+random-access files, all append-type output streams are effectively
+linked to each other.
+</p>
+<a class="index-entry-id" id="index-cleaning-up-a-stream"></a>
+<p>If you have been using a stream for I/O (or have just opened the stream),
+and you want to do I/O using
+another channel (either a stream or a descriptor) that is linked to it,
+you must first <em class="dfn">clean up</em> the stream that you have been using.
+See <a class="xref" href="Cleaning-Streams.html">Cleaning Streams</a>.
+</p>
+<p>Terminating a process, or executing a new program in the process,
+destroys all the streams in the process.  If descriptors linked to these
+streams persist in other processes, their file positions become
+undefined as a result.  To prevent this, you must clean up the streams
+before destroying them.
+</p>
+<p>In addition to cleaning up a stream before doing I/O using another
+linked channel, additional precautions are needed to ensure a
+well-defined file position indicator in some cases.  If both the
+following conditions hold, you must set the file position indicator on
+the new channel (a stream) using a function such as <code class="code">fseek</code>.
+</p>
+<ul class="itemize mark-bullet">
+<li>The new linked channel is a stream that was previously active.
+
+</li><li>The file position indicator was previously set on that channel (while
+it was previously active) with a function such as <code class="code">fseek</code>.
+</li></ul>
+
+<p>POSIX requires such precautions in more cases: if either the old or
+the new linked channel is a stream (whether or not previously active)
+and the file position indicator was previously set on any channel
+linked to those channels with a function such as <code class="code">fseek</code> or
+<code class="code">lseek</code>.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Independent-Channels.html">Independent Channels</a>, Up: <a href="Stream_002fDescriptor-Precautions.html">Dangers of Mixing Streams and Descriptors</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

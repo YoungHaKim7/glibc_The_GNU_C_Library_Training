@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Broken-down Time (The GNU C Library)</title>
+
+<meta name="description" content="Broken-down Time (The GNU C Library)">
+<meta name="keywords" content="Broken-down Time (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Calendar-Time.html" rel="up" title="Calendar Time">
+<link href="Formatting-Calendar-Time.html" rel="next" title="Formatting Calendar Time">
+<link href="Setting-and-Adjusting-the-Time.html" rel="prev" title="Setting and Adjusting the Time">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Broken_002ddown-Time">
+<div class="nav-panel">
+<p>
+Next: <a href="Formatting-Calendar-Time.html" accesskey="n" rel="next">Formatting Calendar Time</a>, Previous: <a href="Setting-and-Adjusting-the-Time.html" accesskey="p" rel="prev">Setting and Adjusting the Time</a>, Up: <a href="Calendar-Time.html" accesskey="u" rel="up">Calendar Time</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Broken_002ddown-Time-1"><span>22.5.3 Broken-down Time<a class="copiable-link" href="#Broken_002ddown-Time-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-broken_002ddown-time-1"></a>
+<a class="index-entry-id" id="index-calendar-time-and-broken_002ddown-time"></a>
+
+<p>Simple calendar times represent absolute times as elapsed times since
+an epoch.  This is convenient for computation, but has no relation to
+the way people normally think of calendar time.  By contrast,
+<em class="dfn">broken-down time</em> is a binary representation of calendar time
+separated into year, month, day, and so on.  Although broken-down time
+values are painful to calculate with, they are useful for printing
+human readable time information.
+</p>
+<p>A broken-down time value is always relative to a choice of time
+zone, and it also indicates which time zone that is.
+</p>
+<p>The symbols in this section are declared in the header file <samp class="file">time.h</samp>.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-tm-1"><span class="category-def">Data Type: </span><span><strong class="def-name">struct tm</strong><a class="copiable-link" href="#index-struct-tm-1"> &para;</a></span></dt>
+<dd>
+<p>This is the data type used to represent a broken-down time.  The structure
+contains at least the following members, which can appear in any order.
+</p>
+<dl class="table">
+<dt><code class="code">int tm_sec</code></dt>
+<dd><p>This is the number of full seconds since the top of the minute (normally
+in the range <code class="code">0</code> through <code class="code">59</code>, but the actual upper limit is
+<code class="code">60</code>, to allow for leap seconds if leap second support is
+available).
+<a class="index-entry-id" id="index-leap-second"></a>
+</p>
+</dd>
+<dt><code class="code">int tm_min</code></dt>
+<dd><p>This is the number of full minutes since the top of the hour (in the
+range <code class="code">0</code> through <code class="code">59</code>).
+</p>
+</dd>
+<dt><code class="code">int tm_hour</code></dt>
+<dd><p>This is the number of full hours past midnight (in the range <code class="code">0</code> through
+<code class="code">23</code>).
+</p>
+</dd>
+<dt><code class="code">int tm_mday</code></dt>
+<dd><p>This is the ordinal day of the month (in the range <code class="code">1</code> through <code class="code">31</code>).
+Watch out for this one!  As the only ordinal number in the structure, it is
+inconsistent with the rest of the structure.
+</p>
+</dd>
+<dt><code class="code">int tm_mon</code></dt>
+<dd><p>This is the number of full calendar months since the beginning of the
+year (in the range <code class="code">0</code> through <code class="code">11</code>).  Watch out for this one!
+People usually use ordinal numbers for month-of-year (where January = 1).
+</p>
+</dd>
+<dt><code class="code">int tm_year</code></dt>
+<dd><p>This is the number of full calendar years since 1900.
+</p>
+</dd>
+<dt><code class="code">int tm_wday</code></dt>
+<dd><p>This is the number of full days since Sunday (in the range <code class="code">0</code> through
+<code class="code">6</code>).
+</p>
+</dd>
+<dt><code class="code">int tm_yday</code></dt>
+<dd><p>This is the number of full days since the beginning of the year (in the
+range <code class="code">0</code> through <code class="code">365</code>).
+</p>
+</dd>
+<dt><a class="index-entry-id" id="index-summer-time"></a>
+<a id="index-daylight-saving-time"></a><span><code class="code">int tm_isdst</code><a class="copiable-link" href="#index-daylight-saving-time"> &para;</a></span></dt>
+<dd><p>This is a flag that indicates whether daylight saving time is (or was, or
+will be) in effect at the time described.  The value is positive if
+daylight saving time is in effect, zero if it is not, and negative if the
+information is not available.
+Although this flag is useful when passing a broken-down time to the
+<code class="code">mktime</code> function, for other uses this flag should be ignored and
+the <code class="code">tm_gmtoff</code> and <code class="code">tm_zone</code> fields should be inspected instead.
+</p>
+</dd>
+<dt><code class="code">long int tm_gmtoff</code></dt>
+<dd><p>This field describes the time zone that was used to compute this
+broken-down time value, including any adjustment for daylight saving; it
+is the number of seconds that you must add to UTC to get local time.
+You can also think of this as the number of seconds east of the Prime Meridian.
+For example, for U.S. Eastern Standard Time, the value is <code class="code">-5*60*60</code>.
+</p>
+</dd>
+<dt><code class="code">const char *tm_zone</code></dt>
+<dd><p>This field is the abbreviation for the time zone that was used to compute this
+broken-down time value.
+</p></dd>
+</dl>
+
+<p><strong class="strong">Portability note:</strong>  The <code class="code">tm_gmtoff</code> and <code class="code">tm_zone</code> fields
+are derived from BSD and are POSIX extensions to ISO&nbsp;C<!-- /@w -->.
+Code intended to be portable to operating systems that lack
+these fields can instead use time zone state variables, although
+those variables are unreliable when the <code class="env">TZ</code> environment variable
+has a geographical format.  See <a class="xref" href="Time-Zone-State.html">State Variables for Time Zones</a>.
+</p></dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-localtime"><span class="category-def">Function: </span><span><code class="def-type">struct tm *</code> <strong class="def-name">localtime</strong> <code class="def-code-arguments">(const time_t *<var class="var">time</var>)</code><a class="copiable-link" href="#index-localtime"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:tmbuf env locale
+| AS-Unsafe heap lock
+| AC-Unsafe lock mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">localtime</code> function converts the simple time pointed to by
+<var class="var">time</var> to broken-down time representation, expressed relative to the
+user&rsquo;s specified time zone.
+</p>
+<p>The return value is a pointer to a static broken-down time structure, which
+might be overwritten by subsequent calls to <code class="code">gmtime</code>
+or <code class="code">localtime</code>.  (No other library function overwrites the contents
+of this object.)  In the GNU C Library, the structure&rsquo;s <code class="code">tm_zone</code>
+points to a string with a storage lifetime that lasts indefinitely;
+on other platforms, the lifetime may expire when the <code class="env">TZ</code>
+environment variable is changed.
+</p>
+<p>The return value is the null pointer if <var class="var">time</var> cannot be represented
+as a broken-down time; typically this is because the year cannot fit into
+an <code class="code">int</code>.
+</p>
+<p>Calling <code class="code">localtime</code> also sets the time zone state as if
+<code class="code">tzset</code> were called.  See <a class="xref" href="Time-Zone-State.html">State Variables for Time Zones</a>.
+</p></dd></dl>
+
+<p>Using the <code class="code">localtime</code> function is a big problem in multi-threaded
+programs.  The result is returned in a static buffer and this is used in
+all threads.  A variant function avoids this problem.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-localtime_005fr"><span class="category-def">Function: </span><span><code class="def-type">struct tm *</code> <strong class="def-name">localtime_r</strong> <code class="def-code-arguments">(const time_t *<var class="var">time</var>, struct tm *<var class="var">resultp</var>)</code><a class="copiable-link" href="#index-localtime_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe env locale
+| AS-Unsafe heap lock
+| AC-Unsafe lock mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>The <code class="code">localtime_r</code> function works just like the <code class="code">localtime</code>
+function.  It takes a pointer to a variable containing a simple time
+and converts it to the broken-down time format.
+</p>
+<p>But the result is not placed in a static buffer.  Instead it is placed
+in the object of type <code class="code">struct tm</code> to which the parameter
+<var class="var">resultp</var> points.  Also, the time zone state is not necessarily
+set as if <code class="code">tzset</code> were called.
+</p>
+<p>If the conversion is successful the function returns a pointer to the
+object the result was written into, i.e., it returns <var class="var">resultp</var>.
+</p></dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-gmtime"><span class="category-def">Function: </span><span><code class="def-type">struct tm *</code> <strong class="def-name">gmtime</strong> <code class="def-code-arguments">(const time_t *<var class="var">time</var>)</code><a class="copiable-link" href="#index-gmtime"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:tmbuf env locale
+| AS-Unsafe heap lock
+| AC-Unsafe lock mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">localtime</code>, except that the broken-down
+time is expressed as UTC rather than relative to a local time zone.
+The broken-down time&rsquo;s <code class="code">tm_gmtoff</code> is 0, and its
+<code class="code">tm_zone</code> is a string <code class="t">&quot;UTC&quot;</code> with static storage duration.
+</p>
+</dd></dl>
+
+<p>As for the <code class="code">localtime</code> function we have the problem that the result
+is placed in a static variable.  A thread-safe replacement is also provided for
+<code class="code">gmtime</code>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-gmtime_005fr"><span class="category-def">Function: </span><span><code class="def-type">struct tm *</code> <strong class="def-name">gmtime_r</strong> <code class="def-code-arguments">(const time_t *<var class="var">time</var>, struct tm *<var class="var">resultp</var>)</code><a class="copiable-link" href="#index-gmtime_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe env locale
+| AS-Unsafe heap lock
+| AC-Unsafe lock mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">localtime_r</code>, except that it converts
+just like <code class="code">gmtime</code> the given time as UTC.
+</p>
+<p>If the conversion is successful the function returns a pointer to the
+object the result was written into, i.e., it returns <var class="var">resultp</var>.
+</p></dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mktime"><span class="category-def">Function: </span><span><code class="def-type">time_t</code> <strong class="def-name">mktime</strong> <code class="def-code-arguments">(struct tm *<var class="var">brokentime</var>)</code><a class="copiable-link" href="#index-mktime"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe env locale
+| AS-Unsafe heap lock
+| AC-Unsafe lock mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">mktime</code> function converts a broken-down time structure to a
+simple time representation.  It also normalizes the contents of the
+broken-down time structure, and fills in some components based on the
+values of the others.
+</p>
+<p>The <code class="code">mktime</code> function ignores the specified contents of the
+<code class="code">tm_wday</code>, <code class="code">tm_yday</code>, <code class="code">tm_gmtoff</code>, and <code class="code">tm_zone</code>
+members of the broken-down time
+structure.  It uses the values of the other components to determine the
+calendar time; it&rsquo;s permissible for these components to have
+unnormalized values outside their normal ranges.  The last thing that
+<code class="code">mktime</code> does is adjust the components of the <var class="var">brokentime</var>
+structure, including the members that were initially ignored.
+</p>
+<p>If the specified broken-down time cannot be represented as a simple time,
+<code class="code">mktime</code> returns a value of <code class="code">(time_t)(-1)</code> and does not modify
+the contents of <var class="var">brokentime</var>.
+</p>
+<p>Calling <code class="code">mktime</code> also sets the time zone state as if
+<code class="code">tzset</code> were called; <code class="code">mktime</code> uses this information instead
+of <var class="var">brokentime</var>&rsquo;s initial <code class="code">tm_gmtoff</code> and <code class="code">tm_zone</code>
+members.  See <a class="xref" href="Time-Zone-State.html">State Variables for Time Zones</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-timelocal"><span class="category-def">Function: </span><span><code class="def-type">time_t</code> <strong class="def-name">timelocal</strong> <code class="def-code-arguments">(struct tm *<var class="var">brokentime</var>)</code><a class="copiable-link" href="#index-timelocal"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe env locale
+| AS-Unsafe heap lock
+| AC-Unsafe lock mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p><code class="code">timelocal</code> is functionally identical to <code class="code">mktime</code>, but more
+mnemonically named.  Note that it is the inverse of the <code class="code">localtime</code>
+function.
+</p>
+<p><strong class="strong">Portability note:</strong>  <code class="code">mktime</code> is essentially universally
+available.  <code class="code">timelocal</code> is rather rare.
+</p>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-timegm"><span class="category-def">Function: </span><span><code class="def-type">time_t</code> <strong class="def-name">timegm</strong> <code class="def-code-arguments">(struct tm *<var class="var">brokentime</var>)</code><a class="copiable-link" href="#index-timegm"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe env locale
+| AS-Unsafe heap lock
+| AC-Unsafe lock mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p><code class="code">timegm</code> is functionally identical to <code class="code">mktime</code> except it
+always takes the input values to be UTC
+regardless of any local time zone setting.
+</p>
+<p>Note that <code class="code">timegm</code> is the inverse of <code class="code">gmtime</code>.
+</p>
+<p><strong class="strong">Portability note:</strong>  <code class="code">mktime</code> is essentially universally
+available.  Although <code class="code">timegm</code> is standardized by C23, some
+other systems lack it; to be portable to them, you can set
+the <code class="env">TZ</code> environment variable to UTC, call <code class="code">mktime</code>, then set
+<code class="env">TZ</code> back.
+</p>
+</dd></dl>
+
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Formatting-Calendar-Time.html">Formatting Calendar Time</a>, Previous: <a href="Setting-and-Adjusting-the-Time.html">Setting and Adjusting the Time</a>, Up: <a href="Calendar-Time.html">Calendar Time</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

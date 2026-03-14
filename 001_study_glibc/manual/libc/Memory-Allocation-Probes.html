@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Memory Allocation Probes (The GNU C Library)</title>
+
+<meta name="description" content="Memory Allocation Probes (The GNU C Library)">
+<meta name="keywords" content="Memory Allocation Probes (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Internal-Probes.html" rel="up" title="Internal Probes">
+<link href="Non_002dlocal-Goto-Probes.html" rel="next" title="Non-local Goto Probes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Memory-Allocation-Probes">
+<div class="nav-panel">
+<p>
+Next: <a href="Non_002dlocal-Goto-Probes.html" accesskey="n" rel="next">Non-local Goto Probes</a>, Up: <a href="Internal-Probes.html" accesskey="u" rel="up">Internal probes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Memory-Allocation-Probes-1"><span>38.1 Memory Allocation Probes<a class="copiable-link" href="#Memory-Allocation-Probes-1"> &para;</a></span></h3>
+
+<p>These probes are designed to signal relatively unusual situations within
+the virtual memory subsystem of the GNU C Library.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fsbrk_005fmore"><span class="category-def">Probe: </span><span><strong class="def-name">memory_sbrk_more</strong> <var class="def-var-arguments">(void *<var class="var">$arg1</var>, size_t <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005fsbrk_005fmore"> &para;</a></span></dt>
+<dd><p>This probe is triggered after the main arena is extended by calling
+<code class="code">sbrk</code>.  Argument <var class="var">$arg1</var> is the additional size requested to
+<code class="code">sbrk</code>, and <var class="var">$arg2</var> is the pointer that marks the end of the
+<code class="code">sbrk</code> area, returned in response to the request.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fsbrk_005fless"><span class="category-def">Probe: </span><span><strong class="def-name">memory_sbrk_less</strong> <var class="def-var-arguments">(void *<var class="var">$arg1</var>, size_t <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005fsbrk_005fless"> &para;</a></span></dt>
+<dd><p>This probe is triggered after the size of the main arena is decreased by
+calling <code class="code">sbrk</code>.  Argument <var class="var">$arg1</var> is the size released by
+<code class="code">sbrk</code> (the positive value, rather than the negative value passed
+to <code class="code">sbrk</code>), and <var class="var">$arg2</var> is the pointer that marks the end of
+the <code class="code">sbrk</code> area, returned in response to the request.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fheap_005fnew"><span class="category-def">Probe: </span><span><strong class="def-name">memory_heap_new</strong> <var class="def-var-arguments">(void *<var class="var">$arg1</var>, size_t <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005fheap_005fnew"> &para;</a></span></dt>
+<dd><p>This probe is triggered after a new heap is <code class="code">mmap</code>ed.  Argument
+<var class="var">$arg1</var> is a pointer to the base of the memory area, where the
+<code class="code">heap_info</code> data structure is held, and <var class="var">$arg2</var> is the size of
+the heap.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fheap_005ffree"><span class="category-def">Probe: </span><span><strong class="def-name">memory_heap_free</strong> <var class="def-var-arguments">(void *<var class="var">$arg1</var>, size_t <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005fheap_005ffree"> &para;</a></span></dt>
+<dd><p>This probe is triggered <em class="emph">before</em> (unlike the other sbrk and heap
+probes) a heap is completely removed via <code class="code">munmap</code>.  Argument
+<var class="var">$arg1</var> is a pointer to the heap, and <var class="var">$arg2</var> is the size of the
+heap.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fheap_005fmore"><span class="category-def">Probe: </span><span><strong class="def-name">memory_heap_more</strong> <var class="def-var-arguments">(void *<var class="var">$arg1</var>, size_t <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005fheap_005fmore"> &para;</a></span></dt>
+<dd><p>This probe is triggered after a trailing portion of an <code class="code">mmap</code>ed
+heap is extended.  Argument <var class="var">$arg1</var> is a pointer to the heap, and
+<var class="var">$arg2</var> is the new size of the heap.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fheap_005fless"><span class="category-def">Probe: </span><span><strong class="def-name">memory_heap_less</strong> <var class="def-var-arguments">(void *<var class="var">$arg1</var>, size_t <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005fheap_005fless"> &para;</a></span></dt>
+<dd><p>This probe is triggered after a trailing portion of an <code class="code">mmap</code>ed
+heap is released.  Argument <var class="var">$arg1</var> is a pointer to the heap, and
+<var class="var">$arg2</var> is the new size of the heap.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fmalloc_005fretry"><span class="category-def">Probe: </span><span><strong class="def-name">memory_malloc_retry</strong> <var class="def-var-arguments">(size_t <var class="var">$arg1</var>)</var><a class="copiable-link" href="#index-memory_005fmalloc_005fretry"> &para;</a></span></dt>
+<dt class="deftpx def-cmd-deftp def-line" id="index-memory_005frealloc_005fretry"><span class="category-def">Probe: </span><span><strong class="def-name">memory_realloc_retry</strong> <var class="def-var-arguments">(size_t <var class="var">$arg1</var>, void *<var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005frealloc_005fretry"> &para;</a></span></dt>
+<dt class="deftpx def-cmd-deftp def-line" id="index-memory_005fmemalign_005fretry"><span class="category-def">Probe: </span><span><strong class="def-name">memory_memalign_retry</strong> <var class="def-var-arguments">(size_t <var class="var">$arg1</var>, size_t <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005fmemalign_005fretry"> &para;</a></span></dt>
+<dt class="deftpx def-cmd-deftp def-line" id="index-memory_005fcalloc_005fretry"><span class="category-def">Probe: </span><span><strong class="def-name">memory_calloc_retry</strong> <var class="def-var-arguments">(size_t <var class="var">$arg1</var>)</var><a class="copiable-link" href="#index-memory_005fcalloc_005fretry"> &para;</a></span></dt>
+<dd><p>These probes are triggered when the corresponding functions fail to
+obtain the requested amount of memory from the arena in use, before they
+call <code class="code">arena_get_retry</code> to select an alternate arena in which to
+retry the allocation.  Argument <var class="var">$arg1</var> is the amount of memory
+requested by the user; in the <code class="code">calloc</code> case, that is the total size
+computed from both function arguments.  In the <code class="code">realloc</code> case,
+<var class="var">$arg2</var> is the pointer to the memory area being resized.  In the
+<code class="code">memalign</code> case, <var class="var">$arg2</var> is the alignment to be used for the
+request, which may be stricter than the value passed to the
+<code class="code">memalign</code> function.  A <code class="code">memalign</code> probe is also used by functions
+<code class="code">posix_memalign, valloc</code> and <code class="code">pvalloc</code>.
+</p>
+<p>Note that the argument order does <em class="emph">not</em> match that of the
+corresponding two-argument functions, so that in all of these probes the
+user-requested allocation size is in <var class="var">$arg1</var>.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005farena_005fretry"><span class="category-def">Probe: </span><span><strong class="def-name">memory_arena_retry</strong> <var class="def-var-arguments">(size_t <var class="var">$arg1</var>, void *<var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005farena_005fretry"> &para;</a></span></dt>
+<dd><p>This probe is triggered within <code class="code">arena_get_retry</code> (the function
+called to select the alternate arena in which to retry an allocation
+that failed on the first attempt), before the selection of an alternate
+arena.  This probe is redundant, but much easier to use when it&rsquo;s not
+important to determine which of the various memory allocation functions
+is failing to allocate on the first try.  Argument <var class="var">$arg1</var> is the
+same as in the function-specific probes, except for extra room for
+padding introduced by functions that have to ensure stricter alignment.
+Argument <var class="var">$arg2</var> is the arena in which allocation failed.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005farena_005fnew"><span class="category-def">Probe: </span><span><strong class="def-name">memory_arena_new</strong> <var class="def-var-arguments">(void *<var class="var">$arg1</var>, size_t <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005farena_005fnew"> &para;</a></span></dt>
+<dd><p>This probe is triggered when <code class="code">malloc</code> allocates and initializes an
+additional arena (not the main arena), but before the arena is assigned
+to the running thread or inserted into the internal linked list of
+arenas.  The arena&rsquo;s <code class="code">malloc_state</code> internal data structure is
+located at <var class="var">$arg1</var>, within a newly-allocated heap big enough to hold
+at least <var class="var">$arg2</var> bytes.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005farena_005freuse"><span class="category-def">Probe: </span><span><strong class="def-name">memory_arena_reuse</strong> <var class="def-var-arguments">(void *<var class="var">$arg1</var>, void *<var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005farena_005freuse"> &para;</a></span></dt>
+<dd><p>This probe is triggered when <code class="code">malloc</code> has just selected an existing
+arena to reuse, and (temporarily) reserved it for exclusive use.
+Argument <var class="var">$arg1</var> is a pointer to the newly-selected arena, and
+<var class="var">$arg2</var> is a pointer to the arena previously used by that thread.
+</p>
+<p>This occurs within
+<code class="code">reused_arena</code>, right after the mutex mentioned in probe
+<code class="code">memory_arena_reuse_wait</code> is acquired; argument <var class="var">$arg1</var> will
+point to the same arena.  In this configuration, this will usually only
+occur once per thread.  The exception is when a thread first selected
+the main arena, but a subsequent allocation from it fails: then, and
+only then, may we switch to another arena to retry that allocation, and
+for further allocations within that thread.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005farena_005freuse_005fwait"><span class="category-def">Probe: </span><span><strong class="def-name">memory_arena_reuse_wait</strong> <var class="def-var-arguments">(void *<var class="var">$arg1</var>, void *<var class="var">$arg2</var>, void *<var class="var">$arg3</var>)</var><a class="copiable-link" href="#index-memory_005farena_005freuse_005fwait"> &para;</a></span></dt>
+<dd><p>This probe is triggered when <code class="code">malloc</code> is about to wait for an arena
+to become available for reuse.  Argument <var class="var">$arg1</var> holds a pointer to
+the mutex the thread is going to wait on, <var class="var">$arg2</var> is a pointer to a
+newly-chosen arena to be reused, and <var class="var">$arg3</var> is a pointer to the
+arena previously used by that thread.
+</p>
+<p>This occurs within
+<code class="code">reused_arena</code>, when a thread first tries to allocate memory or
+needs a retry after a failure to allocate from the main arena, there
+isn&rsquo;t any free arena, the maximum number of arenas has been reached, and
+an existing arena was chosen for reuse, but its mutex could not be
+immediately acquired.  The mutex in <var class="var">$arg1</var> is the mutex of the
+selected arena.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005farena_005freuse_005ffree_005flist"><span class="category-def">Probe: </span><span><strong class="def-name">memory_arena_reuse_free_list</strong> <var class="def-var-arguments">(void *<var class="var">$arg1</var>)</var><a class="copiable-link" href="#index-memory_005farena_005freuse_005ffree_005flist"> &para;</a></span></dt>
+<dd><p>This probe is triggered when <code class="code">malloc</code> has chosen an arena that is
+in the free list for use by a thread, within the <code class="code">get_free_list</code>
+function.  The argument <var class="var">$arg1</var> holds a pointer to the selected arena.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fmallopt"><span class="category-def">Probe: </span><span><strong class="def-name">memory_mallopt</strong> <var class="def-var-arguments">(int <var class="var">$arg1</var>, int <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005fmallopt"> &para;</a></span></dt>
+<dd><p>This probe is triggered when function <code class="code">mallopt</code> is called to change
+<code class="code">malloc</code> internal configuration parameters, before any change to
+the parameters is made.  The arguments <var class="var">$arg1</var> and <var class="var">$arg2</var> are
+the ones passed to the <code class="code">mallopt</code> function.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fmallopt_005fmxfast"><span class="category-def">Probe: </span><span><strong class="def-name">memory_mallopt_mxfast</strong> <var class="def-var-arguments">(int <var class="var">$arg1</var>, int <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005fmallopt_005fmxfast"> &para;</a></span></dt>
+<dd><p>This probe is triggered shortly after the <code class="code">memory_mallopt</code> probe,
+when the parameter to be changed is <code class="code">M_MXFAST</code>, and the requested
+value is in an acceptable range.  Argument <var class="var">$arg1</var> is the requested
+value, and <var class="var">$arg2</var> is the previous value of this <code class="code">malloc</code>
+parameter.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fmallopt_005ftrim_005fthreshold"><span class="category-def">Probe: </span><span><strong class="def-name">memory_mallopt_trim_threshold</strong> <var class="def-var-arguments">(int <var class="var">$arg1</var>, int <var class="var">$arg2</var>, int <var class="var">$arg3</var>)</var><a class="copiable-link" href="#index-memory_005fmallopt_005ftrim_005fthreshold"> &para;</a></span></dt>
+<dd><p>This probe is triggered shortly after the <code class="code">memory_mallopt</code> probe,
+when the parameter to be changed is <code class="code">M_TRIM_THRESHOLD</code>.  Argument
+<var class="var">$arg1</var> is the requested value, <var class="var">$arg2</var> is the previous value of
+this <code class="code">malloc</code> parameter, and <var class="var">$arg3</var> is nonzero if dynamic
+threshold adjustment was already disabled.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fmallopt_005ftop_005fpad"><span class="category-def">Probe: </span><span><strong class="def-name">memory_mallopt_top_pad</strong> <var class="def-var-arguments">(int <var class="var">$arg1</var>, int <var class="var">$arg2</var>, int <var class="var">$arg3</var>)</var><a class="copiable-link" href="#index-memory_005fmallopt_005ftop_005fpad"> &para;</a></span></dt>
+<dd><p>This probe is triggered shortly after the <code class="code">memory_mallopt</code> probe,
+when the parameter to be changed is <code class="code">M_TOP_PAD</code>.  Argument
+<var class="var">$arg1</var> is the requested value, <var class="var">$arg2</var> is the previous value of
+this <code class="code">malloc</code> parameter, and <var class="var">$arg3</var> is nonzero if dynamic
+threshold adjustment was already disabled.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fmallopt_005fmmap_005fthreshold"><span class="category-def">Probe: </span><span><strong class="def-name">memory_mallopt_mmap_threshold</strong> <var class="def-var-arguments">(int <var class="var">$arg1</var>, int <var class="var">$arg2</var>, int <var class="var">$arg3</var>)</var><a class="copiable-link" href="#index-memory_005fmallopt_005fmmap_005fthreshold"> &para;</a></span></dt>
+<dd><p>This probe is triggered shortly after the <code class="code">memory_mallopt</code> probe,
+when the parameter to be changed is <code class="code">M_MMAP_THRESHOLD</code>, and the
+requested value is in an acceptable range.  Argument <var class="var">$arg1</var> is the
+requested value, <var class="var">$arg2</var> is the previous value of this <code class="code">malloc</code>
+parameter, and <var class="var">$arg3</var> is nonzero if dynamic threshold adjustment
+was already disabled.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fmallopt_005fmmap_005fmax"><span class="category-def">Probe: </span><span><strong class="def-name">memory_mallopt_mmap_max</strong> <var class="def-var-arguments">(int <var class="var">$arg1</var>, int <var class="var">$arg2</var>, int <var class="var">$arg3</var>)</var><a class="copiable-link" href="#index-memory_005fmallopt_005fmmap_005fmax"> &para;</a></span></dt>
+<dd><p>This probe is triggered shortly after the <code class="code">memory_mallopt</code> probe,
+when the parameter to be changed is <code class="code">M_MMAP_MAX</code>.  Argument
+<var class="var">$arg1</var> is the requested value, <var class="var">$arg2</var> is the previous value of
+this <code class="code">malloc</code> parameter, and <var class="var">$arg3</var> is nonzero if dynamic
+threshold adjustment was already disabled.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fmallopt_005fperturb"><span class="category-def">Probe: </span><span><strong class="def-name">memory_mallopt_perturb</strong> <var class="def-var-arguments">(int <var class="var">$arg1</var>, int <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005fmallopt_005fperturb"> &para;</a></span></dt>
+<dd><p>This probe is triggered shortly after the <code class="code">memory_mallopt</code> probe,
+when the parameter to be changed is <code class="code">M_PERTURB</code>.  Argument
+<var class="var">$arg1</var> is the requested value, and <var class="var">$arg2</var> is the previous
+value of this <code class="code">malloc</code> parameter.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fmallopt_005farena_005ftest"><span class="category-def">Probe: </span><span><strong class="def-name">memory_mallopt_arena_test</strong> <var class="def-var-arguments">(int <var class="var">$arg1</var>, int <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005fmallopt_005farena_005ftest"> &para;</a></span></dt>
+<dd><p>This probe is triggered shortly after the <code class="code">memory_mallopt</code> probe,
+when the parameter to be changed is <code class="code">M_ARENA_TEST</code>, and the
+requested value is in an acceptable range.  Argument <var class="var">$arg1</var> is the
+requested value, and <var class="var">$arg2</var> is the previous value of this
+<code class="code">malloc</code> parameter.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fmallopt_005farena_005fmax"><span class="category-def">Probe: </span><span><strong class="def-name">memory_mallopt_arena_max</strong> <var class="def-var-arguments">(int <var class="var">$arg1</var>, int <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005fmallopt_005farena_005fmax"> &para;</a></span></dt>
+<dd><p>This probe is triggered shortly after the <code class="code">memory_mallopt</code> probe,
+when the parameter to be changed is <code class="code">M_ARENA_MAX</code>, and the
+requested value is in an acceptable range.  Argument <var class="var">$arg1</var> is the
+requested value, and <var class="var">$arg2</var> is the previous value of this
+<code class="code">malloc</code> parameter.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005fmallopt_005ffree_005fdyn_005fthresholds"><span class="category-def">Probe: </span><span><strong class="def-name">memory_mallopt_free_dyn_thresholds</strong> <var class="def-var-arguments">(int <var class="var">$arg1</var>, int <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005fmallopt_005ffree_005fdyn_005fthresholds"> &para;</a></span></dt>
+<dd><p>This probe is triggered when function <code class="code">free</code> decides to adjust the
+dynamic brk/mmap thresholds.  Argument <var class="var">$arg1</var> and <var class="var">$arg2</var> are
+the adjusted mmap and trim thresholds, respectively.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005ftunable_005ftcache_005fmax_005fbytes"><span class="category-def">Probe: </span><span><strong class="def-name">memory_tunable_tcache_max_bytes</strong> <var class="def-var-arguments">(int <var class="var">$arg1</var>, int <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005ftunable_005ftcache_005fmax_005fbytes"> &para;</a></span></dt>
+<dd><p>This probe is triggered when the <code class="code">glibc.malloc.tcache_max</code>
+tunable is set.  Argument <var class="var">$arg1</var> is the requested value, and
+<var class="var">$arg2</var> is the previous value of this tunable.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005ftunable_005ftcache_005fcount"><span class="category-def">Probe: </span><span><strong class="def-name">memory_tunable_tcache_count</strong> <var class="def-var-arguments">(int <var class="var">$arg1</var>, int <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005ftunable_005ftcache_005fcount"> &para;</a></span></dt>
+<dd><p>This probe is triggered when the <code class="code">glibc.malloc.tcache_count</code>
+tunable is set.  Argument <var class="var">$arg1</var> is the requested value, and
+<var class="var">$arg2</var> is the previous value of this tunable.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-memory_005ftcache_005fdouble_005ffree"><span class="category-def">Probe: </span><span><strong class="def-name">memory_tcache_double_free</strong> <var class="def-var-arguments">(void *<var class="var">$arg1</var>, int <var class="var">$arg2</var>)</var><a class="copiable-link" href="#index-memory_005ftcache_005fdouble_005ffree"> &para;</a></span></dt>
+<dd><p>This probe is triggered when <code class="code">free</code> determines that the memory
+being freed has probably already been freed, and resides in the
+per-thread cache.  Note that there is an extremely unlikely chance
+that this probe will trigger due to random payload data remaining in
+the allocated memory matching the key used to detect double frees.
+This probe actually indicates that an expensive linear search of the
+tcache, looking for a double free, has happened.  Argument <var class="var">$arg1</var>
+is the memory location as passed to <code class="code">free</code>, Argument <var class="var">$arg2</var>
+is the tcache bin it resides in.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Non_002dlocal-Goto-Probes.html">Non-local Goto Probes</a>, Up: <a href="Internal-Probes.html">Internal probes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Signal Stack (The GNU C Library)</title>
+
+<meta name="description" content="Signal Stack (The GNU C Library)">
+<meta name="keywords" content="Signal Stack (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Signal-Handling.html" rel="up" title="Signal Handling">
+<link href="BSD-Signal-Handling.html" rel="next" title="BSD Signal Handling">
+<link href="Waiting-for-a-Signal.html" rel="prev" title="Waiting for a Signal">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Signal-Stack">
+<div class="nav-panel">
+<p>
+Next: <a href="BSD-Signal-Handling.html" accesskey="n" rel="next">BSD Signal Handling</a>, Previous: <a href="Waiting-for-a-Signal.html" accesskey="p" rel="prev">Waiting for a Signal</a>, Up: <a href="Signal-Handling.html" accesskey="u" rel="up">Signal Handling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Using-a-Separate-Signal-Stack"><span>25.9 Using a Separate Signal Stack<a class="copiable-link" href="#Using-a-Separate-Signal-Stack"> &para;</a></span></h3>
+
+<p>A signal stack is a special area of memory to be used as the execution
+stack during signal handlers.  It should be fairly large, to avoid any
+danger that it will overflow in turn; the macro <code class="code">SIGSTKSZ</code> is
+defined to a canonical size for signal stacks.  You can use
+<code class="code">malloc</code> to allocate the space for the stack.  Then call
+<code class="code">sigaltstack</code> or <code class="code">sigstack</code> to tell the system to use that
+space for the signal stack.
+</p>
+<p>You don&rsquo;t need to write signal handlers differently in order to use a
+signal stack.  Switching from one stack to the other happens
+automatically.  (Some non-GNU debuggers on some machines may get
+confused if you examine a stack trace while a handler that uses the
+signal stack is running.)
+</p>
+<p>There are two interfaces for telling the system to use a separate signal
+stack.  <code class="code">sigstack</code> is the older interface, which comes from 4.2
+BSD.  <code class="code">sigaltstack</code> is the newer interface, and comes from 4.4
+BSD.  The <code class="code">sigaltstack</code> interface has the advantage that it does
+not require your program to know which direction the stack grows, which
+depends on the specific machine and operating system.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-stack_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">stack_t</strong><a class="copiable-link" href="#index-stack_005ft"> &para;</a></span></dt>
+<dd>
+<p>This structure describes a signal stack.  It contains the following members:
+</p>
+<dl class="table">
+<dt><code class="code">void *ss_sp</code></dt>
+<dd><p>This points to the base of the signal stack.
+</p>
+</dd>
+<dt><code class="code">size_t ss_size</code></dt>
+<dd><p>This is the size (in bytes) of the signal stack which &lsquo;<samp class="samp">ss_sp</samp>&rsquo; points to.
+You should set this to however much space you allocated for the stack.
+</p>
+<p>There are two macros defined in <samp class="file">signal.h</samp> that you should use in
+calculating this size:
+</p>
+<dl class="vtable">
+<dt><a id="index-SIGSTKSZ"></a><span><code class="code">SIGSTKSZ</code><a class="copiable-link" href="#index-SIGSTKSZ"> &para;</a></span></dt>
+<dd><p>This is the canonical size for a signal stack.  It is judged to be
+sufficient for normal uses.
+</p>
+</dd>
+<dt><a id="index-MINSIGSTKSZ"></a><span><code class="code">MINSIGSTKSZ</code><a class="copiable-link" href="#index-MINSIGSTKSZ"> &para;</a></span></dt>
+<dd><p>This is the amount of signal stack space the operating system needs just
+to implement signal delivery.  The size of a signal stack <strong class="strong">must</strong>
+be greater than this.
+</p>
+<p>For most cases, just using <code class="code">SIGSTKSZ</code> for <code class="code">ss_size</code> is
+sufficient.  But if you know how much stack space your program&rsquo;s signal
+handlers will need, you may want to use a different size.  In this case,
+you should allocate <code class="code">MINSIGSTKSZ</code> additional bytes for the signal
+stack and increase <code class="code">ss_size</code> accordingly.
+</p></dd>
+</dl>
+
+</dd>
+<dt><code class="code">int ss_flags</code></dt>
+<dd><p>This field contains the bitwise <small class="sc">OR</small> of these flags:
+</p>
+<dl class="vtable">
+<dt><a id="index-SS_005fDISABLE"></a><span><code class="code">SS_DISABLE</code><a class="copiable-link" href="#index-SS_005fDISABLE"> &para;</a></span></dt>
+<dd><p>This tells the system that it should not use the signal stack.
+</p>
+</dd>
+<dt><a id="index-SS_005fONSTACK"></a><span><code class="code">SS_ONSTACK</code><a class="copiable-link" href="#index-SS_005fONSTACK"> &para;</a></span></dt>
+<dd><p>This is set by the system, and indicates that the signal stack is
+currently in use.  If this bit is not set, then signals will be
+delivered on the normal user stack.
+</p></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sigaltstack"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sigaltstack</strong> <code class="def-code-arguments">(const stack_t *restrict <var class="var">stack</var>, stack_t *restrict <var class="var">oldstack</var>)</code><a class="copiable-link" href="#index-sigaltstack"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock/hurd
+| AC-Unsafe lock/hurd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">sigaltstack</code> function specifies an alternate stack for use
+during signal handling.  When a signal is received by the process and
+its action indicates that the signal stack is used, the system arranges
+a switch to the currently installed signal stack while the handler for
+that signal is executed.
+</p>
+<p>If <var class="var">oldstack</var> is not a null pointer, information about the currently
+installed signal stack is returned in the location it points to.  If
+<var class="var">stack</var> is not a null pointer, then this is installed as the new
+stack for use by signal handlers.
+</p>
+<p>The return value is <code class="code">0</code> on success and <code class="code">-1</code> on failure.  If
+<code class="code">sigaltstack</code> fails, it sets <code class="code">errno</code> to one of these values:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>You tried to disable a stack that was in fact currently in use.
+</p>
+</dd>
+<dt><code class="code">ENOMEM</code></dt>
+<dd><p>The size of the alternate stack was too small.
+It must be greater than <code class="code">MINSIGSTKSZ</code>.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>Here is the older <code class="code">sigstack</code> interface.  You should use
+<code class="code">sigaltstack</code> instead on systems that have it.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-sigstack"><span class="category-def">Data Type: </span><span><strong class="def-name">struct sigstack</strong><a class="copiable-link" href="#index-struct-sigstack"> &para;</a></span></dt>
+<dd>
+<p>This structure describes a signal stack.  It contains the following members:
+</p>
+<dl class="table">
+<dt><code class="code">void *ss_sp</code></dt>
+<dd><p>This is the stack pointer.  If the stack grows downwards on your
+machine, this should point to the top of the area you allocated.  If the
+stack grows upwards, it should point to the bottom.
+</p>
+</dd>
+<dt><code class="code">int ss_onstack</code></dt>
+<dd><p>This field is true if the process is currently using this stack.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sigstack"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sigstack</strong> <code class="def-code-arguments">(struct sigstack *<var class="var">stack</var>, struct sigstack *<var class="var">oldstack</var>)</code><a class="copiable-link" href="#index-sigstack"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock/hurd
+| AC-Unsafe lock/hurd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">sigstack</code> function specifies an alternate stack for use during
+signal handling.  When a signal is received by the process and its
+action indicates that the signal stack is used, the system arranges a
+switch to the currently installed signal stack while the handler for
+that signal is executed.
+</p>
+<p>If <var class="var">oldstack</var> is not a null pointer, information about the currently
+installed signal stack is returned in the location it points to.  If
+<var class="var">stack</var> is not a null pointer, then this is installed as the new
+stack for use by signal handlers.
+</p>
+<p>The return value is <code class="code">0</code> on success and <code class="code">-1</code> on failure.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="BSD-Signal-Handling.html">BSD Signal Handling</a>, Previous: <a href="Waiting-for-a-Signal.html">Waiting for a Signal</a>, Up: <a href="Signal-Handling.html">Signal Handling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

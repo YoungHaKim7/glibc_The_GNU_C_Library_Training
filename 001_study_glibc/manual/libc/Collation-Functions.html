@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Collation Functions (The GNU C Library)</title>
+
+<meta name="description" content="Collation Functions (The GNU C Library)">
+<meta name="keywords" content="Collation Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="String-and-Array-Utilities.html" rel="up" title="String and Array Utilities">
+<link href="Search-Functions.html" rel="next" title="Search Functions">
+<link href="String_002fArray-Comparison.html" rel="prev" title="String/Array Comparison">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Collation-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Search-Functions.html" accesskey="n" rel="next">Search Functions</a>, Previous: <a href="String_002fArray-Comparison.html" accesskey="p" rel="prev">String/Array Comparison</a>, Up: <a href="String-and-Array-Utilities.html" accesskey="u" rel="up">String and Array Utilities</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Collation-Functions-1"><span>5.8 Collation Functions<a class="copiable-link" href="#Collation-Functions-1"> &para;</a></span></h3>
+
+<a class="index-entry-id" id="index-collating-strings"></a>
+<a class="index-entry-id" id="index-string-collation-functions"></a>
+
+<p>In some locales, the conventions for lexicographic ordering differ from
+the strict numeric ordering of character codes.  For example, in Spanish
+most glyphs with diacritical marks such as accents are not considered
+distinct letters for the purposes of collation.  On the other hand, in
+Czech the two-character sequence &lsquo;<samp class="samp">ch</samp>&rsquo; is treated as a single letter
+that is collated between &lsquo;<samp class="samp">h</samp>&rsquo; and &lsquo;<samp class="samp">i</samp>&rsquo;.
+</p>
+<p>You can use the functions <code class="code">strcoll</code> and <code class="code">strxfrm</code> (declared in
+the headers file <samp class="file">string.h</samp>) and <code class="code">wcscoll</code> and <code class="code">wcsxfrm</code>
+(declared in the headers file <samp class="file">wchar</samp>) to compare strings using a
+collation ordering appropriate for the current locale.  The locale used
+by these functions in particular can be specified by setting the locale
+for the <code class="code">LC_COLLATE</code> category; see <a class="ref" href="Locales.html">Locales and Internationalization</a>.
+<a class="index-entry-id" id="index-string_002eh-6"></a>
+<a class="index-entry-id" id="index-wchar_002eh-2"></a>
+</p>
+<p>In the standard C locale, the collation sequence for <code class="code">strcoll</code> is
+the same as that for <code class="code">strcmp</code>.  Similarly, <code class="code">wcscoll</code> and
+<code class="code">wcscmp</code> are the same in this situation.
+</p>
+<p>Effectively, the way these functions work is by applying a mapping to
+transform the characters in a multibyte string to a byte
+sequence that represents
+the string&rsquo;s position in the collating sequence of the current locale.
+Comparing two such byte sequences in a simple fashion is equivalent to
+comparing the strings with the locale&rsquo;s collating sequence.
+</p>
+<p>The functions <code class="code">strcoll</code> and <code class="code">wcscoll</code> perform this translation
+implicitly, in order to do one comparison.  By contrast, <code class="code">strxfrm</code>
+and <code class="code">wcsxfrm</code> perform the mapping explicitly.  If you are making
+multiple comparisons using the same string or set of strings, it is
+likely to be more efficient to use <code class="code">strxfrm</code> or <code class="code">wcsxfrm</code> to
+transform all the strings just once, and subsequently compare the
+transformed strings with <code class="code">strcmp</code> or <code class="code">wcscmp</code>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strcoll"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">strcoll</strong> <code class="def-code-arguments">(const char *<var class="var">s1</var>, const char *<var class="var">s2</var>)</code><a class="copiable-link" href="#index-strcoll"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">strcoll</code> function is similar to <code class="code">strcmp</code> but uses the
+collating sequence of the current locale for collation (the
+<code class="code">LC_COLLATE</code> locale).  The arguments are multibyte strings.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcscoll"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">wcscoll</strong> <code class="def-code-arguments">(const wchar_t *<var class="var">ws1</var>, const wchar_t *<var class="var">ws2</var>)</code><a class="copiable-link" href="#index-wcscoll"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wcscoll</code> function is similar to <code class="code">wcscmp</code> but uses the
+collating sequence of the current locale for collation (the
+<code class="code">LC_COLLATE</code> locale).
+</p></dd></dl>
+
+<p>Here is an example of sorting an array of strings, using <code class="code">strcoll</code>
+to compare them.  The actual sort algorithm is not written here; it
+comes from <code class="code">qsort</code> (see <a class="pxref" href="Array-Sort-Function.html">Array Sort Function</a>).  The job of the
+code shown here is to say how to compare the strings while sorting them.
+(Later on in this section, we will show a way to do this more
+efficiently using <code class="code">strxfrm</code>.)
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">/* <span class="r">This is the comparison function used with <code class="code">qsort</code>.</span> */
+
+int
+compare_elements (const void *v1, const void *v2)
+{
+  char * const *p1 = v1;
+  char * const *p2 = v2;
+
+  return strcoll (*p1, *p2);
+}
+
+/* <span class="r">This is the entry point&mdash;the function to sort</span>
+   <span class="r">strings using the locale&rsquo;s collating sequence.</span> */
+
+void
+sort_strings (char **array, int nstrings)
+{
+  /* <span class="r">Sort <code class="code">temp_array</code> by comparing the strings.</span> */
+  qsort (array, nstrings,
+         sizeof (char *), compare_elements);
+}
+</pre></div>
+
+<a class="index-entry-id" id="index-converting-string-to-collation-order"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strxfrm"><span class="category-def">Function: </span><span><code class="def-type">size_t</code> <strong class="def-name">strxfrm</strong> <code class="def-code-arguments">(char *restrict <var class="var">to</var>, const char *restrict <var class="var">from</var>, size_t <var class="var">size</var>)</code><a class="copiable-link" href="#index-strxfrm"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">strxfrm</code> transforms the multibyte string
+<var class="var">from</var> using the
+collation transformation determined by the locale currently selected for
+collation, and stores the transformed string in the array <var class="var">to</var>.  Up
+to <var class="var">size</var> bytes (including a terminating null byte) are
+stored.
+</p>
+<p>The behavior is undefined if the strings <var class="var">to</var> and <var class="var">from</var>
+overlap; see <a class="ref" href="Copying-Strings-and-Arrays.html">Copying Strings and Arrays</a>.
+</p>
+<p>The return value is the length of the entire transformed string.  This
+value is not affected by the value of <var class="var">size</var>, but if it is greater
+or equal than <var class="var">size</var>, it means that the transformed string did not
+entirely fit in the array <var class="var">to</var>.  In this case, only as much of the
+string as actually fits was stored.  To get the whole transformed
+string, call <code class="code">strxfrm</code> again with a bigger output array.
+</p>
+<p>The transformed string may be longer than the original string, and it
+may also be shorter.
+</p>
+<p>If <var class="var">size</var> is zero, no bytes are stored in <var class="var">to</var>.  In this
+case, <code class="code">strxfrm</code> simply returns the number of bytes that would
+be the length of the transformed string.  This is useful for determining
+what size the allocated array should be.  It does not matter what
+<var class="var">to</var> is if <var class="var">size</var> is zero; <var class="var">to</var> may even be a null pointer.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcsxfrm"><span class="category-def">Function: </span><span><code class="def-type">size_t</code> <strong class="def-name">wcsxfrm</strong> <code class="def-code-arguments">(wchar_t *restrict <var class="var">wto</var>, const wchar_t *<var class="var">wfrom</var>, size_t <var class="var">size</var>)</code><a class="copiable-link" href="#index-wcsxfrm"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">wcsxfrm</code> transforms wide string <var class="var">wfrom</var>
+using the collation transformation determined by the locale currently
+selected for collation, and stores the transformed string in the array
+<var class="var">wto</var>.  Up to <var class="var">size</var> wide characters (including a terminating null
+wide character) are stored.
+</p>
+<p>The behavior is undefined if the strings <var class="var">wto</var> and <var class="var">wfrom</var>
+overlap; see <a class="ref" href="Copying-Strings-and-Arrays.html">Copying Strings and Arrays</a>.
+</p>
+<p>The return value is the length of the entire transformed wide
+string.  This value is not affected by the value of <var class="var">size</var>, but if
+it is greater or equal than <var class="var">size</var>, it means that the transformed
+wide string did not entirely fit in the array <var class="var">wto</var>.  In
+this case, only as much of the wide string as actually fits
+was stored.  To get the whole transformed wide string, call
+<code class="code">wcsxfrm</code> again with a bigger output array.
+</p>
+<p>The transformed wide string may be longer than the original
+wide string, and it may also be shorter.
+</p>
+<p>If <var class="var">size</var> is zero, no wide characters are stored in <var class="var">to</var>.  In this
+case, <code class="code">wcsxfrm</code> simply returns the number of wide characters that
+would be the length of the transformed wide string.  This is
+useful for determining what size the allocated array should be (remember
+to multiply with <code class="code">sizeof (wchar_t)</code>).  It does not matter what
+<var class="var">wto</var> is if <var class="var">size</var> is zero; <var class="var">wto</var> may even be a null pointer.
+</p></dd></dl>
+
+<p>Here is an example of how you can use <code class="code">strxfrm</code> when
+you plan to do many comparisons.  It does the same thing as the previous
+example, but much faster, because it has to transform each string only
+once, no matter how many times it is compared with other strings.  Even
+the time needed to allocate and free storage is much less than the time
+we save, when there are many strings.
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">struct sorter { char *input; char *transformed; };
+
+/* <span class="r">This is the comparison function used with <code class="code">qsort</code></span>
+   <span class="r">to sort an array of <code class="code">struct sorter</code>.</span> */
+
+int
+compare_elements (const void *v1, const void *v2)
+{
+  const struct sorter *p1 = v1;
+  const struct sorter *p2 = v2;
+
+  return strcmp (p1-&gt;transformed, p2-&gt;transformed);
+}
+
+/* <span class="r">This is the entry point&mdash;the function to sort</span>
+   <span class="r">strings using the locale&rsquo;s collating sequence.</span> */
+
+void
+sort_strings_fast (char **array, int nstrings)
+{
+  struct sorter temp_array[nstrings];
+  int i;
+
+  /* <span class="r">Set up <code class="code">temp_array</code>.  Each element contains</span>
+     <span class="r">one input string and its transformed string.</span> */
+  for (i = 0; i &lt; nstrings; i++)
+    {
+      size_t length = strlen (array[i]) * 2;
+      char *transformed;
+      size_t transformed_length;
+
+      temp_array[i].input = array[i];
+
+      /* <span class="r">First try a buffer perhaps big enough.</span>  */
+      transformed = (char *) xmalloc (length);
+
+      /* <span class="r">Transform <code class="code">array[i]</code>.</span>  */
+      transformed_length = strxfrm (transformed, array[i], length);
+
+      /* <span class="r">If the buffer was not large enough, resize it</span>
+         <span class="r">and try again.</span>  */
+      if (transformed_length &gt;= length)
+        {
+          /* <span class="r">Allocate the needed space. +1 for terminating</span>
+             <span class="r"><code class="code">'\0'</code> byte.</span>  */
+          transformed = xrealloc (transformed,
+                                  transformed_length + 1);
+
+          /* <span class="r">The return value is not interesting because we know</span>
+             <span class="r">how long the transformed string is.</span>  */
+          (void) strxfrm (transformed, array[i],
+                          transformed_length + 1);
+        }
+
+      temp_array[i].transformed = transformed;
+    }
+
+  /* <span class="r">Sort <code class="code">temp_array</code> by comparing transformed strings.</span> */
+  qsort (temp_array, nstrings,
+         sizeof (struct sorter), compare_elements);
+
+  /* <span class="r">Put the elements back in the permanent array</span>
+     <span class="r">in their sorted order.</span> */
+  for (i = 0; i &lt; nstrings; i++)
+    array[i] = temp_array[i].input;
+
+  /* <span class="r">Free the strings we allocated.</span> */
+  for (i = 0; i &lt; nstrings; i++)
+    free (temp_array[i].transformed);
+}
+</pre></div>
+
+<p>The interesting part of this code for the wide character version would
+look like this:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">void
+sort_strings_fast (wchar_t **array, int nstrings)
+{
+  ...
+      /* <span class="r">Transform <code class="code">array[i]</code>.</span>  */
+      transformed_length = wcsxfrm (transformed, array[i], length);
+
+      /* <span class="r">If the buffer was not large enough, resize it</span>
+         <span class="r">and try again.</span>  */
+      if (transformed_length &gt;= length)
+        {
+          /* <span class="r">Allocate the needed space. +1 for terminating</span>
+             <span class="r"><code class="code">L'\0'</code> wide character.</span>  */
+          transformed = xreallocarray (transformed,
+                                       transformed_length + 1,
+                                       sizeof *transformed);
+
+          /* <span class="r">The return value is not interesting because we know</span>
+             <span class="r">how long the transformed string is.</span>  */
+          (void) wcsxfrm (transformed, array[i],
+                          transformed_length + 1);
+        }
+  ...
+</pre></div>
+
+<p>Note the additional multiplication with <code class="code">sizeof (wchar_t)</code> in the
+<code class="code">realloc</code> call.
+</p>
+<p><strong class="strong">Compatibility Note:</strong> The string collation functions are a new
+feature of ISO&nbsp;C90<!-- /@w -->.  Older C dialects have no equivalent feature.
+The wide character versions were introduced in Amendment&nbsp;1<!-- /@w --> to ISO&nbsp;C90<!-- /@w -->.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Search-Functions.html">Search Functions</a>, Previous: <a href="String_002fArray-Comparison.html">String/Array Comparison</a>, Up: <a href="String-and-Array-Utilities.html">String and Array Utilities</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

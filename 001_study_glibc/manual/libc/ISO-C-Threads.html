@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>ISO C Threads (The GNU C Library)</title>
+
+<meta name="description" content="ISO C Threads (The GNU C Library)">
+<meta name="keywords" content="ISO C Threads (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Threads.html" rel="up" title="Threads">
+<link href="POSIX-Threads.html" rel="next" title="POSIX Threads">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="ISO-C-Threads">
+<div class="nav-panel">
+<p>
+Next: <a href="POSIX-Threads.html" accesskey="n" rel="next">POSIX Threads</a>, Up: <a href="Threads.html" accesskey="u" rel="up">Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="ISO-C-Threads-1"><span>36.1 ISO C Threads<a class="copiable-link" href="#ISO-C-Threads-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-ISO-C-threads"></a>
+<a class="index-entry-id" id="index-C-threads"></a>
+<a class="index-entry-id" id="index-threads_002eh"></a>
+
+<p>This section describes the GNU C Library ISO C threads implementation.
+To have a deeper understanding of this API, it is strongly recommended
+to read ISO/IEC 9899:2011, section 7.26, in which ISO C threads were
+originally specified.
+</p>
+<p>All types and function prototypes are declared in the header file
+<samp class="file">threads.h</samp>.  When compiling for C, some functionality is also
+available in <samp class="file">stdlib.h</samp>.
+</p>
+<p>It is recommended that GNU systems use the functionality in
+<samp class="file">pthread.h</samp> instead of <samp class="file">thread.h</samp>, as they are more portable
+between C and C++.
+</p>
+
+
+<ul class="mini-toc">
+<li><a href="ISO-C-Threads-Return-Values.html" accesskey="1">Return Values</a></li>
+<li><a href="ISO-C-Thread-Management.html" accesskey="2">Creation and Control</a></li>
+<li><a href="Call-Once.html" accesskey="3">Call Once</a></li>
+<li><a href="ISO-C-Mutexes.html" accesskey="4">Mutexes</a></li>
+<li><a href="ISO-C-Condition-Variables.html" accesskey="5">Condition Variables</a></li>
+<li><a href="ISO-C-Thread_002dlocal-Storage.html" accesskey="6">Thread-local Storage</a></li>
+</ul>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Pseudo-Terminal Pairs (The GNU C Library)</title>
+
+<meta name="description" content="Pseudo-Terminal Pairs (The GNU C Library)">
+<meta name="keywords" content="Pseudo-Terminal Pairs (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Pseudo_002dTerminals.html" rel="up" title="Pseudo-Terminals">
+<link href="Allocation.html" rel="prev" title="Allocation">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Pseudo_002dTerminal-Pairs">
+<div class="nav-panel">
+<p>
+Previous: <a href="Allocation.html" accesskey="p" rel="prev">Allocating Pseudo-Terminals</a>, Up: <a href="Pseudo_002dTerminals.html" accesskey="u" rel="up">Pseudo-Terminals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Opening-a-Pseudo_002dTerminal-Pair"><span>17.10.2 Opening a Pseudo-Terminal Pair<a class="copiable-link" href="#Opening-a-Pseudo_002dTerminal-Pair"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-opening-a-pseudo_002dterminal-pair"></a>
+
+<p>These functions, derived from BSD, are available in the separate
+<samp class="file">libutil</samp> library, and declared in <samp class="file">pty.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-openpty"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">openpty</strong> <code class="def-code-arguments">(int *<var class="var">amaster</var>, int *<var class="var">aslave</var>, char *<var class="var">name</var>, const struct termios *<var class="var">termp</var>, const struct winsize *<var class="var">winp</var>)</code><a class="copiable-link" href="#index-openpty"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function allocates and opens a pseudo-terminal pair, returning the
+file descriptor for the master in <var class="var">*amaster</var>, and the file
+descriptor for the slave in <var class="var">*aslave</var>.  If the argument <var class="var">name</var>
+is not a null pointer, the file name of the slave pseudo-terminal
+device is stored in <code class="code">*name</code>.  If <var class="var">termp</var> is not a null pointer,
+the terminal attributes of the slave are set to the ones specified in
+the structure that <var class="var">termp</var> points to (see <a class="pxref" href="Terminal-Modes.html">Terminal Modes</a>).
+Likewise, if <var class="var">winp</var> is not a null pointer, the screen size of
+the slave is set to the values specified in the structure that
+<var class="var">winp</var> points to.
+</p>
+<p>The normal return value from <code class="code">openpty</code> is <em class="math">0</em>; a value of
+<em class="math">-1</em> is returned in case of failure.  The following <code class="code">errno</code>
+conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">ENOENT</code></dt>
+<dd><p>There are no free pseudo-terminal pairs available.
+</p></dd>
+</dl>
+
+<p><strong class="strong">Warning:</strong> Using the <code class="code">openpty</code> function with <var class="var">name</var> not
+set to <code class="code">NULL</code> is <strong class="strong">very dangerous</strong> because it provides no
+protection against overflowing the string <var class="var">name</var>.  You should use
+the <code class="code">ttyname</code> function on the file descriptor returned in
+<var class="var">*slave</var> to find out the file name of the slave pseudo-terminal
+device instead.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-forkpty"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">forkpty</strong> <code class="def-code-arguments">(int *<var class="var">amaster</var>, char *<var class="var">name</var>, const struct termios *<var class="var">termp</var>, const struct winsize *<var class="var">winp</var>)</code><a class="copiable-link" href="#index-forkpty"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to the <code class="code">openpty</code> function, but in
+addition, forks a new process (see <a class="pxref" href="Creating-a-Process.html">Creating a Process</a>) and makes the
+newly opened slave pseudo-terminal device the controlling terminal
+(see <a class="pxref" href="Controlling-Terminal.html">Controlling Terminal of a Process</a>) for the child process.
+</p>
+<p>If the operation is successful, there are then both parent and child
+processes and both see <code class="code">forkpty</code> return, but with different values:
+it returns a value of <em class="math">0</em> in the child process and returns the child&rsquo;s
+process ID in the parent process.
+</p>
+<p>If the allocation of a pseudo-terminal pair or the process creation
+failed, <code class="code">forkpty</code> returns a value of <em class="math">-1</em> in the parent
+process.
+</p>
+<p><strong class="strong">Warning:</strong> The <code class="code">forkpty</code> function has the same problems with
+respect to the <var class="var">name</var> argument as <code class="code">openpty</code>.
+</p></dd></dl>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Allocation.html">Allocating Pseudo-Terminals</a>, Up: <a href="Pseudo_002dTerminals.html">Pseudo-Terminals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

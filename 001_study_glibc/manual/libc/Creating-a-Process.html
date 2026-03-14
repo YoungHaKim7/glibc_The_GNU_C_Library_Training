@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Creating a Process (The GNU C Library)</title>
+
+<meta name="description" content="Creating a Process (The GNU C Library)">
+<meta name="keywords" content="Creating a Process (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Processes.html" rel="up" title="Processes">
+<link href="Querying-a-Process.html" rel="next" title="Querying a Process">
+<link href="Process-Identification.html" rel="prev" title="Process Identification">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Creating-a-Process">
+<div class="nav-panel">
+<p>
+Next: <a href="Querying-a-Process.html" accesskey="n" rel="next">Querying a Process</a>, Previous: <a href="Process-Identification.html" accesskey="p" rel="prev">Process Identification</a>, Up: <a href="Processes.html" accesskey="u" rel="up">Processes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Creating-a-Process-1"><span>27.4 Creating a Process<a class="copiable-link" href="#Creating-a-Process-1"> &para;</a></span></h3>
+
+<p>The <code class="code">fork</code> function is the primitive for creating a process.
+It is declared in the header file <samp class="file">unistd.h</samp>.
+<a class="index-entry-id" id="index-unistd_002eh-18"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fork"><span class="category-def">Function: </span><span><code class="def-type">pid_t</code> <strong class="def-name">fork</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-fork"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe plugin
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fork</code> function creates a new process.
+</p>
+<p>If the operation is successful, there are then both parent and child
+processes and both see <code class="code">fork</code> return, but with different values: it
+returns a value of <code class="code">0</code> in the child process and returns the child&rsquo;s
+process ID in the parent process.
+</p>
+<p>If process creation failed, <code class="code">fork</code> returns a value of <code class="code">-1</code> in
+the parent process.  The following <code class="code">errno</code> error conditions are
+defined for <code class="code">fork</code>:
+</p>
+<dl class="table">
+<dt><code class="code">EAGAIN</code></dt>
+<dd><p>There aren&rsquo;t enough system resources to create another process, or the
+user already has too many processes running.  This means exceeding the
+<code class="code">RLIMIT_NPROC</code> resource limit, which can usually be increased;
+see <a class="pxref" href="Limits-on-Resources.html">Limiting Resource Usage</a>.
+</p>
+</dd>
+<dt><code class="code">ENOMEM</code></dt>
+<dd><p>The process requires more space than the system can supply.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>The specific attributes of the child process that differ from the
+parent process are:
+</p>
+<ul class="itemize mark-bullet">
+<li>The child process has its own unique process ID.
+
+</li><li>The parent process ID of the child process is the process ID of its
+parent process.
+
+</li><li>The child process gets its own copies of the parent process&rsquo;s open file
+descriptors.  Subsequently changing attributes of the file descriptors
+in the parent process won&rsquo;t affect the file descriptors in the child,
+and vice versa.  See <a class="xref" href="Control-Operations.html">Control Operations on Files</a>.  However, the file position
+associated with each descriptor is shared by both processes;
+see <a class="pxref" href="File-Position.html">File Position</a>.
+
+</li><li>The elapsed processor times for the child process are set to zero;
+see <a class="ref" href="Processor-Time.html">Processor Time Inquiry</a>.
+
+</li><li>The child doesn&rsquo;t inherit file locks set by the parent process.
+See <a class="xref" href="Control-Operations.html">Control Operations on Files</a>.
+
+</li><li>The child doesn&rsquo;t inherit alarms set by the parent process.
+See <a class="xref" href="Setting-an-Alarm.html">Setting an Alarm</a>.
+
+</li><li>The set of pending signals (see <a class="pxref" href="Delivery-of-Signal.html">How Signals Are Delivered</a>) for the child
+process is cleared.  (The child process inherits its mask of blocked
+signals and signal actions from the parent process.)
+</li></ul>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-_005fFork"><span class="category-def">Function: </span><span><code class="def-type">pid_t</code> <strong class="def-name">_Fork</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-_005fFork"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">_Fork</code> function is similar to <code class="code">fork</code>, but it does not invoke
+any callbacks registered with <code class="code">pthread_atfork</code>, nor does it reset
+any internal state or locks (such as the <code class="code">malloc</code> locks).  In the
+new subprocess, only async-signal-safe functions may be called, such as
+<code class="code">dup2</code> or <code class="code">execve</code>.
+</p>
+<p>The <code class="code">_Fork</code> function is an async-signal-safe replacement of <code class="code">fork</code>.
+</p>
+<p>This function was originally a GNU extension, but was added in
+POSIX.1-2024.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-vfork"><span class="category-def">Function: </span><span><code class="def-type">pid_t</code> <strong class="def-name">vfork</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-vfork"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe plugin
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">vfork</code> function is similar to <code class="code">fork</code> but on some systems
+it is more efficient; however, there are restrictions you must follow to
+use it safely.
+</p>
+<p>While <code class="code">fork</code> makes a complete copy of the calling process&rsquo;s address
+space and allows both the parent and child to execute independently,
+<code class="code">vfork</code> does not make this copy.  Instead, the child process
+created with <code class="code">vfork</code> shares its parent&rsquo;s address space until it
+calls <code class="code">_exit</code> or one of the <code class="code">exec</code> functions.  In the
+meantime, the parent process suspends execution.
+</p>
+<p>You must be very careful not to allow the child process created with
+<code class="code">vfork</code> to modify any global data or even local variables shared
+with the parent.  Furthermore, the child process cannot return from (or
+do a long jump out of) the function that called <code class="code">vfork</code>!  This
+would leave the parent process&rsquo;s control information very confused.  If
+in doubt, use <code class="code">fork</code> instead.
+</p>
+<p>Some operating systems don&rsquo;t really implement <code class="code">vfork</code>.  The GNU C Library
+permits you to use <code class="code">vfork</code> on all systems, but actually
+executes <code class="code">fork</code> if <code class="code">vfork</code> isn&rsquo;t available.  If you follow
+the proper precautions for using <code class="code">vfork</code>, your program will still
+work even if the system uses <code class="code">fork</code> instead.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Querying-a-Process.html">Querying a Process</a>, Previous: <a href="Process-Identification.html">Process Identification</a>, Up: <a href="Processes.html">Processes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

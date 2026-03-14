@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Networks Database (The GNU C Library)</title>
+
+<meta name="description" content="Networks Database (The GNU C Library)">
+<meta name="keywords" content="Networks Database (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Sockets.html" rel="up" title="Sockets">
+<link href="Other-Socket-APIs.html" rel="next" title="Other Socket APIs">
+<link href="Socket-Options.html" rel="prev" title="Socket Options">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Networks-Database">
+<div class="nav-panel">
+<p>
+Next: <a href="Other-Socket-APIs.html" accesskey="n" rel="next">Other Socket APIs</a>, Previous: <a href="Socket-Options.html" accesskey="p" rel="prev">Socket Options</a>, Up: <a href="Sockets.html" accesskey="u" rel="up">Sockets</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Networks-Database-1"><span>16.13 Networks Database<a class="copiable-link" href="#Networks-Database-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-networks-database"></a>
+<a class="index-entry-id" id="index-converting-network-number-to-network-name"></a>
+<a class="index-entry-id" id="index-converting-network-name-to-network-number"></a>
+
+<a class="index-entry-id" id="index-_002fetc_002fnetworks"></a>
+<a class="index-entry-id" id="index-netdb_002eh-3"></a>
+<p>Many systems come with a database that records a list of networks known
+to the system developer.  This is usually kept either in the file
+<samp class="file">/etc/networks</samp> or in an equivalent from a name server.  This data
+base is useful for routing programs such as <code class="code">route</code>, but it is not
+useful for programs that simply communicate over the network.  We
+provide functions to access this database, which are declared in
+<samp class="file">netdb.h</samp>.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-netent"><span class="category-def">Data Type: </span><span><strong class="def-name">struct netent</strong><a class="copiable-link" href="#index-struct-netent"> &para;</a></span></dt>
+<dd>
+<p>This data type is used to represent information about entries in the
+networks database.  It has the following members:
+</p>
+<dl class="table">
+<dt><code class="code">char *n_name</code></dt>
+<dd><p>This is the &ldquo;official&rdquo; name of the network.
+</p>
+</dd>
+<dt><code class="code">char **n_aliases</code></dt>
+<dd><p>These are alternative names for the network, represented as a vector
+of strings.  A null pointer terminates the array.
+</p>
+</dd>
+<dt><code class="code">int n_addrtype</code></dt>
+<dd><p>This is the type of the network number; this is always equal to
+<code class="code">AF_INET</code> for Internet networks.
+</p>
+</dd>
+<dt><code class="code">unsigned long int n_net</code></dt>
+<dd><p>This is the network number.  Network numbers are returned in host
+byte order; see <a class="ref" href="Byte-Order.html">Byte Order Conversion</a>.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>Use the <code class="code">getnetbyname</code> or <code class="code">getnetbyaddr</code> functions to search
+the networks database for information about a specific network.  The
+information is returned in a statically-allocated structure; you must
+copy the information if you need to save it.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getnetbyname"><span class="category-def">Function: </span><span><code class="def-type">struct netent *</code> <strong class="def-name">getnetbyname</strong> <code class="def-code-arguments">(const char *<var class="var">name</var>)</code><a class="copiable-link" href="#index-getnetbyname"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:netbyname env locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">getnetbyname</code> function returns information about the network
+named <var class="var">name</var>.  It returns a null pointer if there is no such
+network.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getnetbyaddr"><span class="category-def">Function: </span><span><code class="def-type">struct netent *</code> <strong class="def-name">getnetbyaddr</strong> <code class="def-code-arguments">(uint32_t <var class="var">net</var>, int <var class="var">type</var>)</code><a class="copiable-link" href="#index-getnetbyaddr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:netbyaddr locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">getnetbyaddr</code> function returns information about the network
+of type <var class="var">type</var> with number <var class="var">net</var>.  You should specify a value of
+<code class="code">AF_INET</code> for the <var class="var">type</var> argument for Internet networks.
+</p>
+<p><code class="code">getnetbyaddr</code> returns a null pointer if there is no such
+network.
+</p></dd></dl>
+
+<p>You can also scan the networks database using <code class="code">setnetent</code>,
+<code class="code">getnetent</code> and <code class="code">endnetent</code>.  Be careful when using these
+functions because they are not reentrant.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setnetent"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">setnetent</strong> <code class="def-code-arguments">(int <var class="var">stayopen</var>)</code><a class="copiable-link" href="#index-setnetent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:netent env locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function opens and rewinds the networks database.
+</p>
+<p>If the <var class="var">stayopen</var> argument is nonzero, this sets a flag so that
+subsequent calls to <code class="code">getnetbyname</code> or <code class="code">getnetbyaddr</code> will
+not close the database (as they usually would).  This makes for more
+efficiency if you call those functions several times, by avoiding
+reopening the database for each call.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getnetent"><span class="category-def">Function: </span><span><code class="def-type">struct netent *</code> <strong class="def-name">getnetent</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-getnetent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:netent race:netentbuf env locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns the next entry in the networks database.  It
+returns a null pointer if there are no more entries.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-endnetent"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">endnetent</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-endnetent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:netent env locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function closes the networks database.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Other-Socket-APIs.html">Other Socket APIs</a>, Previous: <a href="Socket-Options.html">Socket Options</a>, Up: <a href="Sockets.html">Sockets</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

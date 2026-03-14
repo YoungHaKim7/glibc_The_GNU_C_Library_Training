@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Rounding (The GNU C Library)</title>
+
+<meta name="description" content="Rounding (The GNU C Library)">
+<meta name="keywords" content="Rounding (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Arithmetic.html" rel="up" title="Arithmetic">
+<link href="Control-Functions.html" rel="next" title="Control Functions">
+<link href="Floating-Point-Errors.html" rel="prev" title="Floating Point Errors">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Rounding">
+<div class="nav-panel">
+<p>
+Next: <a href="Control-Functions.html" accesskey="n" rel="next">Floating-Point Control Functions</a>, Previous: <a href="Floating-Point-Errors.html" accesskey="p" rel="prev">Errors in Floating-Point Calculations</a>, Up: <a href="Arithmetic.html" accesskey="u" rel="up">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Rounding-Modes"><span>20.6 Rounding Modes<a class="copiable-link" href="#Rounding-Modes"> &para;</a></span></h3>
+
+<p>Floating-point calculations are carried out internally with extra
+precision, and then rounded to fit into the destination type.  This
+ensures that results are as precise as the input data.  IEEE&nbsp;754<!-- /@w -->
+defines four possible rounding modes:
+</p>
+<dl class="table">
+<dt>Round to nearest.</dt>
+<dd><p>This is the default mode.  It should be used unless there is a specific
+need for one of the others.  In this mode results are rounded to the
+nearest representable value.  If the result is midway between two
+representable values, the even representable is chosen. <em class="dfn">Even</em> here
+means the lowest-order bit is zero.  This rounding mode prevents
+statistical bias and guarantees numeric stability: round-off errors in a
+lengthy calculation will remain smaller than half of <code class="code">FLT_EPSILON</code>.
+</p>
+</dd>
+<dt>Round toward plus Infinity.</dt>
+<dd><p>All results are rounded to the smallest representable value
+which is greater than the result.
+</p>
+</dd>
+<dt>Round toward minus Infinity.</dt>
+<dd><p>All results are rounded to the largest representable value which is less
+than the result.
+</p>
+</dd>
+<dt>Round toward zero.</dt>
+<dd><p>All results are rounded to the largest representable value whose
+magnitude is less than that of the result.  In other words, if the
+result is negative it is rounded up; if it is positive, it is rounded
+down.
+</p></dd>
+</dl>
+
+<p><samp class="file">fenv.h</samp> defines constants which you can use to refer to the
+various rounding modes.  Each one will be defined if and only if the FPU
+supports the corresponding rounding mode.
+</p>
+<dl class="vtable">
+<dt><a id="index-FE_005fTONEAREST"></a><span><code class="code">FE_TONEAREST</code><a class="copiable-link" href="#index-FE_005fTONEAREST"> &para;</a></span></dt>
+<dd>
+<p>Round to nearest.
+</p>
+</dd>
+<dt><a id="index-FE_005fUPWARD"></a><span><code class="code">FE_UPWARD</code><a class="copiable-link" href="#index-FE_005fUPWARD"> &para;</a></span></dt>
+<dd>
+<p>Round toward <em class="math">+&#x221E;</em>.
+</p>
+</dd>
+<dt><a id="index-FE_005fDOWNWARD"></a><span><code class="code">FE_DOWNWARD</code><a class="copiable-link" href="#index-FE_005fDOWNWARD"> &para;</a></span></dt>
+<dd>
+<p>Round toward <em class="math">-&#x221E;</em>.
+</p>
+</dd>
+<dt><a id="index-FE_005fTOWARDZERO"></a><span><code class="code">FE_TOWARDZERO</code><a class="copiable-link" href="#index-FE_005fTOWARDZERO"> &para;</a></span></dt>
+<dd>
+<p>Round toward zero.
+</p></dd>
+</dl>
+
+<p>Underflow is an unusual case.  Normally, IEEE&nbsp;754<!-- /@w --> floating point
+numbers are always normalized (see <a class="pxref" href="Floating-Point-Concepts.html">Floating Point Representation Concepts</a>).
+Numbers smaller than <em class="math">2^r</em> (where <em class="math">r</em> is the minimum exponent,
+<code class="code">FLT_MIN_RADIX-1</code> for <var class="var">float</var>) cannot be represented as
+normalized numbers.  Rounding all such numbers to zero or <em class="math">2^r</em>
+would cause some algorithms to fail at 0.  Therefore, they are left in
+denormalized form.  That produces loss of precision, since some bits of
+the mantissa are stolen to indicate the decimal point.
+</p>
+<p>If a result is too small to be represented as a denormalized number, it
+is rounded to zero.  However, the sign of the result is preserved; if
+the calculation was negative, the result is <em class="dfn">negative zero</em>.
+Negative zero can also result from some operations on infinity, such as
+<em class="math">4/-&#x221E;</em>.
+</p>
+<p>At any time, one of the above four rounding modes is selected.  You can
+find out which one with this function:
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fegetround"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fegetround</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-fegetround"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns the currently selected rounding mode, represented by one of the
+values of the defined rounding mode macros.
+</p></dd></dl>
+
+<p>To change the rounding mode, use this function:
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fesetround"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fesetround</strong> <code class="def-code-arguments">(int <var class="var">round</var>)</code><a class="copiable-link" href="#index-fesetround"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Changes the currently selected rounding mode to <var class="var">round</var>.  If
+<var class="var">round</var> does not correspond to one of the supported rounding modes
+nothing is changed.  <code class="code">fesetround</code> returns zero if it changed the
+rounding mode, or a nonzero value if the mode is not supported.
+</p></dd></dl>
+
+<p>You should avoid changing the rounding mode if possible.  It can be an
+expensive operation; also, some hardware requires you to compile your
+program differently for it to work.  The resulting code may run slower.
+See your compiler documentation for details.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Control-Functions.html">Floating-Point Control Functions</a>, Previous: <a href="Floating-Point-Errors.html">Errors in Floating-Point Calculations</a>, Up: <a href="Arithmetic.html">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

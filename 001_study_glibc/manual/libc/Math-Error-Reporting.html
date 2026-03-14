@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Math Error Reporting (The GNU C Library)</title>
+
+<meta name="description" content="Math Error Reporting (The GNU C Library)">
+<meta name="keywords" content="Math Error Reporting (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Floating-Point-Errors.html" rel="up" title="Floating Point Errors">
+<link href="Status-bit-operations.html" rel="prev" title="Status bit operations">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Math-Error-Reporting">
+<div class="nav-panel">
+<p>
+Previous: <a href="Status-bit-operations.html" accesskey="p" rel="prev">Examining the FPU status word</a>, Up: <a href="Floating-Point-Errors.html" accesskey="u" rel="up">Errors in Floating-Point Calculations</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Error-Reporting-by-Mathematical-Functions"><span>20.5.4 Error Reporting by Mathematical Functions<a class="copiable-link" href="#Error-Reporting-by-Mathematical-Functions"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-errors_002c-mathematical"></a>
+<a class="index-entry-id" id="index-domain-error"></a>
+<a class="index-entry-id" id="index-range-error"></a>
+
+<p>Many of the math functions are defined only over a subset of the real or
+complex numbers.  Even if they are mathematically defined, their result
+may be larger or smaller than the range representable by their return
+type without loss of accuracy.  These are known as <em class="dfn">domain errors</em>,
+<em class="dfn">overflows</em>, and
+<em class="dfn">underflows</em>, respectively.  Math functions do several things when
+one of these errors occurs.  In this manual we will refer to the
+complete response as <em class="dfn">signalling</em> a domain error, overflow, or
+underflow.
+</p>
+<p>When a math function suffers a domain error, it raises the invalid
+exception and returns NaN.  It also sets <code class="code">errno</code> to <code class="code">EDOM</code>;
+this is for compatibility with old systems that do not support IEEE&nbsp;754<!-- /@w --> exception handling.  Likewise, when overflow occurs, math
+functions raise the overflow exception and, in the default rounding
+mode, return <em class="math">&#x221E;</em> or <em class="math">-&#x221E;</em> as appropriate
+(in other rounding modes, the largest finite value of the appropriate
+sign is returned when appropriate for that rounding mode).  They also
+set <code class="code">errno</code> to <code class="code">ERANGE</code> if returning <em class="math">&#x221E;</em> or
+<em class="math">-&#x221E;</em>; <code class="code">errno</code> may or may not be set to
+<code class="code">ERANGE</code> when a finite value is returned on overflow.  When
+underflow occurs, the underflow exception is raised, and zero
+(appropriately signed) or a subnormal value, as appropriate for the
+mathematical result of the function and the rounding mode, is
+returned.  <code class="code">errno</code> may be set to <code class="code">ERANGE</code>, but this is not
+guaranteed; it is intended that the GNU C Library should set it when the
+underflow is to an appropriately signed zero, but not necessarily for
+other underflows.
+</p>
+<p>When a math function has an argument that is a signaling NaN,
+the GNU C Library does not consider this a domain error, so <code class="code">errno</code> is
+unchanged, but the invalid exception is still raised (except for a few
+functions that are specified to handle signaling NaNs differently).
+</p>
+<p>Some of the math functions are defined mathematically to result in a
+complex value over parts of their domains.  The most familiar example of
+this is taking the square root of a negative number.  The complex math
+functions, such as <code class="code">csqrt</code>, will return the appropriate complex value
+in this case.  The real-valued functions, such as <code class="code">sqrt</code>, will
+signal a domain error.
+</p>
+<p>Some older hardware does not support infinities.  On that hardware,
+overflows instead return a particular very large number (usually the
+largest representable number).  <samp class="file">math.h</samp> defines macros you can use
+to test for overflow on both old and new hardware.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-HUGE_005fVAL"><span class="category-def">Macro: </span><span><code class="def-type">double</code> <strong class="def-name">HUGE_VAL</strong><a class="copiable-link" href="#index-HUGE_005fVAL"> &para;</a></span></dt>
+<dt class="deftypevrx def-cmd-deftypevr def-line" id="index-HUGE_005fVALF"><span class="category-def">Macro: </span><span><code class="def-type">float</code> <strong class="def-name">HUGE_VALF</strong><a class="copiable-link" href="#index-HUGE_005fVALF"> &para;</a></span></dt>
+<dt class="deftypevrx def-cmd-deftypevr def-line" id="index-HUGE_005fVALL"><span class="category-def">Macro: </span><span><code class="def-type">long double</code> <strong class="def-name">HUGE_VALL</strong><a class="copiable-link" href="#index-HUGE_005fVALL"> &para;</a></span></dt>
+<dt class="deftypevrx def-cmd-deftypevr def-line" id="index-HUGE_005fVAL_005fFN"><span class="category-def">Macro: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">HUGE_VAL_FN</strong><a class="copiable-link" href="#index-HUGE_005fVAL_005fFN"> &para;</a></span></dt>
+<dt class="deftypevrx def-cmd-deftypevr def-line" id="index-HUGE_005fVAL_005fFNx"><span class="category-def">Macro: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">HUGE_VAL_FNx</strong><a class="copiable-link" href="#index-HUGE_005fVAL_005fFNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>An expression representing a particular very large number.  On machines
+that use IEEE&nbsp;754<!-- /@w --> floating point format, <code class="code">HUGE_VAL</code> is infinity.
+On other machines, it&rsquo;s typically the largest positive number that can
+be represented.
+</p>
+<p>Mathematical functions return the appropriately typed version of
+<code class="code">HUGE_VAL</code> or <code class="code">&minus;HUGE_VAL</code> when the result is too large
+to be represented.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Status-bit-operations.html">Examining the FPU status word</a>, Up: <a href="Floating-Point-Errors.html">Errors in Floating-Point Calculations</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

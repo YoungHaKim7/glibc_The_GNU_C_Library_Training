@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Allocation (The GNU C Library)</title>
+
+<meta name="description" content="Allocation (The GNU C Library)">
+<meta name="keywords" content="Allocation (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Pseudo_002dTerminals.html" rel="up" title="Pseudo-Terminals">
+<link href="Pseudo_002dTerminal-Pairs.html" rel="next" title="Pseudo-Terminal Pairs">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Allocation">
+<div class="nav-panel">
+<p>
+Next: <a href="Pseudo_002dTerminal-Pairs.html" accesskey="n" rel="next">Opening a Pseudo-Terminal Pair</a>, Up: <a href="Pseudo_002dTerminals.html" accesskey="u" rel="up">Pseudo-Terminals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Allocating-Pseudo_002dTerminals"><span>17.10.1 Allocating Pseudo-Terminals<a class="copiable-link" href="#Allocating-Pseudo_002dTerminals"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-allocating-pseudo_002dterminals"></a>
+
+<a class="index-entry-id" id="index-stdlib_002eh-11"></a>
+<p>This subsection describes functions for allocating a pseudo-terminal,
+and for making this pseudo-terminal available for actual use.  These
+functions are declared in the header file <samp class="file">stdlib.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-posix_005fopenpt"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">posix_openpt</strong> <code class="def-code-arguments">(int <var class="var">flags</var>)</code><a class="copiable-link" href="#index-posix_005fopenpt"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p><code class="code">posix_openpt</code> returns a new file descriptor for the next
+available master pseudo-terminal.  In the case of an error, it returns
+a value of <em class="math">-1</em> instead, and sets <code class="code">errno</code> to indicate
+the error.  See <a class="xref" href="Opening-and-Closing-Files.html">Opening and Closing Files</a> for possible values
+of <code class="code">errno</code>.
+</p>
+<p><var class="var">flags</var> is a bit mask created from a bitwise OR of zero or more
+of the following flags:
+</p>
+<dl class="table">
+<dt><code class="code">O_RDWR</code></dt>
+<dd><p>Open the device for both reading and writing.  It is usual to specify
+this flag.
+</p></dd>
+<dt><code class="code">O_NOCTTY</code></dt>
+<dd><p>Do not make the device the controlling terminal for the process.
+</p></dd>
+</dl>
+
+<p>These flags are defined in <samp class="file">fcntl.h</samp>.  See <a class="xref" href="Access-Modes.html">File Access Modes</a>.
+</p>
+<p>For this function to be available, <code class="code">_XOPEN_SOURCE</code> must be defined
+to a value greater than &lsquo;<samp class="samp">600</samp>&rsquo;.  See <a class="xref" href="Feature-Test-Macros.html">Feature Test Macros</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getpt"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getpt</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-getpt"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p><code class="code">getpt</code> is similar to <code class="code">posix_openpt</code>.  This function is a
+GNU extension and should not be used in portable programs.
+</p>
+<p>The <code class="code">getpt</code> function returns a new file descriptor for the next
+available master pseudo-terminal.  The normal return value from
+<code class="code">getpt</code> is a non-negative integer file descriptor.  In the case of
+an error, a value of <em class="math">-1</em> is returned instead.  The following
+<code class="code">errno</code> conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">ENOENT</code></dt>
+<dd><p>There are no free master pseudo-terminals available.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-grantpt"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">grantpt</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>)</code><a class="copiable-link" href="#index-grantpt"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">grantpt</code> function changes the ownership and access permission
+of the slave pseudo-terminal device corresponding to the master
+pseudo-terminal device associated with the file descriptor
+<var class="var">filedes</var>.  The owner is set from the real user ID of the calling
+process (see <a class="pxref" href="Process-Persona.html">The Persona of a Process</a>), and the group is set to a special
+group (typically <em class="dfn">tty</em>) or from the real group ID of the calling
+process.  The access permission is set such that the file is both
+readable and writable by the owner and only writable by the group.
+</p>
+<p>On some systems this function is implemented by invoking a special
+<code class="code">setuid</code> root program (see <a class="pxref" href="How-Change-Persona.html">How an Application Can Change Persona</a>).  As a
+consequence, installing a signal handler for the <code class="code">SIGCHLD</code> signal
+(see <a class="pxref" href="Job-Control-Signals.html">Job Control Signals</a>) may interfere with a call to
+<code class="code">grantpt</code>.
+</p>
+<p>The normal return value from <code class="code">grantpt</code> is <em class="math">0</em>; a value of
+<em class="math">-1</em> is returned in case of failure.  The following <code class="code">errno</code>
+error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">filedes</var> argument is not a valid file descriptor.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">filedes</var> argument is not associated with a master pseudo-terminal
+device.
+</p>
+</dd>
+<dt><code class="code">EACCES</code></dt>
+<dd><p>The slave pseudo-terminal device corresponding to the master associated
+with <var class="var">filedes</var> could not be accessed.
+</p></dd>
+</dl>
+
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-unlockpt"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">unlockpt</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>)</code><a class="copiable-link" href="#index-unlockpt"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap/bsd
+| AC-Unsafe mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">unlockpt</code> function unlocks the slave pseudo-terminal device
+corresponding to the master pseudo-terminal device associated with the
+file descriptor <var class="var">filedes</var>.  On many systems, the slave can only be
+opened after unlocking, so portable applications should always call
+<code class="code">unlockpt</code> before trying to open the slave.
+</p>
+<p>The normal return value from <code class="code">unlockpt</code> is <em class="math">0</em>; a value of
+<em class="math">-1</em> is returned in case of failure.  The following <code class="code">errno</code>
+error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">filedes</var> argument is not a valid file descriptor.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">filedes</var> argument is not associated with a master pseudo-terminal
+device.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ptsname"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">ptsname</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>)</code><a class="copiable-link" href="#index-ptsname"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Unsafe race:ptsname
+| AS-Unsafe heap/bsd
+| AC-Unsafe mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>If the file descriptor <var class="var">filedes</var> is associated with a
+master pseudo-terminal device, the <code class="code">ptsname</code> function returns a
+pointer to a statically-allocated, null-terminated string containing the
+file name of the associated slave pseudo-terminal file.  This string
+might be overwritten by subsequent calls to <code class="code">ptsname</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ptsname_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">ptsname_r</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, char *<var class="var">buf</var>, size_t <var class="var">len</var>)</code><a class="copiable-link" href="#index-ptsname_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap/bsd
+| AC-Unsafe mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">ptsname_r</code> function is similar to the <code class="code">ptsname</code> function
+except that it places its result into the user-specified buffer starting
+at <var class="var">buf</var> with length <var class="var">len</var>.
+</p>
+<p>This function was originally a GNU extension, but was added in
+POSIX.1-2024.
+</p></dd></dl>
+
+<p>Typical usage of these functions is illustrated by the following example:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">int
+open_pty_pair (int *amaster, int *aslave)
+{
+  int master, slave;
+  char *name;
+
+  master = posix_openpt (O_RDWR | O_NOCTTY);
+  if (master &lt; 0)
+    return 0;
+
+  if (grantpt (master) &lt; 0 || unlockpt (master) &lt; 0)
+    goto close_master;
+  name = ptsname (master);
+  if (name == NULL)
+    goto close_master;
+
+  slave = open (name, O_RDWR);
+  if (slave == -1)
+    goto close_master;
+
+  *amaster = master;
+  *aslave = slave;
+  return 1;
+
+close_slave:
+  close (slave);
+
+close_master:
+  close (master);
+  return 0;
+}
+</pre></div>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Pseudo_002dTerminal-Pairs.html">Opening a Pseudo-Terminal Pair</a>, Up: <a href="Pseudo_002dTerminals.html">Pseudo-Terminals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

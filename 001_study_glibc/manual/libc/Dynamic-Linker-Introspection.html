@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Dynamic Linker Introspection (The GNU C Library)</title>
+
+<meta name="description" content="Dynamic Linker Introspection (The GNU C Library)">
+<meta name="keywords" content="Dynamic Linker Introspection (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Dynamic-Linker.html" rel="up" title="Dynamic Linker">
+<link href="Dynamic-Linker-Hardening.html" rel="next" title="Dynamic Linker Hardening">
+<link href="Dynamic-Linker-Environment-Variables.html" rel="prev" title="Dynamic Linker Environment Variables">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Dynamic-Linker-Introspection">
+<div class="nav-panel">
+<p>
+Next: <a href="Dynamic-Linker-Hardening.html" accesskey="n" rel="next">Avoiding Unexpected Issues With Dynamic Linking</a>, Previous: <a href="Dynamic-Linker-Environment-Variables.html" accesskey="p" rel="prev">Dynamic Linker Environment Variables</a>, Up: <a href="Dynamic-Linker.html" accesskey="u" rel="up">Dynamic Linker</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Dynamic-Linker-Introspection-1"><span>37.3 Dynamic Linker Introspection<a class="copiable-link" href="#Dynamic-Linker-Introspection-1"> &para;</a></span></h3>
+
+<p>The GNU C Library provides various facilities for querying information from the
+dynamic linker.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-link_005fmap"><span class="category-def">Data Type: </span><span><strong class="def-name">struct link_map</strong><a class="copiable-link" href="#index-struct-link_005fmap"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-link-map"></a>
+<p>A <em class="dfn">link map</em> is associated with the main executable and each shared
+object.  Some fields of the link map are accessible to applications and
+exposed through the <code class="code">struct link_map</code>.  Applications must not modify
+the link map directly.
+</p>
+<p>Pointers to link maps can be obtained from the <code class="code">_r_debug</code> variable,
+from the <code class="code">RTLD_DI_LINKMAP</code> request for <code class="code">dlinfo</code>, and from the
+<code class="code">_dl_find_object</code> function.  See below for details.
+</p>
+<dl class="table">
+<dt><a id="index-load-address"></a><span><code class="code">l_addr</code><a class="copiable-link" href="#index-load-address"> &para;</a></span></dt>
+<dd><p>This field contains the <em class="dfn">load address</em> of the object.  This is the
+offset that needs to be applied to unrelocated addresses in the object
+image (as stored on disk) to form an address that can be used at run
+time for accessing data or running code.  For position-dependent
+executables, the load address is typically zero, and no adjustment is
+required.  For position-independent objects, the <code class="code">l_addr</code> field
+usually contains the address of the object&rsquo;s ELF header in the process
+image.  However, this correspondence is not guaranteed because the ELF
+header might not be mapped at all, and the ELF file as stored on disk
+might use zero as the lowest virtual address.  Due to the second
+variable, values of the <code class="code">l_addr</code> field do not necessarily uniquely
+identify a shared object.
+</p>
+<p>On Linux, to obtain the lowest loaded address of the main program, use
+<code class="code">getauxval</code> to obtain the <code class="code">AT_PHDR</code> and <code class="code">AT_PHNUM</code> values
+for the current process.  Alternatively, call
+&lsquo;<samp class="samp">dlinfo (_r_debug.r_map, &amp;<var class="var">phdr</var>)</samp>&rsquo;
+to obtain the number of program headers, and the address of the program
+header array will be stored in <var class="var">phdr</var>
+(of type <code class="code">const ElfW(Phdr) *</code>, as explained below).
+These values allow processing the array of program headers and the
+address information in the <code class="code">PT_LOAD</code> entries among them.
+This works even when the program was started with an explicit loader
+invocation.
+</p>
+</dd>
+<dt><code class="code">l_name</code></dt>
+<dd><p>For a shared object, this field contains the file name that the
+the GNU C Library dynamic loader used when opening the object.  This can be
+a relative path (relative to the current directory at process start,
+or if the object was loaded later, via <code class="code">dlopen</code> or
+<code class="code">dlmopen</code>).  Symbolic links are not necessarily resolved.
+</p>
+<p>For the main executable, <code class="code">l_name</code> is &lsquo;<samp class="samp">&quot;&quot;</samp>&rsquo; (the empty string).
+(The main executable is not loaded by the GNU C Library, so its file name is
+not available.)  On Linux, the main executable is available as
+<samp class="file">/proc/self/exe</samp> (unless an explicit loader invocation was used to
+start the program).  The file name <samp class="file">/proc/self/exe</samp> continues to
+resolve to the same file even if it is moved within or deleted from the
+file system.  Its current location can be read using <code class="code">readlink</code>.
+See <a class="xref" href="Symbolic-Links.html">Symbolic Links</a>.  (Although <samp class="file">/proc/self/exe</samp> is not actually
+a symbol link, it is only presented as one.)  Note that <samp class="file">/proc</samp> may
+not be mounted, in which case <samp class="file">/proc/self/exe</samp> is not available.
+</p>
+<p>If an explicit loader invocation is used (such as &lsquo;<samp class="samp">ld.so
+/usr/bin/emacs</samp>&rsquo;), the <samp class="file">/proc/self/exe</samp> approach does not work
+because the file name refers to the dynamic linker <code class="code">ld.so</code>, and not
+the <code class="code">/usr/bin/emacs</code> program.  An approximation to the executable
+path is still available in the <code class="code"><var class="var">info</var>.dli_fname</code> member after
+calling &lsquo;<samp class="samp">dladdr (_r_debug.r_map-&gt;l_ld, &amp;<var class="var">info</var>)</samp>&rsquo;.  Note that
+this could be a relative path, and it is supplied by the process that
+created the current process, not the kernel, so it could be inaccurate.
+</p>
+</dd>
+<dt><code class="code">l_ld</code></dt>
+<dd><p>This is a pointer to the ELF dynamic segment, an array of tag/value
+pairs that provide various pieces of information that the dynamic
+linking process uses.  On most architectures, addresses in the dynamic
+segment are relocated at run time, but on some architectures and in some
+run-time configurations, it is necessary to add the <code class="code">l_addr</code> field
+value to obtain a proper address.
+</p>
+</dd>
+<dt><code class="code">l_prev</code></dt>
+<dt><code class="code">l_next</code></dt>
+<dd><p>These fields are used to maintain a double-linked linked list of all
+link maps within one <code class="code">dlmopen</code> namespace.  Note that there is
+currently no thread-safe way to iterate over this list.  The
+callback-based <code class="code">dl_iterate_phdr</code> interface can be used instead.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p><strong class="strong">Portability note:</strong> It is not possible to create a <code class="code">struct
+link_map</code> object and pass a pointer to a function that expects a
+<code class="code">struct link_map *</code> argument.  Only link map pointers initially
+supplied by the GNU C Library are permitted as arguments.  In current versions
+of the GNU C Library, handles returned by <code class="code">dlopen</code> and <code class="code">dlmopen</code> are
+pointers to link maps.  However, this is not a portable assumption, and
+may even change in future versions of the GNU C Library.  To obtain the link
+map associated with a handle, see <code class="code">dlinfo</code> and
+<code class="code">RTLD_DI_LINKMAP</code> below.  If a function accepts both
+<code class="code">dlopen</code>/<code class="code">dlmopen</code> handles and <code class="code">struct link_map</code> pointers
+in its <code class="code">void *</code> argument, that is documented explicitly.
+</p>
+<ul class="mini-toc">
+<li><a href="#Querying-information-for-loaded-objects" accesskey="1">Querying information for loaded objects</a></li>
+</ul>
+<div class="subsection-level-extent" id="Querying-information-for-loaded-objects">
+<h4 class="subsection"><span>37.3.1 Querying information for loaded objects<a class="copiable-link" href="#Querying-information-for-loaded-objects"> &para;</a></span></h4>
+
+<p>The <code class="code">dlinfo</code> function provides access to internal information
+associated with <code class="code">dlopen</code>/<code class="code">dlmopen</code> handles and link maps.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-dlinfo"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">dlinfo</strong> <code class="def-code-arguments">(void *<var class="var">handle</var>, int <var class="var">request</var>, void *<var class="var">arg</var>)</code><a class="copiable-link" href="#index-dlinfo"> &para;</a></span></dt>
+<dd><p>| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function returns information about <var class="var">handle</var> in the memory
+location <var class="var">arg</var>, based on <var class="var">request</var>.  The <var class="var">handle</var> argument
+must be a pointer returned by <code class="code">dlopen</code> or <code class="code">dlmopen</code>; it must
+not have been closed by <code class="code">dlclose</code>.  Alternatively, <var class="var">handle</var>
+can be a <code class="code">struct link_map *</code> value for a link map of an object
+that has not been closed.
+</p>
+<p>On success, <code class="code">dlinfo</code> returns 0 for most request types; exceptions
+are noted below.  If there is an error, the function returns <em class="math">-1</em>,
+and <code class="code">dlerror</code> can be used to obtain a corresponding error message.
+</p>
+<p>The following operations are defined for use with <var class="var">request</var>:
+</p>
+<dl class="vtable">
+<dt><a id="index-RTLD_005fDI_005fLINKMAP"></a><span><code class="code">RTLD_DI_LINKMAP</code><a class="copiable-link" href="#index-RTLD_005fDI_005fLINKMAP"> &para;</a></span></dt>
+<dd><p>The corresponding <code class="code">struct link_map</code> pointer for <var class="var">handle</var> is
+written to <code class="code">*<var class="var">arg</var></code>.  The <var class="var">arg</var> argument must be the
+address of an object of type <code class="code">struct link_map *</code>.
+</p>
+</dd>
+<dt><a id="index-RTLD_005fDI_005fLMID"></a><span><code class="code">RTLD_DI_LMID</code><a class="copiable-link" href="#index-RTLD_005fDI_005fLMID"> &para;</a></span></dt>
+<dd><p>The namespace identifier of <var class="var">handle</var> is written to
+<code class="code">*<var class="var">arg</var></code>.  The <var class="var">arg</var> argument must be the address of an
+object of type <code class="code">Lmid_t</code>.
+</p>
+</dd>
+<dt><a id="index-RTLD_005fDI_005fORIGIN_005fPATH"></a><span><code class="code">RTLD_DI_ORIGIN_PATH</code><a class="copiable-link" href="#index-RTLD_005fDI_005fORIGIN_005fPATH"> &para;</a></span></dt>
+<dd><p>The <code class="code">$ORIGIN</code> dynamic string token pointer for <var class="var">handle</var> is written
+to <code class="code">*<var class="var">arg</var></code>.  The <var class="var">arg</var> argument must be the address of a
+<code class="code">const char *</code>.  If the <code class="code">$ORIGIN</code> could not be determined, the
+function still returns 0 but writes a null pointer to <code class="code">*<var class="var">arg</var></code>.
+The returned string is only valid as long as the corresponding handle is
+valid.  Accessing it after <code class="code">dlclose</code> has been called for the
+corresponding <var class="var">handle</var> is undefined behavior.
+</p>
+</dd>
+<dt><a id="index-RTLD_005fDI_005fORIGIN"></a><span><code class="code">RTLD_DI_ORIGIN</code><a class="copiable-link" href="#index-RTLD_005fDI_005fORIGIN"> &para;</a></span></dt>
+<dd><p>The value of the <code class="code">$ORIGIN</code> dynamic string token for <var class="var">handle</var> is
+written to the character array starting at <var class="var">arg</var> as a
+null-terminated string.
+</p>
+<p>This request type should not be used because it is prone to buffer
+overflows.  Instead, <code class="code">RTLD_DI_ORIGIN_PATH</code> described above should be
+used.
+</p>
+</dd>
+<dt><a id="index-RTLD_005fDI_005fSERINFO"></a><span><code class="code">RTLD_DI_SERINFO</code><a class="copiable-link" href="#index-RTLD_005fDI_005fSERINFO"> &para;</a></span></dt>
+<dt><a id="index-RTLD_005fDI_005fSERINFOSIZE"></a><span><code class="code">RTLD_DI_SERINFOSIZE</code><a class="copiable-link" href="#index-RTLD_005fDI_005fSERINFOSIZE"> &para;</a></span></dt>
+<dd><p>These requests can be used to obtain search path information for
+<var class="var">handle</var>.  For both requests, <var class="var">arg</var> must point to a
+<code class="code">Dl_serinfo</code> object.  The <code class="code">RTLD_DI_SERINFOSIZE</code> request must
+be made first; it updates the <code class="code">dls_size</code> and <code class="code">dls_cnt</code> members
+of the <code class="code">Dl_serinfo</code> object.  The caller should then allocate memory
+to store at least <code class="code">dls_size</code> bytes and pass that buffer to a
+<code class="code">RTLD_DI_SERINFO</code> request.  This second request fills the
+<code class="code">dls_serpath</code> array.  The number of array elements was returned in
+the <code class="code">dls_cnt</code> member in the initial <code class="code">RTLD_DI_SERINFOSIZE</code>
+request.  The caller is responsible for freeing the allocated buffer.
+</p>
+<p>This interface is prone to buffer overflows in multi-threaded processes
+because the required size can change between the
+<code class="code">RTLD_DI_SERINFOSIZE</code> and <code class="code">RTLD_DI_SERINFO</code> requests.
+</p>
+</dd>
+<dt><a id="index-RTLD_005fDI_005fTLS_005fDATA"></a><span><code class="code">RTLD_DI_TLS_DATA</code><a class="copiable-link" href="#index-RTLD_005fDI_005fTLS_005fDATA"> &para;</a></span></dt>
+<dd><p>This request writes the address of the TLS block (in the current thread)
+for the shared object identified by <var class="var">handle</var> to <code class="code">*<var class="var">arg</var></code>.
+The argument <var class="var">arg</var> must be the address of an object of type
+<code class="code">void *</code>.  A null pointer is written if the object does not have
+any associated TLS block.
+</p>
+</dd>
+<dt><a id="index-RTLD_005fDI_005fTLS_005fMODID"></a><span><code class="code">RTLD_DI_TLS_MODID</code><a class="copiable-link" href="#index-RTLD_005fDI_005fTLS_005fMODID"> &para;</a></span></dt>
+<dd><p>This request writes the TLS module ID for the shared object <var class="var">handle</var>
+to <code class="code">*<var class="var">arg</var></code>.  The argument <var class="var">arg</var> must be the address of an
+object of type <code class="code">size_t</code>.  The module ID is zero if the object
+does not have an associated TLS block.
+</p>
+</dd>
+<dt><a id="index-RTLD_005fDI_005fPHDR"></a><span><code class="code">RTLD_DI_PHDR</code><a class="copiable-link" href="#index-RTLD_005fDI_005fPHDR"> &para;</a></span></dt>
+<dd><p>This request writes the address of the program header array to
+<code class="code">*<var class="var">arg</var></code>.  The argument <var class="var">arg</var> must be the address of an
+object of type <code class="code">const ElfW(Phdr) *</code> (that is,
+<code class="code">const Elf32_Phdr *</code> or <code class="code">const Elf64_Phdr *</code>, as appropriate
+for the current architecture).  For this request, the value returned by
+<code class="code">dlinfo</code> is the number of program headers in the program header
+array.
+</p></dd>
+</dl>
+
+<p>The <code class="code">dlinfo</code> function is a GNU extension.
+</p></dd></dl>
+
+<p>The remainder of this section documents the <code class="code">_dl_find_object</code>
+function and supporting types and constants.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-dl_005ffind_005fobject"><span class="category-def">Data Type: </span><span><strong class="def-name">struct dl_find_object</strong><a class="copiable-link" href="#index-struct-dl_005ffind_005fobject"> &para;</a></span></dt>
+<dd>
+<p>This structure contains information about a main program or loaded
+object.  The <code class="code">_dl_find_object</code> function uses it to return
+result data to the caller.
+</p>
+<dl class="table">
+<dt><code class="code">unsigned long long int dlfo_flags</code></dt>
+<dd><p>Bit zero signals if SFrame stack data is valid.  See
+<code class="code">DLFO_FLAG_SFRAME</code> below.
+</p>
+</dd>
+<dt><code class="code">void *dlfo_map_start</code></dt>
+<dd><p>The start address of the inspected mapping.  This information comes from
+the program header, so it follows its convention, and the address is not
+necessarily page-aligned.
+</p>
+</dd>
+<dt><code class="code">void *dlfo_map_end</code></dt>
+<dd><p>The end address of the mapping.
+</p>
+</dd>
+<dt><code class="code">struct link_map *dlfo_link_map</code></dt>
+<dd><p>This member contains a pointer to the link map of the object.
+</p>
+</dd>
+<dt><code class="code">void *dlfo_eh_frame</code></dt>
+<dd><p>This member contains a pointer to the exception handling data of the
+object.  See <code class="code">DLFO_EH_SEGMENT_TYPE</code> below.
+</p>
+</dd>
+<dt><code class="code">void *dlfo_sframe</code></dt>
+<dd><p>This member points to the SFrame stack trace data associated with the
+object.  It is valid only when <code class="code">DLFO_FLAG_SFRAME</code> is set in
+<code class="code">dlfo_flags</code>; otherwise, it may be null or undefined.
+</p>
+</dd>
+</dl>
+
+<p>This structure is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-DLFO_005fSTRUCT_005fHAS_005fEH_005fDBASE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">DLFO_STRUCT_HAS_EH_DBASE</strong><a class="copiable-link" href="#index-DLFO_005fSTRUCT_005fHAS_005fEH_005fDBASE"> &para;</a></span></dt>
+<dd>
+<p>On most targets, this macro is defined as <code class="code">0</code>.  If it is defined to
+<code class="code">1</code>, <code class="code">struct dl_find_object</code> contains an additional member
+<code class="code">dlfo_eh_dbase</code> of type <code class="code">void *</code>.  It is the base address for
+<code class="code">DW_EH_PE_datarel</code> DWARF encodings to this location.
+</p>
+<p>This macro is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-DLFO_005fSTRUCT_005fHAS_005fEH_005fCOUNT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">DLFO_STRUCT_HAS_EH_COUNT</strong><a class="copiable-link" href="#index-DLFO_005fSTRUCT_005fHAS_005fEH_005fCOUNT"> &para;</a></span></dt>
+<dd>
+<p>On most targets, this macro is defined as <code class="code">0</code>.  If it is defined to
+<code class="code">1</code>, <code class="code">struct dl_find_object</code> contains an additional member
+<code class="code">dlfo_eh_count</code> of type <code class="code">int</code>.  It is the number of exception
+handling entries in the EH frame segment identified by the
+<code class="code">dlfo_eh_frame</code> member.
+</p>
+<p>This macro is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-DLFO_005fEH_005fSEGMENT_005fTYPE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">DLFO_EH_SEGMENT_TYPE</strong><a class="copiable-link" href="#index-DLFO_005fEH_005fSEGMENT_005fTYPE"> &para;</a></span></dt>
+<dd>
+<p>On targets using DWARF-based exception unwinding, this macro expands to
+<code class="code">PT_GNU_EH_FRAME</code>.  This indicates that <code class="code">dlfo_eh_frame</code> in
+<code class="code">struct dl_find_object</code> points to the <code class="code">PT_GNU_EH_FRAME</code>
+segment of the object.  On targets that use other unwinding formats, the
+macro expands to the program header type for the unwinding data.
+</p>
+<p>This macro is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-_005fdl_005ffind_005fobject"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">_dl_find_object</strong> <code class="def-code-arguments">(void *<var class="var">address</var>, struct dl_find_object *<var class="var">result</var>)</code><a class="copiable-link" href="#index-_005fdl_005ffind_005fobject"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>On success, this function returns 0 and writes about the object
+surrounding the address to <code class="code">*<var class="var">result</var></code>.  On failure, -1 is
+returned.
+</p>
+<p>The <var class="var">address</var> can be a code address or data address.  On
+architectures using function descriptors, no attempt is made to decode
+the function descriptor.  Depending on how these descriptors are
+implemented, <code class="code">_dl_find_object</code> may return the object that defines
+the function descriptor (and not the object that contains the code
+implementing the function), or fail to find any object at all.
+</p>
+<p>On success <var class="var">address</var> is greater than or equal to
+<code class="code"><var class="var">result</var>-&gt;dlfo_map_start</code> and less than
+<code class="code"><var class="var">result</var>-&gt;dlfo_map_end</code>, that is, the supplied code address is
+located within the reported mapping.
+</p>
+<p>This function returns a pointer to the unwinding information for the
+object that contains the program code <var class="var">address</var> in
+<code class="code"><var class="var">result</var>-&gt;dlfo_eh_frame</code>.  If the platform uses DWARF
+unwinding information, this is the in-memory address of the
+<code class="code">PT_GNU_EH_FRAME</code> segment.  See <code class="code">DLFO_EH_SEGMENT_TYPE</code> above.
+In case <var class="var">address</var> resides in an object that lacks unwinding information,
+the function still returns 0, but sets <code class="code"><var class="var">result</var>-&gt;dlfo_eh_frame</code>
+to a null pointer.
+</p>
+<p><code class="code">_dl_find_object</code> itself is thread-safe.  However, if the
+application invokes <code class="code">dlclose</code> for the object that contains
+<var class="var">address</var> concurrently with <code class="code">_dl_find_object</code> or after the call
+returns, accessing the unwinding data for that object or the link map
+(through <code class="code"><var class="var">result</var>-&gt;dlfo_link_map</code>) is not safe.  Therefore, the
+application needs to ensure by other means (e.g., by convention) that
+<var class="var">address</var> remains a valid code address while the unwinding
+information is processed.
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+
+<p>The following flag masks are defined for use with <code class="code">dlfo_flags</code>:
+</p>
+<dl class="table">
+<dt><code class="code">DLFO_FLAG_SFRAME</code></dt>
+<dd><p>A bit mask used to signal that the object contains SFrame data.  See
+<code class="code">dlfo_sframe</code> above.
+</p>
+</dd>
+</dl>
+
+</div>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Dynamic-Linker-Hardening.html">Avoiding Unexpected Issues With Dynamic Linking</a>, Previous: <a href="Dynamic-Linker-Environment-Variables.html">Dynamic Linker Environment Variables</a>, Up: <a href="Dynamic-Linker.html">Dynamic Linker</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

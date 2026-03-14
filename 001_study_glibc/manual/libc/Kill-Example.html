@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Kill Example (The GNU C Library)</title>
+
+<meta name="description" content="Kill Example (The GNU C Library)">
+<meta name="keywords" content="Kill Example (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Generating-Signals.html" rel="up" title="Generating Signals">
+<link href="Permission-for-kill.html" rel="prev" title="Permission for kill">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Kill-Example">
+<div class="nav-panel">
+<p>
+Previous: <a href="Permission-for-kill.html" accesskey="p" rel="prev">Permission for using <code class="code">kill</code></a>, Up: <a href="Generating-Signals.html" accesskey="u" rel="up">Generating Signals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Using-kill-for-Communication"><span>25.6.4 Using <code class="code">kill</code> for Communication<a class="copiable-link" href="#Using-kill-for-Communication"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-interprocess-communication_002c-with-signals"></a>
+<p>Here is a longer example showing how signals can be used for
+interprocess communication.  This is what the <code class="code">SIGUSR1</code> and
+<code class="code">SIGUSR2</code> signals are provided for.  Since these signals are fatal
+by default, the process that is supposed to receive them must trap them
+through <code class="code">signal</code> or <code class="code">sigaction</code>.
+</p>
+<p>In this example, a parent process forks a child process and then waits
+for the child to complete its initialization.  The child process tells
+the parent when it is ready by sending it a <code class="code">SIGUSR1</code> signal, using
+the <code class="code">kill</code> function.
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">
+
+</pre><div class="group"><pre class="example-preformatted">#include &lt;signal.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+</pre></div><pre class="example-preformatted">
+
+/* <span class="r">When a <code class="code">SIGUSR1</code> signal arrives, set this variable.</span> */
+volatile sig_atomic_t usr_interrupt = 0;
+
+void
+synch_signal (int sig)
+{
+  usr_interrupt = 1;
+}
+
+/* <span class="r">The child process executes this function.</span> */
+void
+child_function (void)
+{
+  /* <span class="r">Perform initialization.</span> */
+  printf (&quot;I'm here!!!  My pid is %d.\n&quot;, (int) getpid ());
+
+  /* <span class="r">Let parent know you&rsquo;re done.</span> */
+  kill (getppid (), SIGUSR1);
+
+  /* <span class="r">Continue with execution.</span> */
+  puts (&quot;Bye, now....&quot;);
+  exit (0);
+}
+
+int
+main (void)
+{
+  struct sigaction usr_action;
+  sigset_t block_mask;
+  pid_t child_id;
+
+  /* <span class="r">Establish the signal handler.</span> */
+  sigfillset (&amp;block_mask);
+  usr_action.sa_handler = synch_signal;
+  usr_action.sa_mask = block_mask;
+  usr_action.sa_flags = 0;
+  sigaction (SIGUSR1, &amp;usr_action, NULL);
+
+  /* <span class="r">Create the child process.</span> */
+  child_id = fork ();
+  if (child_id == 0)
+    child_function ();          /* <span class="r">Does not return.</span> */
+
+</pre><div class="group"><pre class="example-preformatted">  /* <span class="r">Busy wait for the child to send a signal.</span> */
+  while (!usr_interrupt)
+    ;
+</pre></div><pre class="example-preformatted">
+
+  /* <span class="r">Now continue execution.</span> */
+  puts (&quot;That's all, folks!&quot;);
+
+  return 0;
+}
+</pre></div>
+
+<p>This example uses a busy wait, which is bad, because it wastes CPU
+cycles that other programs could otherwise use.  It is better to ask the
+system to wait until the signal arrives.  See the example in
+<a class="ref" href="Waiting-for-a-Signal.html">Waiting for a Signal</a>.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Permission-for-kill.html">Permission for using <code class="code">kill</code></a>, Up: <a href="Generating-Signals.html">Generating Signals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

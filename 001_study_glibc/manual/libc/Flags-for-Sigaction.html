@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Flags for Sigaction (The GNU C Library)</title>
+
+<meta name="description" content="Flags for Sigaction (The GNU C Library)">
+<meta name="keywords" content="Flags for Sigaction (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Signal-Actions.html" rel="up" title="Signal Actions">
+<link href="Initial-Signal-Actions.html" rel="next" title="Initial Signal Actions">
+<link href="Sigaction-Function-Example.html" rel="prev" title="Sigaction Function Example">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Flags-for-Sigaction">
+<div class="nav-panel">
+<p>
+Next: <a href="Initial-Signal-Actions.html" accesskey="n" rel="next">Initial Signal Actions</a>, Previous: <a href="Sigaction-Function-Example.html" accesskey="p" rel="prev"><code class="code">sigaction</code> Function Example</a>, Up: <a href="Signal-Actions.html" accesskey="u" rel="up">Specifying Signal Actions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Flags-for-sigaction"><span>25.3.5 Flags for <code class="code">sigaction</code><a class="copiable-link" href="#Flags-for-sigaction"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-signal-flags"></a>
+<a class="index-entry-id" id="index-flags-for-sigaction"></a>
+<a class="index-entry-id" id="index-sigaction-flags"></a>
+
+<p>The <code class="code">sa_flags</code> member of the <code class="code">sigaction</code> structure is a
+catch-all for special features.  Most of the time, <code class="code">SA_RESTART</code> is
+a good value to use for this field.
+</p>
+<p>The value of <code class="code">sa_flags</code> is interpreted as a bit mask.  Thus, you
+should choose the flags you want to set, <small class="sc">OR</small> those flags together,
+and store the result in the <code class="code">sa_flags</code> member of your
+<code class="code">sigaction</code> structure.
+</p>
+<p>Each signal number has its own set of flags.  Each call to
+<code class="code">sigaction</code> affects one particular signal number, and the flags
+that you specify apply only to that particular signal.
+</p>
+<p>In the GNU C Library, establishing a handler with <code class="code">signal</code> sets all
+the flags to zero except for <code class="code">SA_RESTART</code>, whose value depends on
+the settings you have made with <code class="code">siginterrupt</code>.  See <a class="xref" href="Interrupted-Primitives.html">Primitives Interrupted by Signals</a>, to see what this is about.
+</p>
+<a class="index-entry-id" id="index-signal_002eh-4"></a>
+<p>These macros are defined in the header file <samp class="file">signal.h</samp>.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SA_005fNOCLDSTOP"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SA_NOCLDSTOP</strong><a class="copiable-link" href="#index-SA_005fNOCLDSTOP"> &para;</a></span></dt>
+<dd>
+<p>This flag is meaningful only for the <code class="code">SIGCHLD</code> signal.  When the
+flag is set, the system delivers the signal for a terminated child
+process but not for one that is stopped.  By default, <code class="code">SIGCHLD</code> is
+delivered for both terminated children and stopped children.
+</p>
+<p>Setting this flag for a signal other than <code class="code">SIGCHLD</code> has no effect.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SA_005fNOCLDWAIT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SA_NOCLDWAIT</strong><a class="copiable-link" href="#index-SA_005fNOCLDWAIT"> &para;</a></span></dt>
+<dd><p>This flag is meaningful only for the <code class="code">SIGCHLD</code> signal.  When the
+flag is set, the terminated child will not wait for the parent to reap
+it, or become a zombie if not reaped.  The child will instead be
+reaped by the kernel immediately on termination, similar to setting
+SIGCHLD to SIG_IGN.
+</p>
+<p>Setting this flag for a signal other than <code class="code">SIGCHLD</code> has no effect.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SA_005fNODEFER"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SA_NODEFER</strong><a class="copiable-link" href="#index-SA_005fNODEFER"> &para;</a></span></dt>
+<dd><p>Normally a signal is added to the signal mask while running its own
+handler; this negates that, so that the same signal can be received
+while it&rsquo;s handler is running.  Note that if the signal is included in
+<code class="code">sa_mask</code>, it is masked regardless of this flag.  Only useful when
+assigning a function as a signal handler.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SA_005fONSTACK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SA_ONSTACK</strong><a class="copiable-link" href="#index-SA_005fONSTACK"> &para;</a></span></dt>
+<dd>
+<p>If this flag is set for a particular signal number, the system uses the
+signal stack when delivering that kind of signal.  See <a class="xref" href="Signal-Stack.html">Using a Separate Signal Stack</a>.
+If a signal with this flag arrives and you have not set a signal stack,
+the normal user stack is used instead, as if the flag had not been set.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SA_005fRESETHAND"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SA_RESETHAND</strong><a class="copiable-link" href="#index-SA_005fRESETHAND"> &para;</a></span></dt>
+<dd><p>Resets the handler for a signal to SIG_DFL, at the moment specified
+handler function begins.  I.e. the handler is called once, then the
+action resets.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SA_005fRESTART"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SA_RESTART</strong><a class="copiable-link" href="#index-SA_005fRESTART"> &para;</a></span></dt>
+<dd>
+<p>This flag controls what happens when a signal is delivered during
+certain primitives (such as <code class="code">open</code>, <code class="code">read</code> or <code class="code">write</code>),
+and the signal handler returns normally.  There are two alternatives:
+the library function can resume, or it can return failure with error
+code <code class="code">EINTR</code>.
+</p>
+<p>The choice is controlled by the <code class="code">SA_RESTART</code> flag for the
+particular kind of signal that was delivered.  If the flag is set,
+returning from a handler resumes the library function.  If the flag is
+clear, returning from a handler makes the function fail.
+See <a class="xref" href="Interrupted-Primitives.html">Primitives Interrupted by Signals</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SA_005fSIGINFO"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SA_SIGINFO</strong><a class="copiable-link" href="#index-SA_005fSIGINFO"> &para;</a></span></dt>
+<dd><p>Indicates that the <code class="code">sa_sigaction</code> three-argument form of the
+handler should be used in setting up a handler instead of the
+one-argument <code class="code">sa_handler</code> form.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Initial-Signal-Actions.html">Initial Signal Actions</a>, Previous: <a href="Sigaction-Function-Example.html"><code class="code">sigaction</code> Function Example</a>, Up: <a href="Signal-Actions.html">Specifying Signal Actions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

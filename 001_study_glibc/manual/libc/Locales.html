@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Locales (The GNU C Library)</title>
+
+<meta name="description" content="Locales (The GNU C Library)">
+<meta name="keywords" content="Locales (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html" rel="up" title="Top">
+<link href="Message-Translation.html" rel="next" title="Message Translation">
+<link href="Character-Set-Handling.html" rel="prev" title="Character Set Handling">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="chapter-level-extent" id="Locales">
+<div class="nav-panel">
+<p>
+Next: <a href="Message-Translation.html" accesskey="n" rel="next">Message Translation</a>, Previous: <a href="Character-Set-Handling.html" accesskey="p" rel="prev">Character Set Handling</a>, Up: <a href="index.html" accesskey="u" rel="up">Main Menu</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h2 class="chapter" id="Locales-and-Internationalization"><span>7 Locales and Internationalization<a class="copiable-link" href="#Locales-and-Internationalization"> &para;</a></span></h2>
+
+<p>Different countries and cultures have varying conventions for how to
+communicate.  These conventions range from very simple ones, such as the
+format for representing dates and times, to very complex ones, such as
+the language spoken.
+</p>
+<a class="index-entry-id" id="index-internationalization"></a>
+<a class="index-entry-id" id="index-locales"></a>
+<p><em class="dfn">Internationalization</em> of software means programming it to be able
+to adapt to the user&rsquo;s favorite conventions.  In ISO&nbsp;C<!-- /@w -->,
+internationalization works by means of <em class="dfn">locales</em>.  Each locale
+specifies a collection of conventions, one convention for each purpose.
+The user chooses a set of conventions by specifying a locale (via
+environment variables).
+</p>
+<p>All programs inherit the chosen locale as part of their environment.
+Provided the programs are written to obey the choice of locale, they
+will follow the conventions preferred by the user.
+</p>
+
+<ul class="mini-toc">
+<li><a href="Effects-of-Locale.html" accesskey="1">What Effects a Locale Has</a></li>
+<li><a href="Choosing-Locale.html" accesskey="2">Choosing a Locale</a></li>
+<li><a href="Locale-Categories.html" accesskey="3">Locale Categories</a></li>
+<li><a href="Setting-the-Locale.html" accesskey="4">How Programs Set the Locale</a></li>
+<li><a href="Standard-Locales.html" accesskey="5">Standard Locales</a></li>
+<li><a href="Locale-Names.html" accesskey="6">Locale Names</a></li>
+<li><a href="Locale-Information.html" accesskey="7">Accessing Locale Information</a></li>
+<li><a href="Formatting-Numbers.html" accesskey="8">A dedicated function to format numbers</a></li>
+<li><a href="Yes_002dor_002dNo-Questions.html" accesskey="9">Yes-or-No Questions</a></li>
+</ul>
+</div>
+
+
+
+</body>
+</html>

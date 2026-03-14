@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Why Change Persona (The GNU C Library)</title>
+
+<meta name="description" content="Why Change Persona (The GNU C Library)">
+<meta name="keywords" content="Why Change Persona (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Users-and-Groups.html" rel="up" title="Users and Groups">
+<link href="How-Change-Persona.html" rel="next" title="How Change Persona">
+<link href="Process-Persona.html" rel="prev" title="Process Persona">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Why-Change-Persona">
+<div class="nav-panel">
+<p>
+Next: <a href="How-Change-Persona.html" accesskey="n" rel="next">How an Application Can Change Persona</a>, Previous: <a href="Process-Persona.html" accesskey="p" rel="prev">The Persona of a Process</a>, Up: <a href="Users-and-Groups.html" accesskey="u" rel="up">Users and Groups</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Why-Change-the-Persona-of-a-Process_003f"><span>31.3 Why Change the Persona of a Process?<a class="copiable-link" href="#Why-Change-the-Persona-of-a-Process_003f"> &para;</a></span></h3>
+
+<p>The most obvious situation where it is necessary for a process to change
+its user and/or group IDs is the <code class="code">login</code> program.  When
+<code class="code">login</code> starts running, its user ID is <code class="code">root</code>.  Its job is to
+start a shell whose user and group IDs are those of the user who is
+logging in.  (To accomplish this fully, <code class="code">login</code> must set the real
+user and group IDs as well as its persona.  But this is a special case.)
+</p>
+<p>The more common case of changing persona is when an ordinary user
+program needs access to a resource that wouldn&rsquo;t ordinarily be
+accessible to the user actually running it.
+</p>
+<p>For example, you may have a file that is controlled by your program but
+that shouldn&rsquo;t be read or modified directly by other users, either
+because it implements some kind of locking protocol, or because you want
+to preserve the integrity or privacy of the information it contains.
+This kind of restricted access can be implemented by having the program
+change its effective user or group ID to match that of the resource.
+</p>
+<p>Thus, imagine a game program that saves scores in a file.  The game
+program itself needs to be able to update this file no matter who is
+running it, but if users can write the file without going through the
+game, they can give themselves any scores they like.  Some people
+consider this undesirable, or even reprehensible.  It can be prevented
+by creating a new user ID and login name (say, <code class="code">games</code>) to own the
+scores file, and make the file writable only by this user.  Then, when
+the game program wants to update this file, it can change its effective
+user ID to be that for <code class="code">games</code>.  In effect, the program must
+adopt the persona of <code class="code">games</code> so it can write to the scores file.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="How-Change-Persona.html">How an Application Can Change Persona</a>, Previous: <a href="Process-Persona.html">The Persona of a Process</a>, Up: <a href="Users-and-Groups.html">Users and Groups</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

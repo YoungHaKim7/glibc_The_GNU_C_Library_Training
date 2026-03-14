@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Error Codes (The GNU C Library)</title>
+
+<meta name="description" content="Error Codes (The GNU C Library)">
+<meta name="keywords" content="Error Codes (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Error-Reporting.html" rel="up" title="Error Reporting">
+<link href="Error-Messages.html" rel="next" title="Error Messages">
+<link href="Checking-for-Errors.html" rel="prev" title="Checking for Errors">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Error-Codes">
+<div class="nav-panel">
+<p>
+Next: <a href="Error-Messages.html" accesskey="n" rel="next">Error Messages</a>, Previous: <a href="Checking-for-Errors.html" accesskey="p" rel="prev">Checking for Errors</a>, Up: <a href="Error-Reporting.html" accesskey="u" rel="up">Error Reporting</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Error-Codes-1"><span>2.2 Error Codes<a class="copiable-link" href="#Error-Codes-1"> &para;</a></span></h3>
+
+<a class="index-entry-id" id="index-errno_002eh-3"></a>
+<p>The error code macros are defined in the header file <samp class="file">errno.h</samp>.
+All of them expand into integer constant values.  Some of these error
+codes can&rsquo;t occur on GNU systems, but they can occur using the GNU C Library
+on other systems.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EPERM"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EPERM</strong><a class="copiable-link" href="#index-EPERM"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Operation-not-permitted"></a>
+<p>&ldquo;Operation not permitted.&rdquo;
+Only the owner of the file (or other resource)
+or processes with special privileges can perform the operation.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOENT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOENT</strong><a class="copiable-link" href="#index-ENOENT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-such-file-or-directory"></a>
+<p>&ldquo;No such file or directory.&rdquo;
+This is a &ldquo;file doesn&rsquo;t exist&rdquo; error
+for ordinary files that are referenced in contexts where they are
+expected to already exist.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ESRCH"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ESRCH</strong><a class="copiable-link" href="#index-ESRCH"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-such-process"></a>
+<p>&ldquo;No such process.&rdquo;
+No process matches the specified process ID.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EINTR"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EINTR</strong><a class="copiable-link" href="#index-EINTR"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Interrupted-system-call"></a>
+<p>&ldquo;Interrupted system call.&rdquo;
+An asynchronous signal occurred and prevented
+completion of the call.  When this happens, you should try the call
+again.
+</p>
+<p>You can choose to have functions resume after a signal that is handled,
+rather than failing with <code class="code">EINTR</code>; see <a class="ref" href="Interrupted-Primitives.html">Primitives Interrupted by Signals</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EIO"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EIO</strong><a class="copiable-link" href="#index-EIO"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Input_002foutput-error"></a>
+<p>&ldquo;Input/output error.&rdquo;
+Usually used for physical read or write errors.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENXIO"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENXIO</strong><a class="copiable-link" href="#index-ENXIO"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-such-device-or-address"></a>
+<p>&ldquo;No such device or address.&rdquo;
+The system tried to use the device
+represented by a file you specified, and it couldn&rsquo;t find the device.
+This can mean that the device file was installed incorrectly, or that
+the physical device is missing or not correctly attached to the
+computer.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-E2BIG"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">E2BIG</strong><a class="copiable-link" href="#index-E2BIG"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Argument-list-too-long"></a>
+<p>&ldquo;Argument list too long.&rdquo;
+Used when the arguments passed to a new program
+being executed with one of the <code class="code">exec</code> functions (see <a class="pxref" href="Executing-a-File.html">Executing a File</a>) occupy too much memory space.  This condition never arises on
+GNU/Hurd systems.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOEXEC"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOEXEC</strong><a class="copiable-link" href="#index-ENOEXEC"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Exec-format-error"></a>
+<p>&ldquo;Exec format error.&rdquo;
+Invalid executable file format.  This condition is detected by the
+<code class="code">exec</code> functions; see <a class="ref" href="Executing-a-File.html">Executing a File</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EBADF"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EBADF</strong><a class="copiable-link" href="#index-EBADF"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Bad-file-descriptor"></a>
+<p>&ldquo;Bad file descriptor.&rdquo;
+For example, I/O on a descriptor that has been
+closed or reading from a descriptor open only for writing (or vice
+versa).
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ECHILD"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ECHILD</strong><a class="copiable-link" href="#index-ECHILD"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-child-processes"></a>
+<p>&ldquo;No child processes.&rdquo;
+This error happens on operations that are
+supposed to manipulate child processes, when there aren&rsquo;t any processes
+to manipulate.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EDEADLK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EDEADLK</strong><a class="copiable-link" href="#index-EDEADLK"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Resource-deadlock-avoided"></a>
+<p>&ldquo;Resource deadlock avoided.&rdquo;
+Allocating a system resource would have resulted in a
+deadlock situation.  The system does not guarantee that it will notice
+all such situations.  This error means you got lucky and the system
+noticed; it might just hang.  See <a class="xref" href="File-Locks.html">File Locks</a>, for an example.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOMEM"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOMEM</strong><a class="copiable-link" href="#index-ENOMEM"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Cannot-allocate-memory"></a>
+<p>&ldquo;Cannot allocate memory.&rdquo;
+The system cannot allocate more virtual memory
+because its capacity is full.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EACCES"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EACCES</strong><a class="copiable-link" href="#index-EACCES"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Permission-denied"></a>
+<p>&ldquo;Permission denied.&rdquo;
+The file permissions do not allow the attempted operation.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EFAULT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EFAULT</strong><a class="copiable-link" href="#index-EFAULT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Bad-address"></a>
+<p>&ldquo;Bad address.&rdquo;
+An invalid pointer was detected.
+On GNU/Hurd systems, this error never happens; you get a signal instead.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOTBLK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOTBLK</strong><a class="copiable-link" href="#index-ENOTBLK"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Block-device-required"></a>
+<p>&ldquo;Block device required.&rdquo;
+A file that isn&rsquo;t a block special file was given in a situation that
+requires one.  For example, trying to mount an ordinary file as a file
+system in Unix gives this error.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EBUSY"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EBUSY</strong><a class="copiable-link" href="#index-EBUSY"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Device-or-resource-busy"></a>
+<p>&ldquo;Device or resource busy.&rdquo;
+A system resource that can&rsquo;t be shared is already in use.
+For example, if you try to delete a file that is the root of a currently
+mounted filesystem, you get this error.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EEXIST"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EEXIST</strong><a class="copiable-link" href="#index-EEXIST"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-File-exists"></a>
+<p>&ldquo;File exists.&rdquo;
+An existing file was specified in a context where it only
+makes sense to specify a new file.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EXDEV"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EXDEV</strong><a class="copiable-link" href="#index-EXDEV"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Invalid-cross_002ddevice-link"></a>
+<p>&ldquo;Invalid cross-device link.&rdquo;
+An attempt to make an improper link across file systems was detected.
+This happens not only when you use <code class="code">link</code> (see <a class="pxref" href="Hard-Links.html">Hard Links</a>) but
+also when you rename a file with <code class="code">rename</code> (see <a class="pxref" href="Renaming-Files.html">Renaming Files</a>).
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENODEV"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENODEV</strong><a class="copiable-link" href="#index-ENODEV"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-such-device"></a>
+<p>&ldquo;No such device.&rdquo;
+The wrong type of device was given to a function that expects a
+particular sort of device.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOTDIR"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOTDIR</strong><a class="copiable-link" href="#index-ENOTDIR"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Not-a-directory"></a>
+<p>&ldquo;Not a directory.&rdquo;
+A file that isn&rsquo;t a directory was specified when a directory is required.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EISDIR"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EISDIR</strong><a class="copiable-link" href="#index-EISDIR"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Is-a-directory"></a>
+<p>&ldquo;Is a directory.&rdquo;
+You cannot open a directory for writing,
+or create or remove hard links to it.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EINVAL"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EINVAL</strong><a class="copiable-link" href="#index-EINVAL"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Invalid-argument"></a>
+<p>&ldquo;Invalid argument.&rdquo;
+This is used to indicate various kinds of problems
+with passing the wrong argument to a library function.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EMFILE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EMFILE</strong><a class="copiable-link" href="#index-EMFILE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Too-many-open-files"></a>
+<p>&ldquo;Too many open files.&rdquo;
+The current process has too many files open and can&rsquo;t open any more.
+Duplicate descriptors do count toward this limit.
+</p>
+<p>In BSD and GNU, the number of open files is controlled by a resource
+limit that can usually be increased.  If you get this error, you might
+want to increase the <code class="code">RLIMIT_NOFILE</code> limit or make it unlimited;
+see <a class="pxref" href="Limits-on-Resources.html">Limiting Resource Usage</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENFILE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENFILE</strong><a class="copiable-link" href="#index-ENFILE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Too-many-open-files-in-system"></a>
+<p>&ldquo;Too many open files in system.&rdquo;
+There are too many distinct file openings in the entire system.  Note
+that any number of linked channels count as just one file opening; see
+<a class="ref" href="Linked-Channels.html">Linked Channels</a>.  This error never occurs on GNU/Hurd systems.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOTTY"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOTTY</strong><a class="copiable-link" href="#index-ENOTTY"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Inappropriate-ioctl-for-device"></a>
+<p>&ldquo;Inappropriate ioctl for device.&rdquo;
+Inappropriate I/O control operation, such as trying to set terminal
+modes on an ordinary file.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ETXTBSY"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ETXTBSY</strong><a class="copiable-link" href="#index-ETXTBSY"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Text-file-busy"></a>
+<p>&ldquo;Text file busy.&rdquo;
+An attempt to execute a file that is currently open for writing, or
+write to a file that is currently being executed.  Often using a
+debugger to run a program is considered having it open for writing and
+will cause this error.  (The name stands for &ldquo;text file busy&rdquo;.)  This
+is not an error on GNU/Hurd systems; the text is copied as necessary.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EFBIG"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EFBIG</strong><a class="copiable-link" href="#index-EFBIG"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-File-too-large"></a>
+<p>&ldquo;File too large.&rdquo;
+The size of a file would be larger than allowed by the system.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOSPC"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOSPC</strong><a class="copiable-link" href="#index-ENOSPC"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-space-left-on-device"></a>
+<p>&ldquo;No space left on device.&rdquo;
+Write operation on a file failed because the
+disk is full.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ESPIPE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ESPIPE</strong><a class="copiable-link" href="#index-ESPIPE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Illegal-seek"></a>
+<p>&ldquo;Illegal seek.&rdquo;
+Invalid seek operation (such as on a pipe).
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EROFS"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EROFS</strong><a class="copiable-link" href="#index-EROFS"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Read_002donly-file-system"></a>
+<p>&ldquo;Read-only file system.&rdquo;
+An attempt was made to modify something on a read-only file system.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EMLINK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EMLINK</strong><a class="copiable-link" href="#index-EMLINK"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Too-many-links"></a>
+<p>&ldquo;Too many links.&rdquo;
+The link count of a single file would become too large.
+<code class="code">rename</code> can cause this error if the file being renamed already has
+as many links as it can take (see <a class="pxref" href="Renaming-Files.html">Renaming Files</a>).
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EPIPE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EPIPE</strong><a class="copiable-link" href="#index-EPIPE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Broken-pipe"></a>
+<p>&ldquo;Broken pipe.&rdquo;
+There is no process reading from the other end of a pipe.
+Every library function that returns this error code also generates a
+<code class="code">SIGPIPE</code> signal; this signal terminates the program if not handled
+or blocked.  Thus, your program will never actually see <code class="code">EPIPE</code>
+unless it has handled or blocked <code class="code">SIGPIPE</code>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EDOM"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EDOM</strong><a class="copiable-link" href="#index-EDOM"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Numerical-argument-out-of-domain"></a>
+<p>&ldquo;Numerical argument out of domain.&rdquo;
+Used by mathematical functions when an argument value does
+not fall into the domain over which the function is defined.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ERANGE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ERANGE</strong><a class="copiable-link" href="#index-ERANGE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Numerical-result-out-of-range"></a>
+<p>&ldquo;Numerical result out of range.&rdquo;
+Used by mathematical functions when the result value is
+not representable because of overflow or underflow.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EAGAIN"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EAGAIN</strong><a class="copiable-link" href="#index-EAGAIN"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Resource-temporarily-unavailable"></a>
+<p>&ldquo;Resource temporarily unavailable.&rdquo;
+The call might work if you try again
+later.
+</p>
+<p>This error can happen in a few different situations:
+</p>
+<ul class="itemize mark-bullet">
+<li>An operation that would block was attempted on an object that has
+non-blocking mode selected.  Trying the same operation again will block
+until some external condition makes it possible to read, write, or
+connect (whatever the operation).  You can use <code class="code">select</code> to find out
+when the operation will be possible; see <a class="pxref" href="Waiting-for-I_002fO.html">Waiting for Input or Output</a>.
+</li><li>A temporary resource shortage made an operation impossible.  <code class="code">fork</code>
+can return this error.  It indicates that the shortage is expected to
+pass, so your program can try the call again later and it may succeed.
+It is probably a good idea to delay for a few seconds before trying it
+again, to allow time for other processes to release scarce resources.
+Such shortages are usually fairly serious and affect the whole system,
+so usually an interactive program should report the error to the user
+and return to its command loop.
+</li></ul>
+
+<p><strong class="strong">Portability Note:</strong> In the GNU C Library,
+<code class="code">EAGAIN</code> and <code class="code">EWOULDBLOCK</code> are equal.
+Portable code should check for both errors and treat them the same.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EWOULDBLOCK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EWOULDBLOCK</strong><a class="copiable-link" href="#index-EWOULDBLOCK"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Operation-would-block"></a>
+<p>&ldquo;Operation would block.&rdquo;
+In the GNU C Library, this is another name for <code class="code">EAGAIN</code> (above).
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EINPROGRESS"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EINPROGRESS</strong><a class="copiable-link" href="#index-EINPROGRESS"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Operation-now-in-progress"></a>
+<p>&ldquo;Operation now in progress.&rdquo;
+An operation that cannot complete immediately was initiated on an object
+that has non-blocking mode selected.  Some functions that must always
+block (such as <code class="code">connect</code>; see <a class="pxref" href="Connecting.html">Making a Connection</a>) never return
+<code class="code">EAGAIN</code>.  Instead, they return <code class="code">EINPROGRESS</code> to indicate that
+the operation has begun and will take some time.  Attempts to manipulate
+the object before the call completes return <code class="code">EALREADY</code>.  You can
+use the <code class="code">select</code> function to find out when the pending operation
+has completed; see <a class="pxref" href="Waiting-for-I_002fO.html">Waiting for Input or Output</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EALREADY"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EALREADY</strong><a class="copiable-link" href="#index-EALREADY"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Operation-already-in-progress"></a>
+<p>&ldquo;Operation already in progress.&rdquo;
+An operation is already in progress on an object that has non-blocking
+mode selected.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOTSOCK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOTSOCK</strong><a class="copiable-link" href="#index-ENOTSOCK"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Socket-operation-on-non_002dsocket"></a>
+<p>&ldquo;Socket operation on non-socket.&rdquo;
+A file that isn&rsquo;t a socket was specified when a socket is required.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EMSGSIZE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EMSGSIZE</strong><a class="copiable-link" href="#index-EMSGSIZE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Message-too-long"></a>
+<p>&ldquo;Message too long.&rdquo;
+The size of a message sent on a socket was larger than the supported
+maximum size.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EPROTOTYPE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EPROTOTYPE</strong><a class="copiable-link" href="#index-EPROTOTYPE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Protocol-wrong-type-for-socket"></a>
+<p>&ldquo;Protocol wrong type for socket.&rdquo;
+The socket type does not support the requested communications protocol.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOPROTOOPT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOPROTOOPT</strong><a class="copiable-link" href="#index-ENOPROTOOPT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Protocol-not-available"></a>
+<p>&ldquo;Protocol not available.&rdquo;
+You specified a socket option that doesn&rsquo;t make sense for the
+particular protocol being used by the socket.  See <a class="xref" href="Socket-Options.html">Socket Options</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EPROTONOSUPPORT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EPROTONOSUPPORT</strong><a class="copiable-link" href="#index-EPROTONOSUPPORT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Protocol-not-supported"></a>
+<p>&ldquo;Protocol not supported.&rdquo;
+The socket domain does not support the requested communications protocol
+(perhaps because the requested protocol is completely invalid).
+See <a class="xref" href="Creating-a-Socket.html">Creating a Socket</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ESOCKTNOSUPPORT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ESOCKTNOSUPPORT</strong><a class="copiable-link" href="#index-ESOCKTNOSUPPORT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Socket-type-not-supported"></a>
+<p>&ldquo;Socket type not supported.&rdquo;
+The socket type is not supported.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EOPNOTSUPP"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EOPNOTSUPP</strong><a class="copiable-link" href="#index-EOPNOTSUPP"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Operation-not-supported"></a>
+<p>&ldquo;Operation not supported.&rdquo;
+The operation you requested is not supported.  Some socket functions
+don&rsquo;t make sense for all types of sockets, and others may not be
+implemented for all communications protocols.  On GNU/Hurd systems, this
+error can happen for many calls when the object does not support the
+particular operation; it is a generic indication that the server knows
+nothing to do for that call.
+</p>
+<p><strong class="strong">Portability Note:</strong> Depending on the operating system, the
+values of <code class="code">EOPNOTSUPP</code> and <code class="code">ENOTSUP</code> may be equal.
+Portable code should check for both errors and treat them the same.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EPFNOSUPPORT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EPFNOSUPPORT</strong><a class="copiable-link" href="#index-EPFNOSUPPORT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Protocol-family-not-supported"></a>
+<p>&ldquo;Protocol family not supported.&rdquo;
+The socket communications protocol family you requested is not supported.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EAFNOSUPPORT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EAFNOSUPPORT</strong><a class="copiable-link" href="#index-EAFNOSUPPORT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Address-family-not-supported-by-protocol"></a>
+<p>&ldquo;Address family not supported by protocol.&rdquo;
+The address family specified for a socket is not supported; it is
+inconsistent with the protocol being used on the socket.  See <a class="xref" href="Sockets.html">Sockets</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EADDRINUSE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EADDRINUSE</strong><a class="copiable-link" href="#index-EADDRINUSE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Address-already-in-use"></a>
+<p>&ldquo;Address already in use.&rdquo;
+The requested socket address is already in use.  See <a class="xref" href="Socket-Addresses.html">Socket Addresses</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EADDRNOTAVAIL"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EADDRNOTAVAIL</strong><a class="copiable-link" href="#index-EADDRNOTAVAIL"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Cannot-assign-requested-address"></a>
+<p>&ldquo;Cannot assign requested address.&rdquo;
+The requested socket address is not available; for example, you tried
+to give a socket a name that doesn&rsquo;t match the local host name.
+See <a class="xref" href="Socket-Addresses.html">Socket Addresses</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENETDOWN"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENETDOWN</strong><a class="copiable-link" href="#index-ENETDOWN"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Network-is-down"></a>
+<p>&ldquo;Network is down.&rdquo;
+A socket operation failed because the network was down.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENETUNREACH"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENETUNREACH</strong><a class="copiable-link" href="#index-ENETUNREACH"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Network-is-unreachable"></a>
+<p>&ldquo;Network is unreachable.&rdquo;
+A socket operation failed because the subnet containing the remote host
+was unreachable.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENETRESET"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENETRESET</strong><a class="copiable-link" href="#index-ENETRESET"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Network-dropped-connection-on-reset"></a>
+<p>&ldquo;Network dropped connection on reset.&rdquo;
+A network connection was reset because the remote host crashed.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ECONNABORTED"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ECONNABORTED</strong><a class="copiable-link" href="#index-ECONNABORTED"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Software-caused-connection-abort"></a>
+<p>&ldquo;Software caused connection abort.&rdquo;
+A network connection was aborted locally.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ECONNRESET"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ECONNRESET</strong><a class="copiable-link" href="#index-ECONNRESET"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Connection-reset-by-peer"></a>
+<p>&ldquo;Connection reset by peer.&rdquo;
+A network connection was closed for reasons outside the control of the
+local host, such as by the remote machine rebooting or an unrecoverable
+protocol violation.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOBUFS"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOBUFS</strong><a class="copiable-link" href="#index-ENOBUFS"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-buffer-space-available"></a>
+<p>&ldquo;No buffer space available.&rdquo;
+The kernel&rsquo;s buffers for I/O operations are all in use.  In GNU, this
+error is always synonymous with <code class="code">ENOMEM</code>; you may get one or the
+other from network operations.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EISCONN"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EISCONN</strong><a class="copiable-link" href="#index-EISCONN"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Transport-endpoint-is-already-connected"></a>
+<p>&ldquo;Transport endpoint is already connected.&rdquo;
+You tried to connect a socket that is already connected.
+See <a class="xref" href="Connecting.html">Making a Connection</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOTCONN"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOTCONN</strong><a class="copiable-link" href="#index-ENOTCONN"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Transport-endpoint-is-not-connected"></a>
+<p>&ldquo;Transport endpoint is not connected.&rdquo;
+The socket is not connected to anything.  You get this error when you
+try to transmit data over a socket, without first specifying a
+destination for the data.  For a connectionless socket (for datagram
+protocols, such as UDP), you get <code class="code">EDESTADDRREQ</code> instead.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EDESTADDRREQ"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EDESTADDRREQ</strong><a class="copiable-link" href="#index-EDESTADDRREQ"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Destination-address-required"></a>
+<p>&ldquo;Destination address required.&rdquo;
+No default destination address was set for the socket.  You get this
+error when you try to transmit data over a connectionless socket,
+without first specifying a destination for the data with <code class="code">connect</code>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ESHUTDOWN"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ESHUTDOWN</strong><a class="copiable-link" href="#index-ESHUTDOWN"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Cannot-send-after-transport-endpoint-shutdown"></a>
+<p>&ldquo;Cannot send after transport endpoint shutdown.&rdquo;
+The socket has already been shut down.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ETOOMANYREFS"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ETOOMANYREFS</strong><a class="copiable-link" href="#index-ETOOMANYREFS"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Too-many-references_003a-cannot-splice"></a>
+<p>&ldquo;Too many references: cannot splice.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ETIMEDOUT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ETIMEDOUT</strong><a class="copiable-link" href="#index-ETIMEDOUT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Connection-timed-out"></a>
+<p>&ldquo;Connection timed out.&rdquo;
+A socket operation with a specified timeout received no response during
+the timeout period.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ECONNREFUSED"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ECONNREFUSED</strong><a class="copiable-link" href="#index-ECONNREFUSED"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Connection-refused"></a>
+<p>&ldquo;Connection refused.&rdquo;
+A remote host refused to allow the network connection (typically because
+it is not running the requested service).
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ELOOP"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ELOOP</strong><a class="copiable-link" href="#index-ELOOP"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Too-many-levels-of-symbolic-links"></a>
+<p>&ldquo;Too many levels of symbolic links.&rdquo;
+Too many levels of symbolic links were encountered in looking up a file name.
+This often indicates a cycle of symbolic links.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENAMETOOLONG"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENAMETOOLONG</strong><a class="copiable-link" href="#index-ENAMETOOLONG"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-File-name-too-long"></a>
+<p>&ldquo;File name too long.&rdquo;
+Filename too long (longer than <code class="code">PATH_MAX</code>; see <a class="pxref" href="Limits-for-Files.html">Limits on File System Capacity</a>) or host name too long (in <code class="code">gethostname</code> or
+<code class="code">sethostname</code>; see <a class="pxref" href="Host-Identification.html">Host Identification</a>).
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EHOSTDOWN"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EHOSTDOWN</strong><a class="copiable-link" href="#index-EHOSTDOWN"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Host-is-down"></a>
+<p>&ldquo;Host is down.&rdquo;
+The remote host for a requested network connection is down.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EHOSTUNREACH"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EHOSTUNREACH</strong><a class="copiable-link" href="#index-EHOSTUNREACH"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-route-to-host"></a>
+<p>&ldquo;No route to host.&rdquo;
+The remote host for a requested network connection is not reachable.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOTEMPTY"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOTEMPTY</strong><a class="copiable-link" href="#index-ENOTEMPTY"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Directory-not-empty"></a>
+<p>&ldquo;Directory not empty.&rdquo;
+Directory not empty, where an empty directory was expected.  Typically,
+this error occurs when you are trying to delete a directory.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EPROCLIM"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EPROCLIM</strong><a class="copiable-link" href="#index-EPROCLIM"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Too-many-processes"></a>
+<p>&ldquo;Too many processes.&rdquo;
+This means that the per-user limit on new process would be exceeded by
+an attempted <code class="code">fork</code>.  See <a class="xref" href="Limits-on-Resources.html">Limiting Resource Usage</a>, for details on
+the <code class="code">RLIMIT_NPROC</code> limit.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EUSERS"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EUSERS</strong><a class="copiable-link" href="#index-EUSERS"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Too-many-users"></a>
+<p>&ldquo;Too many users.&rdquo;
+The file quota system is confused because there are too many users.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EDQUOT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EDQUOT</strong><a class="copiable-link" href="#index-EDQUOT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Disk-quota-exceeded"></a>
+<p>&ldquo;Disk quota exceeded.&rdquo;
+The user&rsquo;s disk quota was exceeded.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ESTALE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ESTALE</strong><a class="copiable-link" href="#index-ESTALE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Stale-file-handle"></a>
+<p>&ldquo;Stale file handle.&rdquo;
+This indicates an internal confusion in the
+file system which is due to file system rearrangements on the server host
+for NFS file systems or corruption in other file systems.
+Repairing this condition usually requires unmounting, possibly repairing
+and remounting the file system.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EREMOTE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EREMOTE</strong><a class="copiable-link" href="#index-EREMOTE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Object-is-remote"></a>
+<p>&ldquo;Object is remote.&rdquo;
+An attempt was made to NFS-mount a remote file system with a file name that
+already specifies an NFS-mounted file.
+(This is an error on some operating systems, but we expect it to work
+properly on GNU/Hurd systems, making this error code impossible.)
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EBADRPC"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EBADRPC</strong><a class="copiable-link" href="#index-EBADRPC"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-RPC-struct-is-bad"></a>
+<p>&ldquo;RPC struct is bad.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ERPCMISMATCH"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ERPCMISMATCH</strong><a class="copiable-link" href="#index-ERPCMISMATCH"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-RPC-version-wrong"></a>
+<p>&ldquo;RPC version wrong.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EPROGUNAVAIL"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EPROGUNAVAIL</strong><a class="copiable-link" href="#index-EPROGUNAVAIL"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-RPC-program-not-available"></a>
+<p>&ldquo;RPC program not available.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EPROGMISMATCH"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EPROGMISMATCH</strong><a class="copiable-link" href="#index-EPROGMISMATCH"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-RPC-program-version-wrong"></a>
+<p>&ldquo;RPC program version wrong.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EPROCUNAVAIL"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EPROCUNAVAIL</strong><a class="copiable-link" href="#index-EPROCUNAVAIL"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-RPC-bad-procedure-for-program"></a>
+<p>&ldquo;RPC bad procedure for program.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOLCK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOLCK</strong><a class="copiable-link" href="#index-ENOLCK"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-locks-available"></a>
+<p>&ldquo;No locks available.&rdquo;
+This is used by the file locking facilities; see
+<a class="ref" href="File-Locks.html">File Locks</a>.  This error is never generated by GNU/Hurd systems, but
+it can result from an operation to an NFS server running another
+operating system.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EFTYPE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EFTYPE</strong><a class="copiable-link" href="#index-EFTYPE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Inappropriate-file-type-or-format"></a>
+<p>&ldquo;Inappropriate file type or format.&rdquo;
+The file was the wrong type for the
+operation, or a data file had the wrong format.
+</p>
+<p>On some systems <code class="code">chmod</code> returns this error if you try to set the
+sticky bit on a non-directory file; see <a class="pxref" href="Setting-Permissions.html">Assigning File Permissions</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EAUTH"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EAUTH</strong><a class="copiable-link" href="#index-EAUTH"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Authentication-error"></a>
+<p>&ldquo;Authentication error.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENEEDAUTH"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENEEDAUTH</strong><a class="copiable-link" href="#index-ENEEDAUTH"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Need-authenticator"></a>
+<p>&ldquo;Need authenticator.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOSYS"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOSYS</strong><a class="copiable-link" href="#index-ENOSYS"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Function-not-implemented"></a>
+<p>&ldquo;Function not implemented.&rdquo;
+This indicates that the function called is
+not implemented at all, either in the C library itself or in the
+operating system.  When you get this error, you can be sure that this
+particular function will always fail with <code class="code">ENOSYS</code> unless you
+install a new version of the C library or the operating system.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ELIBEXEC"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ELIBEXEC</strong><a class="copiable-link" href="#index-ELIBEXEC"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Cannot-exec-a-shared-library-directly"></a>
+<p>&ldquo;Cannot exec a shared library directly.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOTSUP"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOTSUP</strong><a class="copiable-link" href="#index-ENOTSUP"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Not-supported"></a>
+<p>&ldquo;Not supported.&rdquo;
+A function returns this error when certain parameter
+values are valid, but the functionality they request is not available.
+This can mean that the function does not implement a particular command
+or option value or flag bit at all.  For functions that operate on some
+object given in a parameter, such as a file descriptor or a port, it
+might instead mean that only <em class="emph">that specific object</em> (file
+descriptor, port, etc.) is unable to support the other parameters given;
+different file descriptors might support different ranges of parameter
+values.
+</p>
+<p>If the entire function is not available at all in the implementation,
+it returns <code class="code">ENOSYS</code> instead.
+</p>
+<p><strong class="strong">Portability Note:</strong> Depending on the operating system, the
+values of <code class="code">EOPNOTSUPP</code> and <code class="code">ENOTSUP</code> may be equal.
+Portable code should check for both errors and treat them the same.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EILSEQ"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EILSEQ</strong><a class="copiable-link" href="#index-EILSEQ"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Invalid-or-incomplete-multibyte-or-wide-character"></a>
+<p>&ldquo;Invalid or incomplete multibyte or wide character.&rdquo;
+While decoding a multibyte character the function came along an invalid
+or an incomplete sequence of bytes or the given wide character is invalid.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EBACKGROUND"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EBACKGROUND</strong><a class="copiable-link" href="#index-EBACKGROUND"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Inappropriate-operation-for-background-process"></a>
+<p>&ldquo;Inappropriate operation for background process.&rdquo;
+On GNU/Hurd systems, servers supporting the <code class="code">term</code> protocol return
+this error for certain operations when the caller is not in the
+foreground process group of the terminal.  Users do not usually see this
+error because functions such as <code class="code">read</code> and <code class="code">write</code> translate
+it into a <code class="code">SIGTTIN</code> or <code class="code">SIGTTOU</code> signal.  See <a class="xref" href="Job-Control.html">Job Control</a>,
+for information on process groups and these signals.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EDIED"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EDIED</strong><a class="copiable-link" href="#index-EDIED"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Translator-died"></a>
+<p>&ldquo;Translator died.&rdquo;
+On GNU/Hurd systems, opening a file returns this error when the file is
+translated by a program and the translator program dies while starting
+up, before it has connected to the file.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ED"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ED</strong><a class="copiable-link" href="#index-ED"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-_003f"></a>
+<p>&ldquo;?.&rdquo;
+The experienced user will know what is wrong.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EGREGIOUS"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EGREGIOUS</strong><a class="copiable-link" href="#index-EGREGIOUS"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-You-really-blew-it-this-time"></a>
+<p>&ldquo;You really blew it this time.&rdquo;
+You did <strong class="strong">what</strong>?
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EIEIO"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EIEIO</strong><a class="copiable-link" href="#index-EIEIO"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Computer-bought-the-farm"></a>
+<p>&ldquo;Computer bought the farm.&rdquo;
+Go home and have a glass of warm, dairy-fresh milk.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EGRATUITOUS"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EGRATUITOUS</strong><a class="copiable-link" href="#index-EGRATUITOUS"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Gratuitous-error"></a>
+<p>&ldquo;Gratuitous error.&rdquo;
+This error code has no purpose.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EBADMSG"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EBADMSG</strong><a class="copiable-link" href="#index-EBADMSG"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Bad-message"></a>
+<p>&ldquo;Bad message.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EIDRM"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EIDRM</strong><a class="copiable-link" href="#index-EIDRM"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Identifier-removed"></a>
+<p>&ldquo;Identifier removed.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EMULTIHOP"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EMULTIHOP</strong><a class="copiable-link" href="#index-EMULTIHOP"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Multihop-attempted"></a>
+<p>&ldquo;Multihop attempted.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENODATA"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENODATA</strong><a class="copiable-link" href="#index-ENODATA"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-data-available"></a>
+<p>&ldquo;No data available.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOLINK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOLINK</strong><a class="copiable-link" href="#index-ENOLINK"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Link-has-been-severed"></a>
+<p>&ldquo;Link has been severed.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOMSG"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOMSG</strong><a class="copiable-link" href="#index-ENOMSG"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-message-of-desired-type"></a>
+<p>&ldquo;No message of desired type.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOSR"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOSR</strong><a class="copiable-link" href="#index-ENOSR"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Out-of-streams-resources"></a>
+<p>&ldquo;Out of streams resources.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOSTR"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOSTR</strong><a class="copiable-link" href="#index-ENOSTR"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Device-not-a-stream"></a>
+<p>&ldquo;Device not a stream.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EOVERFLOW"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EOVERFLOW</strong><a class="copiable-link" href="#index-EOVERFLOW"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Value-too-large-for-defined-data-type"></a>
+<p>&ldquo;Value too large for defined data type.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EPROTO"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EPROTO</strong><a class="copiable-link" href="#index-EPROTO"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Protocol-error"></a>
+<p>&ldquo;Protocol error.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ETIME"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ETIME</strong><a class="copiable-link" href="#index-ETIME"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Timer-expired"></a>
+<p>&ldquo;Timer expired.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ECANCELED"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ECANCELED</strong><a class="copiable-link" href="#index-ECANCELED"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Operation-canceled"></a>
+<p>&ldquo;Operation canceled.&rdquo;
+An asynchronous operation was canceled before it
+completed.  See <a class="xref" href="Asynchronous-I_002fO.html">Perform I/O Operations in Parallel</a>.  When you call <code class="code">aio_cancel</code>,
+the normal result is for the operations affected to complete with this
+error; see <a class="pxref" href="Cancel-AIO-Operations.html">Cancellation of AIO Operations</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EOWNERDEAD"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EOWNERDEAD</strong><a class="copiable-link" href="#index-EOWNERDEAD"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Owner-died"></a>
+<p>&ldquo;Owner died.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOTRECOVERABLE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOTRECOVERABLE</strong><a class="copiable-link" href="#index-ENOTRECOVERABLE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-State-not-recoverable"></a>
+<p>&ldquo;State not recoverable.&rdquo;
+</p></dd></dl>
+
+
+<p><em class="emph">The following error codes are defined by the Linux/i386 kernel.
+They are not yet documented.</em>
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ERESTART"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ERESTART</strong><a class="copiable-link" href="#index-ERESTART"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Interrupted-system-call-should-be-restarted"></a>
+<p>&ldquo;Interrupted system call should be restarted.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ECHRNG"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ECHRNG</strong><a class="copiable-link" href="#index-ECHRNG"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Channel-number-out-of-range"></a>
+<p>&ldquo;Channel number out of range.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EL2NSYNC"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EL2NSYNC</strong><a class="copiable-link" href="#index-EL2NSYNC"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Level-2-not-synchronized"></a>
+<p>&ldquo;Level 2 not synchronized.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EL3HLT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EL3HLT</strong><a class="copiable-link" href="#index-EL3HLT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Level-3-halted"></a>
+<p>&ldquo;Level 3 halted.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EL3RST"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EL3RST</strong><a class="copiable-link" href="#index-EL3RST"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Level-3-reset"></a>
+<p>&ldquo;Level 3 reset.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ELNRNG"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ELNRNG</strong><a class="copiable-link" href="#index-ELNRNG"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Link-number-out-of-range"></a>
+<p>&ldquo;Link number out of range.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EUNATCH"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EUNATCH</strong><a class="copiable-link" href="#index-EUNATCH"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Protocol-driver-not-attached"></a>
+<p>&ldquo;Protocol driver not attached.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOCSI"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOCSI</strong><a class="copiable-link" href="#index-ENOCSI"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-CSI-structure-available"></a>
+<p>&ldquo;No CSI structure available.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EL2HLT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EL2HLT</strong><a class="copiable-link" href="#index-EL2HLT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Level-2-halted"></a>
+<p>&ldquo;Level 2 halted.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EBADE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EBADE</strong><a class="copiable-link" href="#index-EBADE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Invalid-exchange"></a>
+<p>&ldquo;Invalid exchange.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EBADR"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EBADR</strong><a class="copiable-link" href="#index-EBADR"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Invalid-request-descriptor"></a>
+<p>&ldquo;Invalid request descriptor.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EXFULL"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EXFULL</strong><a class="copiable-link" href="#index-EXFULL"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Exchange-full"></a>
+<p>&ldquo;Exchange full.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOANO"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOANO</strong><a class="copiable-link" href="#index-ENOANO"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-anode"></a>
+<p>&ldquo;No anode.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EBADRQC"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EBADRQC</strong><a class="copiable-link" href="#index-EBADRQC"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Invalid-request-code"></a>
+<p>&ldquo;Invalid request code.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EBADSLT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EBADSLT</strong><a class="copiable-link" href="#index-EBADSLT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Invalid-slot"></a>
+<p>&ldquo;Invalid slot.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EDEADLOCK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EDEADLOCK</strong><a class="copiable-link" href="#index-EDEADLOCK"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-File-locking-deadlock-error"></a>
+<p>&ldquo;File locking deadlock error.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EBFONT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EBFONT</strong><a class="copiable-link" href="#index-EBFONT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Bad-font-file-format"></a>
+<p>&ldquo;Bad font file format.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENONET"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENONET</strong><a class="copiable-link" href="#index-ENONET"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Machine-is-not-on-the-network"></a>
+<p>&ldquo;Machine is not on the network.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOPKG"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOPKG</strong><a class="copiable-link" href="#index-ENOPKG"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Package-not-installed"></a>
+<p>&ldquo;Package not installed.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EADV"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EADV</strong><a class="copiable-link" href="#index-EADV"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Advertise-error"></a>
+<p>&ldquo;Advertise error.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ESRMNT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ESRMNT</strong><a class="copiable-link" href="#index-ESRMNT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Srmount-error"></a>
+<p>&ldquo;Srmount error.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ECOMM"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ECOMM</strong><a class="copiable-link" href="#index-ECOMM"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Communication-error-on-send"></a>
+<p>&ldquo;Communication error on send.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EDOTDOT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EDOTDOT</strong><a class="copiable-link" href="#index-EDOTDOT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-RFS-specific-error"></a>
+<p>&ldquo;RFS specific error.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOTUNIQ"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOTUNIQ</strong><a class="copiable-link" href="#index-ENOTUNIQ"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Name-not-unique-on-network"></a>
+<p>&ldquo;Name not unique on network.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EBADFD"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EBADFD</strong><a class="copiable-link" href="#index-EBADFD"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-File-descriptor-in-bad-state"></a>
+<p>&ldquo;File descriptor in bad state.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EREMCHG"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EREMCHG</strong><a class="copiable-link" href="#index-EREMCHG"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Remote-address-changed"></a>
+<p>&ldquo;Remote address changed.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ELIBACC"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ELIBACC</strong><a class="copiable-link" href="#index-ELIBACC"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Can-not-access-a-needed-shared-library"></a>
+<p>&ldquo;Can not access a needed shared library.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ELIBBAD"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ELIBBAD</strong><a class="copiable-link" href="#index-ELIBBAD"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Accessing-a-corrupted-shared-library"></a>
+<p>&ldquo;Accessing a corrupted shared library.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ELIBSCN"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ELIBSCN</strong><a class="copiable-link" href="#index-ELIBSCN"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-_002elib-section-in-a_002eout-corrupted"></a>
+<p>&ldquo;.lib section in a.out corrupted.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ELIBMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ELIBMAX</strong><a class="copiable-link" href="#index-ELIBMAX"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Attempting-to-link-in-too-many-shared-libraries"></a>
+<p>&ldquo;Attempting to link in too many shared libraries.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ESTRPIPE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ESTRPIPE</strong><a class="copiable-link" href="#index-ESTRPIPE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Streams-pipe-error"></a>
+<p>&ldquo;Streams pipe error.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EUCLEAN"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EUCLEAN</strong><a class="copiable-link" href="#index-EUCLEAN"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Structure-needs-cleaning"></a>
+<p>&ldquo;Structure needs cleaning.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOTNAM"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOTNAM</strong><a class="copiable-link" href="#index-ENOTNAM"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Not-a-XENIX-named-type-file"></a>
+<p>&ldquo;Not a XENIX named type file.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENAVAIL"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENAVAIL</strong><a class="copiable-link" href="#index-ENAVAIL"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-XENIX-semaphores-available"></a>
+<p>&ldquo;No XENIX semaphores available.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EISNAM"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EISNAM</strong><a class="copiable-link" href="#index-EISNAM"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Is-a-named-type-file"></a>
+<p>&ldquo;Is a named type file.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EREMOTEIO"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EREMOTEIO</strong><a class="copiable-link" href="#index-EREMOTEIO"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Remote-I_002fO-error"></a>
+<p>&ldquo;Remote I/O error.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOMEDIUM"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOMEDIUM</strong><a class="copiable-link" href="#index-ENOMEDIUM"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-No-medium-found"></a>
+<p>&ldquo;No medium found.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EMEDIUMTYPE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EMEDIUMTYPE</strong><a class="copiable-link" href="#index-EMEDIUMTYPE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Wrong-medium-type"></a>
+<p>&ldquo;Wrong medium type.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ENOKEY"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ENOKEY</strong><a class="copiable-link" href="#index-ENOKEY"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Required-key-not-available"></a>
+<p>&ldquo;Required key not available.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EKEYEXPIRED"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EKEYEXPIRED</strong><a class="copiable-link" href="#index-EKEYEXPIRED"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Key-has-expired"></a>
+<p>&ldquo;Key has expired.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EKEYREVOKED"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EKEYREVOKED</strong><a class="copiable-link" href="#index-EKEYREVOKED"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Key-has-been-revoked"></a>
+<p>&ldquo;Key has been revoked.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EKEYREJECTED"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EKEYREJECTED</strong><a class="copiable-link" href="#index-EKEYREJECTED"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Key-was-rejected-by-service"></a>
+<p>&ldquo;Key was rejected by service.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ERFKILL"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">ERFKILL</strong><a class="copiable-link" href="#index-ERFKILL"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Operation-not-possible-due-to-RF_002dkill"></a>
+<p>&ldquo;Operation not possible due to RF-kill.&rdquo;
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-EHWPOISON"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">EHWPOISON</strong><a class="copiable-link" href="#index-EHWPOISON"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-Memory-page-has-hardware-error"></a>
+<p>&ldquo;Memory page has hardware error.&rdquo;
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Error-Messages.html">Error Messages</a>, Previous: <a href="Checking-for-Errors.html">Checking for Errors</a>, Up: <a href="Error-Reporting.html">Error Reporting</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

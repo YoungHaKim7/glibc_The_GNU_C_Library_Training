@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Setting the Locale (The GNU C Library)</title>
+
+<meta name="description" content="Setting the Locale (The GNU C Library)">
+<meta name="keywords" content="Setting the Locale (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Locales.html" rel="up" title="Locales">
+<link href="Standard-Locales.html" rel="next" title="Standard Locales">
+<link href="Locale-Categories.html" rel="prev" title="Locale Categories">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Setting-the-Locale">
+<div class="nav-panel">
+<p>
+Next: <a href="Standard-Locales.html" accesskey="n" rel="next">Standard Locales</a>, Previous: <a href="Locale-Categories.html" accesskey="p" rel="prev">Locale Categories</a>, Up: <a href="Locales.html" accesskey="u" rel="up">Locales and Internationalization</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="How-Programs-Set-the-Locale"><span>7.4 How Programs Set the Locale<a class="copiable-link" href="#How-Programs-Set-the-Locale"> &para;</a></span></h3>
+
+<p>A C program inherits its locale environment variables when it starts up.
+This happens automatically.  However, these variables do not
+automatically control the locale used by the library functions, because
+ISO&nbsp;C<!-- /@w --> says that all programs start by default in the standard &lsquo;<samp class="samp">C</samp>&rsquo;
+locale.  To use the locales specified by the environment, you must call
+<code class="code">setlocale</code>.  Call it as follows:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">setlocale (LC_ALL, &quot;&quot;);
+</pre></div>
+
+<p>to select a locale based on the user choice of the appropriate
+environment variables.
+</p>
+<a class="index-entry-id" id="index-changing-the-locale"></a>
+<a class="index-entry-id" id="index-locale_002c-changing"></a>
+<p>You can also use <code class="code">setlocale</code> to specify a particular locale, for
+general use or for a specific category.
+</p>
+<a class="index-entry-id" id="index-locale_002eh"></a>
+<p>The symbols in this section are defined in the header file <samp class="file">locale.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setlocale"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">setlocale</strong> <code class="def-code-arguments">(int <var class="var">category</var>, const char *<var class="var">locale</var>)</code><a class="copiable-link" href="#index-setlocale"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe const:locale env
+| AS-Unsafe init lock heap corrupt
+| AC-Unsafe init corrupt lock mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">setlocale</code> sets the current locale for category
+<var class="var">category</var> to <var class="var">locale</var>.
+</p>
+<p>If <var class="var">category</var> is <code class="code">LC_ALL</code>, this specifies the locale for all
+purposes.  The other possible values of <var class="var">category</var> specify a
+single purpose (see <a class="pxref" href="Locale-Categories.html">Locale Categories</a>).
+</p>
+<p>You can also use this function to find out the current locale by passing
+a null pointer as the <var class="var">locale</var> argument.  In this case,
+<code class="code">setlocale</code> returns a string that is the name of the locale
+currently selected for category <var class="var">category</var>.
+</p>
+<p>The string returned by <code class="code">setlocale</code> can be overwritten by subsequent
+calls, so you should make a copy of the string (see <a class="pxref" href="Copying-Strings-and-Arrays.html">Copying Strings and Arrays</a>) if you want to save it past any further calls to
+<code class="code">setlocale</code>.  (The standard library is guaranteed never to call
+<code class="code">setlocale</code> itself.)
+</p>
+<p>You should not modify the string returned by <code class="code">setlocale</code>.  It might
+be the same string that was passed as an argument in a previous call to
+<code class="code">setlocale</code>.  One requirement is that the <var class="var">category</var> must be
+the same in the call the string was returned and the one when the string
+is passed in as <var class="var">locale</var> parameter.
+</p>
+<p>When you read the current locale for category <code class="code">LC_ALL</code>, the value
+encodes the entire combination of selected locales for all categories.
+If you specify the same &ldquo;locale name&rdquo; with <code class="code">LC_ALL</code> in a
+subsequent call to <code class="code">setlocale</code>, it restores the same combination
+of locale selections.
+</p>
+<p>To be sure you can use the returned string encoding the currently selected
+locale at a later time, you must make a copy of the string.  It is not
+guaranteed that the returned pointer remains valid over time.
+</p>
+<p>When the <var class="var">locale</var> argument is not a null pointer, the string returned
+by <code class="code">setlocale</code> reflects the newly-modified locale.
+</p>
+<p>If you specify an empty string for <var class="var">locale</var>, this means to read the
+appropriate environment variable and use its value to select the locale
+for <var class="var">category</var>.
+</p>
+<p>If a nonempty string is given for <var class="var">locale</var>, then the locale of that
+name is used if possible.
+</p>
+<p>The effective locale name (either the second argument to
+<code class="code">setlocale</code>, or if the argument is an empty string, the name
+obtained from the process environment) must be a valid locale name.
+See <a class="xref" href="Locale-Names.html">Locale Names</a>.
+</p>
+<p>If you specify an invalid locale name, <code class="code">setlocale</code> returns a null
+pointer and leaves the current locale unchanged.
+</p></dd></dl>
+
+<p>Here is an example showing how you might use <code class="code">setlocale</code> to
+temporarily switch to a new locale.
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">#include &lt;stddef.h&gt;
+#include &lt;locale.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+void
+with_other_locale (char *new_locale,
+                   void (*subroutine) (int),
+                   int argument)
+{
+  char *old_locale, *saved_locale;
+
+  /* <span class="r">Get the name of the current locale.</span>  */
+  old_locale = setlocale (LC_ALL, NULL);
+
+  /* <span class="r">Copy the name so it won&rsquo;t be clobbered by <code class="code">setlocale</code>.</span> */
+  saved_locale = strdup (old_locale);
+  if (saved_locale == NULL)
+    fatal (&quot;Out of memory&quot;);
+
+  /* <span class="r">Now change the locale and do some stuff with it.</span> */
+  setlocale (LC_ALL, new_locale);
+  (*subroutine) (argument);
+
+  /* <span class="r">Restore the original locale.</span> */
+  setlocale (LC_ALL, saved_locale);
+  free (saved_locale);
+}
+</pre></div>
+
+<p><strong class="strong">Portability Note:</strong> Some ISO&nbsp;C<!-- /@w --> systems may define additional
+locale categories, and future versions of the library will do so.  For
+portability, assume that any symbol beginning with &lsquo;<samp class="samp">LC_</samp>&rsquo; might be
+defined in <samp class="file">locale.h</samp>.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Standard-Locales.html">Standard Locales</a>, Previous: <a href="Locale-Categories.html">Locale Categories</a>, Up: <a href="Locales.html">Locales and Internationalization</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

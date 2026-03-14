@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Is It a Terminal (The GNU C Library)</title>
+
+<meta name="description" content="Is It a Terminal (The GNU C Library)">
+<meta name="keywords" content="Is It a Terminal (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Low_002dLevel-Terminal-Interface.html" rel="up" title="Low-Level Terminal Interface">
+<link href="I_002fO-Queues.html" rel="next" title="I/O Queues">
+<link href="Terminal-Device-Model.html" rel="prev" title="Terminal Device Model">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Is-It-a-Terminal">
+<div class="nav-panel">
+<p>
+Next: <a href="I_002fO-Queues.html" accesskey="n" rel="next">I/O Queues</a>, Previous: <a href="Terminal-Device-Model.html" accesskey="p" rel="prev">Terminal Device Model</a>, Up: <a href="Low_002dLevel-Terminal-Interface.html" accesskey="u" rel="up">Low-Level Terminal Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Identifying-Terminals"><span>17.2 Identifying Terminals<a class="copiable-link" href="#Identifying-Terminals"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-terminal-identification"></a>
+<a class="index-entry-id" id="index-identifying-terminals"></a>
+
+<p>The functions described in this chapter only work on files that
+correspond to terminal devices.  You can find out whether a file
+descriptor is associated with a terminal by using the <code class="code">isatty</code>
+function.
+</p>
+<a class="index-entry-id" id="index-unistd_002eh-13"></a>
+<p>Prototypes for the functions in this section are declared in the header
+file <samp class="file">unistd.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-isatty"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">isatty</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>)</code><a class="copiable-link" href="#index-isatty"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns <code class="code">1</code> if <var class="var">filedes</var> is a file descriptor
+associated with an open terminal device, and <em class="math">0</em> otherwise.
+</p></dd></dl>
+
+<p>If a file descriptor is associated with a terminal, you can get its
+associated file name using the <code class="code">ttyname</code> function.  See also the
+<code class="code">ctermid</code> function, described in <a class="ref" href="Identifying-the-Terminal.html">Identifying the Controlling Terminal</a>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ttyname"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">ttyname</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>)</code><a class="copiable-link" href="#index-ttyname"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:ttyname
+| AS-Unsafe heap lock
+| AC-Unsafe lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>If the file descriptor <var class="var">filedes</var> is associated with a terminal
+device, the <code class="code">ttyname</code> function returns a pointer to a
+statically-allocated, null-terminated string containing the file name of
+the terminal file.  The value is a null pointer if the file descriptor
+isn&rsquo;t associated with a terminal, or the file name cannot be determined.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ttyname_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">ttyname_r</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, char *<var class="var">buf</var>, size_t <var class="var">len</var>)</code><a class="copiable-link" href="#index-ttyname_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">ttyname_r</code> function is similar to the <code class="code">ttyname</code> function
+except that it places its result into the user-specified buffer starting
+at <var class="var">buf</var> with length <var class="var">len</var>.
+</p>
+<p>The normal return value from <code class="code">ttyname_r</code> is <em class="math">0</em>.  Otherwise an
+error number is returned to indicate the error.  The following
+<code class="code">errno</code> error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">filedes</var> argument is not a valid file descriptor.
+</p>
+</dd>
+<dt><code class="code">ENOTTY</code></dt>
+<dd><p>The <var class="var">filedes</var> is not associated with a terminal.
+</p>
+</dd>
+<dt><code class="code">ERANGE</code></dt>
+<dd><p>The buffer length <var class="var">len</var> is too small to store the string to be
+returned.
+</p>
+</dd>
+<dt><code class="code">ENODEV</code></dt>
+<dd><p>The <var class="var">filedes</var> is associated with a terminal device that is a slave
+pseudo-terminal, but the file name associated with that device could
+not be determined.  This is a GNU extension.
+</p></dd>
+</dl>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="I_002fO-Queues.html">I/O Queues</a>, Previous: <a href="Terminal-Device-Model.html">Terminal Device Model</a>, Up: <a href="Low_002dLevel-Terminal-Interface.html">Low-Level Terminal Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

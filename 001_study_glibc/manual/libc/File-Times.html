@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>File Times (The GNU C Library)</title>
+
+<meta name="description" content="File Times (The GNU C Library)">
+<meta name="keywords" content="File Times (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="File-Attributes.html" rel="up" title="File Attributes">
+<link href="File-Size.html" rel="next" title="File Size">
+<link href="Testing-File-Access.html" rel="prev" title="Testing File Access">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="File-Times">
+<div class="nav-panel">
+<p>
+Next: <a href="File-Size.html" accesskey="n" rel="next">File Size</a>, Previous: <a href="Testing-File-Access.html" accesskey="p" rel="prev">Testing Permission to Access a File</a>, Up: <a href="File-Attributes.html" accesskey="u" rel="up">File Attributes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="File-Times-1"><span>14.10.9 File Times<a class="copiable-link" href="#File-Times-1"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-file-access-time"></a>
+<a class="index-entry-id" id="index-file-modification-time"></a>
+<a class="index-entry-id" id="index-file-attribute-modification-time"></a>
+<p>Each file has three time stamps associated with it:  its access time,
+its modification time, and its attribute modification time.  These
+correspond to the <code class="code">st_atime</code>, <code class="code">st_mtime</code>, and <code class="code">st_ctime</code>
+members of the <code class="code">stat</code> structure; see <a class="ref" href="File-Attributes.html">File Attributes</a>.
+</p>
+<p>All of these times are represented in calendar time format, as
+<code class="code">time_t</code> objects.  This data type is defined in <samp class="file">time.h</samp>.
+For more information about representation and manipulation of time
+values, see <a class="ref" href="Calendar-Time.html">Calendar Time</a>.
+<a class="index-entry-id" id="index-time_002eh"></a>
+</p>
+<p>Reading from a file updates its access time attribute, and writing
+updates its modification time.  When a file is created, all three
+time stamps for that file are set to the current time.  In addition, the
+attribute change time and modification time fields of the directory that
+contains the new entry are updated.
+</p>
+<p>Adding a new name for a file with the <code class="code">link</code> function updates the
+attribute change time field of the file being linked, and both the
+attribute change time and modification time fields of the directory
+containing the new name.  These same fields are affected if a file name
+is deleted with <code class="code">unlink</code>, <code class="code">remove</code> or <code class="code">rmdir</code>.  Renaming
+a file with <code class="code">rename</code> affects only the attribute change time and
+modification time fields of the two parent directories involved, and not
+the times for the file being renamed.
+</p>
+<p>Changing the attributes of a file (for example, with <code class="code">chmod</code>)
+updates its attribute change time field.
+</p>
+<p>You can also change some of the time stamps of a file explicitly using
+the <code class="code">utime</code> function&mdash;all except the attribute change time.  You
+need to include the header file <samp class="file">utime.h</samp> to use this facility.
+<a class="index-entry-id" id="index-utime_002eh"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-utimbuf"><span class="category-def">Data Type: </span><span><strong class="def-name">struct utimbuf</strong><a class="copiable-link" href="#index-struct-utimbuf"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">utimbuf</code> structure is used with the <code class="code">utime</code> function to
+specify new access and modification times for a file.  It contains the
+following members:
+</p>
+<dl class="table">
+<dt><code class="code">time_t actime</code></dt>
+<dd><p>This is the access time for the file.
+</p>
+</dd>
+<dt><code class="code">time_t modtime</code></dt>
+<dd><p>This is the modification time for the file.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-utime"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">utime</strong> <code class="def-code-arguments">(const char *<var class="var">filename</var>, const struct utimbuf *<var class="var">times</var>)</code><a class="copiable-link" href="#index-utime"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is used to modify the file times associated with the file
+named <var class="var">filename</var>.
+</p>
+<p>If <var class="var">times</var> is a null pointer, then the access and modification times
+of the file are set to the current time.  Otherwise, they are set to the
+values from the <code class="code">actime</code> and <code class="code">modtime</code> members (respectively)
+of the <code class="code">utimbuf</code> structure pointed to by <var class="var">times</var>.
+</p>
+<p>The attribute modification time for the file is set to the current time
+in either case (since changing the time stamps is itself a modification
+of the file attributes).
+</p>
+<p>The <code class="code">utime</code> function returns <code class="code">0</code> if successful and <code class="code">-1</code>
+on failure.  In addition to the usual file name errors
+(see <a class="pxref" href="File-Name-Errors.html">File Name Errors</a>), the following <code class="code">errno</code> error conditions
+are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EACCES</code></dt>
+<dd><p>There is a permission problem in the case where a null pointer was
+passed as the <var class="var">times</var> argument.  In order to update the time stamp on
+the file, you must either be the owner of the file, have write
+permission for the file, or be a privileged user.
+</p>
+</dd>
+<dt><code class="code">ENOENT</code></dt>
+<dd><p>The file doesn&rsquo;t exist.
+</p>
+</dd>
+<dt><code class="code">EPERM</code></dt>
+<dd><p>If the <var class="var">times</var> argument is not a null pointer, you must either be
+the owner of the file or be a privileged user.
+</p>
+</dd>
+<dt><code class="code">EROFS</code></dt>
+<dd><p>The file lives on a read-only file system.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>Each of the three time stamps has a corresponding microsecond part,
+which extends its resolution.  These fields are called
+<code class="code">st_atime_usec</code>, <code class="code">st_mtime_usec</code>, and <code class="code">st_ctime_usec</code>;
+each has a value between 0 and 999,999, which indicates the time in
+microseconds.  They correspond to the <code class="code">tv_usec</code> field of a
+<code class="code">timeval</code> structure; see <a class="ref" href="Time-Types.html">Time Types</a>.
+</p>
+<p>The <code class="code">utimes</code> function is like <code class="code">utime</code>, but also lets you specify
+the fractional part of the file times.  The prototype for this function is
+in the header file <samp class="file">sys/time.h</samp>.
+<a class="index-entry-id" id="index-sys_002ftime_002eh"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-utimes"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">utimes</strong> <code class="def-code-arguments">(const char *<var class="var">filename</var>, const struct timeval <var class="var">tvp</var><code class="t">[2]</code>)</code><a class="copiable-link" href="#index-utimes"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function sets the file access and modification times of the file
+<var class="var">filename</var>.  The new file access time is specified by
+<code class="code"><var class="var">tvp</var>[0]</code>, and the new modification time by
+<code class="code"><var class="var">tvp</var>[1]</code>.  Similar to <code class="code">utime</code>, if <var class="var">tvp</var> is a null
+pointer then the access and modification times of the file are set to
+the current time.  This function comes from BSD.
+</p>
+<p>The return values and error conditions are the same as for the <code class="code">utime</code>
+function.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-lutimes"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">lutimes</strong> <code class="def-code-arguments">(const char *<var class="var">filename</var>, const struct timeval <var class="var">tvp</var><code class="t">[2]</code>)</code><a class="copiable-link" href="#index-lutimes"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is like <code class="code">utimes</code>, except that it does not follow
+symbolic links.  If <var class="var">filename</var> is the name of a symbolic link,
+<code class="code">lutimes</code> sets the file access and modification times of the
+symbolic link special file itself (as seen by <code class="code">lstat</code>;
+see <a class="pxref" href="Symbolic-Links.html">Symbolic Links</a>) while <code class="code">utimes</code> sets the file access and
+modification times of the file the symbolic link refers to.  This
+function comes from FreeBSD, and is not available on all platforms (if
+not available, it will fail with <code class="code">ENOSYS</code>).
+</p>
+<p>The return values and error conditions are the same as for the <code class="code">utime</code>
+function.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-futimes"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">futimes</strong> <code class="def-code-arguments">(int <var class="var">fd</var>, const struct timeval <var class="var">tvp</var><code class="t">[2]</code>)</code><a class="copiable-link" href="#index-futimes"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is like <code class="code">utimes</code>, except that it takes an open file
+descriptor as an argument instead of a file name.  See <a class="xref" href="Low_002dLevel-I_002fO.html">Low-Level Input/Output</a>.  This function comes from FreeBSD, and is not available on all
+platforms (if not available, it will fail with <code class="code">ENOSYS</code>).
+</p>
+<p>Like <code class="code">utimes</code>, <code class="code">futimes</code> returns <code class="code">0</code> on success and <code class="code">-1</code>
+on failure.  The following <code class="code">errno</code> error conditions are defined for
+<code class="code">futimes</code>:
+</p>
+<dl class="table">
+<dt><code class="code">EACCES</code></dt>
+<dd><p>There is a permission problem in the case where a null pointer was
+passed as the <var class="var">times</var> argument.  In order to update the time stamp on
+the file, you must either be the owner of the file, have write
+permission for the file, or be a privileged user.
+</p>
+</dd>
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">filedes</var> argument is not a valid file descriptor.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>At least one of the fields in the <code class="code">tvp</code> array passed has an invalid
+value.
+</p>
+</dd>
+<dt><code class="code">EPERM</code></dt>
+<dd><p>If the <var class="var">times</var> argument is not a null pointer, you must either be
+the owner of the file or be a privileged user.
+</p>
+</dd>
+<dt><code class="code">EROFS</code></dt>
+<dd><p>The file lives on a read-only file system.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-futimens"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">futimens</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, const struct timespec <var class="var">tsp</var><code class="t">[2]</code>)</code><a class="copiable-link" href="#index-futimens"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is like <code class="code">futimes</code>, except that it sets the file access
+and modification timestamps with nanosecond precision.  The argument
+<code class="code">tsp</code> is used similarly to <code class="code">futimes</code>&rsquo; <code class="code">tvp</code>, but has a
+<code class="code">const struct timespec</code> type that can express calendar time with
+nanosecond precision.  See <a class="xref" href="Time-Types.html">Time Types</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-utimensat"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">utimensat</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, const char *<var class="var">filename</var>, const struct timespec <var class="var">tsp</var><code class="t">[2]</code>, int <var class="var">flags</var>)</code><a class="copiable-link" href="#index-utimensat"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is a descriptor-relative version of the <code class="code">futimens</code>
+function above.  See <a class="xref" href="Descriptor_002dRelative-Access.html">Descriptor-Relative Access</a>.  The <var class="var">flags</var>
+argument can contain a combination of the flags <code class="code">AT_EMPTY_PATH</code>, and
+<code class="code">AT_SYMLINK_NOFOLLOW</code>.  The call:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">futimens (<var class="var">filedes</var>, <var class="var">tsp</var>)
+</pre></div>
+
+<p>is equivalent to:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">utimensat (<var class="var">filedes</var>, <code class="code">NULL</code>, <var class="var">tsp</var>, 0)
+</pre></div>
+
+<p>Compared to <code class="code">futimens</code>, some additional error conditions can occur due
+to descriptor-relative access.  See <a class="xref" href="Descriptor_002dRelative-Access.html">Descriptor-Relative Access</a>.  In
+addition to this, the following other errors can also occur:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">filename</var> argument is NULL, <var class="var">filedes</var> is not <code class="code">AT_FDCWD</code>,
+and <var class="var">flags</var> is not <code class="code">0</code>.
+</p>
+</dd>
+<dt><code class="code">ELOOP</code></dt>
+<dd><p>There are too many levels of indirection.  This can be the result of
+circular symbolic links to directories.
+</p>
+</dd>
+<dt><code class="code">ENAMETOOLONG</code></dt>
+<dd><p>The resulting path is too long.  This error only occurs on systems which
+have a limit on the file name length.
+</p>
+</dd>
+<dt><code class="code">ENOENT</code></dt>
+<dd><p>The <var class="var">filename</var> argument is an empty string and <var class="var">flags</var> does not
+contain <code class="code">AT_EMPTY_PATH</code>, or <var class="var">filename</var> does not refer to an
+existing file.
+</p>
+</dd>
+<dt><code class="code">ESRCH</code></dt>
+<dd><p>Search permission was denied for one of the prefix components of the the
+<var class="var">filename</var> argument.
+</p></dd>
+</dl>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="File-Size.html">File Size</a>, Previous: <a href="Testing-File-Access.html">Testing Permission to Access a File</a>, Up: <a href="File-Attributes.html">File Attributes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

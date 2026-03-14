@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Netgroup Membership (The GNU C Library)</title>
+
+<meta name="description" content="Netgroup Membership (The GNU C Library)">
+<meta name="keywords" content="Netgroup Membership (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Netgroup-Database.html" rel="up" title="Netgroup Database">
+<link href="Lookup-Netgroup.html" rel="prev" title="Lookup Netgroup">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Netgroup-Membership">
+<div class="nav-panel">
+<p>
+Previous: <a href="Lookup-Netgroup.html" accesskey="p" rel="prev">Looking up one Netgroup</a>, Up: <a href="Netgroup-Database.html" accesskey="u" rel="up">Netgroup Database</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Testing-for-Netgroup-Membership"><span>31.16.3 Testing for Netgroup Membership<a class="copiable-link" href="#Testing-for-Netgroup-Membership"> &para;</a></span></h4>
+
+<p>It is often not necessary to scan the whole netgroup since often the
+only interesting question is whether a given entry is part of the
+selected netgroup.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-innetgr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">innetgr</strong> <code class="def-code-arguments">(const char *<var class="var">netgroup</var>, const char *<var class="var">host</var>, const char *<var class="var">user</var>, const char *<var class="var">domain</var>)</code><a class="copiable-link" href="#index-innetgr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:netgrent locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function tests whether the triple specified by the parameters
+<var class="var">host</var>, <var class="var">user</var>, and <var class="var">domain</var> is part of the netgroup
+<var class="var">netgroup</var>.  Using this function has the advantage that
+</p>
+<ol class="enumerate">
+<li> no other netgroup function can use the global netgroup state since
+internal locking is used and
+</li><li> the function is implemented more efficiently than successive calls
+to the other <code class="code">set</code>/<code class="code">get</code>/<code class="code">endnetgrent</code> functions.
+</li></ol>
+
+<p>Any of the pointers <var class="var">host</var>, <var class="var">user</var>, or <var class="var">domain</var> can be
+<code class="code">NULL</code> which means any value is accepted in this position.  This is
+also true for the name <code class="code">-</code> which should not match any other string
+otherwise.
+</p>
+<p>The return value is <code class="code">1</code> if an entry matching the given triple is
+found in the netgroup.  The return value is <code class="code">0</code> if the netgroup
+itself is not found, the netgroup does not contain the triple or
+internal errors occurred.
+</p></dd></dl>
+
+</div>
+
+
+
+</body>
+</html>

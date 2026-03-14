@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Argp Help Filtering (The GNU C Library)</title>
+
+<meta name="description" content="Argp Help Filtering (The GNU C Library)">
+<meta name="keywords" content="Argp Help Filtering (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Argp-Parsers.html" rel="up" title="Argp Parsers">
+<link href="Argp-Children.html" rel="prev" title="Argp Children">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Argp-Help-Filtering">
+<div class="nav-panel">
+<p>
+Previous: <a href="Argp-Children.html" accesskey="p" rel="prev">Combining Multiple Argp Parsers</a>, Up: <a href="Argp-Parsers.html" accesskey="u" rel="up">Specifying Argp Parsers</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Customizing-Argp-Help-Output"><span>26.3.8 Customizing Argp Help Output<a class="copiable-link" href="#Customizing-Argp-Help-Output"> &para;</a></span></h4>
+
+<p>The <code class="code">help_filter</code> field in a <code class="code">struct argp</code> is a pointer to a
+function that filters the text of help messages before displaying
+them.  They have a function signature like:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">char *<var class="var">help-filter</var> (int <var class="var">key</var>, const char *<var class="var">text</var>, void *<var class="var">input</var>)
+</pre></div>
+
+
+<p>Where <var class="var">key</var> is either a key from an option, in which case <var class="var">text</var>
+is that option&rsquo;s help text.  See <a class="xref" href="Argp-Option-Vectors.html">Specifying Options in an Argp Parser</a>.  Alternately, one
+of the special keys with names beginning with &lsquo;<samp class="samp">ARGP_KEY_HELP_</samp>&rsquo;
+might be used, describing which other help text <var class="var">text</var> will contain.
+See <a class="xref" href="Argp-Help-Filter-Keys.html">Special Keys for Argp Help Filter Functions</a>.
+</p>
+<p>The function should return either <var class="var">text</var> if it remains as-is, or a
+replacement string allocated using <code class="code">malloc</code>.  This will be either be
+freed by argp or zero, which prints nothing.  The value of <var class="var">text</var> is
+supplied <em class="emph">after</em> any translation has been done, so if any of the
+replacement text needs translation, it will be done by the filter
+function.  <var class="var">input</var> is either the input supplied to <code class="code">argp_parse</code>
+or it is zero, if <code class="code">argp_help</code> was called directly by the user.
+</p>
+
+<ul class="mini-toc">
+<li><a href="Argp-Help-Filter-Keys.html" accesskey="1">Special Keys for Argp Help Filter Functions</a></li>
+</ul>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Missing Pieces (The GNU C Library)</title>
+
+<meta name="description" content="Missing Pieces (The GNU C Library)">
+<meta name="keywords" content="Missing Pieces (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Implementing-a-Shell.html" rel="up" title="Implementing a Shell">
+<link href="Continuing-Stopped-Jobs.html" rel="prev" title="Continuing Stopped Jobs">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Missing-Pieces">
+<div class="nav-panel">
+<p>
+Previous: <a href="Continuing-Stopped-Jobs.html" accesskey="p" rel="prev">Continuing Stopped Jobs</a>, Up: <a href="Implementing-a-Shell.html" accesskey="u" rel="up">Implementing a Job Control Shell</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="The-Missing-Pieces"><span>29.5.7 The Missing Pieces<a class="copiable-link" href="#The-Missing-Pieces"> &para;</a></span></h4>
+
+<p>The code extracts for the sample shell included in this chapter are only
+a part of the entire shell program.  In particular, nothing at all has
+been said about how <code class="code">job</code> and <code class="code">program</code> data structures are
+allocated and initialized.
+</p>
+<p>Most real shells provide a complex user interface that has support for
+a command language; variables; abbreviations, substitutions, and pattern
+matching on file names; and the like.  All of this is far too complicated
+to explain here!  Instead, we have concentrated on showing how to
+implement the core process creation and job control functions that can
+be called from such a shell.
+</p>
+<p>Here is a table summarizing the major entry points we have presented:
+</p>
+<dl class="table">
+<dt><code class="code">void init_shell (void)</code></dt>
+<dd><p>Initialize the shell&rsquo;s internal state.  See <a class="xref" href="Initializing-the-Shell.html">Initializing the Shell</a>.
+</p>
+</dd>
+<dt><code class="code">void launch_job (job *<var class="var">j</var>, int <var class="var">foreground</var>)</code></dt>
+<dd><p>Launch the job <var class="var">j</var> as either a foreground or background job.
+See <a class="xref" href="Launching-Jobs.html">Launching Jobs</a>.
+</p>
+</dd>
+<dt><code class="code">void do_job_notification (void)</code></dt>
+<dd><p>Check for and report any jobs that have terminated or stopped.  Can be
+called synchronously or within a handler for <code class="code">SIGCHLD</code> signals.
+See <a class="xref" href="Stopped-and-Terminated-Jobs.html">Stopped and Terminated Jobs</a>.
+</p>
+</dd>
+<dt><code class="code">void continue_job (job *<var class="var">j</var>, int <var class="var">foreground</var>)</code></dt>
+<dd><p>Continue the job <var class="var">j</var>.  See <a class="xref" href="Continuing-Stopped-Jobs.html">Continuing Stopped Jobs</a>.
+</p></dd>
+</dl>
+
+<p>Of course, a real shell would also want to provide other functions for
+managing jobs.  For example, it would be useful to have commands to list
+all active jobs or to send a signal (such as <code class="code">SIGKILL</code>) to a job.
+</p>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Continuing-Stopped-Jobs.html">Continuing Stopped Jobs</a>, Up: <a href="Implementing-a-Shell.html">Implementing a Job Control Shell</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Dynamic Linker Environment Variables (The GNU C Library)</title>
+
+<meta name="description" content="Dynamic Linker Environment Variables (The GNU C Library)">
+<meta name="keywords" content="Dynamic Linker Environment Variables (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Dynamic-Linker.html" rel="up" title="Dynamic Linker">
+<link href="Dynamic-Linker-Introspection.html" rel="next" title="Dynamic Linker Introspection">
+<link href="Dynamic-Linker-Invocation.html" rel="prev" title="Dynamic Linker Invocation">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Dynamic-Linker-Environment-Variables">
+<div class="nav-panel">
+<p>
+Next: <a href="Dynamic-Linker-Introspection.html" accesskey="n" rel="next">Dynamic Linker Introspection</a>, Previous: <a href="Dynamic-Linker-Invocation.html" accesskey="p" rel="prev">Dynamic Linker Invocation</a>, Up: <a href="Dynamic-Linker.html" accesskey="u" rel="up">Dynamic Linker</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Dynamic-Linker-Environment-Variables-1"><span>37.2 Dynamic Linker Environment Variables<a class="copiable-link" href="#Dynamic-Linker-Environment-Variables-1"> &para;</a></span></h3>
+
+<p>The behavior of the dynamic linker can be modified through various environment
+variables.
+</p>
+<dl class="table">
+<dt><a id="index-LD_005fDEBUG-environment-variable"></a><span><code class="code">LD_DEBUG</code><a class="copiable-link" href="#index-LD_005fDEBUG-environment-variable"> &para;</a></span></dt>
+<dd><p>The <code class="env">LD_DEBUG</code> environment variable can be set to a comma-separated list
+of keywords to enable debugging output from the dynamic linker.  Setting it to
+<code class="code">help</code> will display a list of all available keywords.  The output is
+written to standard output by default.
+</p>
+<dl class="table">
+<dt><code class="code">libs</code></dt>
+<dd><p>Display library search paths.
+</p>
+</dd>
+<dt><code class="code">reloc</code></dt>
+<dd><p>Display relocation processing.
+</p>
+</dd>
+<dt><code class="code">files</code></dt>
+<dd><p>Display progress for input file processing.
+</p>
+</dd>
+<dt><code class="code">symbols</code></dt>
+<dd><p>Display symbol table processing.
+</p>
+</dd>
+<dt><code class="code">bindings</code></dt>
+<dd><p>Display information about symbol binding.
+</p>
+</dd>
+<dt><code class="code">versions</code></dt>
+<dd><p>Display version dependencies.
+</p>
+</dd>
+<dt><code class="code">scopes</code></dt>
+<dd><p>Display scope information.
+</p>
+</dd>
+<dt><code class="code">tls</code></dt>
+<dd><p>Display information about Thread-Local Storage (TLS) handling, including TCB
+allocation, deallocation, and reuse. This is useful for debugging issues
+related to thread creation and lifecycle.
+</p>
+</dd>
+<dt><code class="code">security</code></dt>
+<dd><p>Display security warnings that are related to loading binaries that lack
+certain target-dependent hardening features.  This may be useful for audit
+purposes.
+</p>
+</dd>
+<dt><code class="code">all</code></dt>
+<dd><p>All previous options combined.
+</p>
+</dd>
+<dt><code class="code">statistics</code></dt>
+<dd><p>Display relocation statistics.
+</p>
+</dd>
+<dt><code class="code">unused</code></dt>
+<dd><p>Determined unused DSOs.
+</p>
+</dd>
+<dt><code class="code">help</code></dt>
+<dd><p>Display a help message with all available options and exit.
+</p></dd>
+</dl>
+
+</dd>
+<dt><a id="index-LD_005fDEBUG_005fOUTPUT-environment-variable"></a><span><code class="code">LD_DEBUG_OUTPUT</code><a class="copiable-link" href="#index-LD_005fDEBUG_005fOUTPUT-environment-variable"> &para;</a></span></dt>
+<dd><p>If <code class="env">LD_DEBUG</code> is set, the output is written to standard output by
+default.  If <code class="env">LD_DEBUG_OUTPUT</code> is set, the output is written to the
+file specified by its value, with the process ID appended. For example, if
+<code class="env">LD_DEBUG_OUTPUT</code> is set to <samp class="file">/tmp/glibc.debug</samp>, the output will be
+written to a file named <samp class="file">/tmp/glibc.debug.12345</samp>, where <code class="code">12345</code> is
+the process ID.
+</p></dd>
+</dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Dynamic-Linker-Introspection.html">Dynamic Linker Introspection</a>, Previous: <a href="Dynamic-Linker-Invocation.html">Dynamic Linker Invocation</a>, Up: <a href="Dynamic-Linker.html">Dynamic Linker</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

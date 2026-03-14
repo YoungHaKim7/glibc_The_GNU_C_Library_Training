@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Flags for Globbing (The GNU C Library)</title>
+
+<meta name="description" content="Flags for Globbing (The GNU C Library)">
+<meta name="keywords" content="Flags for Globbing (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Globbing.html" rel="up" title="Globbing">
+<link href="More-Flags-for-Globbing.html" rel="next" title="More Flags for Globbing">
+<link href="Calling-Glob.html" rel="prev" title="Calling Glob">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Flags-for-Globbing">
+<div class="nav-panel">
+<p>
+Next: <a href="More-Flags-for-Globbing.html" accesskey="n" rel="next">More Flags for Globbing</a>, Previous: <a href="Calling-Glob.html" accesskey="p" rel="prev">Calling <code class="code">glob</code></a>, Up: <a href="Globbing.html" accesskey="u" rel="up">Globbing</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Flags-for-Globbing-1"><span>10.2.2 Flags for Globbing<a class="copiable-link" href="#Flags-for-Globbing-1"> &para;</a></span></h4>
+
+<p>This section describes the standard flags that you can specify in the
+<var class="var">flags</var> argument to <code class="code">glob</code>.  Choose the flags you want,
+and combine them with the C bitwise OR operator <code class="code">|</code>.
+</p>
+<p>Note that there are <a class="ref" href="More-Flags-for-Globbing.html">More Flags for Globbing</a> available as GNU extensions.
+</p>
+<dl class="vtable">
+<dt><a id="index-GLOB_005fAPPEND"></a><span><code class="code">GLOB_APPEND</code><a class="copiable-link" href="#index-GLOB_005fAPPEND"> &para;</a></span></dt>
+<dd>
+<p>Append the words from this expansion to the vector of words produced by
+previous calls to <code class="code">glob</code>.  This way you can effectively expand
+several words as if they were concatenated with spaces between them.
+</p>
+<p>In order for appending to work, you must not modify the contents of the
+word vector structure between calls to <code class="code">glob</code>.  And, if you set
+<code class="code">GLOB_DOOFFS</code> in the first call to <code class="code">glob</code>, you must also
+set it when you append to the results.
+</p>
+<p>Note that the pointer stored in <code class="code">gl_pathv</code> may no longer be valid
+after you call <code class="code">glob</code> the second time, because <code class="code">glob</code> might
+have relocated the vector.  So always fetch <code class="code">gl_pathv</code> from the
+<code class="code">glob_t</code> structure after each <code class="code">glob</code> call; <strong class="strong">never</strong> save
+the pointer across calls.
+</p>
+</dd>
+<dt><a id="index-GLOB_005fDOOFFS"></a><span><code class="code">GLOB_DOOFFS</code><a class="copiable-link" href="#index-GLOB_005fDOOFFS"> &para;</a></span></dt>
+<dd>
+<p>Leave blank slots at the beginning of the vector of words.
+The <code class="code">gl_offs</code> field says how many slots to leave.
+The blank slots contain null pointers.
+</p>
+</dd>
+<dt><a id="index-GLOB_005fERR"></a><span><code class="code">GLOB_ERR</code><a class="copiable-link" href="#index-GLOB_005fERR"> &para;</a></span></dt>
+<dd>
+<p>Give up right away and report an error if there is any difficulty
+reading the directories that must be read in order to expand <var class="var">pattern</var>
+fully.  Such difficulties might include a directory in which you don&rsquo;t
+have the requisite access.  Normally, <code class="code">glob</code> tries its best to keep
+on going despite any errors, reading whatever directories it can.
+</p>
+<p>You can exercise even more control than this by specifying an
+error-handler function <var class="var">errfunc</var> when you call <code class="code">glob</code>.  If
+<var class="var">errfunc</var> is not a null pointer, then <code class="code">glob</code> doesn&rsquo;t give up
+right away when it can&rsquo;t read a directory; instead, it calls
+<var class="var">errfunc</var> with two arguments, like this:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">(*<var class="var">errfunc</var>) (<var class="var">filename</var>, <var class="var">error-code</var>)
+</pre></div>
+
+<p>The argument <var class="var">filename</var> is the name of the directory that
+<code class="code">glob</code> couldn&rsquo;t open or couldn&rsquo;t read, and <var class="var">error-code</var> is the
+<code class="code">errno</code> value that was reported to <code class="code">glob</code>.
+</p>
+<p>If the error handler function returns nonzero, then <code class="code">glob</code> gives up
+right away.  Otherwise, it continues.
+</p>
+</dd>
+<dt><a id="index-GLOB_005fMARK"></a><span><code class="code">GLOB_MARK</code><a class="copiable-link" href="#index-GLOB_005fMARK"> &para;</a></span></dt>
+<dd>
+<p>If the pattern matches the name of a directory, append &lsquo;<samp class="samp">/</samp>&rsquo; to the
+directory&rsquo;s name when returning it.
+</p>
+</dd>
+<dt><a id="index-GLOB_005fNOCHECK"></a><span><code class="code">GLOB_NOCHECK</code><a class="copiable-link" href="#index-GLOB_005fNOCHECK"> &para;</a></span></dt>
+<dd>
+<p>If the pattern doesn&rsquo;t match any file names, return the pattern itself
+as if it were a file name that had been matched.  (Normally, when the
+pattern doesn&rsquo;t match anything, <code class="code">glob</code> returns that there were no
+matches.)
+</p>
+</dd>
+<dt><a id="index-GLOB_005fNOESCAPE"></a><span><code class="code">GLOB_NOESCAPE</code><a class="copiable-link" href="#index-GLOB_005fNOESCAPE"> &para;</a></span></dt>
+<dd>
+<p>Don&rsquo;t treat the &lsquo;<samp class="samp">\</samp>&rsquo; character specially in patterns.  Normally,
+&lsquo;<samp class="samp">\</samp>&rsquo; quotes the following character, turning off its special meaning
+(if any) so that it matches only itself.  When quoting is enabled, the
+pattern &lsquo;<samp class="samp">\?</samp>&rsquo; matches only the string &lsquo;<samp class="samp">?</samp>&rsquo;, because the question
+mark in the pattern acts like an ordinary character.
+</p>
+<p>If you use <code class="code">GLOB_NOESCAPE</code>, then &lsquo;<samp class="samp">\</samp>&rsquo; is an ordinary character.
+</p>
+<p><code class="code">glob</code> does its work by calling the function <code class="code">fnmatch</code>
+repeatedly.  It handles the flag <code class="code">GLOB_NOESCAPE</code> by turning on the
+<code class="code">FNM_NOESCAPE</code> flag in calls to <code class="code">fnmatch</code>.
+</p>
+</dd>
+<dt><a id="index-GLOB_005fNOSORT"></a><span><code class="code">GLOB_NOSORT</code><a class="copiable-link" href="#index-GLOB_005fNOSORT"> &para;</a></span></dt>
+<dd>
+<p>Don&rsquo;t sort the file names; return them in no particular order.
+(In practice, the order will depend on the order of the entries in
+the directory.)  The only reason <em class="emph">not</em> to sort is to save time.
+</p></dd>
+</dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="More-Flags-for-Globbing.html">More Flags for Globbing</a>, Previous: <a href="Calling-Glob.html">Calling <code class="code">glob</code></a>, Up: <a href="Globbing.html">Globbing</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

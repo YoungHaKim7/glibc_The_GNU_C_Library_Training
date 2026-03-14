@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Directory Entries (The GNU C Library)</title>
+
+<meta name="description" content="Directory Entries (The GNU C Library)">
+<meta name="keywords" content="Directory Entries (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Accessing-Directories.html" rel="up" title="Accessing Directories">
+<link href="Opening-a-Directory.html" rel="next" title="Opening a Directory">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Directory-Entries">
+<div class="nav-panel">
+<p>
+Next: <a href="Opening-a-Directory.html" accesskey="n" rel="next">Opening a Directory Stream</a>, Up: <a href="Accessing-Directories.html" accesskey="u" rel="up">Accessing Directories</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Format-of-a-Directory-Entry"><span>14.3.1 Format of a Directory Entry<a class="copiable-link" href="#Format-of-a-Directory-Entry"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-dirent_002eh-1"></a>
+<p>This section describes what you find in a single directory entry, as you
+might obtain it from a directory stream.  All the symbols are declared
+in the header file <samp class="file">dirent.h</samp>.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-dirent"><span class="category-def">Data Type: </span><span><strong class="def-name">struct dirent</strong><a class="copiable-link" href="#index-struct-dirent"> &para;</a></span></dt>
+<dd>
+<p>This is a structure type used to return information about directory
+entries.  It contains the following fields:
+</p>
+<dl class="table">
+<dt><code class="code">char d_name[]</code></dt>
+<dd><p>This is the null-terminated file name component.  This is the only
+field you can count on in all POSIX systems.
+</p>
+<p>While this field is defined with a specified length, functions such as
+<code class="code">readdir</code> may return a pointer to a <code class="code">struct dirent</code> where the
+<code class="code">d_name</code> extends beyond the end of the struct.
+</p>
+</dd>
+<dt><code class="code">ino_t d_fileno</code></dt>
+<dd><p>This is the file serial number.  For BSD compatibility, you can also
+refer to this member as <code class="code">d_ino</code>.  On GNU/Linux and GNU/Hurd systems and most POSIX
+systems, for most files this the same as the <code class="code">st_ino</code> member that
+<code class="code">stat</code> will return for the file.  See <a class="xref" href="File-Attributes.html">File Attributes</a>.
+</p>
+</dd>
+<dt><code class="code">off_t d_off</code></dt>
+<dd><p>This value contains the offset of the next directory entry (after this
+entry) in the directory stream.  The value may not be compatible with
+<code class="code">lseek</code> or <code class="code">seekdir</code>, especially if the width of <code class="code">d_off</code>
+is less than 64 bits.  Directory entries are not ordered by offset, and
+the <code class="code">d_off</code> and <code class="code">d_reclen</code> values are unrelated.  Seeking on
+directory streams is not recommended.  The symbol
+<code class="code">_DIRENT_HAVE_D_OFF</code> is defined if the <code class="code">d_ino</code> member is
+available.
+</p>
+</dd>
+<dt><code class="code">unsigned char d_namlen</code></dt>
+<dd><p>This is the length of the file name, not including the terminating
+null character.  Its type is <code class="code">unsigned char</code> because that is the
+integer type of the appropriate size.  This member is a BSD extension.
+The symbol <code class="code">_DIRENT_HAVE_D_NAMLEN</code> is defined if this member is
+available.  (It is not available on Linux.)
+</p>
+</dd>
+<dt><code class="code">unsigned short int d_reclen</code></dt>
+<dd><p>This is the length of the entire directory record.  When iterating
+through a buffer filled by <code class="code">getdents64</code> (see <a class="pxref" href="Low_002dlevel-Directory-Access.html">Low-level Directory Access</a>), this value needs to be added to the offset of the current
+directory entry to obtain the offset of the next entry.  When using
+<code class="code">readdir</code> and related functions, the value of <code class="code">d_reclen</code> is
+undefined and should not be accessed.  The symbol
+<code class="code">_DIRENT_HAVE_D_RECLEN</code> is defined if this member is available.
+</p>
+</dd>
+<dt><code class="code">unsigned char d_type</code></dt>
+<dd><p>This is the type of the file, possibly unknown.  The following constants
+are defined for its value:
+</p>
+<dl class="vtable">
+<dt><a id="index-DT_005fUNKNOWN"></a><span><code class="code">DT_UNKNOWN</code><a class="copiable-link" href="#index-DT_005fUNKNOWN"> &para;</a></span></dt>
+<dd><p>The type is unknown.  Only some filesystems have full support to
+return the type of the file, others might always return this value.
+</p>
+</dd>
+<dt><a id="index-DT_005fREG"></a><span><code class="code">DT_REG</code><a class="copiable-link" href="#index-DT_005fREG"> &para;</a></span></dt>
+<dd><p>A regular file.
+</p>
+</dd>
+<dt><a id="index-DT_005fDIR"></a><span><code class="code">DT_DIR</code><a class="copiable-link" href="#index-DT_005fDIR"> &para;</a></span></dt>
+<dd><p>A directory.
+</p>
+</dd>
+<dt><a id="index-DT_005fFIFO"></a><span><code class="code">DT_FIFO</code><a class="copiable-link" href="#index-DT_005fFIFO"> &para;</a></span></dt>
+<dd><p>A named pipe, or FIFO.  See <a class="xref" href="FIFO-Special-Files.html">FIFO Special Files</a>.
+</p>
+</dd>
+<dt><a id="index-DT_005fSOCK"></a><span><code class="code">DT_SOCK</code><a class="copiable-link" href="#index-DT_005fSOCK"> &para;</a></span></dt>
+<dd><p>A local-domain socket.  </p>
+</dd>
+<dt><a id="index-DT_005fCHR"></a><span><code class="code">DT_CHR</code><a class="copiable-link" href="#index-DT_005fCHR"> &para;</a></span></dt>
+<dd><p>A character device.
+</p>
+</dd>
+<dt><a id="index-DT_005fBLK"></a><span><code class="code">DT_BLK</code><a class="copiable-link" href="#index-DT_005fBLK"> &para;</a></span></dt>
+<dd><p>A block device.
+</p>
+</dd>
+<dt><a id="index-DT_005fLNK"></a><span><code class="code">DT_LNK</code><a class="copiable-link" href="#index-DT_005fLNK"> &para;</a></span></dt>
+<dd><p>A symbolic link.
+</p></dd>
+</dl>
+
+<p>This member is a BSD extension.  The symbol <code class="code">_DIRENT_HAVE_D_TYPE</code>
+is defined if this member is available.  On systems where it is used, it
+corresponds to the file type bits in the <code class="code">st_mode</code> member of
+<code class="code">struct stat</code>.  If the value cannot be determined the member
+value is <code class="code">DT_UNKNOWN</code>.  These two macros convert between <code class="code">d_type</code>
+values and <code class="code">st_mode</code> values:
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-IFTODT"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">IFTODT</strong> <code class="def-code-arguments">(mode_t <var class="var">mode</var>)</code><a class="copiable-link" href="#index-IFTODT"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This returns the <code class="code">d_type</code> value corresponding to <var class="var">mode</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-DTTOIF"><span class="category-def">Function: </span><span><code class="def-type">mode_t</code> <strong class="def-name">DTTOIF</strong> <code class="def-code-arguments">(int <var class="var">dtype</var>)</code><a class="copiable-link" href="#index-DTTOIF"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This returns the <code class="code">st_mode</code> value corresponding to <var class="var">dtype</var>.
+</p></dd></dl>
+</dd>
+</dl>
+
+<p>This structure may contain additional members in the future.  Their
+availability is always announced in the compilation environment by a
+macro named <code class="code">_DIRENT_HAVE_D_<var class="var">xxx</var></code> where <var class="var">xxx</var> is replaced
+by the name of the new member.  For instance, the member <code class="code">d_reclen</code>
+available on some systems is announced through the macro
+<code class="code">_DIRENT_HAVE_D_RECLEN</code>.
+</p>
+<p>When a file has multiple names, each name has its own directory entry.
+The only way you can tell that the directory entries belong to a
+single file is that they have the same value for the <code class="code">d_fileno</code>
+field.
+</p>
+<p>File attributes such as size, modification times etc., are part of the
+file itself, not of any particular directory entry.  See <a class="xref" href="File-Attributes.html">File Attributes</a>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Opening-a-Directory.html">Opening a Directory Stream</a>, Up: <a href="Accessing-Directories.html">Accessing Directories</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

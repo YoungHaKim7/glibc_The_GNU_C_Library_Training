@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Setting Permissions (The GNU C Library)</title>
+
+<meta name="description" content="Setting Permissions (The GNU C Library)">
+<meta name="keywords" content="Setting Permissions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="File-Attributes.html" rel="up" title="File Attributes">
+<link href="Testing-File-Access.html" rel="next" title="Testing File Access">
+<link href="Access-Permission.html" rel="prev" title="Access Permission">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Setting-Permissions">
+<div class="nav-panel">
+<p>
+Next: <a href="Testing-File-Access.html" accesskey="n" rel="next">Testing Permission to Access a File</a>, Previous: <a href="Access-Permission.html" accesskey="p" rel="prev">How Your Access to a File is Decided</a>, Up: <a href="File-Attributes.html" accesskey="u" rel="up">File Attributes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Assigning-File-Permissions"><span>14.10.7 Assigning File Permissions<a class="copiable-link" href="#Assigning-File-Permissions"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-file-creation-mask"></a>
+<a class="index-entry-id" id="index-umask"></a>
+<p>The primitive functions for creating files (for example, <code class="code">open</code> or
+<code class="code">mkdir</code>) take a <var class="var">mode</var> argument, which specifies the file
+permissions to give the newly created file.  This mode is modified by
+the process&rsquo;s <em class="dfn">file creation mask</em>, or <em class="dfn">umask</em>, before it is
+used.
+</p>
+<p>The bits that are set in the file creation mask identify permissions
+that are always to be disabled for newly created files.  For example, if
+you set all the &ldquo;other&rdquo; access bits in the mask, then newly created
+files are not accessible at all to processes in the &ldquo;other&rdquo; category,
+even if the <var class="var">mode</var> argument passed to the create function would
+permit such access.  In other words, the file creation mask is the
+complement of the ordinary access permissions you want to grant.
+</p>
+<p>Programs that create files typically specify a <var class="var">mode</var> argument that
+includes all the permissions that make sense for the particular file.
+For an ordinary file, this is typically read and write permission for
+all classes of users.  These permissions are then restricted as
+specified by the individual user&rsquo;s own file creation mask.
+</p>
+<a class="index-entry-id" id="index-chmod"></a>
+<p>To change the permission of an existing file given its name, call
+<code class="code">chmod</code>.  This function uses the specified permission bits and
+ignores the file creation mask.
+</p>
+<a class="index-entry-id" id="index-umask-2"></a>
+<p>In normal use, the file creation mask is initialized by the user&rsquo;s login
+shell (using the <code class="code">umask</code> shell command), and inherited by all
+subprocesses.  Application programs normally don&rsquo;t need to worry about
+the file creation mask.  It will automatically do what it is supposed to
+do.
+</p>
+<p>When your program needs to create a file and bypass the umask for its
+access permissions, the easiest way to do this is to use <code class="code">fchmod</code>
+after opening the file, rather than changing the umask.  In fact,
+changing the umask is usually done only by shells.  They use the
+<code class="code">umask</code> function.
+</p>
+<p>The functions in this section are declared in <samp class="file">sys/stat.h</samp>.
+<a class="index-entry-id" id="index-sys_002fstat_002eh-5"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-umask-1"><span class="category-def">Function: </span><span><code class="def-type">mode_t</code> <strong class="def-name">umask</strong> <code class="def-code-arguments">(mode_t <var class="var">mask</var>)</code><a class="copiable-link" href="#index-umask-1"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">umask</code> function sets the file creation mask of the current
+process to <var class="var">mask</var>, and returns the previous value of the file
+creation mask.
+</p>
+<p>Here is an example showing how to read the mask with <code class="code">umask</code>
+without changing it permanently:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">mode_t
+read_umask (void)
+{
+  mode_t mask = umask (0);
+  umask (mask);
+  return mask;
+}
+</pre></div>
+
+<p>However, on GNU/Hurd systems it is better to use <code class="code">getumask</code> if
+you just want to read the mask value, because it is reentrant.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getumask"><span class="category-def">Function: </span><span><code class="def-type">mode_t</code> <strong class="def-name">getumask</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-getumask"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Return the current value of the file creation mask for the current
+process.  This function is a GNU extension and is only available on
+GNU/Hurd systems.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-chmod-1"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">chmod</strong> <code class="def-code-arguments">(const char *<var class="var">filename</var>, mode_t <var class="var">mode</var>)</code><a class="copiable-link" href="#index-chmod-1"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">chmod</code> function sets the access permission bits for the file
+named by <var class="var">filename</var> to <var class="var">mode</var>.
+</p>
+<p>If <var class="var">filename</var> is a symbolic link, <code class="code">chmod</code> changes the
+permissions of the file pointed to by the link, not those of the link
+itself.
+</p>
+<p>This function returns <code class="code">0</code> if successful and <code class="code">-1</code> if not.  In
+addition to the usual file name errors (see <a class="pxref" href="File-Name-Errors.html">File Name Errors</a>), the following <code class="code">errno</code> error conditions are defined for
+this function:
+</p>
+<dl class="table">
+<dt><code class="code">ENOENT</code></dt>
+<dd><p>The named file doesn&rsquo;t exist.
+</p>
+</dd>
+<dt><code class="code">EPERM</code></dt>
+<dd><p>This process does not have permission to change the access permissions
+of this file.  Only the file&rsquo;s owner (as judged by the effective user ID
+of the process) or a privileged user can change them.
+</p>
+</dd>
+<dt><code class="code">EROFS</code></dt>
+<dd><p>The file resides on a read-only file system.
+</p>
+</dd>
+<dt><code class="code">EFTYPE</code></dt>
+<dd><p><var class="var">mode</var> has the <code class="code">S_ISVTX</code> bit (the &ldquo;sticky bit&rdquo;) set,
+and the named file is not a directory.  Some systems do not allow setting the
+sticky bit on non-directory files, and some do (and only some of those
+assign a useful meaning to the bit for non-directory files).
+</p>
+<p>You only get <code class="code">EFTYPE</code> on systems where the sticky bit has no useful
+meaning for non-directory files, so it is always safe to just clear the
+bit in <var class="var">mode</var> and call <code class="code">chmod</code> again.  See <a class="xref" href="Permission-Bits.html">The Mode Bits for Access Permission</a>,
+for full details on the sticky bit.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fchmod"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fchmod</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, mode_t <var class="var">mode</var>)</code><a class="copiable-link" href="#index-fchmod"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is like <code class="code">chmod</code>, except that it changes the permissions of the
+currently open file given by <var class="var">filedes</var>.
+</p>
+<p>The return value from <code class="code">fchmod</code> is <code class="code">0</code> on success and <code class="code">-1</code>
+on failure.  The following <code class="code">errno</code> error codes are defined for this
+function:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">filedes</var> argument is not a valid file descriptor.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">filedes</var> argument corresponds to a pipe or socket, or something
+else that doesn&rsquo;t really have access permissions.
+</p>
+</dd>
+<dt><code class="code">EPERM</code></dt>
+<dd><p>This process does not have permission to change the access permissions
+of this file.  Only the file&rsquo;s owner (as judged by the effective user ID
+of the process) or a privileged user can change them.
+</p>
+</dd>
+<dt><code class="code">EROFS</code></dt>
+<dd><p>The file resides on a read-only file system.
+</p></dd>
+</dl>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Testing-File-Access.html">Testing Permission to Access a File</a>, Previous: <a href="Access-Permission.html">How Your Access to a File is Decided</a>, Up: <a href="File-Attributes.html">File Attributes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Concatenating Strings (The GNU C Library)</title>
+
+<meta name="description" content="Concatenating Strings (The GNU C Library)">
+<meta name="keywords" content="Concatenating Strings (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="String-and-Array-Utilities.html" rel="up" title="String and Array Utilities">
+<link href="Truncating-Strings.html" rel="next" title="Truncating Strings">
+<link href="Copying-Strings-and-Arrays.html" rel="prev" title="Copying Strings and Arrays">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Concatenating-Strings">
+<div class="nav-panel">
+<p>
+Next: <a href="Truncating-Strings.html" accesskey="n" rel="next">Truncating Strings while Copying</a>, Previous: <a href="Copying-Strings-and-Arrays.html" accesskey="p" rel="prev">Copying Strings and Arrays</a>, Up: <a href="String-and-Array-Utilities.html" accesskey="u" rel="up">String and Array Utilities</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Concatenating-Strings-1"><span>5.5 Concatenating Strings<a class="copiable-link" href="#Concatenating-Strings-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-string_002eh-4"></a>
+<a class="index-entry-id" id="index-wchar_002eh-1"></a>
+<a class="index-entry-id" id="index-concatenating-strings-1"></a>
+<a class="index-entry-id" id="index-string-concatenation-functions-1"></a>
+
+<p>The functions described in this section concatenate the contents of a
+string or wide string to another.  They follow the string-copying
+functions in their conventions.  See <a class="xref" href="Copying-Strings-and-Arrays.html">Copying Strings and Arrays</a>.
+&lsquo;<samp class="samp">strcat</samp>&rsquo; is declared in the header file <samp class="file">string.h</samp> while
+&lsquo;<samp class="samp">wcscat</samp>&rsquo; is declared in <samp class="file">wchar.h</samp>.
+</p>
+<p>As noted below, these functions are problematic as their callers may
+have performance issues.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strcat"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">strcat</strong> <code class="def-code-arguments">(char *restrict <var class="var">to</var>, const char *restrict <var class="var">from</var>)</code><a class="copiable-link" href="#index-strcat"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">strcat</code> function is similar to <code class="code">strcpy</code>, except that the
+bytes from <var class="var">from</var> are concatenated or appended to the end of
+<var class="var">to</var>, instead of overwriting it.  That is, the first byte from
+<var class="var">from</var> overwrites the null byte marking the end of <var class="var">to</var>.
+</p>
+<p>An equivalent definition for <code class="code">strcat</code> would be:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">char *
+strcat (char *restrict to, const char *restrict from)
+{
+  strcpy (to + strlen (to), from);
+  return to;
+}
+</pre></div>
+
+<p>This function has undefined results if the strings overlap.
+</p>
+<p>As noted below, this function has significant performance issues.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcscat"><span class="category-def">Function: </span><span><code class="def-type">wchar_t *</code> <strong class="def-name">wcscat</strong> <code class="def-code-arguments">(wchar_t *restrict <var class="var">wto</var>, const wchar_t *restrict <var class="var">wfrom</var>)</code><a class="copiable-link" href="#index-wcscat"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wcscat</code> function is similar to <code class="code">wcscpy</code>, except that the
+wide characters from <var class="var">wfrom</var> are concatenated or appended to the end of
+<var class="var">wto</var>, instead of overwriting it.  That is, the first wide character from
+<var class="var">wfrom</var> overwrites the null wide character marking the end of <var class="var">wto</var>.
+</p>
+<p>An equivalent definition for <code class="code">wcscat</code> would be:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">wchar_t *
+wcscat (wchar_t *wto, const wchar_t *wfrom)
+{
+  wcscpy (wto + wcslen (wto), wfrom);
+  return wto;
+}
+</pre></div>
+
+<p>This function has undefined results if the strings overlap.
+</p>
+<p>As noted below, this function has significant performance issues.
+</p></dd></dl>
+
+<p>Programmers using the <code class="code">strcat</code> or <code class="code">wcscat</code> functions (or the
+<code class="code">strlcat</code>, <code class="code">strncat</code> and <code class="code">wcsncat</code> functions defined in
+a later section, for that matter)
+can easily be recognized as lazy and reckless.  In almost all situations
+the lengths of the participating strings are known (it better should be
+since how can one otherwise ensure the allocated size of the buffer is
+sufficient?)  Or at least, one could know them if one keeps track of the
+results of the various function calls.  But then it is very inefficient
+to use <code class="code">strcat</code>/<code class="code">wcscat</code>.  A lot of time is wasted finding the
+end of the destination string so that the actual copying can start.
+This is a common example:
+</p>
+<a class="index-entry-id" id="index-va_005fcopy"></a>
+<div class="example smallexample">
+<pre class="example-preformatted">/* <span class="r">This function concatenates arbitrarily many strings.  The last</span>
+   <span class="r">parameter must be <code class="code">NULL</code>.</span>  */
+char *
+concat (const char *str, ...)
+{
+  va_list ap, ap2;
+  size_t total = 1;
+
+  va_start (ap, str);
+  va_copy (ap2, ap);
+
+  /* <span class="r">Determine how much space we need.</span>  */
+  for (const char *s = str; s != NULL; s = va_arg (ap, const char *))
+    total += strlen (s);
+
+  va_end (ap);
+
+  char *result = malloc (total);
+  if (result != NULL)
+    {
+      result[0] = '\0';
+
+      /* <span class="r">Copy the strings.</span>  */
+      for (s = str; s != NULL; s = va_arg (ap2, const char *))
+        strcat (result, s);
+    }
+
+  va_end (ap2);
+
+  return result;
+}
+</pre></div>
+
+<p>This looks quite simple, especially the second loop where the strings
+are actually copied.  But these innocent lines hide a major performance
+penalty.  Just imagine that ten strings of 100 bytes each have to be
+concatenated.  For the second string we search the already stored 100
+bytes for the end of the string so that we can append the next string.
+For all strings in total the comparisons necessary to find the end of
+the intermediate results sums up to 5500!  If we combine the copying
+with the search for the allocation we can write this function more
+efficiently:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">char *
+concat (const char *str, ...)
+{
+  size_t allocated = 100;
+  char *result = malloc (allocated);
+
+  if (result != NULL)
+    {
+      va_list ap;
+      size_t resultlen = 0;
+      char *newp;
+
+      va_start (ap, str);
+
+      for (const char *s = str; s != NULL; s = va_arg (ap, const char *))
+        {
+          size_t len = strlen (s);
+
+          /* <span class="r">Resize the allocated memory if necessary.</span>  */
+          if (resultlen + len + 1 &gt; allocated)
+            {
+              allocated += len;
+              newp = reallocarray (result, allocated, 2);
+              allocated *= 2;
+              if (newp == NULL)
+                {
+                  free (result);
+                  return NULL;
+                }
+              result = newp;
+            }
+
+          memcpy (result + resultlen, s, len);
+          resultlen += len;
+        }
+
+      /* <span class="r">Terminate the result string.</span>  */
+      result[resultlen++] = '\0';
+
+      /* <span class="r">Resize memory to the optimal size.</span>  */
+      newp = realloc (result, resultlen);
+      if (newp != NULL)
+        result = newp;
+
+      va_end (ap);
+    }
+
+  return result;
+}
+</pre></div>
+
+<p>With a bit more knowledge about the input strings one could fine-tune
+the memory allocation.  The difference we are pointing to here is that
+we don&rsquo;t use <code class="code">strcat</code> anymore.  We always keep track of the length
+of the current intermediate result so we can save ourselves the search for the
+end of the string and use <code class="code">mempcpy</code>.  Please note that we also
+don&rsquo;t use <code class="code">stpcpy</code> which might seem more natural since we are handling
+strings.  But this is not necessary since we already know the
+length of the string and therefore can use the faster memory copying
+function.  The example would work for wide characters the same way.
+</p>
+<p>Whenever a programmer feels the need to use <code class="code">strcat</code> she or he
+should think twice and look through the program to see whether the code cannot
+be rewritten to take advantage of already calculated results.
+The related functions <code class="code">strlcat</code>, <code class="code">strncat</code>,
+<code class="code">wcscat</code> and <code class="code">wcsncat</code>
+are almost always unnecessary, too.
+Again: it is almost always unnecessary to use functions like <code class="code">strcat</code>.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Truncating-Strings.html">Truncating Strings while Copying</a>, Previous: <a href="Copying-Strings-and-Arrays.html">Copying Strings and Arrays</a>, Up: <a href="String-and-Array-Utilities.html">String and Array Utilities</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

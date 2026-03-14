@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Interface Naming (The GNU C Library)</title>
+
+<meta name="description" content="Interface Naming (The GNU C Library)">
+<meta name="keywords" content="Interface Naming (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Sockets.html" rel="up" title="Sockets">
+<link href="Local-Namespace.html" rel="next" title="Local Namespace">
+<link href="Socket-Addresses.html" rel="prev" title="Socket Addresses">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Interface-Naming">
+<div class="nav-panel">
+<p>
+Next: <a href="Local-Namespace.html" accesskey="n" rel="next">The Local Namespace</a>, Previous: <a href="Socket-Addresses.html" accesskey="p" rel="prev">Socket Addresses</a>, Up: <a href="Sockets.html" accesskey="u" rel="up">Sockets</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Interface-Naming-1"><span>16.4 Interface Naming<a class="copiable-link" href="#Interface-Naming-1"> &para;</a></span></h3>
+
+<p>Each network interface has a name.  This usually consists of a few
+letters that relate to the type of interface, which may be followed by a
+number if there is more than one interface of that type.  Examples
+might be <code class="code">lo</code> (the loopback interface) and <code class="code">eth0</code> (the first
+Ethernet interface).
+</p>
+<p>Although such names are convenient for humans, it would be clumsy to
+have to use them whenever a program needs to refer to an interface.  In
+such situations an interface is referred to by its <em class="dfn">index</em>, which is
+an arbitrarily-assigned small positive integer.
+</p>
+<p>The following functions, constants and data types are declared in the
+header file <samp class="file">net/if.h</samp>.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-IFNAMSIZ"><span class="category-def">Constant: </span><span><code class="def-type">size_t</code> <strong class="def-name">IFNAMSIZ</strong><a class="copiable-link" href="#index-IFNAMSIZ"> &para;</a></span></dt>
+<dd>
+<p>This constant defines the maximum buffer size needed to hold an
+interface name, including its terminating zero byte.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-if_005fnametoindex"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">if_nametoindex</strong> <code class="def-code-arguments">(const char *<var class="var">ifname</var>)</code><a class="copiable-link" href="#index-if_005fnametoindex"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function yields the interface index corresponding to a particular
+name specified with <var class="var">ifname</var>.
+</p>
+<p>The return value is the interface index on success.  On failure, the
+function&rsquo;s return value is zero and <code class="code">errno</code> is set accordingly.
+The following <code class="code">errno</code> values are specific to this function:
+</p>
+<dl class="table">
+<dt><code class="code">ENODEV</code></dt>
+<dd><p>There is no interface by the name requested.
+</p></dd>
+</dl>
+
+<p>Additionally, since <code class="code">if_nametoindex</code> invokes <code class="code">socket</code>
+internally, <code class="code">errno</code> may also be set to a value listed for the
+<code class="code">socket</code> function (see <a class="pxref" href="Creating-a-Socket.html">Creating a Socket</a>).
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-if_005findextoname"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">if_indextoname</strong> <code class="def-code-arguments">(unsigned int <var class="var">ifindex</var>, char *<var class="var">ifname</var>)</code><a class="copiable-link" href="#index-if_005findextoname"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function maps an interface index <var class="var">ifindex</var> to its corresponding
+name.  The returned name is placed in the buffer pointed to by <var class="var">ifname</var>,
+which must be at least <code class="code">IFNAMSIZ</code> bytes in length.
+</p>
+<p>The return value is <var class="var">ifname</var> on success.  On failure, the function&rsquo;s
+return value is a null pointer and <code class="code">errno</code> is set accordingly.  The
+following <code class="code">errno</code> values are specific to this function:
+</p>
+<dl class="table">
+<dt><code class="code">ENXIO</code></dt>
+<dd><p>There is no interface at the index requested.
+</p></dd>
+</dl>
+
+<p>Additionally, since <code class="code">if_indextoname</code> invokes <code class="code">socket</code>
+internally, <code class="code">errno</code> may also be set to a value listed for the
+<code class="code">socket</code> function (see <a class="pxref" href="Creating-a-Socket.html">Creating a Socket</a>).
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-if_005fnameindex"><span class="category-def">Data Type: </span><span><strong class="def-name">struct if_nameindex</strong><a class="copiable-link" href="#index-struct-if_005fnameindex"> &para;</a></span></dt>
+<dd>
+<p>This data type is used to hold the information about a single
+interface.  It has the following members:
+</p>
+<dl class="table">
+<dt><code class="code">unsigned int if_index;</code></dt>
+<dd><p>This is the interface index.
+</p>
+</dd>
+<dt><code class="code">char *if_name</code></dt>
+<dd><p>This is the null-terminated index name.
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-if_005fnameindex"><span class="category-def">Function: </span><span><code class="def-type">struct if_nameindex *</code> <strong class="def-name">if_nameindex</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-if_005fnameindex"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap lock/hurd
+| AC-Unsafe lock/hurd fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns an array of <code class="code">if_nameindex</code> structures, one
+for every interface that is present.  The end of the list is indicated
+by a structure with an interface of 0 and a null name pointer.  If an
+error occurs, this function returns a null pointer.
+</p>
+<p>The returned structure must be freed with <code class="code">if_freenameindex</code> after
+use.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-if_005ffreenameindex"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">if_freenameindex</strong> <code class="def-code-arguments">(struct if_nameindex *<var class="var">ptr</var>)</code><a class="copiable-link" href="#index-if_005ffreenameindex"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function frees the structure returned by an earlier call to
+<code class="code">if_nameindex</code>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Local-Namespace.html">The Local Namespace</a>, Previous: <a href="Socket-Addresses.html">Socket Addresses</a>, Up: <a href="Sockets.html">Sockets</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Waiting with Explicit Clocks (The GNU C Library)</title>
+
+<meta name="description" content="Waiting with Explicit Clocks (The GNU C Library)">
+<meta name="keywords" content="Waiting with Explicit Clocks (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="POSIX-Threads.html" rel="up" title="POSIX Threads">
+<link href="POSIX-Semaphores.html" rel="next" title="POSIX Semaphores">
+<link href="Thread_002dspecific-Data.html" rel="prev" title="Thread-specific Data">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Waiting-with-Explicit-Clocks">
+<div class="nav-panel">
+<p>
+Next: <a href="POSIX-Semaphores.html" accesskey="n" rel="next">POSIX Semaphores</a>, Previous: <a href="Thread_002dspecific-Data.html" accesskey="p" rel="prev">Thread-specific Data</a>, Up: <a href="POSIX-Threads.html" accesskey="u" rel="up">POSIX Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Functions-for-Waiting-According-to-a-Specific-Clock"><span>36.2.3 Functions for Waiting According to a Specific Clock<a class="copiable-link" href="#Functions-for-Waiting-According-to-a-Specific-Clock"> &para;</a></span></h4>
+
+<p>The GNU C Library provides several waiting functions that expect an explicit
+<code class="code">clockid_t</code> argument.  These functions were all adopted by
+POSIX.1-2024.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fcond_005fclockwait"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_cond_clockwait</strong> <code class="def-code-arguments">(pthread_cond_t *<var class="var">cond</var>, pthread_mutex_t *<var class="var">mutex</var>, clockid_t <var class="var">clockid</var>, const struct timespec *<var class="var">abstime</var>)</code><a class="copiable-link" href="#index-pthread_005fcond_005fclockwait"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Behaves like <code class="code">pthread_cond_timedwait</code> except the time <var class="var">abstime</var> is
+measured against the clock specified by <var class="var">clockid</var> rather than the clock
+specified or defaulted when <code class="code">pthread_cond_init</code> was called.  Currently,
+<var class="var">clockid</var> must be either <code class="code">CLOCK_MONOTONIC</code> or
+<code class="code">CLOCK_REALTIME</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005frwlock_005fclockrdlock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_rwlock_clockrdlock</strong> <code class="def-code-arguments">(pthread_rwlock_t *<var class="var">rwlock</var>, clockid_t <var class="var">clockid</var>, const struct timespec *<var class="var">abstime</var>)</code><a class="copiable-link" href="#index-pthread_005frwlock_005fclockrdlock"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Behaves like <code class="code">pthread_rwlock_timedrdlock</code> except the time
+<var class="var">abstime</var> is measured against the clock specified by <var class="var">clockid</var>
+rather than <code class="code">CLOCK_REALTIME</code>.  Currently, <var class="var">clockid</var> must be either
+<code class="code">CLOCK_MONOTONIC</code> or <code class="code">CLOCK_REALTIME</code>, otherwise <code class="code">EINVAL</code> is
+returned.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005frwlock_005fclockwrlock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_rwlock_clockwrlock</strong> <code class="def-code-arguments">(pthread_rwlock_t *<var class="var">rwlock</var>, clockid_t <var class="var">clockid</var>, const struct timespec *<var class="var">abstime</var>)</code><a class="copiable-link" href="#index-pthread_005frwlock_005fclockwrlock"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Behaves like <code class="code">pthread_rwlock_timedwrlock</code> except the time
+<var class="var">abstime</var> is measured against the clock specified by <var class="var">clockid</var>
+rather than <code class="code">CLOCK_REALTIME</code>.  Currently, <var class="var">clockid</var> must be either
+<code class="code">CLOCK_MONOTONIC</code> or <code class="code">CLOCK_REALTIME</code>, otherwise <code class="code">EINVAL</code> is
+returned.
+</p></dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="POSIX-Semaphores.html">POSIX Semaphores</a>, Previous: <a href="Thread_002dspecific-Data.html">Thread-specific Data</a>, Up: <a href="POSIX-Threads.html">POSIX Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

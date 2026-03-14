@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Example of Parsing (The GNU C Library)</title>
+
+<meta name="description" content="Example of Parsing (The GNU C Library)">
+<meta name="keywords" content="Example of Parsing (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Formatted-Output.html" rel="up" title="Formatted Output">
+<link href="Parsing-a-Template-String.html" rel="prev" title="Parsing a Template String">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Example-of-Parsing">
+<div class="nav-panel">
+<p>
+Previous: <a href="Parsing-a-Template-String.html" accesskey="p" rel="prev">Parsing a Template String</a>, Up: <a href="Formatted-Output.html" accesskey="u" rel="up">Formatted Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Example-of-Parsing-a-Template-String"><span>12.12.11 Example of Parsing a Template String<a class="copiable-link" href="#Example-of-Parsing-a-Template-String"> &para;</a></span></h4>
+
+<p>Here is an example of decoding argument types for a format string.  We
+assume this is part of an interpreter which contains arguments of type
+<code class="code">NUMBER</code>, <code class="code">CHAR</code>, <code class="code">STRING</code> and <code class="code">STRUCTURE</code> (and
+perhaps others which are not valid here).
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">/* <span class="r">Test whether the <var class="var">nargs</var> specified objects</span>
+   <span class="r">in the vector <var class="var">args</var> are valid</span>
+   <span class="r">for the format string <var class="var">format</var>:</span>
+   <span class="r">if so, return 1.</span>
+   <span class="r">If not, return 0 after printing an error message.</span>  */
+
+int
+validate_args (char *format, int nargs, OBJECT *args)
+{
+  int *argtypes;
+  int nwanted;
+
+  /* <span class="r">Get the information about the arguments.</span>
+     <span class="r">Each conversion specification must be at least two characters</span>
+     <span class="r">long, so there cannot be more specifications than half the</span>
+     <span class="r">length of the string.</span>  */
+
+  argtypes = (int *) alloca (strlen (format) / 2 * sizeof (int));
+  nwanted = parse_printf_format (format, nargs, argtypes);
+
+  /* <span class="r">Check the number of arguments.</span>  */
+  if (nwanted &gt; nargs)
+    {
+      error (&quot;too few arguments (at least %d required)&quot;, nwanted);
+      return 0;
+    }
+
+  /* <span class="r">Check the C type wanted for each argument</span>
+     <span class="r">and see if the object given is suitable.</span>  */
+  for (i = 0; i &lt; nwanted; i++)
+    {
+      int wanted;
+
+      if (argtypes[i] &amp; PA_FLAG_PTR)
+	wanted = STRUCTURE;
+      else
+	switch (argtypes[i] &amp; ~PA_FLAG_MASK)
+	  {
+	  case PA_INT:
+	  case PA_FLOAT:
+	  case PA_DOUBLE:
+	    wanted = NUMBER;
+	    break;
+	  case PA_CHAR:
+	    wanted = CHAR;
+	    break;
+	  case PA_STRING:
+	    wanted = STRING;
+	    break;
+	  case PA_POINTER:
+	    wanted = STRUCTURE;
+	    break;
+	  }
+      if (TYPE (args[i]) != wanted)
+	{
+	  error (&quot;type mismatch for arg number %d&quot;, i);
+	  return 0;
+	}
+    }
+  return 1;
+}
+</pre></div>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Parsing-a-Template-String.html">Parsing a Template String</a>, Up: <a href="Formatted-Output.html">Formatted Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

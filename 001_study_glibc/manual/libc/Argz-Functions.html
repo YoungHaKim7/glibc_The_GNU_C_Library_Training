@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Argz Functions (The GNU C Library)</title>
+
+<meta name="description" content="Argz Functions (The GNU C Library)">
+<meta name="keywords" content="Argz Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Argz-and-Envz-Vectors.html" rel="up" title="Argz and Envz Vectors">
+<link href="Envz-Functions.html" rel="next" title="Envz Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Argz-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Envz-Functions.html" accesskey="n" rel="next">Envz Functions</a>, Up: <a href="Argz-and-Envz-Vectors.html" accesskey="u" rel="up">Argz and Envz Vectors</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Argz-Functions-1"><span>5.15.1 Argz Functions<a class="copiable-link" href="#Argz-Functions-1"> &para;</a></span></h4>
+
+<p>Each argz vector is represented by a pointer to the first element, of
+type <code class="code">char *</code>, and a size, of type <code class="code">size_t</code>, both of which can
+be initialized to <code class="code">0</code> to represent an empty argz vector.  All argz
+functions accept either a pointer and a size argument, or pointers to
+them, if they will be modified.
+</p>
+<p>The argz functions use <code class="code">malloc</code>/<code class="code">realloc</code> to allocate/grow
+argz vectors, and so any argz vector created using these functions may
+be freed by using <code class="code">free</code>; conversely, any argz function that may
+grow a string expects that string to have been allocated using
+<code class="code">malloc</code> (those argz functions that only examine their arguments or
+modify them in place will work on any sort of memory).
+See <a class="xref" href="Unconstrained-Allocation.html">Unconstrained Allocation</a>.
+</p>
+<p>All argz functions that do memory allocation have a return type of
+<code class="code">error_t</code>, and return <code class="code">0</code> for success, and <code class="code">ENOMEM</code> if an
+allocation error occurs.
+</p>
+<a class="index-entry-id" id="index-argz_002eh"></a>
+<p>These functions are declared in the standard include file <samp class="file">argz.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argz_005fcreate"><span class="category-def">Function: </span><span><code class="def-type">error_t</code> <strong class="def-name">argz_create</strong> <code class="def-code-arguments">(char *const <var class="var">argv</var>[], char **<var class="var">argz</var>, size_t *<var class="var">argz_len</var>)</code><a class="copiable-link" href="#index-argz_005fcreate"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">argz_create</code> function converts the Unix-style argument vector
+<var class="var">argv</var> (a vector of pointers to normal C strings, terminated by
+<code class="code">(char *)0</code>; see <a class="pxref" href="Program-Arguments.html">Program Arguments</a>) into an argz vector with
+the same elements, which is returned in <var class="var">argz</var> and <var class="var">argz_len</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argz_005fcreate_005fsep"><span class="category-def">Function: </span><span><code class="def-type">error_t</code> <strong class="def-name">argz_create_sep</strong> <code class="def-code-arguments">(const char *<var class="var">string</var>, int <var class="var">sep</var>, char **<var class="var">argz</var>, size_t *<var class="var">argz_len</var>)</code><a class="copiable-link" href="#index-argz_005fcreate_005fsep"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">argz_create_sep</code> function converts the string
+<var class="var">string</var> into an argz vector (returned in <var class="var">argz</var> and
+<var class="var">argz_len</var>) by splitting it into elements at every occurrence of the
+byte <var class="var">sep</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argz_005fcount"><span class="category-def">Function: </span><span><code class="def-type">size_t</code> <strong class="def-name">argz_count</strong> <code class="def-code-arguments">(const char *<var class="var">argz</var>, size_t <var class="var">argz_len</var>)</code><a class="copiable-link" href="#index-argz_005fcount"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns the number of elements in the argz vector <var class="var">argz</var> and
+<var class="var">argz_len</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argz_005fextract"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">argz_extract</strong> <code class="def-code-arguments">(const char *<var class="var">argz</var>, size_t <var class="var">argz_len</var>, char **<var class="var">argv</var>)</code><a class="copiable-link" href="#index-argz_005fextract"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">argz_extract</code> function converts the argz vector <var class="var">argz</var> and
+<var class="var">argz_len</var> into a Unix-style argument vector stored in <var class="var">argv</var>,
+by putting pointers to every element in <var class="var">argz</var> into successive
+positions in <var class="var">argv</var>, followed by a terminator of <code class="code">0</code>.
+<var class="var">Argv</var> must be pre-allocated with enough space to hold all the
+elements in <var class="var">argz</var> plus the terminating <code class="code">(char *)0</code>
+(<code class="code">(argz_count (<var class="var">argz</var>, <var class="var">argz_len</var>) + 1) * sizeof (char *)</code>
+bytes should be enough).  Note that the string pointers stored into
+<var class="var">argv</var> point into <var class="var">argz</var>&mdash;they are not copies&mdash;and so
+<var class="var">argz</var> must be copied if it will be changed while <var class="var">argv</var> is
+still active.  This function is useful for passing the elements in
+<var class="var">argz</var> to an exec function (see <a class="pxref" href="Executing-a-File.html">Executing a File</a>).
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argz_005fstringify"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">argz_stringify</strong> <code class="def-code-arguments">(char *<var class="var">argz</var>, size_t <var class="var">len</var>, int <var class="var">sep</var>)</code><a class="copiable-link" href="#index-argz_005fstringify"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">argz_stringify</code> converts <var class="var">argz</var> into a normal string with
+the elements separated by the byte <var class="var">sep</var>, by replacing each
+<code class="code">'\0'</code> inside <var class="var">argz</var> (except the last one, which terminates the
+string) with <var class="var">sep</var>.  This is handy for printing <var class="var">argz</var> in a
+readable manner.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argz_005fadd"><span class="category-def">Function: </span><span><code class="def-type">error_t</code> <strong class="def-name">argz_add</strong> <code class="def-code-arguments">(char **<var class="var">argz</var>, size_t *<var class="var">argz_len</var>, const char *<var class="var">str</var>)</code><a class="copiable-link" href="#index-argz_005fadd"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">argz_add</code> function adds the string <var class="var">str</var> to the end of the
+argz vector <code class="code">*<var class="var">argz</var></code>, and updates <code class="code">*<var class="var">argz</var></code> and
+<code class="code">*<var class="var">argz_len</var></code> accordingly.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argz_005fadd_005fsep"><span class="category-def">Function: </span><span><code class="def-type">error_t</code> <strong class="def-name">argz_add_sep</strong> <code class="def-code-arguments">(char **<var class="var">argz</var>, size_t *<var class="var">argz_len</var>, const char *<var class="var">str</var>, int <var class="var">delim</var>)</code><a class="copiable-link" href="#index-argz_005fadd_005fsep"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">argz_add_sep</code> function is similar to <code class="code">argz_add</code>, but
+<var class="var">str</var> is split into separate elements in the result at occurrences of
+the byte <var class="var">delim</var>.  This is useful, for instance, for
+adding the components of a Unix search path to an argz vector, by using
+a value of <code class="code">':'</code> for <var class="var">delim</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argz_005fappend"><span class="category-def">Function: </span><span><code class="def-type">error_t</code> <strong class="def-name">argz_append</strong> <code class="def-code-arguments">(char **<var class="var">argz</var>, size_t *<var class="var">argz_len</var>, const char *<var class="var">buf</var>, size_t <var class="var">buf_len</var>)</code><a class="copiable-link" href="#index-argz_005fappend"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">argz_append</code> function appends <var class="var">buf_len</var> bytes starting at
+<var class="var">buf</var> to the argz vector <code class="code">*<var class="var">argz</var></code>, reallocating
+<code class="code">*<var class="var">argz</var></code> to accommodate it, and adding <var class="var">buf_len</var> to
+<code class="code">*<var class="var">argz_len</var></code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argz_005fdelete"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">argz_delete</strong> <code class="def-code-arguments">(char **<var class="var">argz</var>, size_t *<var class="var">argz_len</var>, char *<var class="var">entry</var>)</code><a class="copiable-link" href="#index-argz_005fdelete"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>If <var class="var">entry</var> points to the beginning of one of the elements in the
+argz vector <code class="code">*<var class="var">argz</var></code>, the <code class="code">argz_delete</code> function will
+remove this entry and reallocate <code class="code">*<var class="var">argz</var></code>, modifying
+<code class="code">*<var class="var">argz</var></code> and <code class="code">*<var class="var">argz_len</var></code> accordingly.  Note that as
+destructive argz functions usually reallocate their argz argument,
+pointers into argz vectors such as <var class="var">entry</var> will then become invalid.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argz_005finsert"><span class="category-def">Function: </span><span><code class="def-type">error_t</code> <strong class="def-name">argz_insert</strong> <code class="def-code-arguments">(char **<var class="var">argz</var>, size_t *<var class="var">argz_len</var>, char *<var class="var">before</var>, const char *<var class="var">entry</var>)</code><a class="copiable-link" href="#index-argz_005finsert"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">argz_insert</code> function inserts the string <var class="var">entry</var> into the
+argz vector <code class="code">*<var class="var">argz</var></code> at a point just before the existing
+element pointed to by <var class="var">before</var>, reallocating <code class="code">*<var class="var">argz</var></code> and
+updating <code class="code">*<var class="var">argz</var></code> and <code class="code">*<var class="var">argz_len</var></code>.  If <var class="var">before</var>
+is <code class="code">0</code>, <var class="var">entry</var> is added to the end instead (as if by
+<code class="code">argz_add</code>).  Since the first element is in fact the same as
+<code class="code">*<var class="var">argz</var></code>, passing in <code class="code">*<var class="var">argz</var></code> as the value of
+<var class="var">before</var> will result in <var class="var">entry</var> being inserted at the beginning.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argz_005fnext"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">argz_next</strong> <code class="def-code-arguments">(const char *<var class="var">argz</var>, size_t <var class="var">argz_len</var>, const char *<var class="var">entry</var>)</code><a class="copiable-link" href="#index-argz_005fnext"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">argz_next</code> function provides a convenient way of iterating
+over the elements in the argz vector <var class="var">argz</var>.  It returns a pointer
+to the next element in <var class="var">argz</var> after the element <var class="var">entry</var>, or
+<code class="code">0</code> if there are no elements following <var class="var">entry</var>.  If <var class="var">entry</var>
+is <code class="code">0</code>, the first element of <var class="var">argz</var> is returned.
+</p>
+<p>This behavior suggests two styles of iteration:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">    char *entry = 0;
+    while ((entry = argz_next (<var class="var">argz</var>, <var class="var">argz_len</var>, entry)))
+      <var class="var">action</var>;
+</pre></div>
+
+<p>(the double parentheses are necessary to make some C compilers shut up
+about what they consider a questionable <code class="code">while</code>-test) and:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">    char *entry;
+    for (entry = <var class="var">argz</var>;
+         entry;
+         entry = argz_next (<var class="var">argz</var>, <var class="var">argz_len</var>, entry))
+      <var class="var">action</var>;
+</pre></div>
+
+<p>Note that the latter depends on <var class="var">argz</var> having a value of <code class="code">0</code> if
+it is empty (rather than a pointer to an empty block of memory); this
+invariant is maintained for argz vectors created by the functions here.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-argz_005freplace"><span class="category-def">Function: </span><span><code class="def-type">error_t</code> <strong class="def-name">argz_replace</strong> <code class="def-code-arguments">(char&nbsp;**<var class="var">argz</var>,&nbsp;size_t&nbsp;*<var class="var">argz_len</var><!-- /@w -->, const&nbsp;char&nbsp;*<var class="var">str</var>,&nbsp;const&nbsp;char&nbsp;*<var class="var">with</var><!-- /@w -->, unsigned&nbsp;*<var class="var">replace_count</var><!-- /@w -->)</code><a class="copiable-link" href="#index-argz_005freplace"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Replace any occurrences of the string <var class="var">str</var> in <var class="var">argz</var> with
+<var class="var">with</var>, reallocating <var class="var">argz</var> as necessary.  If
+<var class="var">replace_count</var> is non-zero, <code class="code">*<var class="var">replace_count</var></code> will be
+incremented by the number of replacements performed.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Envz-Functions.html">Envz Functions</a>, Up: <a href="Argz-and-Envz-Vectors.html">Argz and Envz Vectors</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Disadvantages of Alloca (The GNU C Library)</title>
+
+<meta name="description" content="Disadvantages of Alloca (The GNU C Library)">
+<meta name="keywords" content="Disadvantages of Alloca (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Variable-Size-Automatic.html" rel="up" title="Variable Size Automatic">
+<link href="GNU-C-Variable_002dSize-Arrays.html" rel="next" title="GNU C Variable-Size Arrays">
+<link href="Advantages-of-Alloca.html" rel="prev" title="Advantages of Alloca">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Disadvantages-of-Alloca">
+<div class="nav-panel">
+<p>
+Next: <a href="GNU-C-Variable_002dSize-Arrays.html" accesskey="n" rel="next">GNU C Variable-Size Arrays</a>, Previous: <a href="Advantages-of-Alloca.html" accesskey="p" rel="prev">Advantages of <code class="code">alloca</code></a>, Up: <a href="Variable-Size-Automatic.html" accesskey="u" rel="up">Automatic Storage with Variable Size</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Disadvantages-of-alloca"><span>3.2.7.3 Disadvantages of <code class="code">alloca</code><a class="copiable-link" href="#Disadvantages-of-alloca"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-alloca-disadvantages"></a>
+<a class="index-entry-id" id="index-disadvantages-of-alloca"></a>
+<p>These are the disadvantages of <code class="code">alloca</code> in comparison with
+<code class="code">malloc</code>:
+</p>
+<ul class="itemize mark-bullet">
+<li>If you try to allocate more memory than the machine can provide, you
+don&rsquo;t get a clean error message.  Instead you get a fatal signal like
+the one you would get from an infinite recursion; probably a
+segmentation violation (see <a class="pxref" href="Program-Error-Signals.html">Program Error Signals</a>).
+
+</li><li>Some non-GNU systems fail to support <code class="code">alloca</code>, so it is less
+portable.  However, a slower emulation of <code class="code">alloca</code> written in C
+is available for use on systems with this deficiency.
+</li></ul>
+
+</div>
+
+
+
+</body>
+</html>

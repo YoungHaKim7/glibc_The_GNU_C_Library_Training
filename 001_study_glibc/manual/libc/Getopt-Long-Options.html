@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Getopt Long Options (The GNU C Library)</title>
+
+<meta name="description" content="Getopt Long Options (The GNU C Library)">
+<meta name="keywords" content="Getopt Long Options (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Getopt.html" rel="up" title="Getopt">
+<link href="Getopt-Long-Option-Example.html" rel="next" title="Getopt Long Option Example">
+<link href="Example-of-Getopt.html" rel="prev" title="Example of Getopt">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Getopt-Long-Options">
+<div class="nav-panel">
+<p>
+Next: <a href="Getopt-Long-Option-Example.html" accesskey="n" rel="next">Example of Parsing Long Options with <code class="code">getopt_long</code></a>, Previous: <a href="Example-of-Getopt.html" accesskey="p" rel="prev">Example of Parsing Arguments with <code class="code">getopt</code></a>, Up: <a href="Getopt.html" accesskey="u" rel="up">Parsing program options using <code class="code">getopt</code></a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Parsing-Long-Options-with-getopt_005flong"><span>26.2.3 Parsing Long Options with <code class="code">getopt_long</code><a class="copiable-link" href="#Parsing-Long-Options-with-getopt_005flong"> &para;</a></span></h4>
+
+<p>To accept GNU-style long options as well as single-character options,
+use <code class="code">getopt_long</code> instead of <code class="code">getopt</code>.  This function is
+declared in <samp class="file">getopt.h</samp>, not <samp class="file">unistd.h</samp>.  You should make every
+program accept long options if it uses any options, for this takes
+little extra work and helps beginners remember how to use the program.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-option"><span class="category-def">Data Type: </span><span><strong class="def-name">struct option</strong><a class="copiable-link" href="#index-struct-option"> &para;</a></span></dt>
+<dd>
+<p>This structure describes a single long option name for the sake of
+<code class="code">getopt_long</code>.  The argument <var class="var">longopts</var> must be an array of
+these structures, one for each long option.  Terminate the array with an
+element containing all zeros.
+</p>
+<p>The <code class="code">struct option</code> structure has these fields:
+</p>
+<dl class="table">
+<dt><code class="code">const char *name</code></dt>
+<dd><p>This field is the name of the option.  It is a string.
+</p>
+</dd>
+<dt><code class="code">int has_arg</code></dt>
+<dd><p>This field says whether the option takes an argument.  It is an integer,
+and there are three legitimate values: <code class="code">no_argument</code><!-- /@w -->,
+<code class="code">required_argument</code> and <code class="code">optional_argument</code>.
+</p>
+</dd>
+<dt><code class="code">int *flag</code></dt>
+<dt><code class="code">int val</code></dt>
+<dd><p>These fields control how to report or act on the option when it occurs.
+</p>
+<p>If <code class="code">flag</code> is a null pointer, then the <code class="code">val</code> is a value which
+identifies this option.  Often these values are chosen to uniquely
+identify particular long options.
+</p>
+<p>If <code class="code">flag</code> is not a null pointer, it should be the address of an
+<code class="code">int</code> variable which is the flag for this option.  The value in
+<code class="code">val</code> is the value to store in the flag to indicate that the option
+was seen.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getopt_005flong"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getopt_long</strong> <code class="def-code-arguments">(int <var class="var">argc</var>, char *const *<var class="var">argv</var>, const char *<var class="var">shortopts</var>, const struct option *<var class="var">longopts</var>, int *<var class="var">indexptr</var>)</code><a class="copiable-link" href="#index-getopt_005flong"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:getopt env
+| AS-Unsafe heap i18n lock corrupt
+| AC-Unsafe mem lock corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Decode options from the vector <var class="var">argv</var> (whose length is <var class="var">argc</var>).
+The argument <var class="var">shortopts</var> describes the short options to accept, just as
+it does in <code class="code">getopt</code>.  The argument <var class="var">longopts</var> describes the long
+options to accept (see above).
+</p>
+<p>When <code class="code">getopt_long</code> encounters a short option, it does the same
+thing that <code class="code">getopt</code> would do: it returns the character code for the
+option, and stores the option&rsquo;s argument (if it has one) in <code class="code">optarg</code>.
+</p>
+<p>When <code class="code">getopt_long</code> encounters a long option, it takes actions based
+on the <code class="code">flag</code> and <code class="code">val</code> fields of the definition of that
+option.  The option name may be abbreviated as long as the abbreviation is
+unique.
+</p>
+<p>If <code class="code">flag</code> is a null pointer, then <code class="code">getopt_long</code> returns the
+contents of <code class="code">val</code> to indicate which option it found.  You should
+arrange distinct values in the <code class="code">val</code> field for options with
+different meanings, so you can decode these values after
+<code class="code">getopt_long</code> returns.  If the long option is equivalent to a short
+option, you can use the short option&rsquo;s character code in <code class="code">val</code>.
+</p>
+<p>If <code class="code">flag</code> is not a null pointer, that means this option should just
+set a flag in the program.  The flag is a variable of type <code class="code">int</code>
+that you define.  Put the address of the flag in the <code class="code">flag</code> field.
+Put in the <code class="code">val</code> field the value you would like this option to
+store in the flag.  In this case, <code class="code">getopt_long</code> returns <code class="code">0</code>.
+</p>
+<p>For any long option, <code class="code">getopt_long</code> tells you the index in the array
+<var class="var">longopts</var> of the options definition, by storing it into
+<code class="code">*<var class="var">indexptr</var></code>.  You can get the name of the option with
+<code class="code"><var class="var">longopts</var>[*<var class="var">indexptr</var>].name</code>.  So you can distinguish among
+long options either by the values in their <code class="code">val</code> fields or by their
+indices.  You can also distinguish in this way among long options that
+set flags.
+</p>
+<p>When a long option has an argument, <code class="code">getopt_long</code> puts the argument
+value in the variable <code class="code">optarg</code> before returning.  When the option
+has no argument, the value in <code class="code">optarg</code> is a null pointer.  This is
+how you can tell whether an optional argument was supplied.
+</p>
+<p>When <code class="code">getopt_long</code> has no more options to handle, it returns
+<code class="code">-1</code>, and leaves in the variable <code class="code">optind</code> the index in
+<var class="var">argv</var> of the next remaining argument.
+</p></dd></dl>
+
+<p>Since long option names were used before <code class="code">getopt_long</code>
+was invented there are program interfaces which require programs
+to recognize options like &lsquo;<samp class="samp">-option&nbsp;value</samp>&rsquo;<!-- /@w --> instead of
+&lsquo;<samp class="samp">--option&nbsp;value</samp>&rsquo;<!-- /@w -->.  To enable these programs to use the GNU
+getopt functionality there is one more function available.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getopt_005flong_005fonly"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getopt_long_only</strong> <code class="def-code-arguments">(int <var class="var">argc</var>, char *const *<var class="var">argv</var>, const char *<var class="var">shortopts</var>, const struct option *<var class="var">longopts</var>, int *<var class="var">indexptr</var>)</code><a class="copiable-link" href="#index-getopt_005flong_005fonly"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:getopt env
+| AS-Unsafe heap i18n lock corrupt
+| AC-Unsafe mem lock corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>The <code class="code">getopt_long_only</code> function is equivalent to the
+<code class="code">getopt_long</code> function but it allows the user of the
+application to pass long options with only &lsquo;<samp class="samp">-</samp>&rsquo; instead of
+&lsquo;<samp class="samp">--</samp>&rsquo;.  The &lsquo;<samp class="samp">--</samp>&rsquo; prefix is still recognized but instead of
+looking through the short options if a &lsquo;<samp class="samp">-</samp>&rsquo; is seen it is first
+tried whether this parameter names a long option.  If not, it is parsed
+as a short option.  In case both short and long options could be
+matched (this can happen with single letter long options), the short
+option is preferred (with some caveats).  For long options,
+abbreviations are detected as well.
+</p>
+<p>Assuming <code class="code">getopt_long_only</code> is used starting an application with
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">  app -foo
+</pre></div>
+
+<p>the <code class="code">getopt_long_only</code> will first look for a long option named
+&lsquo;<samp class="samp">foo</samp>&rsquo;.  If this is not found, the short options &lsquo;<samp class="samp">f</samp>&rsquo;, &lsquo;<samp class="samp">o</samp>&rsquo;,
+and again &lsquo;<samp class="samp">o</samp>&rsquo; are recognized.
+</p>
+<p>It gets more interesting with single letter long options.  If we
+define options in the following way
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">  static struct option long_options[] = {
+          {&quot;f&quot;,       no_argument,       0,  0 },
+          {&quot;foo&quot;,     no_argument,       0,  0 },
+          {0,         0,                 0,  0 },
+  };
+</pre></div>
+
+<p>use <code class="code">&quot;f&quot;</code> (as a C string) as an option string and start the
+application with <samp class="option">-f</samp>, the short option will be matched.
+<samp class="option">--f</samp> will match the long one.  And both <samp class="option">-fo</samp> and
+<samp class="option">-foo</samp> will match the long option <code class="code">&quot;foo&quot;</code>.
+</p>
+<p>Be aware that if the option string would be <code class="code">&quot;f:&quot;</code> (thus the
+short option requires an argument), using just <samp class="option">-f</samp> leads to an
+error.  But using <samp class="option">-fo</samp> results in the long option being
+matched.  For passing an argument in this situation, you need to do it
+as two arguments (<samp class="option">-f</samp>, <samp class="option">o</samp>).  Though any other value
+would work in a single argument (e.g., <samp class="option">-f1</samp>), since it would
+not match a long option (or its abbreviation).
+</p>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Getopt-Long-Option-Example.html">Example of Parsing Long Options with <code class="code">getopt_long</code></a>, Previous: <a href="Example-of-Getopt.html">Example of Parsing Arguments with <code class="code">getopt</code></a>, Up: <a href="Getopt.html">Parsing program options using <code class="code">getopt</code></a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Receiving Datagrams (The GNU C Library)</title>
+
+<meta name="description" content="Receiving Datagrams (The GNU C Library)">
+<meta name="keywords" content="Receiving Datagrams (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Datagrams.html" rel="up" title="Datagrams">
+<link href="Datagram-Example.html" rel="next" title="Datagram Example">
+<link href="Sending-Datagrams.html" rel="prev" title="Sending Datagrams">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Receiving-Datagrams">
+<div class="nav-panel">
+<p>
+Next: <a href="Datagram-Example.html" accesskey="n" rel="next">Datagram Socket Example</a>, Previous: <a href="Sending-Datagrams.html" accesskey="p" rel="prev">Sending Datagrams</a>, Up: <a href="Datagrams.html" accesskey="u" rel="up">Datagram Socket Operations</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Receiving-Datagrams-1"><span>16.10.2 Receiving Datagrams<a class="copiable-link" href="#Receiving-Datagrams-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-receiving-datagrams"></a>
+
+<p>The <code class="code">recvfrom</code> function reads a packet from a datagram socket and
+also tells you where it was sent from.  This function is declared in
+<samp class="file">sys/socket.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-recvfrom"><span class="category-def">Function: </span><span><code class="def-type">ssize_t</code> <strong class="def-name">recvfrom</strong> <code class="def-code-arguments">(int <var class="var">socket</var>, void *<var class="var">buffer</var>, size_t <var class="var">size</var>, int <var class="var">flags</var>, struct sockaddr *<var class="var">addr</var>, socklen_t *<var class="var">length-ptr</var>)</code><a class="copiable-link" href="#index-recvfrom"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">recvfrom</code> function reads one packet from the socket
+<var class="var">socket</var> into the buffer <var class="var">buffer</var>.  The <var class="var">size</var> argument
+specifies the maximum number of bytes to be read.
+</p>
+<p>If the packet is longer than <var class="var">size</var> bytes, then you get the first
+<var class="var">size</var> bytes of the packet and the rest of the packet is lost.
+There&rsquo;s no way to read the rest of the packet.  Thus, when you use a
+packet protocol, you must always know how long a packet to expect.
+</p>
+<p>The <var class="var">addr</var> and <var class="var">length-ptr</var> arguments are used to return the
+address where the packet came from.  See <a class="xref" href="Socket-Addresses.html">Socket Addresses</a>.  For a
+socket in the local domain the address information won&rsquo;t be meaningful,
+since you can&rsquo;t read the address of such a socket (see <a class="pxref" href="Local-Namespace.html">The Local Namespace</a>).  You can specify a null pointer as the <var class="var">addr</var> argument
+if you are not interested in this information.
+</p>
+<p>The <var class="var">flags</var> are interpreted the same way as for <code class="code">recv</code>
+(see <a class="pxref" href="Socket-Data-Options.html">Socket Data Options</a>).  The return value and error conditions
+are also the same as for <code class="code">recv</code>.
+</p>
+<p>This function is defined as a cancellation point in multi-threaded
+programs, so one has to be prepared for this and make sure that
+allocated resources (like memory, file descriptors, semaphores or
+whatever) are freed even if the thread is canceled.
+</p></dd></dl>
+
+<p>You can use plain <code class="code">recv</code> (see <a class="pxref" href="Receiving-Data.html">Receiving Data</a>) instead of
+<code class="code">recvfrom</code> if you don&rsquo;t need to find out who sent the packet
+(either because you know where it should come from or because you
+treat all possible senders alike).  Even <code class="code">read</code> can be used if
+you don&rsquo;t want to specify <var class="var">flags</var> (see <a class="pxref" href="I_002fO-Primitives.html">Input and Output Primitives</a>).
+</p>
+<p>If you need more flexibility and/or control over sending and receiving
+packets, see <code class="code">sendmsg</code> and <code class="code">recvmsg</code> (see <a class="pxref" href="Other-Socket-APIs.html">Other Socket APIs</a>).
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Datagram-Example.html">Datagram Socket Example</a>, Previous: <a href="Sending-Datagrams.html">Sending Datagrams</a>, Up: <a href="Datagrams.html">Datagram Socket Operations</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

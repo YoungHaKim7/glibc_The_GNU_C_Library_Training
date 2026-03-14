@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Stream/Descriptor Precautions (The GNU C Library)</title>
+
+<meta name="description" content="Stream/Descriptor Precautions (The GNU C Library)">
+<meta name="keywords" content="Stream/Descriptor Precautions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Low_002dLevel-I_002fO.html" rel="up" title="Low-Level I/O">
+<link href="Scatter_002dGather.html" rel="next" title="Scatter-Gather">
+<link href="Descriptors-and-Streams.html" rel="prev" title="Descriptors and Streams">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Stream_002fDescriptor-Precautions">
+<div class="nav-panel">
+<p>
+Next: <a href="Scatter_002dGather.html" accesskey="n" rel="next">Fast Scatter-Gather I/O</a>, Previous: <a href="Descriptors-and-Streams.html" accesskey="p" rel="prev">Descriptors and Streams</a>, Up: <a href="Low_002dLevel-I_002fO.html" accesskey="u" rel="up">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Dangers-of-Mixing-Streams-and-Descriptors"><span>13.5 Dangers of Mixing Streams and Descriptors<a class="copiable-link" href="#Dangers-of-Mixing-Streams-and-Descriptors"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-channels"></a>
+<a class="index-entry-id" id="index-streams-and-descriptors"></a>
+<a class="index-entry-id" id="index-descriptors-and-streams"></a>
+<a class="index-entry-id" id="index-mixing-descriptors-and-streams"></a>
+
+<p>You can have multiple file descriptors and streams (let&rsquo;s call both
+streams and descriptors &ldquo;channels&rdquo; for short) connected to the same
+file, but you must take care to avoid confusion between channels.  There
+are two cases to consider: <em class="dfn">linked</em> channels that share a single
+file position value, and <em class="dfn">independent</em> channels that have their own
+file positions.
+</p>
+<p>It&rsquo;s best to use just one channel in your program for actual data
+transfer to any given file, except when all the access is for input.
+For example, if you open a pipe (something you can only do at the file
+descriptor level), either do all I/O with the descriptor, or construct a
+stream from the descriptor with <code class="code">fdopen</code> and then do all I/O with
+the stream.
+</p>
+
+<ul class="mini-toc">
+<li><a href="Linked-Channels.html" accesskey="1">Linked Channels</a></li>
+<li><a href="Independent-Channels.html" accesskey="2">Independent Channels</a></li>
+<li><a href="Cleaning-Streams.html" accesskey="3">Cleaning Streams</a></li>
+</ul>
+</div>
+
+
+
+</body>
+</html>

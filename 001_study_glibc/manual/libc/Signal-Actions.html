@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Signal Actions (The GNU C Library)</title>
+
+<meta name="description" content="Signal Actions (The GNU C Library)">
+<meta name="keywords" content="Signal Actions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Signal-Handling.html" rel="up" title="Signal Handling">
+<link href="Defining-Handlers.html" rel="next" title="Defining Handlers">
+<link href="Standard-Signals.html" rel="prev" title="Standard Signals">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Signal-Actions">
+<div class="nav-panel">
+<p>
+Next: <a href="Defining-Handlers.html" accesskey="n" rel="next">Defining Signal Handlers</a>, Previous: <a href="Standard-Signals.html" accesskey="p" rel="prev">Standard Signals</a>, Up: <a href="Signal-Handling.html" accesskey="u" rel="up">Signal Handling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Specifying-Signal-Actions"><span>25.3 Specifying Signal Actions<a class="copiable-link" href="#Specifying-Signal-Actions"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-signal-actions"></a>
+<a class="index-entry-id" id="index-establishing-a-handler"></a>
+
+<p>The simplest way to change the action for a signal is to use the
+<code class="code">signal</code> function.  You can specify a built-in action (such as to
+ignore the signal), or you can <em class="dfn">establish a handler</em>.
+</p>
+<p>The GNU C Library also implements the more versatile <code class="code">sigaction</code>
+facility.  This section describes both facilities and gives suggestions
+on which to use when.
+</p>
+
+<ul class="mini-toc">
+<li><a href="Basic-Signal-Handling.html" accesskey="1">Basic Signal Handling</a></li>
+<li><a href="Advanced-Signal-Handling.html" accesskey="2">Advanced Signal Handling</a></li>
+<li><a href="Signal-and-Sigaction.html" accesskey="3">Interaction of <code class="code">signal</code> and <code class="code">sigaction</code></a></li>
+<li><a href="Sigaction-Function-Example.html" accesskey="4"><code class="code">sigaction</code> Function Example</a></li>
+<li><a href="Flags-for-Sigaction.html" accesskey="5">Flags for <code class="code">sigaction</code></a></li>
+<li><a href="Initial-Signal-Actions.html" accesskey="6">Initial Signal Actions</a></li>
+</ul>
+</div>
+
+
+
+</body>
+</html>

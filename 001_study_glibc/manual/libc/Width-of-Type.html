@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Width of Type (The GNU C Library)</title>
+
+<meta name="description" content="Width of Type (The GNU C Library)">
+<meta name="keywords" content="Width of Type (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Data-Type-Measurements.html" rel="up" title="Data Type Measurements">
+<link href="Range-of-Type.html" rel="next" title="Range of Type">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Width-of-Type">
+<div class="nav-panel">
+<p>
+Next: <a href="Range-of-Type.html" accesskey="n" rel="next">Range of an Integer Type</a>, Up: <a href="Data-Type-Measurements.html" accesskey="u" rel="up">Data Type Measurements</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Width-of-an-Integer-Type"><span>A.5.1 Width of an Integer Type<a class="copiable-link" href="#Width-of-an-Integer-Type"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-integer-type-width"></a>
+<a class="index-entry-id" id="index-width-of-integer-type"></a>
+<a class="index-entry-id" id="index-type-measurements_002c-integer"></a>
+<a class="index-entry-id" id="index-limits_002eh-4"></a>
+
+<p>TS 18661-1:2014 defines macros for the width of integer types (the
+number of value and sign bits).  One benefit of these macros is they
+can be used in <code class="code">#if</code> preprocessor directives, whereas
+<code class="code">sizeof</code> cannot.  The following macros are defined in
+<samp class="file">limits.h</samp>.
+</p>
+<dl class="vtable">
+<dt><a id="index-CHAR_005fWIDTH"></a><span><code class="code">CHAR_WIDTH</code><a class="copiable-link" href="#index-CHAR_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-SCHAR_005fWIDTH"></a><span><code class="code">SCHAR_WIDTH</code><a class="copiable-link" href="#index-SCHAR_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-UCHAR_005fWIDTH"></a><span><code class="code">UCHAR_WIDTH</code><a class="copiable-link" href="#index-UCHAR_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-SHRT_005fWIDTH"></a><span><code class="code">SHRT_WIDTH</code><a class="copiable-link" href="#index-SHRT_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-USHRT_005fWIDTH"></a><span><code class="code">USHRT_WIDTH</code><a class="copiable-link" href="#index-USHRT_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-INT_005fWIDTH"></a><span><code class="code">INT_WIDTH</code><a class="copiable-link" href="#index-INT_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-UINT_005fWIDTH"></a><span><code class="code">UINT_WIDTH</code><a class="copiable-link" href="#index-UINT_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-LONG_005fWIDTH"></a><span><code class="code">LONG_WIDTH</code><a class="copiable-link" href="#index-LONG_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-ULONG_005fWIDTH"></a><span><code class="code">ULONG_WIDTH</code><a class="copiable-link" href="#index-ULONG_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-LLONG_005fWIDTH"></a><span><code class="code">LLONG_WIDTH</code><a class="copiable-link" href="#index-LLONG_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-ULLONG_005fWIDTH"></a><span><code class="code">ULLONG_WIDTH</code><a class="copiable-link" href="#index-ULLONG_005fWIDTH"> &para;</a></span></dt>
+<dd>
+<p>These are the widths of the types <code class="code">char</code>, <code class="code">signed char</code>,
+<code class="code">unsigned char</code>, <code class="code">short int</code>, <code class="code">unsigned short int</code>,
+<code class="code">int</code>, <code class="code">unsigned int</code>, <code class="code">long int</code>, <code class="code">unsigned long
+int</code>, <code class="code">long long int</code> and <code class="code">unsigned long long int</code>,
+respectively.
+</p></dd>
+</dl>
+
+<p>Further such macros are defined in <samp class="file">stdint.h</samp>.  Apart from those
+for types specified by width (see <a class="pxref" href="Integers.html">Integers</a>), the following are
+defined:
+</p>
+<dl class="vtable">
+<dt><a id="index-INTPTR_005fWIDTH"></a><span><code class="code">INTPTR_WIDTH</code><a class="copiable-link" href="#index-INTPTR_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-UINTPTR_005fWIDTH"></a><span><code class="code">UINTPTR_WIDTH</code><a class="copiable-link" href="#index-UINTPTR_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-PTRDIFF_005fWIDTH"></a><span><code class="code">PTRDIFF_WIDTH</code><a class="copiable-link" href="#index-PTRDIFF_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-SIG_005fATOMIC_005fWIDTH"></a><span><code class="code">SIG_ATOMIC_WIDTH</code><a class="copiable-link" href="#index-SIG_005fATOMIC_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-SIZE_005fWIDTH"></a><span><code class="code">SIZE_WIDTH</code><a class="copiable-link" href="#index-SIZE_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-WCHAR_005fWIDTH"></a><span><code class="code">WCHAR_WIDTH</code><a class="copiable-link" href="#index-WCHAR_005fWIDTH"> &para;</a></span></dt>
+<dt><a id="index-WINT_005fWIDTH"></a><span><code class="code">WINT_WIDTH</code><a class="copiable-link" href="#index-WINT_005fWIDTH"> &para;</a></span></dt>
+<dd>
+<p>These are the widths of the types <code class="code">intptr_t</code>, <code class="code">uintptr_t</code>,
+<code class="code">ptrdiff_t</code>, <code class="code">sig_atomic_t</code>, <code class="code">size_t</code>, <code class="code">wchar_t</code>
+and <code class="code">wint_t</code>, respectively.
+</p></dd>
+</dl>
+
+<p>A common reason that a program needs to know how many bits are in an
+integer type is for using an array of <code class="code">unsigned long int</code> as a
+bit vector.  You can access the bit at index <var class="var">n</var> with:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">vector[<var class="var">n</var> / ULONG_WIDTH] &amp; (1UL &lt;&lt; (<var class="var">n</var> % ULONG_WIDTH))
+</pre></div>
+
+<p>Before <code class="code">ULONG_WIDTH</code> was a part of the C language,
+<code class="code">CHAR_BIT</code> was used to compute the number of bits in an integer
+data type.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CHAR_005fBIT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">CHAR_BIT</strong><a class="copiable-link" href="#index-CHAR_005fBIT"> &para;</a></span></dt>
+<dd>
+<p>This is the number of bits in a <code class="code">char</code>.  POSIX.1-2001 requires
+this to be 8.
+</p></dd></dl>
+
+<p>The number of bits in any data type <var class="var">type</var> can be computed like
+this:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">sizeof (<var class="var">type</var>) * CHAR_BIT
+</pre></div>
+
+<p>That expression includes padding bits as well as value and sign bits.
+On all systems supported by the GNU C Library, standard integer types other
+than <code class="code">_Bool</code> do not have any padding bits.
+</p>
+<p><strong class="strong">Portability Note:</strong> One cannot actually easily compute the
+number of usable bits in a portable manner.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Range-of-Type.html">Range of an Integer Type</a>, Up: <a href="Data-Type-Measurements.html">Data Type Measurements</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

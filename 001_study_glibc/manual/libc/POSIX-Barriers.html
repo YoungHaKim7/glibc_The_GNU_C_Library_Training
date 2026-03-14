@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>POSIX Barriers (The GNU C Library)</title>
+
+<meta name="description" content="POSIX Barriers (The GNU C Library)">
+<meta name="keywords" content="POSIX Barriers (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="POSIX-Threads.html" rel="up" title="POSIX Threads">
+<link href="POSIX-Spin-Locks.html" rel="next" title="POSIX Spin Locks">
+<link href="POSIX-Semaphores.html" rel="prev" title="POSIX Semaphores">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="POSIX-Barriers">
+<div class="nav-panel">
+<p>
+Next: <a href="POSIX-Spin-Locks.html" accesskey="n" rel="next">POSIX Spin Locks</a>, Previous: <a href="POSIX-Semaphores.html" accesskey="p" rel="prev">POSIX Semaphores</a>, Up: <a href="POSIX-Threads.html" accesskey="u" rel="up">POSIX Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="POSIX-Barriers-1"><span>36.2.5 POSIX Barriers<a class="copiable-link" href="#POSIX-Barriers-1"> &para;</a></span></h4>
+
+<p>A POSIX barrier works as follows: a file-local or global
+<code class="code">pthread_barrier_t</code> object is initialized via
+<code class="code">pthread_barrier_init</code> to require <var class="var">count</var> threads to wait on
+it.  After that, up to <var class="var">count</var>-1 threads will wait on the barrier
+via <code class="code">pthread_barrier_wait</code>.  None of these calls will return
+until <var class="var">count</var> threads are waiting via the next call to
+<code class="code">pthread_barrier_wait</code>, at which point, all of these calls will
+return.  The net result is that <var class="var">count</var> threads will be
+synchronized at that point.  At some point after this, the barrier is
+destroyed via <code class="code">pthread_barrier_destroy</code>.  Note that a barrier
+must be destroyed before being re-initialized, to ensure that all
+threads are properly synchronized, but need not be destroyed and
+re-initialized before being reused.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fbarrier_005finit"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_barrier_init</strong> <code class="def-code-arguments">(pthread_barrier_t *<var class="var">barrier</var>, const pthread_barrierattr_t *<var class="var">attr</var>, unsigned int <var class="var">count</var>)</code><a class="copiable-link" href="#index-pthread_005fbarrier_005finit"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function initializes a barrier to synchronize <var class="var">count</var>
+threads.  The barrier must be uninitialized or destroyed before it is
+initialized; attempting to initialize an in-use barrier results in
+undefined behavior.
+</p>
+<p>The <var class="var">attr</var> argument to <code class="code">pthread_barrier_init</code> is typically
+NULL for a process-private barrier, but may be used to share a barrier
+across processes (documentation TBD).
+</p>
+<p>On success, 0 is returned.  On error, one of the following is returned:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>Either <var class="var">count</var> is zero, or is large enough to cause an internal
+overflow.
+</p></dd>
+</dl>
+
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fbarrier_005fwait"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_barrier_wait</strong> <code class="def-code-arguments">(pthread_barrier_t *<var class="var">barrier</var>)</code><a class="copiable-link" href="#index-pthread_005fbarrier_005fwait"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function synchronizes threads.  The first <var class="var">count</var>-1 threads
+that wait on <var class="var">barrier</var> will just wait.  The next thread that waits
+on <var class="var">barrier</var> will cause all <var class="var">count</var> threads&rsquo; calls to return.
+The <var class="var">barrier</var> must be initialized with <code class="code">pthread_barrier_init</code>
+and not yet destroyed with <code class="code">pthread_barrier_destroy</code>.
+</p>
+<p>The return value of this function is
+<code class="code">PTHREAD_BARRIER_SERIAL_THREAD</code> for one thread (it is unspecified
+which thread) and 0 for the remainder, for each batch of <var class="var">count</var>
+threads synchronized.  After such a batch is synchronized, the
+<var class="var">barrier</var> will begin synchronizing the next <var class="var">count</var> threads.
+</p>
+</dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fbarrier_005fdestroy"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_barrier_destroy</strong> <code class="def-code-arguments">(pthread_barrier_t *<var class="var">barrier</var>)</code><a class="copiable-link" href="#index-pthread_005fbarrier_005fdestroy"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>Destroys <var class="var">barrier</var> and releases any resources it may have
+allocated.  A barrier must not be destroyed if any thread is waiting
+on it, or if it was not initialized.  This call always succeeds and
+returns 0.
+</p>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="POSIX-Spin-Locks.html">POSIX Spin Locks</a>, Previous: <a href="POSIX-Semaphores.html">POSIX Semaphores</a>, Up: <a href="POSIX-Threads.html">POSIX Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

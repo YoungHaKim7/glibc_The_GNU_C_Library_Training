@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Actions in the NSS configuration (The GNU C Library)</title>
+
+<meta name="description" content="Actions in the NSS configuration (The GNU C Library)">
+<meta name="keywords" content="Actions in the NSS configuration (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="NSS-Configuration-File.html" rel="up" title="NSS Configuration File">
+<link href="Notes-on-NSS-Configuration-File.html" rel="next" title="Notes on NSS Configuration File">
+<link href="Services-in-the-NSS-configuration.html" rel="prev" title="Services in the NSS configuration">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+pre.display-preformatted {font-family: inherit}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Actions-in-the-NSS-configuration">
+<div class="nav-panel">
+<p>
+Next: <a href="Notes-on-NSS-Configuration-File.html" accesskey="n" rel="next">Notes on the NSS Configuration File</a>, Previous: <a href="Services-in-the-NSS-configuration.html" accesskey="p" rel="prev">Services in the NSS configuration File</a>, Up: <a href="NSS-Configuration-File.html" accesskey="u" rel="up">The NSS Configuration File</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Actions-in-the-NSS-configuration-1"><span>30.2.2 Actions in the NSS configuration<a class="copiable-link" href="#Actions-in-the-NSS-configuration-1"> &para;</a></span></h4>
+
+<p>The second item in the specification gives the user much finer control
+on the lookup process.  Action items are placed between two service
+names and are written within brackets.  The general form is
+</p>
+<div class="display">
+<pre class="display-preformatted"><code class="code">[</code> ( <code class="code">!</code>? <var class="var">status</var> <code class="code">=</code> <var class="var">action</var> )+ <code class="code">]</code>
+</pre></div>
+
+<p>where
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted"><var class="var">status</var> &rArr; success | notfound | unavail | tryagain
+<var class="var">action</var> &rArr; return | continue
+</pre></div>
+
+<p>The case of the keywords is insignificant.  The <var class="var">status</var>
+values are the results of a call to a lookup function of a specific
+service.  They mean:
+</p>
+<dl class="ftable">
+<dt><a id="index-success"></a><span>&lsquo;<samp class="samp">success</samp>&rsquo;<a class="copiable-link" href="#index-success"> &para;</a></span></dt>
+<dd><p>No error occurred and the wanted entry is returned.  The default action
+for this is <code class="code">return</code>.
+</p>
+</dd>
+<dt><a id="index-notfound"></a><span>&lsquo;<samp class="samp">notfound</samp>&rsquo;<a class="copiable-link" href="#index-notfound"> &para;</a></span></dt>
+<dd><p>The lookup process works ok but the needed value was not found.  The
+default action is <code class="code">continue</code>.
+</p>
+</dd>
+<dt><a id="index-unavail"></a><span>&lsquo;<samp class="samp">unavail</samp>&rsquo;<a class="copiable-link" href="#index-unavail"> &para;</a></span></dt>
+<dd><a class="index-entry-id" id="index-DNS-server-unavailable"></a>
+<p>The service is permanently unavailable.  This can either mean the needed
+file is not available, or, for DNS, the server is not available or does
+not allow queries.  The default action is <code class="code">continue</code>.
+</p>
+</dd>
+<dt><a id="index-tryagain"></a><span>&lsquo;<samp class="samp">tryagain</samp>&rsquo;<a class="copiable-link" href="#index-tryagain"> &para;</a></span></dt>
+<dd><p>The service is temporarily unavailable.  This could mean a file is
+locked or a server currently cannot accept more connections.  The
+default action is <code class="code">continue</code>.
+</p></dd>
+</dl>
+
+<p>The <var class="var">action</var> values mean:
+</p>
+<dl class="ftable">
+<dt><a id="index-return"></a><span>&lsquo;<samp class="samp">return</samp>&rsquo;<a class="copiable-link" href="#index-return"> &para;</a></span></dt>
+<dd>
+<p>If the status matches, stop the lookup process at this service
+specification.  If an entry is available, provide it to the application.
+If an error occurred, report it to the application.  In case of a prior
+&lsquo;<samp class="samp">merge</samp>&rsquo; action, the data is combined with previous lookup results,
+as explained below.
+</p>
+</dd>
+<dt><a id="index-continue"></a><span>&lsquo;<samp class="samp">continue</samp>&rsquo;<a class="copiable-link" href="#index-continue"> &para;</a></span></dt>
+<dd>
+<p>If the status matches, proceed with the lookup process at the next
+entry, discarding the result of the current lookup (and any merged
+data).  An exception is the &lsquo;<samp class="samp">initgroups</samp>&rsquo; database and the
+&lsquo;<samp class="samp">success</samp>&rsquo; status, where &lsquo;<samp class="samp">continue</samp>&rsquo; acts like <code class="code">merge</code>
+below.
+</p>
+</dd>
+<dt><a id="index-merge"></a><span>&lsquo;<samp class="samp">merge</samp>&rsquo;<a class="copiable-link" href="#index-merge"> &para;</a></span></dt>
+<dd>
+<p>Proceed with the lookup process, retaining the current lookup result.
+This action is useful only with the &lsquo;<samp class="samp">success</samp>&rsquo; status.  If a
+subsequent service lookup succeeds and has a matching &lsquo;<samp class="samp">return</samp>&rsquo;
+specification, the results are merged, the lookup process ends, and the
+merged results are returned to the application.  If the following service
+has a matching &lsquo;<samp class="samp">merge</samp>&rsquo; action, the lookup process continues,
+retaining the combined data from this and any previous lookups.
+</p>
+<p>After a <code class="code">merge</code> action, errors from subsequent lookups are ignored,
+and the data gathered so far will be returned.
+</p>
+<p>The &lsquo;<samp class="samp">merge</samp>&rsquo; only applies to the &lsquo;<samp class="samp">success</samp>&rsquo; status.  It is
+currently implemented for the &lsquo;<samp class="samp">group</samp>&rsquo; database and its group
+members field, &lsquo;<samp class="samp">gr_mem</samp>&rsquo;.  If specified for other databases, it
+causes the lookup to fail (if the <var class="var">status</var> matches).
+</p>
+<p>When processing &lsquo;<samp class="samp">merge</samp>&rsquo; for &lsquo;<samp class="samp">group</samp>&rsquo; membership, the group GID
+and name must be identical for both entries.  If only one or the other is
+a match, the behavior is undefined.
+</p>
+</dd>
+</dl>
+
+<p>If we have a line like
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">ethers: nisplus [NOTFOUND=return] db files
+</pre></div>
+
+<p>this is equivalent to
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">ethers: nisplus [SUCCESS=return NOTFOUND=return UNAVAIL=continue
+                 TRYAGAIN=continue]
+        db      [SUCCESS=return NOTFOUND=continue UNAVAIL=continue
+                 TRYAGAIN=continue]
+        files
+</pre></div>
+
+<p>(except that it would have to be written on one line).  The default
+value for the actions are normally what you want, and only need to be
+changed in exceptional cases.
+</p>
+<p>If the optional <code class="code">!</code> is placed before the <var class="var">status</var> this means
+the following action is used for all statuses but <var class="var">status</var> itself.
+I.e., <code class="code">!</code> is negation as in the C language (and others).
+</p>
+<p>Before we explain the exception which makes this action item necessary
+one more remark: obviously it makes no sense to add another action
+item after the <code class="code">files</code> service.  Since there is no other service
+following the action <em class="emph">always</em> is <code class="code">return</code>.
+</p>
+<a class="index-entry-id" id="index-nisplus_002c-and-completeness"></a>
+<p>Now, why is this <code class="code">[NOTFOUND=return]</code> action useful?  To understand
+this we should know that the <code class="code">nisplus</code> service is often
+complete; i.e., if an entry is not available in the NIS+ tables it is
+not available anywhere else.  This is what is expressed by this action
+item: it is useless to examine further services since they will not give
+us a result.
+</p>
+<a class="index-entry-id" id="index-nisplus_002c-and-booting"></a>
+<a class="index-entry-id" id="index-bootstrapping_002c-and-services"></a>
+<p>The situation would be different if the NIS+ service is not available
+because the machine is booting.  In this case the return value of the
+lookup function is not <code class="code">notfound</code> but instead <code class="code">unavail</code>.  And
+as you can see in the complete form above: in this situation the
+<code class="code">db</code> and <code class="code">files</code> services are used.  Neat, isn&rsquo;t it?  The
+system administrator need not pay special care for the time the system
+is not completely ready to work (while booting or shutdown or
+network problems).
+</p>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Notes-on-NSS-Configuration-File.html">Notes on the NSS Configuration File</a>, Previous: <a href="Services-in-the-NSS-configuration.html">Services in the NSS configuration File</a>, Up: <a href="NSS-Configuration-File.html">The NSS Configuration File</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

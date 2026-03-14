@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Process Signal Mask (The GNU C Library)</title>
+
+<meta name="description" content="Process Signal Mask (The GNU C Library)">
+<meta name="keywords" content="Process Signal Mask (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Blocking-Signals.html" rel="up" title="Blocking Signals">
+<link href="Testing-for-Delivery.html" rel="next" title="Testing for Delivery">
+<link href="Signal-Sets.html" rel="prev" title="Signal Sets">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Process-Signal-Mask">
+<div class="nav-panel">
+<p>
+Next: <a href="Testing-for-Delivery.html" accesskey="n" rel="next">Blocking to Test for Delivery of a Signal</a>, Previous: <a href="Signal-Sets.html" accesskey="p" rel="prev">Signal Sets</a>, Up: <a href="Blocking-Signals.html" accesskey="u" rel="up">Blocking Signals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Process-Signal-Mask-1"><span>25.7.3 Process Signal Mask<a class="copiable-link" href="#Process-Signal-Mask-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-signal-mask"></a>
+<a class="index-entry-id" id="index-process-signal-mask"></a>
+
+<p>The collection of signals that are currently blocked is called the
+<em class="dfn">signal mask</em>.  Each process has its own signal mask.  When you
+create a new process (see <a class="pxref" href="Creating-a-Process.html">Creating a Process</a>), it inherits its
+parent&rsquo;s mask.  You can block or unblock signals with total flexibility
+by modifying the signal mask.
+</p>
+<p>The prototype for the <code class="code">sigprocmask</code> function is in <samp class="file">signal.h</samp>.
+<a class="index-entry-id" id="index-signal_002eh-8"></a>
+</p>
+<p>Note that you must not use <code class="code">sigprocmask</code> in multi-threaded processes,
+because each thread has its own signal mask and there is no single process
+signal mask.  According to POSIX, the behavior of <code class="code">sigprocmask</code> in a
+multi-threaded process is &ldquo;unspecified&rdquo;.
+Instead, use <code class="code">pthread_sigmask</code>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sigprocmask"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sigprocmask</strong> <code class="def-code-arguments">(int <var class="var">how</var>, const sigset_t *restrict <var class="var">set</var>, sigset_t *restrict <var class="var">oldset</var>)</code><a class="copiable-link" href="#index-sigprocmask"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:sigprocmask/bsd(SIG_UNBLOCK)
+| AS-Unsafe lock/hurd
+| AC-Unsafe lock/hurd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">sigprocmask</code> function is used to examine or change the calling
+process&rsquo;s signal mask.  The <var class="var">how</var> argument determines how the signal
+mask is changed, and must be one of the following values:
+</p>
+<dl class="vtable">
+<dt><a id="index-SIG_005fBLOCK"></a><span><code class="code">SIG_BLOCK</code><a class="copiable-link" href="#index-SIG_005fBLOCK"> &para;</a></span></dt>
+<dd>
+<p>Block the signals in <code class="code">set</code>&mdash;add them to the existing mask.  In
+other words, the new mask is the union of the existing mask and
+<var class="var">set</var>.
+</p>
+</dd>
+<dt><a id="index-SIG_005fUNBLOCK"></a><span><code class="code">SIG_UNBLOCK</code><a class="copiable-link" href="#index-SIG_005fUNBLOCK"> &para;</a></span></dt>
+<dd>
+<p>Unblock the signals in <var class="var">set</var>&mdash;remove them from the existing mask.
+</p>
+</dd>
+<dt><a id="index-SIG_005fSETMASK"></a><span><code class="code">SIG_SETMASK</code><a class="copiable-link" href="#index-SIG_005fSETMASK"> &para;</a></span></dt>
+<dd>
+<p>Use <var class="var">set</var> for the mask; ignore the previous value of the mask.
+</p></dd>
+</dl>
+
+<p>The last argument, <var class="var">oldset</var>, is used to return information about the
+old process signal mask.  If you just want to change the mask without
+looking at it, pass a null pointer as the <var class="var">oldset</var> argument.
+Similarly, if you want to know what&rsquo;s in the mask without changing it,
+pass a null pointer for <var class="var">set</var> (in this case the <var class="var">how</var> argument
+is not significant).  The <var class="var">oldset</var> argument is often used to
+remember the previous signal mask in order to restore it later.  (Since
+the signal mask is inherited over <code class="code">fork</code> and <code class="code">exec</code> calls, you
+can&rsquo;t predict what its contents are when your program starts running.)
+</p>
+<p>If invoking <code class="code">sigprocmask</code> causes any pending signals to be
+unblocked, at least one of those signals is delivered to the process
+before <code class="code">sigprocmask</code> returns.  The order in which pending signals
+are delivered is not specified, but you can control the order explicitly
+by making multiple <code class="code">sigprocmask</code> calls to unblock various signals
+one at a time.
+</p>
+<p>The <code class="code">sigprocmask</code> function returns <code class="code">0</code> if successful, and <code class="code">-1</code>
+to indicate an error.  The following <code class="code">errno</code> error conditions are
+defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">how</var> argument is invalid.
+</p></dd>
+</dl>
+
+<p>You can&rsquo;t block the <code class="code">SIGKILL</code> and <code class="code">SIGSTOP</code> signals, but
+if the signal set includes these, <code class="code">sigprocmask</code> just ignores
+them instead of returning an error status.
+</p>
+<p>Remember, too, that blocking program error signals such as <code class="code">SIGFPE</code>
+leads to undesirable results for signals generated by an actual program
+error (as opposed to signals sent with <code class="code">raise</code> or <code class="code">kill</code>).
+This is because your program may be too broken to be able to continue
+executing to a point where the signal is unblocked again.
+See <a class="xref" href="Program-Error-Signals.html">Program Error Signals</a>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Testing-for-Delivery.html">Blocking to Test for Delivery of a Signal</a>, Previous: <a href="Signal-Sets.html">Signal Sets</a>, Up: <a href="Blocking-Signals.html">Blocking Signals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

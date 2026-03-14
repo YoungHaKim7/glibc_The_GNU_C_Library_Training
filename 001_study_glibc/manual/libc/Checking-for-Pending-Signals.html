@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Checking for Pending Signals (The GNU C Library)</title>
+
+<meta name="description" content="Checking for Pending Signals (The GNU C Library)">
+<meta name="keywords" content="Checking for Pending Signals (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Blocking-Signals.html" rel="up" title="Blocking Signals">
+<link href="Remembering-a-Signal.html" rel="next" title="Remembering a Signal">
+<link href="Blocking-for-Handler.html" rel="prev" title="Blocking for Handler">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Checking-for-Pending-Signals">
+<div class="nav-panel">
+<p>
+Next: <a href="Remembering-a-Signal.html" accesskey="n" rel="next">Remembering a Signal to Act On Later</a>, Previous: <a href="Blocking-for-Handler.html" accesskey="p" rel="prev">Blocking Signals for a Handler</a>, Up: <a href="Blocking-Signals.html" accesskey="u" rel="up">Blocking Signals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Checking-for-Pending-Signals-1"><span>25.7.6 Checking for Pending Signals<a class="copiable-link" href="#Checking-for-Pending-Signals-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-pending-signals_002c-checking-for"></a>
+<a class="index-entry-id" id="index-blocked-signals_002c-checking-for"></a>
+<a class="index-entry-id" id="index-checking-for-pending-signals"></a>
+
+<p>You can find out which signals are pending at any time by calling
+<code class="code">sigpending</code>.  This function is declared in <samp class="file">signal.h</samp>.
+<a class="index-entry-id" id="index-signal_002eh-9"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sigpending"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sigpending</strong> <code class="def-code-arguments">(sigset_t *<var class="var">set</var>)</code><a class="copiable-link" href="#index-sigpending"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock/hurd
+| AC-Unsafe lock/hurd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">sigpending</code> function stores information about pending signals
+in <var class="var">set</var>.  If there is a pending signal that is blocked from
+delivery, then that signal is a member of the returned set.  (You can
+test whether a particular signal is a member of this set using
+<code class="code">sigismember</code>; see <a class="ref" href="Signal-Sets.html">Signal Sets</a>.)
+</p>
+<p>The return value is <code class="code">0</code> if successful, and <code class="code">-1</code> on failure.
+</p></dd></dl>
+
+<p>Testing whether a signal is pending is not often useful.  Testing when
+that signal is not blocked is almost certainly bad design.
+</p>
+<p>Here is an example.
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">#include &lt;signal.h&gt;
+#include &lt;stddef.h&gt;
+
+sigset_t base_mask, waiting_mask;
+
+sigemptyset (&amp;base_mask);
+sigaddset (&amp;base_mask, SIGINT);
+sigaddset (&amp;base_mask, SIGTSTP);
+
+/* <span class="r">Block user interrupts while doing other processing.</span> */
+sigprocmask (SIG_SETMASK, &amp;base_mask, NULL);
+...
+
+/* <span class="r">After a while, check to see whether any signals are pending.</span> */
+sigpending (&amp;waiting_mask);
+if (sigismember (&amp;waiting_mask, SIGINT)) {
+  /* <span class="r">User has tried to kill the process.</span> */
+}
+else if (sigismember (&amp;waiting_mask, SIGTSTP)) {
+  /* <span class="r">User has tried to stop the process.</span> */
+}
+</pre></div>
+
+<p>Remember that if there is a particular signal pending for your process,
+additional signals of that same type that arrive in the meantime might
+be discarded.  For example, if a <code class="code">SIGINT</code> signal is pending when
+another <code class="code">SIGINT</code> signal arrives, your program will probably only
+see one of them when you unblock this signal.
+</p>
+<p><strong class="strong">Portability Note:</strong> The <code class="code">sigpending</code> function is new in
+POSIX.1.  Older systems have no equivalent facility.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Remembering-a-Signal.html">Remembering a Signal to Act On Later</a>, Previous: <a href="Blocking-for-Handler.html">Blocking Signals for a Handler</a>, Up: <a href="Blocking-Signals.html">Blocking Signals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

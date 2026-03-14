@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Local Modes (The GNU C Library)</title>
+
+<meta name="description" content="Local Modes (The GNU C Library)">
+<meta name="keywords" content="Local Modes (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Terminal-Modes.html" rel="up" title="Terminal Modes">
+<link href="Line-Speed.html" rel="next" title="Line Speed">
+<link href="Control-Modes.html" rel="prev" title="Control Modes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Local-Modes">
+<div class="nav-panel">
+<p>
+Next: <a href="Line-Speed.html" accesskey="n" rel="next">Line Speed</a>, Previous: <a href="Control-Modes.html" accesskey="p" rel="prev">Control Modes</a>, Up: <a href="Terminal-Modes.html" accesskey="u" rel="up">Terminal Modes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Local-Modes-1"><span>17.5.7 Local Modes<a class="copiable-link" href="#Local-Modes-1"> &para;</a></span></h4>
+
+<p>This section describes the flags for the <code class="code">c_lflag</code> member of the
+<code class="code">struct termios</code> structure.  These flags generally control
+higher-level aspects of input processing than the input modes flags
+described in <a class="ref" href="Input-Modes.html">Input Modes</a>, such as echoing, signals, and the choice
+of canonical or noncanonical input.
+</p>
+<p>The <code class="code">c_lflag</code> member itself is an integer, and you change the flags
+and fields using the operators <code class="code">&amp;</code>, <code class="code">|</code>, and <code class="code">^</code>.  Don&rsquo;t
+try to specify the entire value for <code class="code">c_lflag</code>&mdash;instead, change
+only specific flags and leave the rest untouched (see <a class="pxref" href="Setting-Modes.html">Setting Terminal Modes Properly</a>).
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ICANON"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">ICANON</strong><a class="copiable-link" href="#index-ICANON"> &para;</a></span></dt>
+<dd>
+<p>This bit, if set, enables canonical input processing mode.  Otherwise,
+input is processed in noncanonical mode.  See <a class="xref" href="Canonical-or-Not.html">Two Styles of Input: Canonical or Not</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ECHO"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">ECHO</strong><a class="copiable-link" href="#index-ECHO"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, echoing of input characters back to the terminal
+is enabled.
+<a class="index-entry-id" id="index-echo-of-terminal-input"></a>
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ECHOE"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">ECHOE</strong><a class="copiable-link" href="#index-ECHOE"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, echoing indicates erasure of input with the ERASE
+character by erasing the last character in the current line from the
+screen.  Otherwise, the character erased is re-echoed to show what has
+happened (suitable for a printing terminal).
+</p>
+<p>This bit only controls the display behavior; the <code class="code">ICANON</code> bit by
+itself controls actual recognition of the ERASE character and erasure of
+input, without which <code class="code">ECHOE</code> is simply irrelevant.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ECHOPRT"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">ECHOPRT</strong><a class="copiable-link" href="#index-ECHOPRT"> &para;</a></span></dt>
+<dd>
+<p>This bit, like <code class="code">ECHOE</code>, enables display of the ERASE character in
+a way that is geared to a hardcopy terminal.  When you type the ERASE
+character, a &lsquo;<samp class="samp">\</samp>&rsquo; character is printed followed by the first
+character erased.  Typing the ERASE character again just prints the next
+character erased.  Then, the next time you type a normal character, a
+&lsquo;<samp class="samp">/</samp>&rsquo; character is printed before the character echoes.
+</p>
+<p>This is a BSD extension, and exists only in BSD systems and
+GNU/Linux and GNU/Hurd systems.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ECHOK"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">ECHOK</strong><a class="copiable-link" href="#index-ECHOK"> &para;</a></span></dt>
+<dd>
+<p>This bit enables special display of the KILL character by moving to a
+new line after echoing the KILL character normally.  The behavior of
+<code class="code">ECHOKE</code> (below) is nicer to look at.
+</p>
+<p>If this bit is not set, the KILL character echoes just as it would if it
+were not the KILL character.  Then it is up to the user to remember that
+the KILL character has erased the preceding input; there is no
+indication of this on the screen.
+</p>
+<p>This bit only controls the display behavior; the <code class="code">ICANON</code> bit by
+itself controls actual recognition of the KILL character and erasure of
+input, without which <code class="code">ECHOK</code> is simply irrelevant.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ECHOKE"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">ECHOKE</strong><a class="copiable-link" href="#index-ECHOKE"> &para;</a></span></dt>
+<dd>
+<p>This bit is similar to <code class="code">ECHOK</code>.  It enables special display of the
+KILL character by erasing on the screen the entire line that has been
+killed.  This is a BSD extension, and exists only in BSD systems and
+GNU/Linux and GNU/Hurd systems.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ECHONL"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">ECHONL</strong><a class="copiable-link" href="#index-ECHONL"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set and the <code class="code">ICANON</code> bit is also set, then the
+newline (<code class="code">'\n'</code>) character is echoed even if the <code class="code">ECHO</code> bit
+is not set.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ECHOCTL"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">ECHOCTL</strong><a class="copiable-link" href="#index-ECHOCTL"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set and the <code class="code">ECHO</code> bit is also set, echo control
+characters with &lsquo;<samp class="samp">^</samp>&rsquo; followed by the corresponding text character.
+Thus, control-A echoes as &lsquo;<samp class="samp">^A</samp>&rsquo;.  This is usually the preferred mode
+for interactive input, because echoing a control character back to the
+terminal could have some undesired effect on the terminal.
+</p>
+<p>This is a BSD extension, and exists only in BSD systems and
+GNU/Linux and GNU/Hurd systems.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ISIG"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">ISIG</strong><a class="copiable-link" href="#index-ISIG"> &para;</a></span></dt>
+<dd>
+<p>This bit controls whether the INTR, QUIT, and SUSP characters are
+recognized.  The functions associated with these characters are performed
+if and only if this bit is set.  Being in canonical or noncanonical
+input mode has no effect on the interpretation of these characters.
+</p>
+<p>You should use caution when disabling recognition of these characters.
+Programs that cannot be interrupted interactively are very
+user-unfriendly.  If you clear this bit, your program should provide
+some alternate interface that allows the user to interactively send the
+signals associated with these characters, or to escape from the program.
+<a class="index-entry-id" id="index-interactive-signals_002c-from-terminal"></a>
+</p>
+<p>See <a class="xref" href="Signal-Characters.html">Characters that Cause Signals</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-IEXTEN"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">IEXTEN</strong><a class="copiable-link" href="#index-IEXTEN"> &para;</a></span></dt>
+<dd>
+<p>POSIX.1 gives <code class="code">IEXTEN</code> implementation-defined meaning,
+so you cannot rely on this interpretation on all systems.
+</p>
+<p>On BSD systems and GNU/Linux and GNU/Hurd systems, it enables the LNEXT and
+DISCARD characters.
+See <a class="xref" href="Other-Special.html">Other Special Characters</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-NOFLSH"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">NOFLSH</strong><a class="copiable-link" href="#index-NOFLSH"> &para;</a></span></dt>
+<dd>
+<p>Normally, the INTR, QUIT, and SUSP characters cause input and output
+queues for the terminal to be cleared.  If this bit is set, the queues
+are not cleared.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-TOSTOP"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">TOSTOP</strong><a class="copiable-link" href="#index-TOSTOP"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set and the system supports job control, then
+<code class="code">SIGTTOU</code> signals are generated by background processes that
+attempt to write to the terminal.  See <a class="xref" href="Access-to-the-Terminal.html">Access to the Controlling Terminal</a>.
+</p></dd></dl>
+
+<p>The following bits are BSD extensions; they exist only on BSD systems
+and GNU/Hurd systems.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ALTWERASE"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">ALTWERASE</strong><a class="copiable-link" href="#index-ALTWERASE"> &para;</a></span></dt>
+<dd>
+<p>This bit determines how far the WERASE character should erase.  The
+WERASE character erases back to the beginning of a word; the question
+is, where do words begin?
+</p>
+<p>If this bit is clear, then the beginning of a word is a nonwhitespace
+character following a whitespace character.  If the bit is set, then the
+beginning of a word is an alphanumeric character or underscore following
+a character which is none of those.
+</p>
+<p>See <a class="xref" href="Editing-Characters.html">Characters for Input Editing</a>, for more information about the WERASE character.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-FLUSHO"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">FLUSHO</strong><a class="copiable-link" href="#index-FLUSHO"> &para;</a></span></dt>
+<dd>
+<p>This is the bit that toggles when the user types the DISCARD character.
+While this bit is set, all output is discarded.  See <a class="xref" href="Other-Special.html">Other Special Characters</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-NOKERNINFO"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">NOKERNINFO</strong><a class="copiable-link" href="#index-NOKERNINFO"> &para;</a></span></dt>
+<dd>
+<p>Setting this bit disables handling of the STATUS character.
+See <a class="xref" href="Other-Special.html">Other Special Characters</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-PENDIN"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">PENDIN</strong><a class="copiable-link" href="#index-PENDIN"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, it indicates that there is a line of input that
+needs to be reprinted.  Typing the REPRINT character sets this bit; the
+bit remains set until reprinting is finished.  See <a class="xref" href="Editing-Characters.html">Characters for Input Editing</a>.
+</p></dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Line-Speed.html">Line Speed</a>, Previous: <a href="Control-Modes.html">Control Modes</a>, Up: <a href="Terminal-Modes.html">Terminal Modes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Line Control (The GNU C Library)</title>
+
+<meta name="description" content="Line Control (The GNU C Library)">
+<meta name="keywords" content="Line Control (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Low_002dLevel-Terminal-Interface.html" rel="up" title="Low-Level Terminal Interface">
+<link href="Noncanon-Example.html" rel="next" title="Noncanon Example">
+<link href="BSD-Terminal-Modes.html" rel="prev" title="BSD Terminal Modes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Line-Control">
+<div class="nav-panel">
+<p>
+Next: <a href="Noncanon-Example.html" accesskey="n" rel="next">Noncanonical Mode Example</a>, Previous: <a href="BSD-Terminal-Modes.html" accesskey="p" rel="prev">BSD Terminal Modes</a>, Up: <a href="Low_002dLevel-Terminal-Interface.html" accesskey="u" rel="up">Low-Level Terminal Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Line-Control-Functions"><span>17.7 Line Control Functions<a class="copiable-link" href="#Line-Control-Functions"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-terminal-line-control-functions"></a>
+
+<p>These functions perform miscellaneous control actions on terminal
+devices.  As regards terminal access, they are treated like doing
+output: if any of these functions is used by a background process on its
+controlling terminal, normally all processes in the process group are
+sent a <code class="code">SIGTTOU</code> signal.  The exception is if the calling process
+itself is ignoring or blocking <code class="code">SIGTTOU</code> signals, in which case the
+operation is performed and no signal is sent.  See <a class="xref" href="Job-Control.html">Job Control</a>.
+</p>
+<a class="index-entry-id" id="index-break-condition_002c-generating"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-tcsendbreak"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">tcsendbreak</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, int <var class="var">duration</var>)</code><a class="copiable-link" href="#index-tcsendbreak"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:tcattr(filedes)/bsd
+| AS-Unsafe 
+| AC-Unsafe corrupt/bsd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function generates a break condition by transmitting a stream of
+zero bits on the terminal associated with the file descriptor
+<var class="var">filedes</var>.  The duration of the break is controlled by the
+<var class="var">duration</var> argument.  If zero, the duration is between 0.25 and 0.5
+seconds.  The meaning of a nonzero value depends on the operating system.
+</p>
+<p>This function does nothing if the terminal is not an asynchronous serial
+data port.
+</p>
+<p>The return value is normally zero.  In the event of an error, a value
+of <em class="math">-1</em> is returned.  The following <code class="code">errno</code> error conditions
+are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">filedes</var> is not a valid file descriptor.
+</p>
+</dd>
+<dt><code class="code">ENOTTY</code></dt>
+<dd><p>The <var class="var">filedes</var> is not associated with a terminal device.
+</p></dd>
+</dl>
+</dd></dl>
+
+
+<a class="index-entry-id" id="index-flushing-terminal-output-queue"></a>
+<a class="index-entry-id" id="index-terminal-output-queue_002c-flushing"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-tcdrain"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">tcdrain</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>)</code><a class="copiable-link" href="#index-tcdrain"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">tcdrain</code> function waits until all queued
+output to the terminal <var class="var">filedes</var> has been transmitted.
+</p>
+<p>This function is a cancellation point in multi-threaded programs.  This
+is a problem if the thread allocates some resources (like memory, file
+descriptors, semaphores or whatever) at the time <code class="code">tcdrain</code> is
+called.  If the thread gets canceled these resources stay allocated
+until the program ends.  To avoid this calls to <code class="code">tcdrain</code> should be
+protected using cancellation handlers.
+</p>
+<p>The return value is normally zero.  In the event of an error, a value
+of <em class="math">-1</em> is returned.  The following <code class="code">errno</code> error conditions
+are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">filedes</var> is not a valid file descriptor.
+</p>
+</dd>
+<dt><code class="code">ENOTTY</code></dt>
+<dd><p>The <var class="var">filedes</var> is not associated with a terminal device.
+</p>
+</dd>
+<dt><code class="code">EINTR</code></dt>
+<dd><p>The operation was interrupted by delivery of a signal.
+See <a class="xref" href="Interrupted-Primitives.html">Primitives Interrupted by Signals</a>.
+</p></dd>
+</dl>
+</dd></dl>
+
+
+<a class="index-entry-id" id="index-clearing-terminal-input-queue"></a>
+<a class="index-entry-id" id="index-terminal-input-queue_002c-clearing"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-tcflush"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">tcflush</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, int <var class="var">queue</var>)</code><a class="copiable-link" href="#index-tcflush"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">tcflush</code> function is used to clear the input and/or output
+queues associated with the terminal file <var class="var">filedes</var>.  The <var class="var">queue</var>
+argument specifies which queue(s) to clear, and can be one of the
+following values:
+</p>
+<dl class="vtable">
+<dt><a id="index-TCIFLUSH"></a><span><code class="code">TCIFLUSH</code><a class="copiable-link" href="#index-TCIFLUSH"> &para;</a></span></dt>
+<dd>
+<p>Clear any input data received, but not yet read.
+</p>
+</dd>
+<dt><a id="index-TCOFLUSH"></a><span><code class="code">TCOFLUSH</code><a class="copiable-link" href="#index-TCOFLUSH"> &para;</a></span></dt>
+<dd>
+<p>Clear any output data written, but not yet transmitted.
+</p>
+</dd>
+<dt><a id="index-TCIOFLUSH"></a><span><code class="code">TCIOFLUSH</code><a class="copiable-link" href="#index-TCIOFLUSH"> &para;</a></span></dt>
+<dd>
+<p>Clear both queued input and output.
+</p></dd>
+</dl>
+
+<p>The return value is normally zero.  In the event of an error, a value
+of <em class="math">-1</em> is returned.  The following <code class="code">errno</code> error conditions
+are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">filedes</var> is not a valid file descriptor.
+</p>
+</dd>
+<dt><code class="code">ENOTTY</code></dt>
+<dd><p>The <var class="var">filedes</var> is not associated with a terminal device.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>A bad value was supplied as the <var class="var">queue</var> argument.
+</p></dd>
+</dl>
+
+<p>It is unfortunate that this function is named <code class="code">tcflush</code>, because
+the term &ldquo;flush&rdquo; is normally used for quite another operation&mdash;waiting
+until all output is transmitted&mdash;and using it for discarding input or
+output would be confusing.  Unfortunately, the name <code class="code">tcflush</code> comes
+from POSIX and we cannot change it.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-flow-control_002c-terminal"></a>
+<a class="index-entry-id" id="index-terminal-flow-control"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-tcflow"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">tcflow</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, int <var class="var">action</var>)</code><a class="copiable-link" href="#index-tcflow"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:tcattr(filedes)/bsd
+| AS-Unsafe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">tcflow</code> function is used to perform operations relating to
+XON/XOFF flow control on the terminal file specified by <var class="var">filedes</var>.
+</p>
+<p>The <var class="var">action</var> argument specifies what operation to perform, and can
+be one of the following values:
+</p>
+<dl class="vtable">
+<dt><a id="index-TCOOFF"></a><span><code class="code">TCOOFF</code><a class="copiable-link" href="#index-TCOOFF"> &para;</a></span></dt>
+<dd><p>Suspend transmission of output.
+</p>
+</dd>
+<dt><a id="index-TCOON"></a><span><code class="code">TCOON</code><a class="copiable-link" href="#index-TCOON"> &para;</a></span></dt>
+<dd><p>Restart transmission of output.
+</p>
+</dd>
+<dt><a id="index-TCIOFF"></a><span><code class="code">TCIOFF</code><a class="copiable-link" href="#index-TCIOFF"> &para;</a></span></dt>
+<dd><p>Transmit a STOP character.
+</p>
+</dd>
+<dt><a id="index-TCION"></a><span><code class="code">TCION</code><a class="copiable-link" href="#index-TCION"> &para;</a></span></dt>
+<dd><p>Transmit a START character.
+</p></dd>
+</dl>
+
+<p>For more information about the STOP and START characters, see <a class="ref" href="Special-Characters.html">Special Characters</a>.
+</p>
+<p>The return value is normally zero.  In the event of an error, a value
+of <em class="math">-1</em> is returned.  The following <code class="code">errno</code> error conditions
+are defined for this function:
+</p>
+<dl class="table">
+<dt><a id="index-EBADF-1"></a><span><code class="code">EBADF</code><a class="copiable-link" href="#index-EBADF-1"> &para;</a></span></dt>
+<dd><p>The <var class="var">filedes</var> is not a valid file descriptor.
+</p>
+</dd>
+<dt><a id="index-ENOTTY-1"></a><span><code class="code">ENOTTY</code><a class="copiable-link" href="#index-ENOTTY-1"> &para;</a></span></dt>
+<dd><p>The <var class="var">filedes</var> is not associated with a terminal device.
+</p>
+</dd>
+<dt><a id="index-EINVAL-2"></a><span><code class="code">EINVAL</code><a class="copiable-link" href="#index-EINVAL-2"> &para;</a></span></dt>
+<dd><p>A bad value was supplied as the <var class="var">action</var> argument.
+</p></dd>
+</dl>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Noncanon-Example.html">Noncanonical Mode Example</a>, Previous: <a href="BSD-Terminal-Modes.html">BSD Terminal Modes</a>, Up: <a href="Low_002dLevel-Terminal-Interface.html">Low-Level Terminal Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

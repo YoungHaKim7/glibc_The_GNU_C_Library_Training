@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Services Database (The GNU C Library)</title>
+
+<meta name="description" content="Services Database (The GNU C Library)">
+<meta name="keywords" content="Services Database (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Internet-Namespace.html" rel="up" title="Internet Namespace">
+<link href="Byte-Order.html" rel="next" title="Byte Order">
+<link href="Ports.html" rel="prev" title="Ports">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Services-Database">
+<div class="nav-panel">
+<p>
+Next: <a href="Byte-Order.html" accesskey="n" rel="next">Byte Order Conversion</a>, Previous: <a href="Ports.html" accesskey="p" rel="prev">Internet Ports</a>, Up: <a href="Internet-Namespace.html" accesskey="u" rel="up">The Internet Namespace</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="The-Services-Database"><span>16.6.4 The Services Database<a class="copiable-link" href="#The-Services-Database"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-services-database"></a>
+<a class="index-entry-id" id="index-converting-service-name-to-port-number"></a>
+<a class="index-entry-id" id="index-converting-port-number-to-service-name"></a>
+
+<a class="index-entry-id" id="index-_002fetc_002fservices"></a>
+<p>The database that keeps track of &ldquo;well-known&rdquo; services is usually
+either the file <samp class="file">/etc/services</samp> or an equivalent from a name server.
+You can use these utilities, declared in <samp class="file">netdb.h</samp>, to access
+the services database.
+<a class="index-entry-id" id="index-netdb_002eh-1"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-servent"><span class="category-def">Data Type: </span><span><strong class="def-name">struct servent</strong><a class="copiable-link" href="#index-struct-servent"> &para;</a></span></dt>
+<dd>
+<p>This data type holds information about entries from the services database.
+It has the following members:
+</p>
+<dl class="table">
+<dt><code class="code">char *s_name</code></dt>
+<dd><p>This is the &ldquo;official&rdquo; name of the service.
+</p>
+</dd>
+<dt><code class="code">char **s_aliases</code></dt>
+<dd><p>These are alternate names for the service, represented as an array of
+strings.  A null pointer terminates the array.
+</p>
+</dd>
+<dt><code class="code">int s_port</code></dt>
+<dd><p>This is the port number for the service.  Port numbers are given in
+network byte order; see <a class="ref" href="Byte-Order.html">Byte Order Conversion</a>.
+</p>
+</dd>
+<dt><code class="code">char *s_proto</code></dt>
+<dd><p>This is the name of the protocol to use with this service.
+See <a class="xref" href="Protocols-Database.html">Protocols Database</a>.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>To get information about a particular service, use the
+<code class="code">getservbyname</code> or <code class="code">getservbyport</code> functions.  The information
+is returned in a statically-allocated structure; you must copy the
+information if you need to save it across calls.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getservbyname"><span class="category-def">Function: </span><span><code class="def-type">struct servent *</code> <strong class="def-name">getservbyname</strong> <code class="def-code-arguments">(const char *<var class="var">name</var>, const char *<var class="var">proto</var>)</code><a class="copiable-link" href="#index-getservbyname"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:servbyname locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">getservbyname</code> function returns information about the
+service named <var class="var">name</var> using protocol <var class="var">proto</var>.  If it can&rsquo;t find
+such a service, it returns a null pointer.
+</p>
+<p>This function is useful for servers as well as for clients; servers
+use it to determine which port they should listen on (see <a class="pxref" href="Listening.html">Listening for Connections</a>).
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getservbyport"><span class="category-def">Function: </span><span><code class="def-type">struct servent *</code> <strong class="def-name">getservbyport</strong> <code class="def-code-arguments">(int <var class="var">port</var>, const char *<var class="var">proto</var>)</code><a class="copiable-link" href="#index-getservbyport"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:servbyport locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">getservbyport</code> function returns information about the
+service at port <var class="var">port</var> using protocol <var class="var">proto</var>.  If it can&rsquo;t
+find such a service, it returns a null pointer.
+</p></dd></dl>
+
+<p>You can also scan the services database using <code class="code">setservent</code>,
+<code class="code">getservent</code> and <code class="code">endservent</code>.  Be careful when using these
+functions because they are not reentrant.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setservent"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">setservent</strong> <code class="def-code-arguments">(int <var class="var">stayopen</var>)</code><a class="copiable-link" href="#index-setservent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:servent locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function opens the services database to begin scanning it.
+</p>
+<p>If the <var class="var">stayopen</var> argument is nonzero, this sets a flag so that
+subsequent calls to <code class="code">getservbyname</code> or <code class="code">getservbyport</code> will
+not close the database (as they usually would).  This makes for more
+efficiency if you call those functions several times, by avoiding
+reopening the database for each call.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getservent"><span class="category-def">Function: </span><span><code class="def-type">struct servent *</code> <strong class="def-name">getservent</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-getservent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:servent race:serventbuf locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns the next entry in the services database.  If
+there are no more entries, it returns a null pointer.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-endservent"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">endservent</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-endservent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:servent locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function closes the services database.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Byte-Order.html">Byte Order Conversion</a>, Previous: <a href="Ports.html">Internet Ports</a>, Up: <a href="Internet-Namespace.html">The Internet Namespace</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

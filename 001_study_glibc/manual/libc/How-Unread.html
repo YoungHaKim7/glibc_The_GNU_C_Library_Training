@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>How Unread (The GNU C Library)</title>
+
+<meta name="description" content="How Unread (The GNU C Library)">
+<meta name="keywords" content="How Unread (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Unreading.html" rel="up" title="Unreading">
+<link href="Unreading-Idea.html" rel="prev" title="Unreading Idea">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="How-Unread">
+<div class="nav-panel">
+<p>
+Previous: <a href="Unreading-Idea.html" accesskey="p" rel="prev">What Unreading Means</a>, Up: <a href="Unreading.html" accesskey="u" rel="up">Unreading</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Using-ungetc-To-Do-Unreading"><span>12.10.2 Using <code class="code">ungetc</code> To Do Unreading<a class="copiable-link" href="#Using-ungetc-To-Do-Unreading"> &para;</a></span></h4>
+
+<p>The function to unread a character is called <code class="code">ungetc</code>, because it
+reverses the action of <code class="code">getc</code>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ungetc"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">ungetc</strong> <code class="def-code-arguments">(int <var class="var">c</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-ungetc"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe lock corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">ungetc</code> function pushes back the character <var class="var">c</var> onto the
+input stream <var class="var">stream</var>.  So the next input from <var class="var">stream</var> will
+read <var class="var">c</var> before anything else.
+</p>
+<p>If <var class="var">c</var> is <code class="code">EOF</code>, <code class="code">ungetc</code> does nothing and just returns
+<code class="code">EOF</code>.  This lets you call <code class="code">ungetc</code> with the return value of
+<code class="code">getc</code> without needing to check for an error from <code class="code">getc</code>.
+</p>
+<p>The character that you push back doesn&rsquo;t have to be the same as the last
+character that was actually read from the stream.  In fact, it isn&rsquo;t
+necessary to actually read any characters from the stream before
+unreading them with <code class="code">ungetc</code>!  But that is a strange way to write a
+program; usually <code class="code">ungetc</code> is used only to unread a character that
+was just read from the same stream.  The GNU C Library supports this
+even on files opened in binary mode, but other systems might not.
+</p>
+<p>The GNU C Library supports pushing back multiple characters; subsequently
+reading from the stream retrieves the characters in the reverse order
+that they were pushed.
+</p>
+<p>Pushing back characters doesn&rsquo;t alter the file; only the internal
+buffering for the stream is affected.  If a file positioning function
+(such as <code class="code">fseek</code>, <code class="code">fseeko</code> or <code class="code">rewind</code>; see <a class="pxref" href="File-Positioning.html">File Positioning</a>) is called, any pending pushed-back characters are
+discarded.
+</p>
+<p>Unreading a character on a stream that is at end of file clears the
+end-of-file indicator for the stream, because it makes the character of
+input available.  After you read that character, trying to read again
+will encounter end of file.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ungetwc"><span class="category-def">Function: </span><span><code class="def-type">wint_t</code> <strong class="def-name">ungetwc</strong> <code class="def-code-arguments">(wint_t <var class="var">wc</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-ungetwc"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe lock corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">ungetwc</code> function behaves just like <code class="code">ungetc</code> just that it
+pushes back a wide character.
+</p></dd></dl>
+
+<p>Here is an example showing the use of <code class="code">getc</code> and <code class="code">ungetc</code> to
+skip over whitespace characters.  When this function reaches a
+non-whitespace character, it unreads that character to be seen again on
+the next read operation on the stream.
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
+
+void
+skip_whitespace (FILE *stream)
+{
+  int c;
+  do
+    /* <span class="r">No need to check for <code class="code">EOF</code> because it is not</span>
+       <span class="r"><code class="code">isspace</code>, and <code class="code">ungetc</code> ignores <code class="code">EOF</code>.</span>  */
+    c = getc (stream);
+  while (isspace (c));
+  ungetc (c, stream);
+}
+</pre></div>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Unreading-Idea.html">What Unreading Means</a>, Up: <a href="Unreading.html">Unreading</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Non-Local Exits and Signals (The GNU C Library)</title>
+
+<meta name="description" content="Non-Local Exits and Signals (The GNU C Library)">
+<meta name="keywords" content="Non-Local Exits and Signals (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Non_002dLocal-Exits.html" rel="up" title="Non-Local Exits">
+<link href="System-V-contexts.html" rel="next" title="System V contexts">
+<link href="Non_002dLocal-Details.html" rel="prev" title="Non-Local Details">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Non_002dLocal-Exits-and-Signals">
+<div class="nav-panel">
+<p>
+Next: <a href="System-V-contexts.html" accesskey="n" rel="next">Complete Context Control</a>, Previous: <a href="Non_002dLocal-Details.html" accesskey="p" rel="prev">Details of Non-Local Exits</a>, Up: <a href="Non_002dLocal-Exits.html" accesskey="u" rel="up">Non-Local Exits</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Non_002dLocal-Exits-and-Signals-1"><span>24.3 Non-Local Exits and Signals<a class="copiable-link" href="#Non_002dLocal-Exits-and-Signals-1"> &para;</a></span></h3>
+
+<p>In BSD Unix systems, <code class="code">setjmp</code> and <code class="code">longjmp</code> also save and
+restore the set of blocked signals; see <a class="ref" href="Blocking-Signals.html">Blocking Signals</a>.  However,
+the POSIX.1 standard requires <code class="code">setjmp</code> and <code class="code">longjmp</code> not to
+change the set of blocked signals, and provides an additional pair of
+functions (<code class="code">sigsetjmp</code> and <code class="code">siglongjmp</code>) to get the BSD
+behavior.
+</p>
+<p>The behavior of <code class="code">setjmp</code> and <code class="code">longjmp</code> in the GNU C Library is
+controlled by feature test macros; see <a class="ref" href="Feature-Test-Macros.html">Feature Test Macros</a>.  The
+default in the GNU C Library is the POSIX.1 behavior rather than the BSD
+behavior.
+</p>
+<p>The facilities in this section are declared in the header file
+<samp class="file">setjmp.h</samp>.
+<a class="index-entry-id" id="index-setjmp_002eh-1"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-sigjmp_005fbuf"><span class="category-def">Data Type: </span><span><strong class="def-name">sigjmp_buf</strong><a class="copiable-link" href="#index-sigjmp_005fbuf"> &para;</a></span></dt>
+<dd>
+<p>This is similar to <code class="code">jmp_buf</code>, except that it can also store state
+information about the set of blocked signals.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sigsetjmp"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sigsetjmp</strong> <code class="def-code-arguments">(sigjmp_buf <var class="var">state</var>, int <var class="var">savesigs</var>)</code><a class="copiable-link" href="#index-sigsetjmp"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock/hurd
+| AC-Unsafe lock/hurd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is similar to <code class="code">setjmp</code>.  If <var class="var">savesigs</var> is nonzero, the set
+of blocked signals is saved in <var class="var">state</var> and will be restored if a
+<code class="code">siglongjmp</code> is later performed with this <var class="var">state</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-siglongjmp"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">siglongjmp</strong> <code class="def-code-arguments">(sigjmp_buf <var class="var">state</var>, int <var class="var">value</var>)</code><a class="copiable-link" href="#index-siglongjmp"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe plugin corrupt lock/hurd
+| AC-Unsafe corrupt lock/hurd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is similar to <code class="code">longjmp</code> except for the type of its <var class="var">state</var>
+argument.  If the <code class="code">sigsetjmp</code> call that set this <var class="var">state</var> used a
+nonzero <var class="var">savesigs</var> flag, <code class="code">siglongjmp</code> also restores the set of
+blocked signals.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="System-V-contexts.html">Complete Context Control</a>, Previous: <a href="Non_002dLocal-Details.html">Details of Non-Local Exits</a>, Up: <a href="Non_002dLocal-Exits.html">Non-Local Exits</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Asynchronous I/O Signals (The GNU C Library)</title>
+
+<meta name="description" content="Asynchronous I/O Signals (The GNU C Library)">
+<meta name="keywords" content="Asynchronous I/O Signals (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Standard-Signals.html" rel="up" title="Standard Signals">
+<link href="Job-Control-Signals.html" rel="next" title="Job Control Signals">
+<link href="Alarm-Signals.html" rel="prev" title="Alarm Signals">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Asynchronous-I_002fO-Signals">
+<div class="nav-panel">
+<p>
+Next: <a href="Job-Control-Signals.html" accesskey="n" rel="next">Job Control Signals</a>, Previous: <a href="Alarm-Signals.html" accesskey="p" rel="prev">Alarm Signals</a>, Up: <a href="Standard-Signals.html" accesskey="u" rel="up">Standard Signals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Asynchronous-I_002fO-Signals-1"><span>25.2.4 Asynchronous I/O Signals<a class="copiable-link" href="#Asynchronous-I_002fO-Signals-1"> &para;</a></span></h4>
+
+<p>The signals listed in this section are used in conjunction with
+asynchronous I/O facilities.  You have to take explicit action by
+calling <code class="code">fcntl</code> to enable a particular file descriptor to generate
+these signals (see <a class="pxref" href="Interrupt-Input.html">Interrupt-Driven Input</a>).  The default action for these
+signals is to ignore them.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SIGIO"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SIGIO</strong><a class="copiable-link" href="#index-SIGIO"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-input-available-signal"></a>
+<a class="index-entry-id" id="index-output-possible-signal"></a>
+<p>This signal is sent when a file descriptor is ready to perform input
+or output.
+</p>
+<p>On most operating systems, terminals and sockets are the only kinds of
+files that can generate <code class="code">SIGIO</code>; other kinds, including ordinary
+files, never generate <code class="code">SIGIO</code> even if you ask them to.
+</p>
+<p>On GNU systems <code class="code">SIGIO</code> will always be generated properly
+if you successfully set asynchronous mode with <code class="code">fcntl</code>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SIGURG"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SIGURG</strong><a class="copiable-link" href="#index-SIGURG"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-urgent-data-signal"></a>
+<p>This signal is sent when &ldquo;urgent&rdquo; or out-of-band data arrives on a
+socket.  See <a class="xref" href="Out_002dof_002dBand-Data.html">Out-of-Band Data</a>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SIGPOLL"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SIGPOLL</strong><a class="copiable-link" href="#index-SIGPOLL"> &para;</a></span></dt>
+<dd>
+<p>This is a System V signal name, more or less similar to <code class="code">SIGIO</code>.
+It is defined only for compatibility.
+</p></dd></dl>
+
+</div>
+
+
+
+</body>
+</html>

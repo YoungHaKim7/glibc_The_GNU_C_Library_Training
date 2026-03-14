@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Simple Output (The GNU C Library)</title>
+
+<meta name="description" content="Simple Output (The GNU C Library)">
+<meta name="keywords" content="Simple Output (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="I_002fO-on-Streams.html" rel="up" title="I/O on Streams">
+<link href="Character-Input.html" rel="next" title="Character Input">
+<link href="Streams-and-I18N.html" rel="prev" title="Streams and I18N">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Simple-Output">
+<div class="nav-panel">
+<p>
+Next: <a href="Character-Input.html" accesskey="n" rel="next">Character Input</a>, Previous: <a href="Streams-and-I18N.html" accesskey="p" rel="prev">Streams in Internationalized Applications</a>, Up: <a href="I_002fO-on-Streams.html" accesskey="u" rel="up">Input/Output on Streams</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Simple-Output-by-Characters-or-Lines"><span>12.7 Simple Output by Characters or Lines<a class="copiable-link" href="#Simple-Output-by-Characters-or-Lines"> &para;</a></span></h3>
+
+<a class="index-entry-id" id="index-writing-to-a-stream_002c-by-characters"></a>
+<p>This section describes functions for performing character- and
+line-oriented output.
+</p>
+<p>These narrow stream functions are declared in the header file
+<samp class="file">stdio.h</samp> and the wide stream functions in <samp class="file">wchar.h</samp>.
+<a class="index-entry-id" id="index-stdio_002eh-3"></a>
+<a class="index-entry-id" id="index-wchar_002eh-14"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fputc"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fputc</strong> <code class="def-code-arguments">(int <var class="var">c</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-fputc"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fputc</code> function converts the character <var class="var">c</var> to type
+<code class="code">unsigned char</code>, and writes it to the stream <var class="var">stream</var>.
+<code class="code">EOF</code> is returned if a write error occurs; otherwise the
+character <var class="var">c</var> is returned.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fputwc"><span class="category-def">Function: </span><span><code class="def-type">wint_t</code> <strong class="def-name">fputwc</strong> <code class="def-code-arguments">(wchar_t <var class="var">wc</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-fputwc"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fputwc</code> function writes the wide character <var class="var">wc</var> to the
+stream <var class="var">stream</var>.  <code class="code">WEOF</code> is returned if a write error occurs;
+otherwise the character <var class="var">wc</var> is returned.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fputc_005funlocked"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fputc_unlocked</strong> <code class="def-code-arguments">(int <var class="var">c</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-fputc_005funlocked"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:stream
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fputc_unlocked</code> function is equivalent to the <code class="code">fputc</code>
+function except that it does not implicitly lock the stream.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fputwc_005funlocked"><span class="category-def">Function: </span><span><code class="def-type">wint_t</code> <strong class="def-name">fputwc_unlocked</strong> <code class="def-code-arguments">(wchar_t <var class="var">wc</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-fputwc_005funlocked"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:stream
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fputwc_unlocked</code> function is equivalent to the <code class="code">fputwc</code>
+function except that it does not implicitly lock the stream.
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-putc"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">putc</strong> <code class="def-code-arguments">(int <var class="var">c</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-putc"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is just like <code class="code">fputc</code>, except that it may be implemented as
+a macro and may evaluate the <var class="var">stream</var> argument more than once.
+Therefore, <var class="var">stream</var> should never be an expression with side-effects.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-putwc"><span class="category-def">Function: </span><span><code class="def-type">wint_t</code> <strong class="def-name">putwc</strong> <code class="def-code-arguments">(wchar_t <var class="var">wc</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-putwc"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is just like <code class="code">fputwc</code>, except that it may be implemented as
+a macro and may evaluate the <var class="var">stream</var> argument more than once.
+Therefore, <var class="var">stream</var> should never be an expression with side-effects.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-putc_005funlocked"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">putc_unlocked</strong> <code class="def-code-arguments">(int <var class="var">c</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-putc_005funlocked"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:stream
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">putc_unlocked</code> function is equivalent to the <code class="code">putc</code>
+function except that it does not implicitly lock the stream.
+Like <code class="code">putc</code>, it may be implemented as a macro and may evaluate
+the <var class="var">stream</var> argument more than once.  Therefore, <var class="var">stream</var>
+should not be an expression with side-effects.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-putwc_005funlocked"><span class="category-def">Function: </span><span><code class="def-type">wint_t</code> <strong class="def-name">putwc_unlocked</strong> <code class="def-code-arguments">(wchar_t <var class="var">wc</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-putwc_005funlocked"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:stream
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">putwc_unlocked</code> function is equivalent to the <code class="code">putwc</code>
+function except that it does not implicitly lock the stream.
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-putchar"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">putchar</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-putchar"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">putchar</code> function is equivalent to <code class="code">putc</code> with
+<code class="code">stdout</code> as the value of the <var class="var">stream</var> argument.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-putwchar"><span class="category-def">Function: </span><span><code class="def-type">wint_t</code> <strong class="def-name">putwchar</strong> <code class="def-code-arguments">(wchar_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-putwchar"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">putwchar</code> function is equivalent to <code class="code">putwc</code> with
+<code class="code">stdout</code> as the value of the <var class="var">stream</var> argument.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-putchar_005funlocked"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">putchar_unlocked</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-putchar_005funlocked"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:stdout
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">putchar_unlocked</code> function is equivalent to the <code class="code">putchar</code>
+function except that it does not implicitly lock the stream.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-putwchar_005funlocked"><span class="category-def">Function: </span><span><code class="def-type">wint_t</code> <strong class="def-name">putwchar_unlocked</strong> <code class="def-code-arguments">(wchar_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-putwchar_005funlocked"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:stdout
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">putwchar_unlocked</code> function is equivalent to the <code class="code">putwchar</code>
+function except that it does not implicitly lock the stream.
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fputs"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fputs</strong> <code class="def-code-arguments">(const char *<var class="var">s</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-fputs"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">fputs</code> writes the string <var class="var">s</var> to the stream
+<var class="var">stream</var>.  The terminating null character is not written.
+This function does <em class="emph">not</em> add a newline character, either.
+It outputs only the characters in the string.
+</p>
+<p>This function returns <code class="code">EOF</code> if a write error occurs, and otherwise
+a non-negative value.
+</p>
+<p>For example:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">fputs (&quot;Are &quot;, stdout);
+fputs (&quot;you &quot;, stdout);
+fputs (&quot;hungry?\n&quot;, stdout);
+</pre></div>
+
+<p>outputs the text &lsquo;<samp class="samp">Are you hungry?</samp>&rsquo; followed by a newline.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fputws"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fputws</strong> <code class="def-code-arguments">(const wchar_t *<var class="var">ws</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-fputws"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">fputws</code> writes the wide character string <var class="var">ws</var> to
+the stream <var class="var">stream</var>.  The terminating null character is not written.
+This function does <em class="emph">not</em> add a newline character, either.  It
+outputs only the characters in the string.
+</p>
+<p>This function returns <code class="code">WEOF</code> if a write error occurs, and otherwise
+a non-negative value.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fputs_005funlocked"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fputs_unlocked</strong> <code class="def-code-arguments">(const char *<var class="var">s</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-fputs_005funlocked"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:stream
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fputs_unlocked</code> function is equivalent to the <code class="code">fputs</code>
+function except that it does not implicitly lock the stream.
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fputws_005funlocked"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fputws_unlocked</strong> <code class="def-code-arguments">(const wchar_t *<var class="var">ws</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-fputws_005funlocked"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:stream
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fputws_unlocked</code> function is equivalent to the <code class="code">fputws</code>
+function except that it does not implicitly lock the stream.
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-puts"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">puts</strong> <code class="def-code-arguments">(const char *<var class="var">s</var>)</code><a class="copiable-link" href="#index-puts"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe lock corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">puts</code> function writes the string <var class="var">s</var> to the stream
+<code class="code">stdout</code> followed by a newline.  The terminating null character of
+the string is not written.  (Note that <code class="code">fputs</code> does <em class="emph">not</em>
+write a newline as this function does.)
+</p>
+<p><code class="code">puts</code> is the most convenient function for printing simple
+messages.  For example:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">puts (&quot;This is a message.&quot;);
+</pre></div>
+
+<p>outputs the text &lsquo;<samp class="samp">This is a message.</samp>&rsquo; followed by a newline.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-putw"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">putw</strong> <code class="def-code-arguments">(int <var class="var">w</var>, FILE *<var class="var">stream</var>)</code><a class="copiable-link" href="#index-putw"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe lock corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function writes the word <var class="var">w</var> (that is, an <code class="code">int</code>) to
+<var class="var">stream</var>.  It is provided for compatibility with SVID, but we
+recommend you use <code class="code">fwrite</code> instead (see <a class="pxref" href="Block-Input_002fOutput.html">Block Input/Output</a>).
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Character-Input.html">Character Input</a>, Previous: <a href="Streams-and-I18N.html">Streams in Internationalized Applications</a>, Up: <a href="I_002fO-on-Streams.html">Input/Output on Streams</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

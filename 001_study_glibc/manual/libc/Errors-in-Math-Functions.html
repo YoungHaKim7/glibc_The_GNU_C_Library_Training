@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Errors in Math Functions (The GNU C Library)</title>
+
+<meta name="description" content="Errors in Math Functions (The GNU C Library)">
+<meta name="keywords" content="Errors in Math Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Mathematics.html" rel="up" title="Mathematics">
+<link href="Pseudo_002dRandom-Numbers.html" rel="next" title="Pseudo-Random Numbers">
+<link href="Special-Functions.html" rel="prev" title="Special Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Errors-in-Math-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Pseudo_002dRandom-Numbers.html" accesskey="n" rel="next">Pseudo-Random Numbers</a>, Previous: <a href="Special-Functions.html" accesskey="p" rel="prev">Special Functions</a>, Up: <a href="Mathematics.html" accesskey="u" rel="up">Mathematics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Errors-in-Math-Functions-1"><span>19.7 Errors in Math Functions<a class="copiable-link" href="#Errors-in-Math-Functions-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-math-errors"></a>
+<a class="index-entry-id" id="index-ulps"></a>
+
+<p>Errors are measured in &ldquo;units of the last place&rdquo;.  This is a
+measure for the relative error.  For a number <em class="math">z</em> with the
+representation <em class="math">d.d...d&#x00B7;2^e</em> (we assume IEEE
+floating-point numbers with base 2) the ULP is represented by
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">|d.d...d - (z / 2^e)| / 2^(p - 1)
+</pre></div>
+
+<p>where <em class="math">p</em> is the number of bits in the mantissa of the
+floating-point number representation.  Ideally the error for all
+functions is always less than 0.5ulps in round-to-nearest mode.  Using
+rounding bits this is also
+possible and normally implemented for the basic operations.  Except
+for certain functions such as <code class="code">sqrt</code>, <code class="code">fma</code> and <code class="code">rint</code>
+whose results are fully specified by reference to corresponding IEEE
+754 floating-point operations, and conversions between strings and
+floating point, the GNU C Library does not aim for correctly rounded results
+for functions in the math library, and does not aim for correctness in
+whether &ldquo;inexact&rdquo; exceptions are raised.  Instead, the goals for
+accuracy of functions without fully specified results are as follows;
+some functions have bugs meaning they do not meet these goals in all
+cases.  In the future, the GNU C Library may provide some other correctly
+rounding functions under the names such as <code class="code">crsin</code> proposed for
+an extension to ISO C.
+</p>
+<ul class="itemize mark-bullet">
+<li>Each function with a floating-point result behaves as if it computes
+an infinite-precision result that is within a few ulp (in both real
+and complex parts, for functions with complex results) of the
+mathematically correct value of the function (interpreted together
+with ISO C or POSIX semantics for the function in question) at the
+exact value passed as the input.  Exceptions are raised appropriately
+for this value and in accordance with IEEE 754 / ISO C / POSIX
+semantics, and it is then rounded according to the current rounding
+direction to the result that is returned to the user.  <code class="code">errno</code>
+may also be set (see <a class="pxref" href="Math-Error-Reporting.html">Error Reporting by Mathematical Functions</a>).  (The &ldquo;inexact&rdquo;
+exception may be raised, or not raised, even if this is inconsistent
+with the infinite-precision value.)
+
+</li><li>For the IBM <code class="code">long double</code> format, as used on PowerPC GNU/Linux,
+the accuracy goal is weaker for input values not exactly representable
+in 106 bits of precision; it is as if the input value is some value
+within 0.5ulp of the value actually passed, where &ldquo;ulp&rdquo; is
+interpreted in terms of a fixed-precision 106-bit mantissa, but not
+necessarily the exact value actually passed with discontiguous
+mantissa bits.
+
+</li><li>For the IBM <code class="code">long double</code> format, functions whose results are
+fully specified by reference to corresponding IEEE 754 floating-point
+operations have the same accuracy goals as other functions, but with
+the error bound being the same as that for division (3ulp).
+Furthermore, &ldquo;inexact&rdquo; and &ldquo;underflow&rdquo; exceptions may be raised
+for all functions for any inputs, even where such exceptions are
+inconsistent with the returned value, since the underlying
+floating-point arithmetic has that property.
+
+</li><li>Functions behave as if the infinite-precision result computed is zero,
+infinity or NaN if and only if that is the mathematically correct
+infinite-precision result.  They behave as if the infinite-precision
+result computed always has the same sign as the mathematically correct
+result.
+
+</li><li>If the mathematical result is more than a few ulp above the overflow
+threshold for the current rounding direction, the value returned is
+the appropriate overflow value for the current rounding direction,
+with the overflow exception raised.
+
+</li><li>If the mathematical result has magnitude well below half the least
+subnormal magnitude, the returned value is either zero or the least
+subnormal (in each case, with the correct sign), according to the
+current rounding direction and with the underflow exception raised.
+
+</li><li>Where the mathematical result underflows (before rounding) and is not
+exactly representable as a floating-point value, the function does not
+behave as if the computed infinite-precision result is an exact value
+in the subnormal range.  This means that the underflow exception is
+raised other than possibly for cases where the mathematical result is
+very close to the underflow threshold and the function behaves as if
+it computes an infinite-precision result that does not underflow.  (So
+there may be spurious underflow exceptions in cases where the
+underflowing result is exact, but not missing underflow exceptions in
+cases where it is inexact.)
+
+</li><li>The GNU C Library does not aim for functions to satisfy other properties of
+the underlying mathematical function, such as monotonicity, where not
+implied by the above goals.
+
+</li><li>All the above applies to both real and complex parts, for complex
+functions.
+
+</li></ul>
+
+<p>Therefore many of the functions in the math library have errors.  The
+math testsuite only flags results larger than 9ulp (or 16 for IBM
+<code class="code">long double</code> format) as errors; although most of the implementations
+show errors smaller than the limit.
+</p>
+<p>A more comprehensive analysis of the GNU C Library math functions precision could
+be found in &rsquo;Accuracy of Mathematical Functions in Single, Double, Double
+Extended, and Quadruple Precision&rsquo;; Brian Gladman, Vincenzo Innocente,
+John Mather, and Paul Zimmermann at
+<a class="url" href="%3chttps://inria.hal.science/hal-03141101%3e">&lt;https://inria.hal.science/hal-03141101&gt;</a>.  It does not cover complex
+functions, nor <code class="code">jn</code>/<code class="code">yn</code>, and it is only for x86_64, and for
+rounding to nearest, and does not cover any architecture variations (in
+particular IBM <code class="code">long double</code> is out of scope).
+</p>
+<p>For complex functions, some analysis of the GNU C Library math functions can be
+found in &rsquo;Accuracy of Complex Mathematical Operations and Functions in Single
+and Double Precision&rsquo;; Paul Caprioli, Vincenzo Innocente, Paul Zimmermann
+at <a class="url" href="https://inria.hal.science/hal-04714173">https://inria.hal.science/hal-04714173</a>.  It only covers <code class="code">float</code>
+and <code class="code">double</code>, only for x86_64, and for rounding to nearest, and does not
+cover any architecture variations.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Pseudo_002dRandom-Numbers.html">Pseudo-Random Numbers</a>, Previous: <a href="Special-Functions.html">Special Functions</a>, Up: <a href="Mathematics.html">Mathematics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Envz Functions (The GNU C Library)</title>
+
+<meta name="description" content="Envz Functions (The GNU C Library)">
+<meta name="keywords" content="Envz Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Argz-and-Envz-Vectors.html" rel="up" title="Argz and Envz Vectors">
+<link href="Argz-Functions.html" rel="prev" title="Argz Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Envz-Functions">
+<div class="nav-panel">
+<p>
+Previous: <a href="Argz-Functions.html" accesskey="p" rel="prev">Argz Functions</a>, Up: <a href="Argz-and-Envz-Vectors.html" accesskey="u" rel="up">Argz and Envz Vectors</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Envz-Functions-1"><span>5.15.2 Envz Functions<a class="copiable-link" href="#Envz-Functions-1"> &para;</a></span></h4>
+
+<p>Envz vectors are just argz vectors with additional constraints on the form
+of each element; as such, argz functions can also be used on them, where it
+makes sense.
+</p>
+<p>Each element in an envz vector is a name-value pair, separated by a <code class="code">'='</code>
+byte; if multiple <code class="code">'='</code> bytes are present in an element, those
+after the first are considered part of the value, and treated like all other
+non-<code class="code">'\0'</code> bytes.
+</p>
+<p>If <em class="emph">no</em> <code class="code">'='</code> bytes are present in an element, that element is
+considered the name of a &ldquo;null&rdquo; entry, as distinct from an entry with an
+empty value: <code class="code">envz_get</code> will return <code class="code">0</code> if given the name of null
+entry, whereas an entry with an empty value would result in a value of
+<code class="code">&quot;&quot;</code>; <code class="code">envz_entry</code> will still find such entries, however.  Null
+entries can be removed with the <code class="code">envz_strip</code> function.
+</p>
+<p>As with argz functions, envz functions that may allocate memory (and thus
+fail) have a return type of <code class="code">error_t</code>, and return either <code class="code">0</code> or
+<code class="code">ENOMEM</code>.
+</p>
+<a class="index-entry-id" id="index-envz_002eh"></a>
+<p>These functions are declared in the standard include file <samp class="file">envz.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-envz_005fentry"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">envz_entry</strong> <code class="def-code-arguments">(const char *<var class="var">envz</var>, size_t <var class="var">envz_len</var>, const char *<var class="var">name</var>)</code><a class="copiable-link" href="#index-envz_005fentry"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">envz_entry</code> function finds the entry in <var class="var">envz</var> with the name
+<var class="var">name</var>, and returns a pointer to the whole entry&mdash;that is, the argz
+element which begins with <var class="var">name</var> followed by a <code class="code">'='</code> byte.  If
+there is no entry with that name, <code class="code">0</code> is returned.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-envz_005fget"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">envz_get</strong> <code class="def-code-arguments">(const char *<var class="var">envz</var>, size_t <var class="var">envz_len</var>, const char *<var class="var">name</var>)</code><a class="copiable-link" href="#index-envz_005fget"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">envz_get</code> function finds the entry in <var class="var">envz</var> with the name
+<var class="var">name</var> (like <code class="code">envz_entry</code>), and returns a pointer to the value
+portion of that entry (following the <code class="code">'='</code>).  If there is no entry with
+that name (or only a null entry), <code class="code">0</code> is returned.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-envz_005fadd"><span class="category-def">Function: </span><span><code class="def-type">error_t</code> <strong class="def-name">envz_add</strong> <code class="def-code-arguments">(char **<var class="var">envz</var>, size_t *<var class="var">envz_len</var>, const char *<var class="var">name</var>, const char *<var class="var">value</var>)</code><a class="copiable-link" href="#index-envz_005fadd"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">envz_add</code> function adds an entry to <code class="code">*<var class="var">envz</var></code>
+(updating <code class="code">*<var class="var">envz</var></code> and <code class="code">*<var class="var">envz_len</var></code>) with the name
+<var class="var">name</var>, and value <var class="var">value</var>.  If an entry with the same name
+already exists in <var class="var">envz</var>, it is removed first.  If <var class="var">value</var> is
+<code class="code">0</code>, then the new entry will be the special null type of entry
+(mentioned above).
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-envz_005fmerge"><span class="category-def">Function: </span><span><code class="def-type">error_t</code> <strong class="def-name">envz_merge</strong> <code class="def-code-arguments">(char **<var class="var">envz</var>, size_t *<var class="var">envz_len</var>, const char *<var class="var">envz2</var>, size_t <var class="var">envz2_len</var>, int <var class="var">override</var>)</code><a class="copiable-link" href="#index-envz_005fmerge"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">envz_merge</code> function adds each entry in <var class="var">envz2</var> to <var class="var">envz</var>,
+as if with <code class="code">envz_add</code>, updating <code class="code">*<var class="var">envz</var></code> and
+<code class="code">*<var class="var">envz_len</var></code>.  If <var class="var">override</var> is true, then values in <var class="var">envz2</var>
+will supersede those with the same name in <var class="var">envz</var>, otherwise not.
+</p>
+<p>Null entries are treated just like other entries in this respect, so a null
+entry in <var class="var">envz</var> can prevent an entry of the same name in <var class="var">envz2</var> from
+being added to <var class="var">envz</var>, if <var class="var">override</var> is false.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-envz_005fstrip"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">envz_strip</strong> <code class="def-code-arguments">(char **<var class="var">envz</var>, size_t *<var class="var">envz_len</var>)</code><a class="copiable-link" href="#index-envz_005fstrip"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">envz_strip</code> function removes any null entries from <var class="var">envz</var>,
+updating <code class="code">*<var class="var">envz</var></code> and <code class="code">*<var class="var">envz_len</var></code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-envz_005fremove"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">envz_remove</strong> <code class="def-code-arguments">(char **<var class="var">envz</var>, size_t *<var class="var">envz_len</var>, const char *<var class="var">name</var>)</code><a class="copiable-link" href="#index-envz_005fremove"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">envz_remove</code> function removes an entry named <var class="var">name</var> from
+<var class="var">envz</var>, updating <code class="code">*<var class="var">envz</var></code> and <code class="code">*<var class="var">envz_len</var></code>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Argz-Functions.html">Argz Functions</a>, Up: <a href="Argz-and-Envz-Vectors.html">Argz and Envz Vectors</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

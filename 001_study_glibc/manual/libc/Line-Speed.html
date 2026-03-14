@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Line Speed (The GNU C Library)</title>
+
+<meta name="description" content="Line Speed (The GNU C Library)">
+<meta name="keywords" content="Line Speed (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Terminal-Modes.html" rel="up" title="Terminal Modes">
+<link href="Special-Characters.html" rel="next" title="Special Characters">
+<link href="Local-Modes.html" rel="prev" title="Local Modes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Line-Speed">
+<div class="nav-panel">
+<p>
+Next: <a href="Special-Characters.html" accesskey="n" rel="next">Special Characters</a>, Previous: <a href="Local-Modes.html" accesskey="p" rel="prev">Local Modes</a>, Up: <a href="Terminal-Modes.html" accesskey="u" rel="up">Terminal Modes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Line-Speed-1"><span>17.5.8 Line Speed<a class="copiable-link" href="#Line-Speed-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-line-speed"></a>
+<a class="index-entry-id" id="index-baud-rate"></a>
+<a class="index-entry-id" id="index-terminal-line-speed"></a>
+<a class="index-entry-id" id="index-terminal-line-speed-1"></a>
+
+<p>The terminal line speed tells the computer how fast to read and write
+data on the terminal.
+</p>
+<p>For standard asynchronous serial lines employing binary NRZ encoding
+such as RS232, RS422, RS423, or RS485, the terminal speed will equal the
+physical layer baud rate including asynchronous framing and parity bits.
+This needs to match the communication speed expected by the peer device,
+or communication will not work.  Which particular speeds are supported
+by any particular interface is hardware specific.
+</p>
+<p>For other types of devices the meaning of the line speed is
+device-specific and may not even affect the actual data transmission
+speed at all (for example, if it is a pseudo-terminal or network
+connection), but some programs will use it to determine the amount of
+padding needed.  It&rsquo;s best to specify a line speed value that matches
+the actual speed of the actual terminal, but you can safely experiment
+with different values to vary the amount of padding.
+</p>
+<p>As the terminal interface models an RS232 serial interface
+(see <a class="pxref" href="Terminal-Device-Model.html">Terminal Device Model</a>), the term &ldquo;baud rate&rdquo; is frequently
+used as a direct alias for &ldquo;line speed&rdquo;; this convention is followed
+in the following descriptions.
+</p>
+<p>There are actually two line speeds for each terminal, one for input and
+one for output.  You can set them independently, but most often
+terminals use the same speed for both directions.  If the hardware does
+not support different speeds for each direction, the output speed will
+be used for both input and output.
+</p>
+<p>Specifying an output speed of zero generates a modem disconnect request.
+For the <code class="code">speed_t</code> interface, this is the constant <code class="code">B0</code> which
+may or may not have the numeric value <em class="math">0</em>.
+</p>
+<p>Specifying an input speed value of zero sets the input speed to equal
+the output speed.  This is the numeric constant <em class="math">0</em> (not
+necessarily the same as <code class="code">B0</code>) for both the <code class="code">speed_t</code> and
+<code class="code">baud_t</code> interfaces.  This use is deprecated.
+</p>
+<p>The line speed values are stored in the <code class="code">struct termios</code> structure, but
+don&rsquo;t try to access them in the <code class="code">struct termios</code> structure
+directly.  Instead, you should use the functions defined by the
+interfaces below to access them.
+</p>
+<p>The line speed setting functions report errors only when attempting to
+set line rate values that the system simply cannot handle.  If you
+specify a line speed value that is plausible for the system, then the
+functions will succeed.  However, they do not check that a particular
+hardware device can actually support the specified value&mdash;in fact, they
+don&rsquo;t know which device you plan to set the line speed for until
+<code class="code">tcsetattr</code> is called.  If you use <code class="code">tcsetattr</code> to set the
+speed of a particular device to a value that it cannot handle, either
+<code class="code">tcsetattr</code> returns <em class="math">-1</em> and sets <code class="code">errno</code> to
+<code class="code">EINVAL</code>, or the value is adjusted to the closest supported value,
+depending on the policy of the kernel driver.  In the latter case, a
+subsequent call to <code class="code">tcgetattr</code> may or may not reflect this
+adjustment.
+</p>
+<p>The GNU C Library supports two interoperable interfaces for setting the line
+speed: the POSIX.1 <code class="code">speed_t</code> interface, which requires the use of a
+set of enumerated constants, and the <code class="code">baud_t</code> interface, a GNU
+extension, which is guaranteed to use plain numeric values.
+</p>
+<ul class="mini-toc">
+<li><a href="#The-speed_005ft-interface" accesskey="1">The <code class="code">speed_t</code> interface</a></li>
+<li><a href="#The-baud_005ft-interface" accesskey="2">The <code class="code">baud_t</code> interface</a></li>
+</ul>
+<div class="subsubsection-level-extent" id="The-speed_005ft-interface">
+<h4 class="subsubsection"><span>17.5.8.1 The <code class="code">speed_t</code> interface<a class="copiable-link" href="#The-speed_005ft-interface"> &para;</a></span></h4>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-speed_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">speed_t</strong><a class="copiable-link" href="#index-speed_005ft"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">speed_t</code> type is an unsigned integer data type used to
+represent line speeds.
+</p>
+<p><strong class="strong">Portability note:</strong> In the current version of the GNU C Library, the
+<code class="code">speed_t</code> type is numerically identical to the line speed rate.
+Other libraries and older versions of the GNU C Library may require speeds to
+be indicated by enumerated constants, which may not be numerically
+identical to the requested line speed.  For portability, you must use
+one of the following symbols to represent the speed; their precise
+numeric values are system-dependent, but each name has a fixed meaning:
+<code class="code">B110</code> stands for 110 bps, <code class="code">B300</code> for 300 bps, and so on.
+There is no portable way to represent any speed but these.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-B0"></a>
+<a class="index-entry-id" id="index-B50"></a>
+<a class="index-entry-id" id="index-B75"></a>
+<a class="index-entry-id" id="index-B110"></a>
+<a class="index-entry-id" id="index-B134"></a>
+<a class="index-entry-id" id="index-B150"></a>
+<a class="index-entry-id" id="index-B200"></a>
+<a class="index-entry-id" id="index-B300"></a>
+<a class="index-entry-id" id="index-B600"></a>
+<a class="index-entry-id" id="index-B1200"></a>
+<a class="index-entry-id" id="index-B1800"></a>
+<a class="index-entry-id" id="index-B2400"></a>
+<a class="index-entry-id" id="index-B4800"></a>
+<a class="index-entry-id" id="index-B9600"></a>
+<a class="index-entry-id" id="index-B19200"></a>
+<a class="index-entry-id" id="index-B38400"></a>
+<div class="example smallexample">
+<pre class="example-preformatted">B0  B50  B75  B110  B134  B150  B200  B300  B600  B1200
+B1800  B2400  B4800  B9600  B19200  B38400
+</pre></div>
+
+<p>The GNU C Library defines these additional constants:
+</p>
+<a class="index-entry-id" id="index-B7200"></a>
+<a class="index-entry-id" id="index-B14400"></a>
+<a class="index-entry-id" id="index-B28800"></a>
+<a class="index-entry-id" id="index-B33600"></a>
+<a class="index-entry-id" id="index-B57600"></a>
+<a class="index-entry-id" id="index-B76800"></a>
+<a class="index-entry-id" id="index-B115200"></a>
+<a class="index-entry-id" id="index-B153600"></a>
+<a class="index-entry-id" id="index-B230400"></a>
+<a class="index-entry-id" id="index-B307200"></a>
+<a class="index-entry-id" id="index-B460800"></a>
+<a class="index-entry-id" id="index-B500000"></a>
+<a class="index-entry-id" id="index-B576000"></a>
+<a class="index-entry-id" id="index-B614400"></a>
+<a class="index-entry-id" id="index-B921600"></a>
+<a class="index-entry-id" id="index-B1000000"></a>
+<a class="index-entry-id" id="index-B1152000"></a>
+<a class="index-entry-id" id="index-B1500000"></a>
+<a class="index-entry-id" id="index-B2000000"></a>
+<a class="index-entry-id" id="index-B2500000"></a>
+<a class="index-entry-id" id="index-B3000000"></a>
+<a class="index-entry-id" id="index-B3500000"></a>
+<a class="index-entry-id" id="index-B4000000"></a>
+<a class="index-entry-id" id="index-B5000000"></a>
+<a class="index-entry-id" id="index-B10000000"></a>
+<div class="example smallexample">
+<pre class="example-preformatted">B7200 B14400 B28800 B33600 B57600 B76800 B115200 B153600 B230400 B307200
+B460800 B500000 B576000 B614400 B921600 B1000000 B1152000 B1500000
+B2000000 B2500000 B3000000 B3500000 B4000000 B5000000 B10000000
+</pre></div>
+
+<a class="index-entry-id" id="index-EXTA"></a>
+<a class="index-entry-id" id="index-EXTB"></a>
+<p>BSD defines two additional speed symbols as aliases: <code class="code">EXTA</code> is an
+alias for <code class="code">B19200</code> and <code class="code">EXTB</code> is an alias for <code class="code">B38400</code>.
+These aliases are obsolete.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SPEED_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">speed_t</code> <strong class="def-name">SPEED_MAX</strong><a class="copiable-link" href="#index-SPEED_005fMAX"> &para;</a></span></dt>
+<dd>
+
+<p>The GNU C Library defines the constant <code class="code">SPEED_MAX</code> for the largest valid
+value of type <code class="code">speed_t</code>.  This value may be smaller than the
+underlying C type can store.
+</p>
+<p>For compatibility with some other platforms the alias <code class="code">__MAX_BAUD</code>
+is defined for this constant.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cfgetospeed"><span class="category-def">Function: </span><span><code class="def-type">speed_t</code> <strong class="def-name">cfgetospeed</strong> <code class="def-code-arguments">(const struct termios *<var class="var">termios-p</var>)</code><a class="copiable-link" href="#index-cfgetospeed"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns the output line speed stored in the structure
+<code class="code">*<var class="var">termios-p</var></code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cfgetispeed"><span class="category-def">Function: </span><span><code class="def-type">speed_t</code> <strong class="def-name">cfgetispeed</strong> <code class="def-code-arguments">(const struct termios *<var class="var">termios-p</var>)</code><a class="copiable-link" href="#index-cfgetispeed"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns the input line speed stored in the structure
+<code class="code">*<var class="var">termios-p</var></code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cfsetospeed"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">cfsetospeed</strong> <code class="def-code-arguments">(struct termios *<var class="var">termios-p</var>, speed_t <var class="var">speed</var>)</code><a class="copiable-link" href="#index-cfsetospeed"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function stores <var class="var">speed</var> in <code class="code">*<var class="var">termios-p</var></code> as the
+output line speed.  If <var class="var">speed</var> is <code class="code">B0</code>, generates a modem
+disconnect request.
+</p>
+<p>If <var class="var">speed</var> is neither a plausible line speed nor <code class="code">B0</code>,
+<code class="code">cfsetospeed</code> returns <em class="math">-1</em> and sets <code class="code">errno</code> to
+<code class="code">EINVAL</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cfsetispeed"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">cfsetispeed</strong> <code class="def-code-arguments">(struct termios *<var class="var">termios-p</var>, speed_t <var class="var">speed</var>)</code><a class="copiable-link" href="#index-cfsetispeed"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function stores <var class="var">speed</var> in <code class="code">*<var class="var">termios-p</var></code> as the input
+speed.  If <var class="var">speed</var> is <em class="math">0</em>, the input speed is set to equal the
+output speed; note that POSIX.1 specifies this as the numeric value
+<em class="math">0</em> which is not required to equal the constant <code class="code">B0</code>.
+</p>
+<p>If <var class="var">speed</var> is not a plausible line speed or <em class="math">0</em>,
+<code class="code">cfsetispeed</code> returns <em class="math">-1</em> and sets <code class="code">errno</code> to
+<code class="code">EINVAL</code>.
+</p>
+<p><strong class="strong">Portability note:</strong> POSIX.1-2024 has deprecated setting of the
+input speed to <em class="math">0</em> to set the input line speed to equal the output
+line speed.  After calling <code class="code">tcsetattr</code> followed by
+<code class="code">tcgetattr</code>, <code class="code">cfgetispeed</code> may report the input line speed
+either as <em class="math">0</em> or the same as <code class="code">cfgetospeed</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cfsetspeed"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">cfsetspeed</strong> <code class="def-code-arguments">(struct termios *<var class="var">termios-p</var>, speed_t <var class="var">speed</var>)</code><a class="copiable-link" href="#index-cfsetspeed"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function stores <var class="var">speed</var> in <code class="code">*<var class="var">termios-p</var></code> as both the
+input and output speeds.
+</p>
+<p>If <var class="var">baud</var> is not a plausible line speed, <code class="code">cfsetbaud</code> returns
+<em class="math">-1</em> and sets <code class="code">errno</code> to <code class="code">EINVAL</code>.
+</p>
+<p>This function is an extension which originated in 4.4 BSD.
+</p></dd></dl>
+
+</div>
+<div class="subsubsection-level-extent" id="The-baud_005ft-interface">
+<h4 class="subsubsection"><span>17.5.8.2 The <code class="code">baud_t</code> interface<a class="copiable-link" href="#The-baud_005ft-interface"> &para;</a></span></h4>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-baud_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">baud_t</strong><a class="copiable-link" href="#index-baud_005ft"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">baud_t</code> type is a numeric data type used to represent line
+baud rates. It will always represent the actual numeric value
+corresponding to the line speed, unlike <code class="code">speed_t</code>. In the current
+version of the GNU C Library this is the same type as <code class="code">speed_t</code>, but this
+may not be the case in future versions or on other implementations; it
+is specifically not guaranteed to be an integer type.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-BAUD_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">baud_t</code> <strong class="def-name">BAUD_MAX</strong><a class="copiable-link" href="#index-BAUD_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The constant <code class="code">BAUD_MAX</code> is defined to the maximum valid value of
+type <code class="code">baud_t</code>.  This value may be smaller than the underlying C
+type can store.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cfgetobaud"><span class="category-def">Function: </span><span><code class="def-type">baud_t</code> <strong class="def-name">cfgetobaud</strong> <code class="def-code-arguments">(const struct termios *<var class="var">termios-p</var>)</code><a class="copiable-link" href="#index-cfgetobaud"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns the output line speed stored in the structure
+<code class="code">*<var class="var">termios-p</var></code> as a numeric value.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cfgetibaud"><span class="category-def">Function: </span><span><code class="def-type">baud_t</code> <strong class="def-name">cfgetibaud</strong> <code class="def-code-arguments">(const struct termios *<var class="var">termios-p</var>)</code><a class="copiable-link" href="#index-cfgetibaud"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns the input line speed stored in the structure
+<code class="code">*<var class="var">termios-p</var></code> as a numeric value.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cfsetobaud"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">cfsetobaud</strong> <code class="def-code-arguments">(struct termios *<var class="var">termios-p</var>, baud_t <var class="var">baud</var>)</code><a class="copiable-link" href="#index-cfsetobaud"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function stores <var class="var">baud</var> in <code class="code">*<var class="var">termios-p</var></code> as the output
+line speed.  If <var class="var">baud</var> is <em class="math">0</em>, generates a modem disconnect.
+</p>
+<p>If <var class="var">speed</var> is not a plausible line speed, <code class="code">cfsetspeed</code> returns
+<em class="math">-1</em> and sets <code class="code">errno</code> to <code class="code">EINVAL</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cfsetibaud"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">cfsetibaud</strong> <code class="def-code-arguments">(struct termios *<var class="var">termios-p</var>, baud_t <var class="var">baud</var>)</code><a class="copiable-link" href="#index-cfsetibaud"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function stores <var class="var">baud</var> in <code class="code">*<var class="var">termios-p</var></code> as the input
+line speed.
+</p>
+<p>To simplify conversions from the <code class="code">speed_t</code> interface, setting the
+input line speed to <em class="math">0</em> is interpreted as setting the input line
+speed equal to the output line speed.  The caveats described under
+<code class="code">cfsetispeed</code> apply equally to <code class="code">cfsetibaud</code>.  As for
+<code class="code">cfsetispeed</code>, this usage is deprecated.
+</p>
+<p>If <var class="var">baud</var> is not a plausible line speed or <em class="math">0</em>,
+<code class="code">cfsetibaud</code> returns <em class="math">-1</em> and sets <code class="code">errno</code> to
+<code class="code">EINVAL</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cfsetbaud"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">cfsetbaud</strong> <code class="def-code-arguments">(struct termios *<var class="var">termios-p</var>, baud_t <var class="var">baud</var>)</code><a class="copiable-link" href="#index-cfsetbaud"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function stores <var class="var">baud</var> in <code class="code">*<var class="var">termios-p</var></code> as both the
+input and output line speeds.
+</p>
+<p>If <var class="var">baud</var> is not a plausible line speed, <code class="code">cfsetbaud</code> returns
+<em class="math">-1</em> and sets <code class="code">errno</code> to <code class="code">EINVAL</code>.
+</p></dd></dl>
+
+</div>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Special-Characters.html">Special Characters</a>, Previous: <a href="Local-Modes.html">Local Modes</a>, Up: <a href="Terminal-Modes.html">Terminal Modes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Allocation in an Obstack (The GNU C Library)</title>
+
+<meta name="description" content="Allocation in an Obstack (The GNU C Library)">
+<meta name="keywords" content="Allocation in an Obstack (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Obstacks.html" rel="up" title="Obstacks">
+<link href="Freeing-Obstack-Objects.html" rel="next" title="Freeing Obstack Objects">
+<link href="Preparing-for-Obstacks.html" rel="prev" title="Preparing for Obstacks">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Allocation-in-an-Obstack">
+<div class="nav-panel">
+<p>
+Next: <a href="Freeing-Obstack-Objects.html" accesskey="n" rel="next">Freeing Objects in an Obstack</a>, Previous: <a href="Preparing-for-Obstacks.html" accesskey="p" rel="prev">Preparing for Using Obstacks</a>, Up: <a href="Obstacks.html" accesskey="u" rel="up">Obstacks</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Allocation-in-an-Obstack-1"><span>3.2.6.3 Allocation in an Obstack<a class="copiable-link" href="#Allocation-in-an-Obstack-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-allocation-_0028obstacks_0029"></a>
+
+<p>The most direct way to allocate an object in an obstack is with
+<code class="code">obstack_alloc</code>, which is invoked almost like <code class="code">malloc</code>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-obstack_005falloc"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">obstack_alloc</strong> <code class="def-code-arguments">(struct obstack *<var class="var">obstack-ptr</var>, int <var class="var">size</var>)</code><a class="copiable-link" href="#index-obstack_005falloc"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:obstack-ptr
+| AS-Safe 
+| AC-Unsafe corrupt mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This allocates an uninitialized block of <var class="var">size</var> bytes in an obstack
+and returns its address.  Here <var class="var">obstack-ptr</var> specifies which obstack
+to allocate the block in; it is the address of the <code class="code">struct obstack</code>
+object which represents the obstack.  Each obstack function or macro
+requires you to specify an <var class="var">obstack-ptr</var> as the first argument.
+</p>
+<p>This function calls the obstack&rsquo;s <code class="code">obstack_chunk_alloc</code> function if
+it needs to allocate a new chunk of memory; it calls
+<code class="code">obstack_alloc_failed_handler</code> if allocation of memory by
+<code class="code">obstack_chunk_alloc</code> failed.
+</p></dd></dl>
+
+<p>For example, here is a function that allocates a copy of a string <var class="var">str</var>
+in a specific obstack, which is in the variable <code class="code">string_obstack</code>:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">struct obstack string_obstack;
+
+char *
+copystring (char *string)
+{
+  size_t len = strlen (string) + 1;
+  char *s = (char *) obstack_alloc (&amp;string_obstack, len);
+  memcpy (s, string, len);
+  return s;
+}
+</pre></div>
+
+<p>To allocate a block with specified contents, use the function
+<code class="code">obstack_copy</code>, declared like this:
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-obstack_005fcopy"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">obstack_copy</strong> <code class="def-code-arguments">(struct obstack *<var class="var">obstack-ptr</var>, void *<var class="var">address</var>, int <var class="var">size</var>)</code><a class="copiable-link" href="#index-obstack_005fcopy"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:obstack-ptr
+| AS-Safe 
+| AC-Unsafe corrupt mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This allocates a block and initializes it by copying <var class="var">size</var>
+bytes of data starting at <var class="var">address</var>.  It calls
+<code class="code">obstack_alloc_failed_handler</code> if allocation of memory by
+<code class="code">obstack_chunk_alloc</code> failed.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-obstack_005fcopy0"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">obstack_copy0</strong> <code class="def-code-arguments">(struct obstack *<var class="var">obstack-ptr</var>, void *<var class="var">address</var>, int <var class="var">size</var>)</code><a class="copiable-link" href="#index-obstack_005fcopy0"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:obstack-ptr
+| AS-Safe 
+| AC-Unsafe corrupt mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Like <code class="code">obstack_copy</code>, but appends an extra byte containing a null
+character.  This extra byte is not counted in the argument <var class="var">size</var>.
+</p></dd></dl>
+
+<p>The <code class="code">obstack_copy0</code> function is convenient for copying a sequence
+of characters into an obstack as a null-terminated string.  Here is an
+example of its use:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">char *
+obstack_savestring (char *addr, int size)
+{
+  return obstack_copy0 (&amp;myobstack, addr, size);
+}
+</pre></div>
+
+<p>Contrast this with the previous example of <code class="code">savestring</code> using
+<code class="code">malloc</code> (see <a class="pxref" href="Basic-Allocation.html">Basic Memory Allocation</a>).
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Freeing-Obstack-Objects.html">Freeing Objects in an Obstack</a>, Previous: <a href="Preparing-for-Obstacks.html">Preparing for Using Obstacks</a>, Up: <a href="Obstacks.html">Obstacks</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

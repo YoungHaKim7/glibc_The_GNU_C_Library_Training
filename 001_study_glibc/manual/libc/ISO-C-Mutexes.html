@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>ISO C Mutexes (The GNU C Library)</title>
+
+<meta name="description" content="ISO C Mutexes (The GNU C Library)">
+<meta name="keywords" content="ISO C Mutexes (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="ISO-C-Threads.html" rel="up" title="ISO C Threads">
+<link href="ISO-C-Condition-Variables.html" rel="next" title="ISO C Condition Variables">
+<link href="Call-Once.html" rel="prev" title="Call Once">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="ISO-C-Mutexes">
+<div class="nav-panel">
+<p>
+Next: <a href="ISO-C-Condition-Variables.html" accesskey="n" rel="next">Condition Variables</a>, Previous: <a href="Call-Once.html" accesskey="p" rel="prev">Call Once</a>, Up: <a href="ISO-C-Threads.html" accesskey="u" rel="up">ISO C Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Mutexes"><span>36.1.4 Mutexes<a class="copiable-link" href="#Mutexes"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-mutex"></a>
+<a class="index-entry-id" id="index-mutual-exclusion"></a>
+
+<p>To have better control of resources and how threads access them,
+the GNU C Library implements a <em class="dfn">mutex</em> object, which can help avoid race
+conditions and other concurrency issues.  The term &ldquo;mutex&rdquo; refers to
+mutual exclusion.
+</p>
+<p>The fundamental data type for a mutex is the <code class="code">mtx_t</code>:
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-mtx_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">mtx_t</strong><a class="copiable-link" href="#index-mtx_005ft"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">mtx_t</code> data type uniquely identifies a mutex object.
+</p></dd></dl>
+
+<p>The ISO C standard defines several types of mutexes.  They are
+represented by the following symbolic constants:
+</p>
+<dl class="vtable">
+<dt><a id="index-mtx_005fplain"></a><span><code class="code">mtx_plain</code><a class="copiable-link" href="#index-mtx_005fplain"> &para;</a></span></dt>
+<dd>
+<p>A mutex that does not support timeout, or test and return.
+</p>
+</dd>
+<dt><a id="index-mtx_005frecursive"></a><span><code class="code">mtx_recursive</code><a class="copiable-link" href="#index-mtx_005frecursive"> &para;</a></span></dt>
+<dd>
+<p>A mutex that supports recursive locking, which means that the owning
+thread can lock it more than once without causing deadlock.
+</p>
+</dd>
+<dt><a id="index-mtx_005ftimed"></a><span><code class="code">mtx_timed</code><a class="copiable-link" href="#index-mtx_005ftimed"> &para;</a></span></dt>
+<dd>
+<p>A mutex that supports timeout.
+</p></dd>
+</dl>
+
+<p>The following functions are used for working with mutexes:
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mtx_005finit"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">mtx_init</strong> <code class="def-code-arguments">(mtx_t *<var class="var">mutex</var>, int <var class="var">type</var>)</code><a class="copiable-link" href="#index-mtx_005finit"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">mtx_init</code> creates a new mutex object with type <var class="var">type</var>.  The
+object pointed to by <var class="var">mutex</var> is set to the identifier of the newly
+created mutex.
+</p>
+<p>Not all combinations of mutex types are valid for the <code class="code">type</code>
+argument.  Valid uses of mutex types for the <code class="code">type</code> argument are:
+</p>
+<dl class="table">
+<dt><code class="code">mtx_plain</code></dt>
+<dd><p>A non-recursive mutex that does not support timeout.
+</p>
+</dd>
+<dt><code class="code">mtx_timed</code></dt>
+<dd><p>A non-recursive mutex that does support timeout.
+</p>
+</dd>
+<dt><code class="code">mtx_plain | mtx_recursive</code></dt>
+<dd><p>A recursive mutex that does not support timeout.
+</p>
+</dd>
+<dt><code class="code">mtx_timed | mtx_recursive</code></dt>
+<dd><p>A recursive mutex that does support timeout.
+</p></dd>
+</dl>
+
+<p>This function returns either <code class="code">thrd_success</code> or <code class="code">thrd_error</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mtx_005flock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">mtx_lock</strong> <code class="def-code-arguments">(mtx_t *<var class="var">mutex</var>)</code><a class="copiable-link" href="#index-mtx_005flock"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">mtx_lock</code> blocks the current thread until the mutex pointed to
+by <var class="var">mutex</var> is locked.  The behavior is undefined if the current
+thread has already locked the mutex and the mutex is not recursive.
+</p>
+<p>Prior calls to <code class="code">mtx_unlock</code> on the same mutex synchronize-with
+this operation (if this operation succeeds), and all lock/unlock
+operations on any given mutex form a single total order (similar to
+the modification order of an atomic).
+</p>
+<p>This function returns either <code class="code">thrd_success</code> or <code class="code">thrd_error</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mtx_005ftimedlock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">mtx_timedlock</strong> <code class="def-code-arguments">(mtx_t *restrict <var class="var">mutex</var>, const struct timespec *restrict <var class="var">time_point</var>)</code><a class="copiable-link" href="#index-mtx_005ftimedlock"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">mtx_timedlock</code> blocks the current thread until the mutex pointed
+to by <var class="var">mutex</var> is locked or until the calendar time pointed to by
+<var class="var">time_point</var> has been reached.  Since this function takes an
+absolute time, if a duration is required, the calendar time must be
+calculated manually.  See <a class="xref" href="Time-Basics.html">Time Basics</a>, and <a class="ref" href="Calendar-Time.html">Calendar Time</a>.
+</p>
+<p>If the current thread has already locked the mutex and the mutex is
+not recursive, or if the mutex does not support timeout, the behavior
+of this function is undefined.
+</p>
+<p>Prior calls to <code class="code">mtx_unlock</code> on the same mutex synchronize-with
+this operation (if this operation succeeds), and all lock/unlock
+operations on any given mutex form a single total order (similar to
+the modification order of an atomic).
+</p>
+<p>This function returns either <code class="code">thrd_success</code> or <code class="code">thrd_error</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mtx_005ftrylock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">mtx_trylock</strong> <code class="def-code-arguments">(mtx_t *<var class="var">mutex</var>)</code><a class="copiable-link" href="#index-mtx_005ftrylock"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">mtx_trylock</code> tries to lock the mutex pointed to by <var class="var">mutex</var>
+without blocking.  It returns immediately if the mutex is already
+locked.
+</p>
+<p>Prior calls to <code class="code">mtx_unlock</code> on the same mutex synchronize-with
+this operation (if this operation succeeds), and all lock/unlock
+operations on any given mutex form a single total order (similar to
+the modification order of an atomic).
+</p>
+<p>This function returns <code class="code">thrd_success</code> if the lock was obtained,
+<code class="code">thrd_busy</code> if the mutex is already locked, and <code class="code">thrd_error</code>
+on failure.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mtx_005funlock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">mtx_unlock</strong> <code class="def-code-arguments">(mtx_t *<var class="var">mutex</var>)</code><a class="copiable-link" href="#index-mtx_005funlock"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">mtx_unlock</code> unlocks the mutex pointed to by <var class="var">mutex</var>.  The
+behavior is undefined if the mutex is not locked by the calling
+thread.
+</p>
+<p>This function synchronizes-with subsequent <code class="code">mtx_lock</code>,
+<code class="code">mtx_trylock</code>, and <code class="code">mtx_timedlock</code> calls on the same mutex.
+All lock/unlock operations on any given mutex form a single total
+order (similar to the modification order of an atomic).
+</p>
+<p>This function returns either <code class="code">thrd_success</code> or <code class="code">thrd_error</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mtx_005fdestroy"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">mtx_destroy</strong> <code class="def-code-arguments">(mtx_t *<var class="var">mutex</var>)</code><a class="copiable-link" href="#index-mtx_005fdestroy"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">mtx_destroy</code> destroys the mutex pointed to by <var class="var">mutex</var>.  If
+there are any threads waiting on the mutex, the behavior is
+undefined.
+</p></dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="ISO-C-Condition-Variables.html">Condition Variables</a>, Previous: <a href="Call-Once.html">Call Once</a>, Up: <a href="ISO-C-Threads.html">ISO C Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Dynamic Linker Hardening (The GNU C Library)</title>
+
+<meta name="description" content="Dynamic Linker Hardening (The GNU C Library)">
+<meta name="keywords" content="Dynamic Linker Hardening (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Dynamic-Linker.html" rel="up" title="Dynamic Linker">
+<link href="Dynamic-Linker-Introspection.html" rel="prev" title="Dynamic Linker Introspection">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Dynamic-Linker-Hardening">
+<div class="nav-panel">
+<p>
+Previous: <a href="Dynamic-Linker-Introspection.html" accesskey="p" rel="prev">Dynamic Linker Introspection</a>, Up: <a href="Dynamic-Linker.html" accesskey="u" rel="up">Dynamic Linker</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Avoiding-Unexpected-Issues-With-Dynamic-Linking"><span>37.4 Avoiding Unexpected Issues With Dynamic Linking<a class="copiable-link" href="#Avoiding-Unexpected-Issues-With-Dynamic-Linking"> &para;</a></span></h3>
+
+<p>This section details recommendations for increasing application
+robustness, by avoiding potential issues related to dynamic linking.
+The recommendations have two main aims: reduce the involvement of the
+dynamic linker in application execution after process startup, and
+restrict the application to a dynamic linker feature set whose behavior
+is more easily understood.
+</p>
+<p>Key aspects of limiting dynamic linker usage after startup are: no use
+of the <code class="code">dlopen</code> function, disabling lazy binding, and using the
+static TLS model.  More easily understood dynamic linker behavior
+requires avoiding name conflicts (symbols and sonames) and highly
+customizable features like the audit subsystem.
+</p>
+<p>Note that while these steps can be considered a form of application
+hardening, they do not guard against potential harm from accidental or
+deliberate loading of untrusted or malicious code.  There is only
+limited overlap with traditional security hardening for applications
+running on GNU systems.
+</p>
+<ul class="mini-toc">
+<li><a href="#Restricted-Dynamic-Linker-Features" accesskey="1">Restricted Dynamic Linker Features</a></li>
+<li><a href="#Producing-Matching-Binaries" accesskey="2">Producing Matching Binaries</a></li>
+<li><a href="#Checking-Binaries" accesskey="3">Checking Binaries</a></li>
+<li><a href="#Run_002dtime-Considerations" accesskey="4">Run-time Considerations</a></li>
+</ul>
+<div class="subsection-level-extent" id="Restricted-Dynamic-Linker-Features">
+<h4 class="subsection"><span>37.4.1 Restricted Dynamic Linker Features<a class="copiable-link" href="#Restricted-Dynamic-Linker-Features"> &para;</a></span></h4>
+
+<p>Avoiding certain dynamic linker features can increase predictability of
+applications and reduce the risk of running into dynamic linker defects.
+</p>
+<ul class="itemize mark-bullet">
+<li>Do not use the functions <code class="code">dlopen</code>, <code class="code">dlmopen</code>, or
+<code class="code">dlclose</code>.  Dynamic loading and unloading of shared objects
+introduces substantial complications related to symbol and thread-local
+storage (TLS) management.
+
+</li><li>Without the <code class="code">dlopen</code> function, <code class="code">dlsym</code> and <code class="code">dlvsym</code>
+cannot be used with shared object handles.  Minimizing the use of both
+functions is recommended.  If they have to be used, only the
+<code class="code">RTLD_DEFAULT</code> pseudo-handle should be used.
+
+</li><li>Use the local-exec or initial-exec TLS models.  If <code class="code">dlopen</code> is not
+used, there are no compatibility concerns for initial-exec TLS.  This
+TLS model avoids most of the complexity around TLS access.  In
+particular, there are no TLS-related run-time memory allocations after
+process or thread start.
+
+<p>If shared objects are expected to be used more generally, outside the
+hardened, feature-restricted context, lack of compatibility between
+<code class="code">dlopen</code> and initial-exec TLS could be a concern.  In that case,
+the second-best alternative is to use global-dynamic TLS with GNU2 TLS
+descriptors, for targets that fully implement them, including the fast
+path for access to TLS variables defined in the initially loaded set of
+objects.  Like initial-exec TLS, this avoids memory allocations after
+thread creation, but only if the <code class="code">dlopen</code> function is not used.
+</p>
+</li><li>Do not use lazy binding.  Lazy binding may require run-time memory
+allocation, is not async-signal-safe, and introduces considerable
+complexity.
+
+</li><li>Do not use text relocations.  Text relocations are often created by
+accident if position-dependent code is linked into position-independent
+executables or shared objects.  Text relocations require creating
+read-write-execute segments at run time, which may not be possible given
+system security hardening policy.  Text relocations are typically more
+complex to process than the widely used data-only relocation types.
+
+</li><li>Make dependencies on shared objects explicit.  Do not assume that
+certain libraries (such as <code class="code">libc.so.6</code>) are always loaded.
+Specifically, if a main program or shared object references a symbol,
+create an ELF <code class="code">DT_NEEDED</code> dependency on that shared object, or on
+another shared object that is documented (or otherwise guaranteed) to
+have the required explicit dependency.  Referencing a symbol without a
+matching link dependency results in underlinking, and underlinked
+objects cannot always be loaded correctly: Initialization of objects may
+not happen in the required order.
+
+</li><li>Do not create dependency loops between shared objects (<code class="code">libA.so.1</code>
+depending on <code class="code">libB.so.1</code> depending on <code class="code">libC.so.1</code> depending on
+<code class="code">libA.so.1</code>).  The GNU C Library has to initialize one of the objects in
+the cycle first, and the choice of that object is arbitrary and can
+change over time.  The object which is initialized first (and other
+objects involved in the cycle) may not run correctly because not all of
+its dependencies have been initialized.
+
+<p>Underlinking (see above) can hide the presence of cycles.
+</p>
+</li><li>Limit the creation of indirect function (IFUNC) resolvers.  These
+resolvers run during relocation processing, when the GNU C Library is not in
+a fully consistent state.  If you write your own IFUNC resolvers, do
+not depend on external data or function references in those resolvers.
+
+</li><li>Do not use the audit functionality (<code class="code">LD_AUDIT</code>, <code class="code">DT_AUDIT</code>,
+<code class="code">DT_DEPAUDIT</code>).  Its callback and hooking capabilities introduce a
+lot of complexity and subtly alter dynamic linker behavior in corner
+cases even if the audit module is inactive.
+
+</li><li>Do not use symbol interposition.  Without symbol interposition, the
+exact order in which shared objects are searched are less relevant.
+
+<p>Exceptions to this rule are copy relocations (see the next item), and
+vague linkage, as used by the C++ implementation (see below).
+</p>
+</li><li>One potential source of symbol interposition is a combination of static
+and dynamic linking, namely linking a static archive into multiple
+dynamic shared objects.  For such scenarios, the static library should
+be converted into its own dynamic shared object.
+
+<p>A different approach to this situation uses hidden visibility for
+symbols in the static library, but this can cause problems if the
+library does not expect that multiple copies of its code coexist within
+the same process, with no or partial sharing of state.
+</p>
+</li><li>If you use shared objects that are linked with <samp class="option">-Wl,-Bsymbolic</samp>
+(or equivalent) or use protected visibility, the code for the main
+program must be built as <samp class="option">-fpic</samp> or <samp class="option">-fPIC</samp> to avoid
+creating copy relocations (and the main program must not use copy
+relocations for other reasons).  Using <samp class="option">-fpie</samp> or <samp class="option">-fPIE</samp>
+is not an alternative to PIC code in this context.
+
+</li><li>Be careful about explicit section annotations.  Make sure that the
+target section matches the properties of the declared entity (e.g., no
+writable objects in <code class="code">.text</code>).
+
+</li><li>Ensure that all assembler or object input files have the recommended
+security markup, particularly for non-executable stack.
+
+</li><li>Avoid using non-default linker flags and features.  In particular, do
+not use the <code class="code">DT_PREINIT_ARRAY</code> dynamic tag, and do not flag
+objects as <code class="code">DF_1_INITFIRST</code>.  Do not change the default linker
+script of BFD ld.  Do not override ABI defaults, such as the dynamic
+linker path (with <samp class="option">--dynamic-linker</samp>).
+
+</li><li>Some features of the GNU C Library indirectly depend on run-time code loading
+and <code class="code">dlopen</code>.  Use <code class="code">iconv_open</code> with built-in converters only
+(such as <code class="code">UTF-8</code>).  Do not use NSS functionality such as
+<code class="code">getaddrinfo</code> or <code class="code">getpwuid_r</code> unless the system is configured
+for built-in NSS service modules only (see below).
+</li></ul>
+
+<p>Several considerations apply to ELF constructors and destructors.
+</p>
+<ul class="itemize mark-bullet">
+<li>The dynamic linker does not take constructor and destructor priorities
+into account when determining their execution order.  Priorities can be
+set using the GCC attributes <code class="code">constructor</code>, <code class="code">destructor</code>, and
+<code class="code">init_priority</code>.  They are only used by the link editor for
+ordering execution within a completely linked object.  If a dynamic
+shared object needs to be initialized before another object, this can be
+expressed with a <code class="code">DT_NEEDED</code> dependency on the object that needs to
+be initialized earlier.
+
+</li><li>The recommendations to avoid cyclic dependencies and symbol
+interposition make it less likely that ELF objects are accessed before
+their ELF constructors have run.  However, using <code class="code">dlsym</code> and
+<code class="code">dlvsym</code>, it is still possible to access uninitialized facilities
+even with these restrictions in place.  (Of course, access to
+uninitialized functionality is also possible within a single shared
+object or the main executable, without resorting to explicit symbol
+lookup.)  Consider using dynamic, on-demand initialization instead.  To
+deal with access after de-initialization, it may be necessary to
+implement special cases for that scenario, potentially with degraded
+functionality.
+
+</li><li>Be aware that when ELF destructors are executed, it is possible to
+reference already-deconstructed shared objects.  This can happen even in
+the absence of <code class="code">dlsym</code> and <code class="code">dlvsym</code> function calls, for
+example if client code using a shared object has registered callbacks or
+objects with another shared object.  The ELF destructor for the client
+code is executed before the ELF destructor for the shared objects that
+it uses, based on the expected dependency order.
+
+</li><li>If <code class="code">dlopen</code> and <code class="code">dlmopen</code> are not used, <code class="code">DT_NEEDED</code>
+dependency information is complete, and lazy binding is disabled, the
+execution order of ELF destructors is expected to be the reverse of the
+ELF constructor order.  However, two separate dependency sort operations
+still occur.  Even though the listed preconditions should ensure that
+both sorts produce the same ordering, it is recommended not to depend on
+the destructor order being the reverse of the constructor order.
+</li></ul>
+
+<p>The following items provide C++-specific guidance for preparing
+applications.  If another programming language is used and it uses these
+toolchain features targeted at C++ to implement some language
+constructs, these restrictions and recommendations still apply in
+analogous ways.
+</p>
+<ul class="itemize mark-bullet">
+<li>C++ inline functions, templates, and other constructs may need to be
+duplicated into multiple shared objects using vague linkage, resulting
+in symbol interposition.  This type of symbol interposition is
+unproblematic, as long as the C++ one definition rule (ODR) is followed,
+and all definitions in different translation units are equivalent
+according to the language C++ rules.
+
+</li><li>Be aware that under C++ language rules, it is unspecified whether
+evaluating a string literal results in the same address for each
+evaluation.  This also applies to anonymous objects of static storage
+duration that GCC creates, for example to implement the compound
+literals C++ extension.  As a result, comparing pointers to such
+objects, or using them directly as hash table keys, may give unexpected
+results.
+
+<p>By default, variables of block scope of static storage have consistent
+addresses across different translation units, even if defined in
+functions that use vague linkage.
+</p>
+</li><li>Special care is needed if a C++ project uses symbol visibility or
+symbol version management (for example, the GCC &lsquo;<samp class="samp">visibility</samp>&rsquo;
+attribute, the GCC <samp class="option">-fvisibility</samp> option, or a linker version
+script with the linker option <samp class="option">--version-script</samp>).  It is
+necessary to ensure that the symbol management remains consistent with
+how the symbols are used.  Some C++ constructs are implemented with
+the help of ancillary symbols, which can make complicated to achieve
+consistency.  For example, an inline function that is always inlined
+into its callers has no symbol footprint for the function itself, but
+if the function contains a variable of static storage duration, this
+variable may result in the creation of one or more global symbols.
+For correctness, such symbols must be visible and bound to the same
+object in all other places where the inline function may be called.
+This requirement is not met if the symbol visibility is set to hidden,
+or if symbols are assigned a textually different symbol version
+(effectively creating two distinct symbols).
+
+<p>Due to the complex interaction between ELF symbol management and C++
+symbol generation, it is recommended to use C++ language features for
+symbol management, in particular inline namespaces.
+</p>
+</li><li>The toolchain and dynamic linker have multiple mechanisms that bypass
+the usual symbol binding procedures.  This means that the C++ one
+definition rule (ODR) still holds even if certain symbol-based isolation
+mechanisms are used, and object addresses are not shared across
+translation units with incompatible type definitions.
+
+<p>This does not matter if the original (language-independent) advice
+regarding symbol interposition is followed.  However, as the advice may
+be difficult to implement for C++ applications, it is recommended to
+avoid ODR violations across the entire process image.  Inline namespaces
+can be helpful in this context because they can be used to create
+distinct ELF symbols while maintaining source code compatibility at the
+C++ level.
+</p>
+</li><li>Be aware that as a special case of interposed symbols, symbols with the
+<code class="code">STB_GNU_UNIQUE</code> binding type do not follow the usual ELF symbol
+namespace isolation rules: such symbols bind across <code class="code">RTLD_LOCAL</code>
+boundaries.  Furthermore, symbol versioning is ignored for such symbols;
+they are bound by symbol name only.  All their definitions and uses must
+therefore be compatible.  Hidden visibility still prevents the creation
+of <code class="code">STB_GNU_UNIQUE</code> symbols and can achieve isolation of
+incompatible definitions.
+
+</li><li>C++ constructor priorities only affect constructor ordering within one
+shared object.  Global constructor order across shared objects is
+consistent with ELF dependency ordering if there are no ELF dependency
+cycles.
+
+</li><li>C++ exception handling and run-time type information (RTTI), as
+implemented in the GNU toolchain, is not address-significant, and
+therefore is not affected by the symbol binding behaviour of the dynamic
+linker.  This means that types of the same fully-qualified name (in
+non-anonymous namespaces) are always considered the same from an
+exception-handling or RTTI perspective.  This is true even if the type
+information object or vtable has hidden symbol visibility, or the
+corresponding symbols are versioned under different symbol versions, or
+the symbols are not bound to the same objects due to the use of
+<code class="code">RTLD_LOCAL</code> or <code class="code">dlmopen</code>.
+
+<p>This can cause issues in applications that contain multiple incompatible
+definitions of the same type.  Inline namespaces can be used to create
+distinct symbols at the ELF layer, avoiding this type of issue.
+</p>
+</li><li>C++ exception handling across multiple <code class="code">dlmopen</code> namespaces may
+not work, particular with the unwinder in GCC versions before 12.
+Current toolchain versions are able to process unwinding tables across
+<code class="code">dlmopen</code> boundaries.  However, note that type comparison is
+name-based, not address-based (see the previous item), so exception
+types may still be matched in unexpected ways.  An important special
+case of exception handling, invoking destructors for variables of block
+scope, is not impacted by this RTTI type-sharing.  Likewise, regular
+virtual member function dispatch for objects is unaffected (but still
+requires that the type definitions match in all directly involved
+translation units).
+
+<p>Once more, inline namespaces can be used to create distinct ELF symbols
+for different types.
+</p>
+</li><li>Although the C++ standard requires that destructors for global objects
+run in the opposite order of their constructors, the Itanium C++ ABI
+requires a different destruction order in some cases.  As a result, do
+not depend on the precise destructor invocation order in applications
+that use <code class="code">dlclose</code>.
+
+</li><li>Registering destructors for later invocation allocates memory and may
+silently fail if insufficient memory is available.  As a result, the
+destructor is never invoked.  This applies to all forms of destructor
+registration, with the exception of thread-local variables (see the next
+item).  To avoid this issue, ensure that such objects merely have
+trivial destructors, avoiding the need for registration, and deallocate
+resources using a different mechanism (for example, from an ELF
+destructor).
+
+</li><li>A similar issue exists for <code class="code">thread_local</code> variables with thread
+storage duration of types that have non-trivial destructors.  However,
+in this case, memory allocation failure during registration leads to
+process termination.  If process termination is not acceptable, use
+<code class="code">thread_local</code> variables with trivial destructors only.
+Functions for per-thread cleanup can be registered using
+<code class="code">pthread_key_create</code> (globally for all threads) and activated
+using <code class="code">pthread_setspecific</code> (on each thread).  Note that a
+<code class="code">pthread_key_create</code> call may still fail (and
+<code class="code">pthread_create</code> keys are a limited resource in the GNU C Library), but
+this failure can be handled without terminating the process.
+</li></ul>
+
+</div>
+<div class="subsection-level-extent" id="Producing-Matching-Binaries">
+<h4 class="subsection"><span>37.4.2 Producing Matching Binaries<a class="copiable-link" href="#Producing-Matching-Binaries"> &para;</a></span></h4>
+
+<p>This subsection recommends tools and build flags for producing
+applications that meet the recommendations of the previous subsection.
+</p>
+<ul class="itemize mark-bullet">
+<li>Use BFD ld (<code class="command">bfd.ld</code>) from GNU binutils to produce binaries,
+invoked through a compiler driver such as <code class="command">gcc</code>.  The version
+should be not too far ahead of what was current when the version of
+the GNU C Library was first released.
+
+</li><li>Do not use a binutils release that is older than the one used to build
+the GNU C Library itself.
+
+</li><li>Compile with <samp class="option">-ftls-model=initial-exec</samp> to force the initial-exec
+TLS model.
+
+</li><li>Link with <samp class="option">-Wl,-z,now</samp> to disable lazy binding.
+
+</li><li>Link with <samp class="option">-Wl,-z,relro</samp> to enable RELRO (which is the default on
+most targets).
+
+</li><li>Specify all direct shared objects dependencies using <samp class="option">-l</samp> options
+to avoid underlinking.  Rely on <code class="code">.so</code> files (which can be linker
+scripts) and searching with the <samp class="option">-l</samp> option.  Do not specify the
+file names of shared objects on the linker command line.
+
+</li><li>Consider using <samp class="option">-Wl,-z,defs</samp> to treat underlinking as an error
+condition.
+
+</li><li>When creating a shared object (linked with <samp class="option">-shared</samp>), use
+<samp class="option">-Wl,-soname,lib&hellip;</samp> to set a soname that matches the final
+installed name of the file.
+
+</li><li>Do not use the <samp class="option">-rpath</samp> linker option.  (As explained below, all
+required shared objects should be installed into the default search
+path.)
+
+</li><li>Use <samp class="option">-Wl,--error-rwx-segments</samp> and <samp class="option">-Wl,--error-execstack</samp> to
+instruct the link editor to fail the link if the resulting final object
+would have read-write-execute segments or an executable stack.  Such
+issues usually indicate that the input files are not marked up
+correctly.  Use <samp class="option">-Wl,-z,text</samp>, so that the link editor produces
+errors instead of generating binaries with text relocations.
+
+</li><li>Ensure that for each <code class="code">LOAD</code> segment in the ELF program header, file
+offsets, memory sizes, and load addresses are multiples of the largest
+page size supported at run time.  Similarly, the start address and size
+of the <code class="code">GNU_RELRO</code> range should be multiples of the page size.
+
+<p>Avoid creating gaps between <code class="code">LOAD</code> segments.  The difference
+between the load addresses of two subsequent <code class="code">LOAD</code> segments should
+be the size of the first <code class="code">LOAD</code> segment.  (This may require linking
+with <samp class="option">-Wl,-z,noseparate-code</samp>.)
+</p>
+<p>This may not be possible to achieve with the currently available link
+editors.
+</p>
+</li><li>If the multiple-of-page-size criterion for the <code class="code">GNU_RELRO</code> region
+cannot be achieved, ensure that the process memory image right before
+the start of the region does not contain executable or writable memory.
+</li></ul>
+
+</div>
+<div class="subsection-level-extent" id="Checking-Binaries">
+<h4 class="subsection"><span>37.4.3 Checking Binaries<a class="copiable-link" href="#Checking-Binaries"> &para;</a></span></h4>
+
+<p>In some cases, if the previous recommendations are not followed, this
+can be determined from the produced binaries.  This section contains
+suggestions for verifying aspects of these binaries.
+</p>
+<ul class="itemize mark-bullet">
+<li>To detect underlinking, examine the dynamic symbol table, for example
+using &lsquo;<samp class="samp">readelf -sDW</samp>&rsquo;.  If the symbol is defined in a shared object
+that uses symbol versioning, it must carry a symbol version, as in
+&lsquo;<samp class="samp">pthread_kill@GLIBC_2.34</samp>&rsquo;.
+
+</li><li>Examine the dynamic segment with &lsquo;<samp class="samp">readelf -dW</samp>&rsquo; to check that all
+the required <code class="code">NEEDED</code> entries are present.  (It is not necessary to
+list indirect dependencies if these dependencies are guaranteed to
+remain during the evolution of the explicitly listed direct
+dependencies.)
+
+</li><li>The <code class="code">NEEDED</code> entries should not contain full path names including
+slashes, only <code class="code">sonames</code>.
+
+</li><li>For a further consistency check, collect all shared objects referenced
+via <code class="code">NEEDED</code> entries in dynamic segments, transitively, starting at
+the main program.  Then determine their dynamic symbol tables (using
+&lsquo;<samp class="samp">readelf -sDW</samp>&rsquo;, for example).  Ideally, every symbol should be
+defined at most once, so that symbol interposition does not happen.
+
+<p>If there are interposed data symbols, check if the single interposing
+definition is in the main program.  In this case, there must be a copy
+relocation for it.  (This only applies to targets with copy relocations.)
+</p>
+<p>Function symbols should only be interposed in C++ applications, to
+implement vague linkage.  (See the discussion in the C++ recommendations
+above.)
+</p>
+</li><li>Using the previously collected <code class="code">NEEDED</code> entries, check that the
+dependency graph does not contain any cycles.
+
+</li><li>The dynamic segment should also mention <code class="code">BIND_NOW</code> on the
+<code class="code">FLAGS</code> line or <code class="code">NOW</code> on the <code class="code">FLAGS_1</code> line (one is
+enough).
+
+</li><li>Ensure that only static TLS relocations (thread-pointer relative offset
+locations) are used, for example <code class="code">R_AARCH64_TLS_TPREL</code> and
+<code class="code">X86_64_TPOFF64</code>.  As the second-best option, and only if
+compatibility with non-hardened applications using <code class="code">dlopen</code> is
+needed, GNU2 TLS descriptor relocations can be used (for example,
+<code class="code">R_AARCH64_TLSDESC</code> or <code class="code">R_X86_64_TLSDESC</code>).
+
+</li><li>There should not be references to the traditional TLS function symbols
+<code class="code">__tls_get_addr</code>, <code class="code">__tls_get_offset</code>,
+<code class="code">__tls_get_addr_opt</code> in the dynamic symbol table (in the
+&lsquo;<samp class="samp">readelf -sDW</samp>&rsquo; output).  Supporting global dynamic TLS relocations
+(such as <code class="code">R_AARCH64_TLS_DTPMOD</code>, <code class="code">R_AARCH64_TLS_DTPREL</code>,
+<code class="code">R_X86_64_DTPMOD64</code>, <code class="code">R_X86_64_DTPOFF64</code>) should not be used,
+either.
+
+</li><li>Likewise, the functions <code class="code">dlopen</code>, <code class="code">dlmopen</code>, <code class="code">dlclose</code>
+should not be referenced from the dynamic symbol table.
+
+</li><li>For shared objects, there should be a <code class="code">SONAME</code> entry that matches
+the file name (the base name, i.e., the part after the slash).  The
+<code class="code">SONAME</code> string must not contain a slash &lsquo;<samp class="samp">/</samp>&rsquo;.
+
+</li><li>For all objects, the dynamic segment (as shown by &lsquo;<samp class="samp">readelf -dW</samp>&rsquo;)
+should not contain <code class="code">RPATH</code> or <code class="code">RUNPATH</code> entries.
+
+</li><li>Likewise, the dynamic segment should not show any <code class="code">AUDIT</code>,
+<code class="code">DEPAUDIT</code>, <code class="code">AUXILIARY</code>, <code class="code">FILTER</code>, <code class="code">TEXTREL</code>, or
+<code class="code">PREINIT_ARRAY</code> tags.
+
+</li><li>If the dynamic segment contains a (deprecated) <code class="code">HASH</code> tag, it
+must also contain a <code class="code">GNU_HASH</code> tag.
+
+</li><li>The <code class="code">TEXTREL</code> flag (under the <code class="code">FLAGS</code> tag) should not be used.
+
+</li><li>The <code class="code">INITFIRST</code> flag (under <code class="code">FLAGS_1</code>) should not be used.
+
+</li><li>The program header must not have <code class="code">LOAD</code> segments that are writable
+and executable at the same time.
+
+</li><li>All produced objects should have a <code class="code">GNU_STACK</code> program header that
+is not marked as executable.  (However, on some newer targets, a
+non-executable stack is the default, so the <code class="code">GNU_STACK</code> program
+header is not required.)
+</li></ul>
+
+</div>
+<div class="subsection-level-extent" id="Run_002dtime-Considerations">
+<h4 class="subsection"><span>37.4.4 Run-time Considerations<a class="copiable-link" href="#Run_002dtime-Considerations"> &para;</a></span></h4>
+
+<p>In addition to preparing program binaries in a recommended fashion, the
+run-time environment should be set up in such a way that problematic
+dynamic linker features are not used.
+</p>
+<ul class="itemize mark-bullet">
+<li>Install shared objects using their sonames in a default search path
+directory (usually <samp class="file">/usr/lib64</samp>).  Do not use symbolic links.
+
+</li><li>The default search path must not contain objects with duplicate file
+names or sonames.
+
+</li><li>Do not use environment variables (<code class="code">LD_&hellip;</code> variables such as
+<code class="code">LD_PRELOAD</code> or <code class="code">LD_LIBRARY_PATH</code>, or <code class="code">GLIBC_TUNABLES</code>)
+to change default dynamic linker behavior.
+
+</li><li>Do not install shared objects in non-default locations.  (Such locations
+are listed explicitly in the configuration file for <code class="command">ldconfig</code>,
+usually <samp class="file">/etc/ld.so.conf</samp>, or in files included from there.)
+
+</li><li>In relation to the previous item, do not install any objects it
+<code class="code">glibc-hwcaps</code> subdirectories.
+
+</li><li>Do not configure dynamically-loaded NSS service modules, to avoid
+accidental internal use of the <code class="code">dlopen</code> facility.  The <code class="code">files</code>
+and <code class="code">dns</code> modules are built in and do not rely on <code class="code">dlopen</code>.
+
+</li><li>Do not truncate and overwrite files containing programs and shared
+objects in place, while they are used.  Instead, write the new version
+to a different path and use <code class="code">rename</code> to replace the
+already-installed version.
+
+</li><li>Be aware that during a component update procedure that involves multiple
+object files (shared objects and main programs), concurrently starting
+processes may observe an inconsistent combination of object files (some
+already updated, some still at the previous version).  For example,
+this can happen during an update of the GNU C Library itself.
+</li></ul>
+
+</div>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Dynamic-Linker-Introspection.html">Dynamic Linker Introspection</a>, Up: <a href="Dynamic-Linker.html">Dynamic Linker</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

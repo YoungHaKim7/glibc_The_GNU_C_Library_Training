@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Setuid Program Example (The GNU C Library)</title>
+
+<meta name="description" content="Setuid Program Example (The GNU C Library)">
+<meta name="keywords" content="Setuid Program Example (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Users-and-Groups.html" rel="up" title="Users and Groups">
+<link href="Tips-for-Setuid.html" rel="next" title="Tips for Setuid">
+<link href="Enable_002fDisable-Setuid.html" rel="prev" title="Enable/Disable Setuid">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Setuid-Program-Example">
+<div class="nav-panel">
+<p>
+Next: <a href="Tips-for-Setuid.html" accesskey="n" rel="next">Tips for Writing Setuid Programs</a>, Previous: <a href="Enable_002fDisable-Setuid.html" accesskey="p" rel="prev">Enabling and Disabling Setuid Access</a>, Up: <a href="Users-and-Groups.html" accesskey="u" rel="up">Users and Groups</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Setuid-Program-Example-1"><span>31.9 Setuid Program Example<a class="copiable-link" href="#Setuid-Program-Example-1"> &para;</a></span></h3>
+
+<p>Here&rsquo;s an example showing how to set up a program that changes its
+effective user ID.
+</p>
+<p>This is part of a game program called <code class="code">caber-toss</code> that manipulates
+a file <samp class="file">scores</samp> that should be writable only by the game program
+itself.  The program assumes that its executable file will be installed
+with the setuid bit set and owned by the same user as the <samp class="file">scores</samp>
+file.  Typically, a system administrator will set up an account like
+<code class="code">games</code> for this purpose.
+</p>
+<p>The executable file is given mode <code class="code">4755</code>, so that doing an
+&lsquo;<samp class="samp">ls -l</samp>&rsquo; on it produces output like:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">-rwsr-xr-x   1 games    184422 Jul 30 15:17 caber-toss
+</pre></div>
+
+<p>The setuid bit shows up in the file modes as the &lsquo;<samp class="samp">s</samp>&rsquo;.
+</p>
+<p>The scores file is given mode <code class="code">644</code>, and doing an &lsquo;<samp class="samp">ls -l</samp>&rsquo; on
+it shows:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">-rw-r--r--  1 games           0 Jul 31 15:33 scores
+</pre></div>
+
+<p>Here are the parts of the program that show how to set up the changed
+user ID.  This program is conditionalized so that it makes use of the
+file IDs feature if it is supported, and otherwise uses <code class="code">setreuid</code>
+to swap the effective and real user IDs.
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">#include &lt;stdio.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+
+
+/* <span class="r">Remember the effective and real UIDs.</span> */
+
+static uid_t euid, ruid;
+
+
+/* <span class="r">Restore the effective UID to its original value.</span> */
+
+void
+do_setuid (void)
+{
+  int status;
+
+#ifdef _POSIX_SAVED_IDS
+  status = seteuid (euid);
+#else
+  status = setreuid (ruid, euid);
+#endif
+  if (status &lt; 0) {
+    fprintf (stderr, &quot;Couldn't set uid.\n&quot;);
+    exit (status);
+    }
+}
+
+
+</pre><div class="group"><pre class="example-preformatted">/* <span class="r">Set the effective UID to the real UID.</span> */
+
+void
+undo_setuid (void)
+{
+  int status;
+
+#ifdef _POSIX_SAVED_IDS
+  status = seteuid (ruid);
+#else
+  status = setreuid (euid, ruid);
+#endif
+  if (status &lt; 0) {
+    fprintf (stderr, &quot;Couldn't set uid.\n&quot;);
+    exit (status);
+    }
+}
+</pre></div><pre class="example-preformatted">
+
+/* <span class="r">Main program.</span> */
+
+int
+main (void)
+{
+  /* <span class="r">Remember the real and effective user IDs.</span>  */
+  ruid = getuid ();
+  euid = geteuid ();
+  undo_setuid ();
+
+  /* <span class="r">Do the game and record the score.</span>  */
+  ...
+}
+</pre></div>
+
+<p>Notice how the first thing the <code class="code">main</code> function does is to set the
+effective user ID back to the real user ID.  This is so that any other
+file accesses that are performed while the user is playing the game use
+the real user ID for determining permissions.  Only when the program
+needs to open the scores file does it switch back to the file user ID,
+like this:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">/* <span class="r">Record the score.</span> */
+
+int
+record_score (int score)
+{
+  FILE *stream;
+  char *myname;
+
+  /* <span class="r">Open the scores file.</span> */
+  do_setuid ();
+  stream = fopen (SCORES_FILE, &quot;a&quot;);
+  undo_setuid ();
+
+</pre><div class="group"><pre class="example-preformatted">  /* <span class="r">Write the score to the file.</span> */
+  if (stream)
+    {
+      myname = cuserid (NULL);
+      if (score &lt; 0)
+        fprintf (stream, &quot;%10s: Couldn't lift the caber.\n&quot;, myname);
+      else
+        fprintf (stream, &quot;%10s: %d feet.\n&quot;, myname, score);
+      fclose (stream);
+      return 0;
+    }
+  else
+    return -1;
+}
+</pre></div></div>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Tips-for-Setuid.html">Tips for Writing Setuid Programs</a>, Previous: <a href="Enable_002fDisable-Setuid.html">Enabling and Disabling Setuid Access</a>, Up: <a href="Users-and-Groups.html">Users and Groups</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Extra Fast Growing (The GNU C Library)</title>
+
+<meta name="description" content="Extra Fast Growing (The GNU C Library)">
+<meta name="keywords" content="Extra Fast Growing (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Obstacks.html" rel="up" title="Obstacks">
+<link href="Status-of-an-Obstack.html" rel="next" title="Status of an Obstack">
+<link href="Growing-Objects.html" rel="prev" title="Growing Objects">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Extra-Fast-Growing">
+<div class="nav-panel">
+<p>
+Next: <a href="Status-of-an-Obstack.html" accesskey="n" rel="next">Status of an Obstack</a>, Previous: <a href="Growing-Objects.html" accesskey="p" rel="prev">Growing Objects</a>, Up: <a href="Obstacks.html" accesskey="u" rel="up">Obstacks</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Extra-Fast-Growing-Objects"><span>3.2.6.7 Extra Fast Growing Objects<a class="copiable-link" href="#Extra-Fast-Growing-Objects"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-efficiency-and-obstacks"></a>
+
+<p>The usual functions for growing objects incur overhead for checking
+whether there is room for the new growth in the current chunk.  If you
+are frequently constructing objects in small steps of growth, this
+overhead can be significant.
+</p>
+<p>You can reduce the overhead by using special &ldquo;fast growth&rdquo;
+functions that grow the object without checking.  In order to have a
+robust program, you must do the checking yourself.  If you do this checking
+in the simplest way each time you are about to add data to the object, you
+have not saved anything, because that is what the ordinary growth
+functions do.  But if you can arrange to check less often, or check
+more efficiently, then you make the program faster.
+</p>
+<p>The function <code class="code">obstack_room</code> returns the amount of room available
+in the current chunk.  It is declared as follows:
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-obstack_005froom"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">obstack_room</strong> <code class="def-code-arguments">(struct obstack *<var class="var">obstack-ptr</var>)</code><a class="copiable-link" href="#index-obstack_005froom"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:obstack-ptr
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This returns the number of bytes that can be added safely to the current
+growing object (or to an object about to be started) in obstack
+<var class="var">obstack-ptr</var> using the fast growth functions.
+</p></dd></dl>
+
+<p>While you know there is room, you can use these fast growth functions
+for adding data to a growing object:
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-obstack_005f1grow_005ffast"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">obstack_1grow_fast</strong> <code class="def-code-arguments">(struct obstack *<var class="var">obstack-ptr</var>, char <var class="var">c</var>)</code><a class="copiable-link" href="#index-obstack_005f1grow_005ffast"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:obstack-ptr
+| AS-Safe 
+| AC-Unsafe corrupt mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">obstack_1grow_fast</code> adds one byte containing the
+character <var class="var">c</var> to the growing object in obstack <var class="var">obstack-ptr</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-obstack_005fptr_005fgrow_005ffast"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">obstack_ptr_grow_fast</strong> <code class="def-code-arguments">(struct obstack *<var class="var">obstack-ptr</var>, void *<var class="var">data</var>)</code><a class="copiable-link" href="#index-obstack_005fptr_005fgrow_005ffast"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:obstack-ptr
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">obstack_ptr_grow_fast</code> adds <code class="code">sizeof (void *)</code>
+bytes containing the value of <var class="var">data</var> to the growing object in
+obstack <var class="var">obstack-ptr</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-obstack_005fint_005fgrow_005ffast"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">obstack_int_grow_fast</strong> <code class="def-code-arguments">(struct obstack *<var class="var">obstack-ptr</var>, int <var class="var">data</var>)</code><a class="copiable-link" href="#index-obstack_005fint_005fgrow_005ffast"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:obstack-ptr
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">obstack_int_grow_fast</code> adds <code class="code">sizeof (int)</code> bytes
+containing the value of <var class="var">data</var> to the growing object in obstack
+<var class="var">obstack-ptr</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-obstack_005fblank_005ffast"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">obstack_blank_fast</strong> <code class="def-code-arguments">(struct obstack *<var class="var">obstack-ptr</var>, int <var class="var">size</var>)</code><a class="copiable-link" href="#index-obstack_005fblank_005ffast"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:obstack-ptr
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">obstack_blank_fast</code> adds <var class="var">size</var> bytes to the
+growing object in obstack <var class="var">obstack-ptr</var> without initializing them.
+</p></dd></dl>
+
+<p>When you check for space using <code class="code">obstack_room</code> and there is not
+enough room for what you want to add, the fast growth functions
+are not safe.  In this case, simply use the corresponding ordinary
+growth function instead.  Very soon this will copy the object to a
+new chunk; then there will be lots of room available again.
+</p>
+<p>So, each time you use an ordinary growth function, check afterward for
+sufficient space using <code class="code">obstack_room</code>.  Once the object is copied
+to a new chunk, there will be plenty of space again, so the program will
+start using the fast growth functions again.
+</p>
+<p>Here is an example:
+</p>
+<div class="example smallexample">
+<div class="group"><pre class="example-preformatted">void
+add_string (struct obstack *obstack, const char *ptr, int len)
+{
+  while (len &gt; 0)
+    {
+      int room = obstack_room (obstack);
+      if (room == 0)
+        {
+          /* <span class="r">Not enough room.  Add one character slowly,</span>
+             <span class="r">which may copy to a new chunk and make room.</span>  */
+          obstack_1grow (obstack, *ptr++);
+          len--;
+        }
+      else
+        {
+          if (room &gt; len)
+            room = len;
+          /* <span class="r">Add fast as much as we have room for.</span> */
+          len -= room;
+          while (room-- &gt; 0)
+            obstack_1grow_fast (obstack, *ptr++);
+        }
+    }
+}
+</pre></div></div>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Status-of-an-Obstack.html">Status of an Obstack</a>, Previous: <a href="Growing-Objects.html">Growing Objects</a>, Up: <a href="Obstacks.html">Obstacks</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Querying a Process (The GNU C Library)</title>
+
+<meta name="description" content="Querying a Process (The GNU C Library)">
+<meta name="keywords" content="Querying a Process (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Processes.html" rel="up" title="Processes">
+<link href="Executing-a-File.html" rel="next" title="Executing a File">
+<link href="Creating-a-Process.html" rel="prev" title="Creating a Process">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Querying-a-Process">
+<div class="nav-panel">
+<p>
+Next: <a href="Executing-a-File.html" accesskey="n" rel="next">Executing a File</a>, Previous: <a href="Creating-a-Process.html" accesskey="p" rel="prev">Creating a Process</a>, Up: <a href="Processes.html" accesskey="u" rel="up">Processes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Querying-a-Process-1"><span>27.5 Querying a Process<a class="copiable-link" href="#Querying-a-Process-1"> &para;</a></span></h3>
+
+<p>The file descriptor returned by the <code class="code">pidfd_fork</code> function can be used to
+query process extra information.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pidfd_005fgetpid"><span class="category-def">Function: </span><span><code class="def-type">pid_t</code> <strong class="def-name">pidfd_getpid</strong> <code class="def-code-arguments">(int <var class="var">fd</var>)</code><a class="copiable-link" href="#index-pidfd_005fgetpid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>The <code class="code">pidfd_getpid</code> function retrieves the process ID associated with process
+file descriptor created with <code class="code">pid_spawn</code>, <code class="code">pidfd_fork</code>, or
+<code class="code">pidfd_open</code>.
+</p>
+<p>If the operation fails, <code class="code">pidfd_getpid</code> return <code class="code">-1</code> and the following
+<code class="code">errno</code> error conditionas are defined:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The input file descriptor is invalid, does not have a pidfd associated, or an
+error has occurred parsing the kernel data.
+</p></dd>
+<dt><code class="code">EREMOTE</code></dt>
+<dd><p>There is no process ID to denote the process in the current namespace.
+</p></dd>
+<dt><code class="code">ESRCH</code></dt>
+<dd><p>The process for which the file descriptor refers to is terminated.
+</p></dd>
+<dt><code class="code">ENOENT</code></dt>
+<dd><p>The procfs is not mounted.
+</p></dd>
+<dt><code class="code">ENFILE.</code></dt>
+<dd><p>Too many open files in system (<code class="code">pidfd_open</code> tries to open a procfs file and
+read its contents).
+</p></dd>
+<dt><code class="code">ENOMEM</code></dt>
+<dd><p>Insufficient kernel memory was available.
+</p></dd>
+</dl>
+
+<p>This function is specific to Linux.
+</p></dd></dl>
+
+</div>
+
+
+
+</body>
+</html>

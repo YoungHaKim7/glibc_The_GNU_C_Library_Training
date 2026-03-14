@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>NSS Basics (The GNU C Library)</title>
+
+<meta name="description" content="NSS Basics (The GNU C Library)">
+<meta name="keywords" content="NSS Basics (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Name-Service-Switch.html" rel="up" title="Name Service Switch">
+<link href="NSS-Configuration-File.html" rel="next" title="NSS Configuration File">
+<link href="Name-Service-Switch.html" rel="prev" title="Name Service Switch">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="NSS-Basics">
+<div class="nav-panel">
+<p>
+Next: <a href="NSS-Configuration-File.html" accesskey="n" rel="next">The NSS Configuration File</a>, Previous: <a href="Name-Service-Switch.html" accesskey="p" rel="prev">System Databases and Name Service Switch</a>, Up: <a href="Name-Service-Switch.html" accesskey="u" rel="up">System Databases and Name Service Switch</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="NSS-Basics-1"><span>30.1 NSS Basics<a class="copiable-link" href="#NSS-Basics-1"> &para;</a></span></h3>
+
+<p>The basic idea is to put the implementation of the different services
+offered to access the databases in separate modules.  This has some
+advantages:
+</p>
+<ol class="enumerate">
+<li> Contributors can add new services without adding them to the GNU C Library.
+</li><li> The modules can be updated separately.
+</li><li> The C library image is smaller.
+</li></ol>
+
+<p>To fulfill the first goal above, the ABI of the modules will be described
+below.  For getting the implementation of a new service right it is
+important to understand how the functions in the modules get called.
+They are in no way designed to be used by the programmer directly.
+Instead the programmer should only use the documented and standardized
+functions to access the databases.
+</p>
+<p>The databases available in the NSS are
+</p>
+<a class="index-entry-id" id="index-aliases"></a>
+<a class="index-entry-id" id="index-ethers"></a>
+<a class="index-entry-id" id="index-group"></a>
+<a class="index-entry-id" id="index-gshadow"></a>
+<a class="index-entry-id" id="index-hosts"></a>
+<a class="index-entry-id" id="index-initgroups"></a>
+<a class="index-entry-id" id="index-netgroup"></a>
+<a class="index-entry-id" id="index-networks"></a>
+<a class="index-entry-id" id="index-passwd"></a>
+<a class="index-entry-id" id="index-protocols"></a>
+<a class="index-entry-id" id="index-publickey"></a>
+<a class="index-entry-id" id="index-rpc"></a>
+<a class="index-entry-id" id="index-services"></a>
+<a class="index-entry-id" id="index-shadow"></a>
+<dl class="table">
+<dt><code class="code">aliases</code></dt>
+<dd><p>Mail aliases
+</p></dd>
+<dt><code class="code">ethers</code></dt>
+<dd><p>Ethernet numbers,
+</p></dd>
+<dt><code class="code">group</code></dt>
+<dd><p>Groups of users, see <a class="pxref" href="Group-Database.html">Group Database</a>.
+</p></dd>
+<dt><code class="code">gshadow</code></dt>
+<dd><p>Group passphrase hashes and related information.
+</p></dd>
+<dt><code class="code">hosts</code></dt>
+<dd><p>Host names and numbers, see <a class="pxref" href="Host-Names.html">Host Names</a>.
+</p></dd>
+<dt><code class="code">initgroups</code></dt>
+<dd><p>Supplementary group access list.
+</p></dd>
+<dt><code class="code">netgroup</code></dt>
+<dd><p>Network wide list of host and users, see <a class="pxref" href="Netgroup-Database.html">Netgroup Database</a>.
+</p></dd>
+<dt><code class="code">networks</code></dt>
+<dd><p>Network names and numbers, see <a class="pxref" href="Networks-Database.html">Networks Database</a>.
+</p></dd>
+<dt><code class="code">passwd</code></dt>
+<dd><p>User identities, see <a class="pxref" href="User-Database.html">User Database</a>.
+</p></dd>
+<dt><code class="code">protocols</code></dt>
+<dd><p>Network protocols, see <a class="pxref" href="Protocols-Database.html">Protocols Database</a>.
+</p></dd>
+<dt><code class="code">publickey</code></dt>
+<dd><p>Public keys for Secure RPC.
+</p></dd>
+<dt><code class="code">rpc</code></dt>
+<dd><p>Remote procedure call names and numbers.
+</p></dd>
+<dt><code class="code">services</code></dt>
+<dd><p>Network services, see <a class="pxref" href="Services-Database.html">The Services Database</a>.
+</p></dd>
+<dt><code class="code">shadow</code></dt>
+<dd><p>User passphrase hashes and related information.
+</p></dd>
+</dl>
+
+<p>More databases may be added later.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="NSS-Configuration-File.html">The NSS Configuration File</a>, Previous: <a href="Name-Service-Switch.html">System Databases and Name Service Switch</a>, Up: <a href="Name-Service-Switch.html">System Databases and Name Service Switch</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

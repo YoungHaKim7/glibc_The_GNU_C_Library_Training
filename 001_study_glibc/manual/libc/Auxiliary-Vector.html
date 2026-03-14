@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Auxiliary Vector (The GNU C Library)</title>
+
+<meta name="description" content="Auxiliary Vector (The GNU C Library)">
+<meta name="keywords" content="Auxiliary Vector (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Program-Basics.html" rel="up" title="Program Basics">
+<link href="System-Calls.html" rel="next" title="System Calls">
+<link href="Environment-Variables.html" rel="prev" title="Environment Variables">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Auxiliary-Vector">
+<div class="nav-panel">
+<p>
+Next: <a href="System-Calls.html" accesskey="n" rel="next">System Calls</a>, Previous: <a href="Environment-Variables.html" accesskey="p" rel="prev">Environment Variables</a>, Up: <a href="Program-Basics.html" accesskey="u" rel="up">The Basic Program/System Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Auxiliary-Vector-1"><span>26.5 Auxiliary Vector<a class="copiable-link" href="#Auxiliary-Vector-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-auxiliary-vector"></a>
+
+<p>When a program is executed, it receives information from the operating
+system about the environment in which it is operating.  The form of this
+information is a table of key-value pairs, where the keys are from the
+set of &lsquo;<samp class="samp">AT_</samp>&rsquo; values in <samp class="file">elf.h</samp>.  Some of the data is provided
+by the kernel for libc consumption, and may be obtained by ordinary
+interfaces, such as <code class="code">sysconf</code>.  However, on a platform-by-platform
+basis there may be information that is not available any other way.
+</p>
+<ul class="mini-toc">
+<li><a href="#Definition-of-getauxval" accesskey="1">Definition of <code class="code">getauxval</code></a></li>
+</ul>
+<div class="subsection-level-extent" id="Definition-of-getauxval">
+<h4 class="subsection"><span>26.5.1 Definition of <code class="code">getauxval</code><a class="copiable-link" href="#Definition-of-getauxval"> &para;</a></span></h4>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getauxval"><span class="category-def">Function: </span><span><code class="def-type">unsigned long int</code> <strong class="def-name">getauxval</strong> <code class="def-code-arguments">(unsigned long int <var class="var">type</var>)</code><a class="copiable-link" href="#index-getauxval"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is used to inquire about the entries in the auxiliary
+vector.  The <var class="var">type</var> argument should be one of the &lsquo;<samp class="samp">AT_</samp>&rsquo; symbols
+defined in <samp class="file">elf.h</samp>.  If a matching entry is found, the value is
+returned; if the entry is not found, zero is returned and <code class="code">errno</code>
+is set to <code class="code">ENOENT</code>.
+</p>
+<p><strong class="strong">Note:</strong> There is no relationship between the &lsquo;<samp class="samp">AT_</samp>&rsquo; constants
+defined in <samp class="file">elf.h</samp> and the file name lookup flags in
+<samp class="file">fcntl.h</samp>.  See <a class="xref" href="Descriptor_002dRelative-Access.html">Descriptor-Relative Access</a>.
+</p></dd></dl>
+
+<p>For some platforms, the key <code class="code">AT_HWCAP</code> is the easiest way to inquire
+about any instruction set extensions available at runtime.  In this case,
+there will (of necessity) be a platform-specific set of &lsquo;<samp class="samp">HWCAP_</samp>&rsquo;
+values masked together that describe the capabilities of the cpu on which
+the program is being executed.
+</p>
+</div>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="System-Calls.html">System Calls</a>, Previous: <a href="Environment-Variables.html">Environment Variables</a>, Up: <a href="Program-Basics.html">The Basic Program/System Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

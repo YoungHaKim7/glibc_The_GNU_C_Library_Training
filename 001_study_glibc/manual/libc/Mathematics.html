@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Mathematics (The GNU C Library)</title>
+
+<meta name="description" content="Mathematics (The GNU C Library)">
+<meta name="keywords" content="Mathematics (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html" rel="up" title="Top">
+<link href="Arithmetic.html" rel="next" title="Arithmetic">
+<link href="Syslog.html" rel="prev" title="Syslog">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="chapter-level-extent" id="Mathematics">
+<div class="nav-panel">
+<p>
+Next: <a href="Arithmetic.html" accesskey="n" rel="next">Arithmetic Functions</a>, Previous: <a href="Syslog.html" accesskey="p" rel="prev">Syslog</a>, Up: <a href="index.html" accesskey="u" rel="up">Main Menu</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h2 class="chapter" id="Mathematics-1"><span>19 Mathematics<a class="copiable-link" href="#Mathematics-1"> &para;</a></span></h2>
+
+<p>This chapter contains information about functions for performing
+mathematical computations, such as trigonometric functions.  Most of
+these functions have prototypes declared in the header file
+<samp class="file">math.h</samp>.  The complex-valued functions are defined in
+<samp class="file">complex.h</samp>.
+<a class="index-entry-id" id="index-math_002eh"></a>
+<a class="index-entry-id" id="index-complex_002eh"></a>
+</p>
+<p>All mathematical functions which take a floating-point argument
+have three variants, one each for <code class="code">double</code>, <code class="code">float</code>, and
+<code class="code">long double</code> arguments.  The <code class="code">double</code> versions are mostly
+defined in ISO&nbsp;C89<!-- /@w -->.  The <code class="code">float</code> and <code class="code">long double</code>
+versions are from the numeric extensions to C included in ISO&nbsp;C99<!-- /@w -->.
+</p>
+<p>Which of the three versions of a function should be used depends on the
+situation.  For most calculations, the <code class="code">float</code> functions are the
+fastest.  On the other hand, the <code class="code">long double</code> functions have the
+most precision and exponent range.  <code class="code">double</code> is somewhere in between.
+It is usually wise to pick the smallest type that can accommodate your data.
+On some machines <code class="code">long double</code> has no more precision or exponent
+range than <code class="code">double</code>, though the types remain distinct for type checking.
+</p>
+<p>The GNU C Library also provides <code class="code">_Float<var class="var">N</var></code> and
+<code class="code">_Float<var class="var">N</var>x</code> types.  These types are defined in ISO/IEC&nbsp;TS&nbsp;18661-3<!-- /@w -->, which extends ISO&nbsp;C<!-- /@w --> and defines floating-point types that
+are not machine-dependent.  When such a type, such as <code class="code">_Float128</code>,
+is supported by the GNU C Library, extra variants for most of the mathematical
+functions provided for <code class="code">double</code>, <code class="code">float</code>, and <code class="code">long
+double</code> are also provided for the supported type.  Throughout this
+manual, the <code class="code">_Float<var class="var">N</var></code> and <code class="code">_Float<var class="var">N</var>x</code> variants of
+these functions are described along with the <code class="code">double</code>,
+<code class="code">float</code>, and <code class="code">long double</code> variants and they come from
+ISO/IEC&nbsp;TS&nbsp;18661-3<!-- /@w -->, unless explicitly stated otherwise.
+</p>
+<p>Support for <code class="code">_Float<var class="var">N</var></code> or <code class="code">_Float<var class="var">N</var>x</code> types is
+provided for <code class="code">_Float32</code>, <code class="code">_Float64</code> and <code class="code">_Float32x</code> on
+all platforms.
+It is also provided for <code class="code">_Float128</code> and <code class="code">_Float64x</code> on
+powerpc64le (PowerPC 64-bits little-endian), x86_64, x86,
+aarch64, alpha, loongarch, mips64, riscv, s390 and sparc.
+</p>
+
+<ul class="mini-toc">
+<li><a href="Mathematical-Constants.html" accesskey="1">Predefined Mathematical Constants</a></li>
+<li><a href="Trig-Functions.html" accesskey="2">Trigonometric Functions</a></li>
+<li><a href="Inverse-Trig-Functions.html" accesskey="3">Inverse Trigonometric Functions</a></li>
+<li><a href="Exponents-and-Logarithms.html" accesskey="4">Exponentiation and Logarithms</a></li>
+<li><a href="Hyperbolic-Functions.html" accesskey="5">Hyperbolic Functions</a></li>
+<li><a href="Special-Functions.html" accesskey="6">Special Functions</a></li>
+<li><a href="Errors-in-Math-Functions.html" accesskey="7">Errors in Math Functions</a></li>
+<li><a href="Pseudo_002dRandom-Numbers.html" accesskey="8">Pseudo-Random Numbers</a></li>
+<li><a href="FP-Function-Optimizations.html" accesskey="9">Is Fast Code or Small Code preferred?</a></li>
+</ul>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Arithmetic.html">Arithmetic Functions</a>, Previous: <a href="Syslog.html">Syslog</a>, Up: <a href="index.html">Main Menu</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

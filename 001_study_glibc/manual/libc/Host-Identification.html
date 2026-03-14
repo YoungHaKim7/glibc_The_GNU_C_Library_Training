@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Host Identification (The GNU C Library)</title>
+
+<meta name="description" content="Host Identification (The GNU C Library)">
+<meta name="keywords" content="Host Identification (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="System-Management.html" rel="up" title="System Management">
+<link href="Platform-Type.html" rel="next" title="Platform Type">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Host-Identification">
+<div class="nav-panel">
+<p>
+Next: <a href="Platform-Type.html" accesskey="n" rel="next">Platform Type Identification</a>, Up: <a href="System-Management.html" accesskey="u" rel="up">System Management</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Host-Identification-1"><span>32.1 Host Identification<a class="copiable-link" href="#Host-Identification-1"> &para;</a></span></h3>
+
+<p>This section explains how to identify the particular system on which your
+program is running.  First, let&rsquo;s review the various ways computer systems
+are named, which is a little complicated because of the history of the
+development of the Internet.
+</p>
+<p>Every Unix system (also known as a host) has a host name, whether it&rsquo;s
+connected to a network or not.  In its simplest form, as used before
+computer networks were an issue, it&rsquo;s just a word like &lsquo;<samp class="samp">chicken</samp>&rsquo;.
+<a class="index-entry-id" id="index-host-name"></a>
+</p>
+<p>But any system attached to the Internet or any network like it conforms
+to a more rigorous naming convention as part of the Domain Name System
+(DNS).  In the DNS, every host name is composed of two parts:
+<a class="index-entry-id" id="index-DNS"></a>
+<a class="index-entry-id" id="index-Domain-Name-System"></a>
+</p>
+<ol class="enumerate">
+<li> hostname
+</li><li> <a class="index-entry-id" id="index-hostname"></a>
+domain name
+<a class="index-entry-id" id="index-domain-name"></a>
+</li></ol>
+
+<p>You will note that &ldquo;hostname&rdquo; looks a lot like &ldquo;host name&rdquo;, but is
+not the same thing, and that people often incorrectly refer to entire
+host names as &ldquo;domain names.&rdquo;
+</p>
+<p>In the DNS, the full host name is properly called the FQDN (Fully Qualified
+Domain Name) and consists of the hostname, then a period, then the
+domain name.  The domain name itself usually has multiple components
+separated by periods.  So for example, a system&rsquo;s hostname may be
+&lsquo;<samp class="samp">chicken</samp>&rsquo; and its domain name might be &lsquo;<samp class="samp">ai.mit.edu</samp>&rsquo;, so
+its FQDN (which is its host name) is &lsquo;<samp class="samp">chicken.ai.mit.edu</samp>&rsquo;.
+<a class="index-entry-id" id="index-FQDN"></a>
+</p>
+<p>Adding to the confusion, though, is that the DNS is not the only name space
+in which a computer needs to be known.  Another name space is the
+NIS (aka YP) name space.  For NIS purposes, there is another domain
+name, which is called the NIS domain name or the YP domain name.  It
+need not have anything to do with the DNS domain name.
+<a class="index-entry-id" id="index-YP"></a>
+<a class="index-entry-id" id="index-NIS"></a>
+<a class="index-entry-id" id="index-NIS-domain-name"></a>
+<a class="index-entry-id" id="index-YP-domain-name"></a>
+</p>
+<p>Confusing things even more is the fact that in the DNS, it is possible for
+multiple FQDNs to refer to the same system.  However, there is always
+exactly one of them that is the true host name, and it is called the
+canonical FQDN.
+</p>
+<p>In some contexts, the host name is called a &ldquo;node name.&rdquo;
+</p>
+<p>For more information on DNS host naming, see <a class="ref" href="Host-Names.html">Host Names</a>.
+</p>
+<a class="index-entry-id" id="index-hostname-1"></a>
+<a class="index-entry-id" id="index-hostid-1"></a>
+<a class="index-entry-id" id="index-unistd_002eh-26"></a>
+<p>Prototypes for these functions appear in <samp class="file">unistd.h</samp>.
+</p>
+<p>The programs <code class="code">hostname</code>, <code class="code">hostid</code>, and <code class="code">domainname</code> work
+by calling these functions.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-gethostname"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">gethostname</strong> <code class="def-code-arguments">(char *<var class="var">name</var>, size_t <var class="var">size</var>)</code><a class="copiable-link" href="#index-gethostname"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns the host name of the system on which it is called,
+in the array <var class="var">name</var>.  The <var class="var">size</var> argument specifies the size of
+this array, in bytes.  Note that this is <em class="emph">not</em> the DNS hostname.
+If the system participates in the DNS, this is the FQDN (see above).
+</p>
+<p>The return value is <code class="code">0</code> on success and <code class="code">-1</code> on failure.  In
+the GNU C Library, <code class="code">gethostname</code> fails if <var class="var">size</var> is not large
+enough; then you can try again with a larger array.  The following
+<code class="code">errno</code> error condition is defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">ENAMETOOLONG</code></dt>
+<dd><p>The <var class="var">size</var> argument is less than the size of the host name plus one.
+</p></dd>
+</dl>
+
+<a class="index-entry-id" id="index-sys_002fparam_002eh"></a>
+<p>On some systems, there is a symbol for the maximum possible host name
+length: <code class="code">MAXHOSTNAMELEN</code>.  It is defined in <samp class="file">sys/param.h</samp>.
+But you can&rsquo;t count on this to exist, so it is cleaner to handle
+failure and try again.
+</p>
+<p><code class="code">gethostname</code> stores the beginning of the host name in <var class="var">name</var>
+even if the host name won&rsquo;t entirely fit.  For some purposes, a
+truncated host name is good enough.  If it is, you can ignore the
+error code.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sethostname"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sethostname</strong> <code class="def-code-arguments">(const char *<var class="var">name</var>, size_t <var class="var">length</var>)</code><a class="copiable-link" href="#index-sethostname"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">sethostname</code> function sets the host name of the system that
+calls it to <var class="var">name</var>, a string with length <var class="var">length</var>.  Only
+privileged processes are permitted to do this.
+</p>
+<p>Usually <code class="code">sethostname</code> gets called just once, at system boot time.
+Often, the program that calls it sets it to the value it finds in the
+file <code class="code">/etc/hostname</code>.
+<a class="index-entry-id" id="index-_002fetc_002fhostname"></a>
+</p>
+<p>Be sure to set the host name to the full host name, not just the DNS
+hostname (see above).
+</p>
+<p>The return value is <code class="code">0</code> on success and <code class="code">-1</code> on failure.
+The following <code class="code">errno</code> error condition is defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EPERM</code></dt>
+<dd><p>This process cannot set the host name because it is not privileged.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getdomainname"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getdomainname</strong> <code class="def-code-arguments">(char *<var class="var">name</var>, size_t <var class="var">length</var>)</code><a class="copiable-link" href="#index-getdomainname"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<a class="index-entry-id" id="index-NIS-domain-name-1"></a>
+<a class="index-entry-id" id="index-YP-domain-name-1"></a>
+
+<p><code class="code">getdomainname</code> returns the NIS (aka YP) domain name of the system
+on which it is called.  Note that this is not the more popular DNS
+domain name.  Get that with <code class="code">gethostname</code>.
+</p>
+<p>The specifics of this function are analogous to <code class="code">gethostname</code>, above.
+</p>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setdomainname"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setdomainname</strong> <code class="def-code-arguments">(const char *<var class="var">name</var>, size_t <var class="var">length</var>)</code><a class="copiable-link" href="#index-setdomainname"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<a class="index-entry-id" id="index-NIS-domain-name-2"></a>
+<a class="index-entry-id" id="index-YP-domain-name-2"></a>
+
+<p><code class="code">setdomainname</code> sets the NIS (aka YP) domain name of the system
+on which it is called.  Note that this is not the more popular DNS
+domain name.  Set that with <code class="code">sethostname</code>.
+</p>
+<p>The specifics of this function are analogous to <code class="code">sethostname</code>, above.
+</p>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-gethostid"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">gethostid</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-gethostid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe hostid env locale
+| AS-Unsafe dlopen plugin corrupt heap lock
+| AC-Unsafe lock corrupt mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns the &ldquo;host ID&rdquo; of the machine the program is
+running on.  By convention, this is usually the primary Internet IP address
+of that machine, converted to a <code class="code">long&nbsp;int</code><!-- /@w -->.  However, on some
+systems it is a meaningless but unique number which is hard-coded for
+each machine.
+</p>
+<p>This is not widely used.  It arose in BSD 4.2, but was dropped in BSD 4.4.
+It is not required by POSIX.
+</p>
+<p>The proper way to query the IP address is to use <code class="code">gethostbyname</code>
+on the results of <code class="code">gethostname</code>.  For more information on IP addresses,
+See <a class="xref" href="Host-Addresses.html">Host Addresses</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sethostid"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sethostid</strong> <code class="def-code-arguments">(long int <var class="var">id</var>)</code><a class="copiable-link" href="#index-sethostid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe const:hostid
+| AS-Unsafe 
+| AC-Unsafe corrupt fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">sethostid</code> function sets the &ldquo;host ID&rdquo; of the host machine
+to <var class="var">id</var>.  Only privileged processes are permitted to do this.  Usually
+it happens just once, at system boot time.
+</p>
+<p>The proper way to establish the primary IP address of a system
+is to configure the IP address resolver to associate that IP address with
+the system&rsquo;s host name as returned by <code class="code">gethostname</code>.  For example,
+put a record for the system in <samp class="file">/etc/hosts</samp>.
+</p>
+<p>See <code class="code">gethostid</code> above for more information on host ids.
+</p>
+<p>The return value is <code class="code">0</code> on success and <code class="code">-1</code> on failure.
+The following <code class="code">errno</code> error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EPERM</code></dt>
+<dd><p>This process cannot set the host name because it is not privileged.
+</p>
+</dd>
+<dt><code class="code">ENOSYS</code></dt>
+<dd><p>The operating system does not support setting the host ID.  On some
+systems, the host ID is a meaningless but unique number hard-coded for
+each machine.
+</p></dd>
+</dl>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Platform-Type.html">Platform Type Identification</a>, Up: <a href="System-Management.html">System Management</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

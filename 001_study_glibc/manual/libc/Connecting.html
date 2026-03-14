@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Connecting (The GNU C Library)</title>
+
+<meta name="description" content="Connecting (The GNU C Library)">
+<meta name="keywords" content="Connecting (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Connections.html" rel="up" title="Connections">
+<link href="Listening.html" rel="next" title="Listening">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Connecting">
+<div class="nav-panel">
+<p>
+Next: <a href="Listening.html" accesskey="n" rel="next">Listening for Connections</a>, Up: <a href="Connections.html" accesskey="u" rel="up">Using Sockets with Connections</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Making-a-Connection"><span>16.9.1 Making a Connection<a class="copiable-link" href="#Making-a-Connection"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-connecting-a-socket"></a>
+<a class="index-entry-id" id="index-socket_002c-connecting"></a>
+<a class="index-entry-id" id="index-socket_002c-initiating-a-connection"></a>
+<a class="index-entry-id" id="index-socket_002c-client-actions"></a>
+
+<p>In making a connection, the client makes a connection while the server
+waits for and accepts the connection.  Here we discuss what the client
+program must do with the <code class="code">connect</code> function, which is declared in
+<samp class="file">sys/socket.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-connect"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">connect</strong> <code class="def-code-arguments">(int <var class="var">socket</var>, struct sockaddr *<var class="var">addr</var>, socklen_t <var class="var">length</var>)</code><a class="copiable-link" href="#index-connect"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">connect</code> function initiates a connection from the socket
+with file descriptor <var class="var">socket</var> to the socket whose address is
+specified by the <var class="var">addr</var> and <var class="var">length</var> arguments.  (This socket
+is typically on another machine, and it must be already set up as a
+server.)  See <a class="xref" href="Socket-Addresses.html">Socket Addresses</a>, for information about how these
+arguments are interpreted.
+</p>
+<p>Normally, <code class="code">connect</code> waits until the server responds to the request
+before it returns.  You can set nonblocking mode on the socket
+<var class="var">socket</var> to make <code class="code">connect</code> return immediately without waiting
+for the response.  See <a class="xref" href="File-Status-Flags.html">File Status Flags</a>, for information about
+nonblocking mode.
+</p>
+<p>The normal return value from <code class="code">connect</code> is <code class="code">0</code>.  If an error
+occurs, <code class="code">connect</code> returns <code class="code">-1</code>.  The following <code class="code">errno</code>
+error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The socket <var class="var">socket</var> is not a valid file descriptor.
+</p>
+</dd>
+<dt><code class="code">ENOTSOCK</code></dt>
+<dd><p>File descriptor <var class="var">socket</var> is not a socket.
+</p>
+</dd>
+<dt><code class="code">EADDRNOTAVAIL</code></dt>
+<dd><p>The specified address is not available on the remote machine.
+</p>
+</dd>
+<dt><code class="code">EAFNOSUPPORT</code></dt>
+<dd><p>The namespace of the <var class="var">addr</var> is not supported by this socket.
+</p>
+</dd>
+<dt><code class="code">EISCONN</code></dt>
+<dd><p>The socket <var class="var">socket</var> is already connected.
+</p>
+</dd>
+<dt><code class="code">ETIMEDOUT</code></dt>
+<dd><p>The attempt to establish the connection timed out.
+</p>
+</dd>
+<dt><code class="code">ECONNREFUSED</code></dt>
+<dd><p>The server has actively refused to establish the connection.
+</p>
+</dd>
+<dt><code class="code">ENETUNREACH</code></dt>
+<dd><p>The network of the given <var class="var">addr</var> isn&rsquo;t reachable from this host.
+</p>
+</dd>
+<dt><code class="code">EADDRINUSE</code></dt>
+<dd><p>The socket address of the given <var class="var">addr</var> is already in use.
+</p>
+</dd>
+<dt><code class="code">EINPROGRESS</code></dt>
+<dd><p>The socket <var class="var">socket</var> is non-blocking and the connection could not be
+established immediately.  You can determine when the connection is
+completely established with <code class="code">select</code>; see <a class="pxref" href="Waiting-for-I_002fO.html">Waiting for Input or Output</a>.
+Another <code class="code">connect</code> call on the same socket, before the connection is
+completely established, will fail with <code class="code">EALREADY</code>.
+</p>
+</dd>
+<dt><code class="code">EALREADY</code></dt>
+<dd><p>The socket <var class="var">socket</var> is non-blocking and already has a pending
+connection in progress (see <code class="code">EINPROGRESS</code> above).
+</p></dd>
+</dl>
+
+<p>This function is defined as a cancellation point in multi-threaded
+programs, so one has to be prepared for this and make sure that
+allocated resources (like memory, file descriptors, semaphores or
+whatever) are freed even if the thread is canceled.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Listening.html">Listening for Connections</a>, Up: <a href="Connections.html">Using Sockets with Connections</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

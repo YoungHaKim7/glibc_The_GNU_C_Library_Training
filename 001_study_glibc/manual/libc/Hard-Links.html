@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Hard Links (The GNU C Library)</title>
+
+<meta name="description" content="Hard Links (The GNU C Library)">
+<meta name="keywords" content="Hard Links (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="File-System-Interface.html" rel="up" title="File System Interface">
+<link href="Symbolic-Links.html" rel="next" title="Symbolic Links">
+<link href="Working-with-Directory-Trees.html" rel="prev" title="Working with Directory Trees">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Hard-Links">
+<div class="nav-panel">
+<p>
+Next: <a href="Symbolic-Links.html" accesskey="n" rel="next">Symbolic Links</a>, Previous: <a href="Working-with-Directory-Trees.html" accesskey="p" rel="prev">Working with Directory Trees</a>, Up: <a href="File-System-Interface.html" accesskey="u" rel="up">File System Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Hard-Links-1"><span>14.5 Hard Links<a class="copiable-link" href="#Hard-Links-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-hard-link"></a>
+<a class="index-entry-id" id="index-link_002c-hard"></a>
+<a class="index-entry-id" id="index-multiple-names-for-one-file"></a>
+<a class="index-entry-id" id="index-file-names_002c-multiple"></a>
+
+<p>In POSIX systems, one file can have many names at the same time.  All of
+the names are equally real, and no one of them is preferred to the
+others.
+</p>
+<p>To add a name to a file, use the <code class="code">link</code> function.  (The new name is
+also called a <em class="dfn">hard link</em> to the file.)  Creating a new link to a
+file does not copy the contents of the file; it simply makes a new name
+by which the file can be known, in addition to the file&rsquo;s existing name
+or names.
+</p>
+<p>One file can have names in several directories, so the organization
+of the file system is not a strict hierarchy or tree.
+</p>
+<p>In most implementations, it is not possible to have hard links to the
+same file in multiple file systems.  <code class="code">link</code> reports an error if you
+try to make a hard link to the file from another file system when this
+cannot be done.
+</p>
+<p>The prototype for the <code class="code">link</code> function is declared in the header
+file <samp class="file">unistd.h</samp>.
+<a class="index-entry-id" id="index-unistd_002eh-5"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-link-1"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">link</strong> <code class="def-code-arguments">(const char *<var class="var">oldname</var>, const char *<var class="var">newname</var>)</code><a class="copiable-link" href="#index-link-1"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">link</code> function makes a new link to the existing file named by
+<var class="var">oldname</var>, under the new name <var class="var">newname</var>.
+</p>
+<p>This function returns a value of <code class="code">0</code> if it is successful and
+<code class="code">-1</code> on failure.  In addition to the usual file name errors
+(see <a class="pxref" href="File-Name-Errors.html">File Name Errors</a>) for both <var class="var">oldname</var> and <var class="var">newname</var>, the
+following <code class="code">errno</code> error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EACCES</code></dt>
+<dd><p>You are not allowed to write to the directory in which the new link is
+to be written.
+</p>
+</dd>
+<dt><code class="code">EEXIST</code></dt>
+<dd><p>There is already a file named <var class="var">newname</var>.  If you want to replace
+this link with a new link, you must remove the old link explicitly first.
+</p>
+</dd>
+<dt><code class="code">EMLINK</code></dt>
+<dd><p>There are already too many links to the file named by <var class="var">oldname</var>.
+(The maximum number of links to a file is <code class="code">LINK_MAX</code><!-- /@w -->; see
+<a class="ref" href="Limits-for-Files.html">Limits on File System Capacity</a>.)
+</p>
+</dd>
+<dt><code class="code">ENOENT</code></dt>
+<dd><p>The file named by <var class="var">oldname</var> doesn&rsquo;t exist.  You can&rsquo;t make a link to
+a file that doesn&rsquo;t exist.
+</p>
+</dd>
+<dt><code class="code">ENOSPC</code></dt>
+<dd><p>The directory or file system that would contain the new link is full
+and cannot be extended.
+</p>
+</dd>
+<dt><code class="code">EPERM</code></dt>
+<dd><p>On GNU/Linux and GNU/Hurd systems and some others, you cannot make links to
+directories.
+Many systems allow only privileged users to do so.  This error
+is used to report the problem.
+</p>
+</dd>
+<dt><code class="code">EROFS</code></dt>
+<dd><p>The directory containing the new link can&rsquo;t be modified because it&rsquo;s on
+a read-only file system.
+</p>
+</dd>
+<dt><code class="code">EXDEV</code></dt>
+<dd><p>The directory specified in <var class="var">newname</var> is on a different file system
+than the existing file.
+</p>
+</dd>
+<dt><code class="code">EIO</code></dt>
+<dd><p>A hardware error occurred while trying to read or write the to filesystem.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-linkat"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">linkat</strong> <code class="def-code-arguments">(int oldfd, const char *<var class="var">oldname</var>, int newfd, const char *<var class="var">newname</var>, int flags)</code><a class="copiable-link" href="#index-linkat"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>The <code class="code">linkat</code> function is analogous to the <code class="code">link</code> function,
+except that it identifies its source and target using a combination of a
+file descriptor (referring to a directory) and a file name.
+See <a class="xref" href="Descriptor_002dRelative-Access.html">Descriptor-Relative Access</a>.  For <code class="code">linkat</code>, if a file name is
+not absolute, it is resolved relative to the corresponding file
+descriptor.  As usual, the special value <code class="code">AT_FDCWD</code> denotes the
+current directory.
+</p>
+<p>The <var class="var">flags</var> argument is a combination of the following flags:
+</p>
+<dl class="table">
+<dt><code class="code">AT_SYMLINK_FOLLOW</code></dt>
+<dd><p>If the source path identified by <var class="var">oldfd</var> and <var class="var">oldname</var> is a
+symbolic link, <code class="code">linkat</code> follows the symbolic link and creates a
+link to its target.  If the flag is not set, a link for the symbolic
+link itself is created; this is not supported by all file systems and
+<code class="code">linkat</code> can fail in this case.
+</p>
+</dd>
+<dt><code class="code">AT_EMPTY_PATH</code></dt>
+<dd><p>If this flag is specified, <var class="var">oldname</var> can be an empty string.  In
+this case, a new link to the file denoted by the descriptor <var class="var">oldfd</var>
+is created, which may have been opened with <code class="code">O_PATH</code> or
+<code class="code">O_TMPFILE</code>.  This flag is a GNU extension.
+</p></dd>
+</dl>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Symbolic-Links.html">Symbolic Links</a>, Previous: <a href="Working-with-Directory-Trees.html">Working with Directory Trees</a>, Up: <a href="File-System-Interface.html">File System Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

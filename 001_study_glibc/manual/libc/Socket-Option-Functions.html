@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Socket Option Functions (The GNU C Library)</title>
+
+<meta name="description" content="Socket Option Functions (The GNU C Library)">
+<meta name="keywords" content="Socket Option Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Socket-Options.html" rel="up" title="Socket Options">
+<link href="Socket_002dLevel-Options.html" rel="next" title="Socket-Level Options">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Socket-Option-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Socket_002dLevel-Options.html" accesskey="n" rel="next">Socket-Level Options</a>, Up: <a href="Socket-Options.html" accesskey="u" rel="up">Socket Options</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Socket-Option-Functions-1"><span>16.12.1 Socket Option Functions<a class="copiable-link" href="#Socket-Option-Functions-1"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-sys_002fsocket_002eh-13"></a>
+<p>Here are the functions for examining and modifying socket options.
+They are declared in <samp class="file">sys/socket.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getsockopt"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getsockopt</strong> <code class="def-code-arguments">(int <var class="var">socket</var>, int <var class="var">level</var>, int <var class="var">optname</var>, void *<var class="var">optval</var>, socklen_t *<var class="var">optlen-ptr</var>)</code><a class="copiable-link" href="#index-getsockopt"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">getsockopt</code> function gets information about the value of
+option <var class="var">optname</var> at level <var class="var">level</var> for socket <var class="var">socket</var>.
+</p>
+<p>The option value is stored in the buffer that <var class="var">optval</var> points to.
+Before the call, you should supply in <code class="code">*<var class="var">optlen-ptr</var></code> the
+size of this buffer; on return, it contains the number of bytes of
+information actually stored in the buffer.
+</p>
+<p>Most options interpret the <var class="var">optval</var> buffer as a single <code class="code">int</code>
+value.
+</p>
+<p>The actual return value of <code class="code">getsockopt</code> is <code class="code">0</code> on success
+and <code class="code">-1</code> on failure.  The following <code class="code">errno</code> error conditions
+are defined:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">socket</var> argument is not a valid file descriptor.
+</p>
+</dd>
+<dt><code class="code">ENOTSOCK</code></dt>
+<dd><p>The descriptor <var class="var">socket</var> is not a socket.
+</p>
+</dd>
+<dt><code class="code">ENOPROTOOPT</code></dt>
+<dd><p>The <var class="var">optname</var> doesn&rsquo;t make sense for the given <var class="var">level</var>.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setsockopt"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setsockopt</strong> <code class="def-code-arguments">(int <var class="var">socket</var>, int <var class="var">level</var>, int <var class="var">optname</var>, const void *<var class="var">optval</var>, socklen_t <var class="var">optlen</var>)</code><a class="copiable-link" href="#index-setsockopt"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is used to set the socket option <var class="var">optname</var> at level
+<var class="var">level</var> for socket <var class="var">socket</var>.  The value of the option is passed
+in the buffer <var class="var">optval</var> of size <var class="var">optlen</var>.
+</p>
+
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Socket_002dLevel-Options.html">Socket-Level Options</a>, Up: <a href="Socket-Options.html">Socket Options</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

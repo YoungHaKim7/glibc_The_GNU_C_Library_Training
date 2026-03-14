@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Ports (The GNU C Library)</title>
+
+<meta name="description" content="Ports (The GNU C Library)">
+<meta name="keywords" content="Ports (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Internet-Namespace.html" rel="up" title="Internet Namespace">
+<link href="Services-Database.html" rel="next" title="Services Database">
+<link href="Host-Addresses.html" rel="prev" title="Host Addresses">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Ports">
+<div class="nav-panel">
+<p>
+Next: <a href="Services-Database.html" accesskey="n" rel="next">The Services Database</a>, Previous: <a href="Host-Addresses.html" accesskey="p" rel="prev">Host Addresses</a>, Up: <a href="Internet-Namespace.html" accesskey="u" rel="up">The Internet Namespace</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Internet-Ports"><span>16.6.3 Internet Ports<a class="copiable-link" href="#Internet-Ports"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-port-number"></a>
+
+<p>A socket address in the Internet namespace consists of a machine&rsquo;s
+Internet address plus a <em class="dfn">port number</em> which distinguishes the
+sockets on a given machine (for a given protocol).  Port numbers range
+from 0 to 65,535.
+</p>
+<p>Port numbers less than <code class="code">IPPORT_RESERVED</code> are reserved for standard
+servers, such as <code class="code">finger</code> and <code class="code">telnet</code>.  There is a database
+that keeps track of these, and you can use the <code class="code">getservbyname</code>
+function to map a service name onto a port number; see <a class="ref" href="Services-Database.html">The Services Database</a>.
+</p>
+<p>If you write a server that is not one of the standard ones defined in
+the database, you must choose a port number for it.  Use a number
+greater than <code class="code">IPPORT_USERRESERVED</code>; such numbers are reserved for
+servers and won&rsquo;t ever be generated automatically by the system.
+Avoiding conflicts with servers being run by other users is up to you.
+</p>
+<p>When you use a socket without specifying its address, the system
+generates a port number for it.  This number is between
+<code class="code">IPPORT_RESERVED</code> and <code class="code">IPPORT_USERRESERVED</code>.
+</p>
+<p>On the Internet, it is actually legitimate to have two different
+sockets with the same port number, as long as they never both try to
+communicate with the same socket address (host address plus port
+number).  You shouldn&rsquo;t duplicate a port number except in special
+circumstances where a higher-level protocol requires it.  Normally,
+the system won&rsquo;t let you do it; <code class="code">bind</code> normally insists on
+distinct port numbers.  To reuse a port number, you must set the
+socket option <code class="code">SO_REUSEADDR</code>.  See <a class="xref" href="Socket_002dLevel-Options.html">Socket-Level Options</a>.
+</p>
+<a class="index-entry-id" id="index-netinet_002fin_002eh-2"></a>
+<p>These macros are defined in the header file <samp class="file">netinet/in.h</samp>.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-IPPORT_005fRESERVED"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">IPPORT_RESERVED</strong><a class="copiable-link" href="#index-IPPORT_005fRESERVED"> &para;</a></span></dt>
+<dd>
+<p>Port numbers less than <code class="code">IPPORT_RESERVED</code> are reserved for
+superuser use.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-IPPORT_005fUSERRESERVED"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">IPPORT_USERRESERVED</strong><a class="copiable-link" href="#index-IPPORT_005fUSERRESERVED"> &para;</a></span></dt>
+<dd>
+<p>Port numbers greater than or equal to <code class="code">IPPORT_USERRESERVED</code> are
+reserved for explicit use; they will never be allocated automatically.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Services-Database.html">The Services Database</a>, Previous: <a href="Host-Addresses.html">Host Addresses</a>, Up: <a href="Internet-Namespace.html">The Internet Namespace</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

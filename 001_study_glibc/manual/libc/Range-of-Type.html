@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Range of Type (The GNU C Library)</title>
+
+<meta name="description" content="Range of Type (The GNU C Library)">
+<meta name="keywords" content="Range of Type (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Data-Type-Measurements.html" rel="up" title="Data Type Measurements">
+<link href="Floating-Type-Macros.html" rel="next" title="Floating Type Macros">
+<link href="Width-of-Type.html" rel="prev" title="Width of Type">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Range-of-Type">
+<div class="nav-panel">
+<p>
+Next: <a href="Floating-Type-Macros.html" accesskey="n" rel="next">Floating Type Macros</a>, Previous: <a href="Width-of-Type.html" accesskey="p" rel="prev">Width of an Integer Type</a>, Up: <a href="Data-Type-Measurements.html" accesskey="u" rel="up">Data Type Measurements</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Range-of-an-Integer-Type"><span>A.5.2 Range of an Integer Type<a class="copiable-link" href="#Range-of-an-Integer-Type"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-integer-type-range"></a>
+<a class="index-entry-id" id="index-range-of-integer-type"></a>
+<a class="index-entry-id" id="index-limits_002c-integer-types"></a>
+
+<p>Suppose you need to store an integer value which can range from zero to
+one million.  Which is the smallest type you can use?  There is no
+general rule; it depends on the C compiler and target machine.  You can
+use the &lsquo;<samp class="samp">MIN</samp>&rsquo; and &lsquo;<samp class="samp">MAX</samp>&rsquo; macros in <samp class="file">limits.h</samp> to determine
+which type will work.
+</p>
+<p>Each signed integer type has a pair of macros which give the smallest
+and largest values that it can hold.  Each unsigned integer type has one
+such macro, for the maximum value; the minimum value is, of course,
+zero.
+</p>
+<p>The values of these macros are all integer constant expressions.  The
+&lsquo;<samp class="samp">MAX</samp>&rsquo; and &lsquo;<samp class="samp">MIN</samp>&rsquo; macros for <code class="code">char</code> and <code class="code">short&nbsp;int</code><!-- /@w --> types have values of type <code class="code">int</code>.  The &lsquo;<samp class="samp">MAX</samp>&rsquo; and
+&lsquo;<samp class="samp">MIN</samp>&rsquo; macros for the other types have values of the same type
+described by the macro&mdash;thus, <code class="code">ULONG_MAX</code> has type
+<code class="code">unsigned&nbsp;long&nbsp;int</code><!-- /@w -->.
+</p>
+<dl class="vtable">
+<dt><a id="index-SCHAR_005fMIN"></a><span><code class="code">SCHAR_MIN</code><a class="copiable-link" href="#index-SCHAR_005fMIN"> &para;</a></span></dt>
+<dd>
+
+<p>This is the minimum value that can be represented by a <code class="code">signed&nbsp;char</code><!-- /@w -->.
+</p>
+</dd>
+<dt><a id="index-SCHAR_005fMAX"></a><span><code class="code">SCHAR_MAX</code><a class="copiable-link" href="#index-SCHAR_005fMAX"> &para;</a></span></dt>
+<dt><a id="index-UCHAR_005fMAX"></a><span><code class="code">UCHAR_MAX</code><a class="copiable-link" href="#index-UCHAR_005fMAX"> &para;</a></span></dt>
+<dd>
+
+<p>These are the maximum values that can be represented by a
+<code class="code">signed&nbsp;char</code><!-- /@w --> and <code class="code">unsigned&nbsp;char</code><!-- /@w -->, respectively.
+</p>
+</dd>
+<dt><a id="index-CHAR_005fMIN"></a><span><code class="code">CHAR_MIN</code><a class="copiable-link" href="#index-CHAR_005fMIN"> &para;</a></span></dt>
+<dd>
+
+<p>This is the minimum value that can be represented by a <code class="code">char</code>.
+It&rsquo;s equal to <code class="code">SCHAR_MIN</code> if <code class="code">char</code> is signed, or zero
+otherwise.
+</p>
+</dd>
+<dt><a id="index-CHAR_005fMAX"></a><span><code class="code">CHAR_MAX</code><a class="copiable-link" href="#index-CHAR_005fMAX"> &para;</a></span></dt>
+<dd>
+
+<p>This is the maximum value that can be represented by a <code class="code">char</code>.
+It&rsquo;s equal to <code class="code">SCHAR_MAX</code> if <code class="code">char</code> is signed, or
+<code class="code">UCHAR_MAX</code> otherwise.
+</p>
+</dd>
+<dt><a id="index-SHRT_005fMIN"></a><span><code class="code">SHRT_MIN</code><a class="copiable-link" href="#index-SHRT_005fMIN"> &para;</a></span></dt>
+<dd>
+
+<p>This is the minimum value that can be represented by a <code class="code">signed&nbsp;short&nbsp;int</code><!-- /@w -->.  On most machines that the GNU C Library runs on,
+<code class="code">short</code> integers are 16-bit quantities.
+</p>
+</dd>
+<dt><a id="index-SHRT_005fMAX"></a><span><code class="code">SHRT_MAX</code><a class="copiable-link" href="#index-SHRT_005fMAX"> &para;</a></span></dt>
+<dt><a id="index-USHRT_005fMAX"></a><span><code class="code">USHRT_MAX</code><a class="copiable-link" href="#index-USHRT_005fMAX"> &para;</a></span></dt>
+<dd>
+
+<p>These are the maximum values that can be represented by a
+<code class="code">signed&nbsp;short&nbsp;int</code><!-- /@w --> and <code class="code">unsigned&nbsp;short&nbsp;int</code><!-- /@w -->,
+respectively.
+</p>
+</dd>
+<dt><a id="index-INT_005fMIN"></a><span><code class="code">INT_MIN</code><a class="copiable-link" href="#index-INT_005fMIN"> &para;</a></span></dt>
+<dd>
+
+<p>This is the minimum value that can be represented by a <code class="code">signed&nbsp;int</code><!-- /@w -->.  On most machines that the GNU C Library runs on, an <code class="code">int</code> is
+a 32-bit quantity.
+</p>
+</dd>
+<dt><a id="index-INT_005fMAX"></a><span><code class="code">INT_MAX</code><a class="copiable-link" href="#index-INT_005fMAX"> &para;</a></span></dt>
+<dt><a id="index-UINT_005fMAX"></a><span><code class="code">UINT_MAX</code><a class="copiable-link" href="#index-UINT_005fMAX"> &para;</a></span></dt>
+<dd>
+
+<p>These are the maximum values that can be represented by, respectively,
+the type <code class="code">signed&nbsp;int</code><!-- /@w --> and the type <code class="code">unsigned&nbsp;int</code><!-- /@w -->.
+</p>
+</dd>
+<dt><a id="index-LONG_005fMIN"></a><span><code class="code">LONG_MIN</code><a class="copiable-link" href="#index-LONG_005fMIN"> &para;</a></span></dt>
+<dd>
+
+<p>This is the minimum value that can be represented by a <code class="code">signed&nbsp;long&nbsp;int</code><!-- /@w -->.  On most machines that the GNU C Library runs on, <code class="code">long</code>
+integers are 32-bit quantities, the same size as <code class="code">int</code>.
+</p>
+</dd>
+<dt><a id="index-LONG_005fMAX"></a><span><code class="code">LONG_MAX</code><a class="copiable-link" href="#index-LONG_005fMAX"> &para;</a></span></dt>
+<dt><a id="index-ULONG_005fMAX"></a><span><code class="code">ULONG_MAX</code><a class="copiable-link" href="#index-ULONG_005fMAX"> &para;</a></span></dt>
+<dd>
+
+<p>These are the maximum values that can be represented by a
+<code class="code">signed&nbsp;long&nbsp;int</code><!-- /@w --> and <code class="code">unsigned long int</code>, respectively.
+</p>
+</dd>
+<dt><a id="index-LLONG_005fMIN"></a><span><code class="code">LLONG_MIN</code><a class="copiable-link" href="#index-LLONG_005fMIN"> &para;</a></span></dt>
+<dd>
+
+<p>This is the minimum value that can be represented by a <code class="code">signed&nbsp;long&nbsp;long&nbsp;int</code><!-- /@w -->.  On most machines that the GNU C Library runs on,
+<code class="code">long&nbsp;long</code><!-- /@w --> integers are 64-bit quantities.
+</p>
+</dd>
+<dt><a id="index-LLONG_005fMAX"></a><span><code class="code">LLONG_MAX</code><a class="copiable-link" href="#index-LLONG_005fMAX"> &para;</a></span></dt>
+<dt><a id="index-ULLONG_005fMAX"></a><span><code class="code">ULLONG_MAX</code><a class="copiable-link" href="#index-ULLONG_005fMAX"> &para;</a></span></dt>
+<dd>
+
+<p>These are the maximum values that can be represented by a <code class="code">signed
+long long int</code> and <code class="code">unsigned long long int</code>, respectively.
+</p>
+</dd>
+<dt><a id="index-LONG_005fLONG_005fMIN"></a><span><code class="code">LONG_LONG_MIN</code><a class="copiable-link" href="#index-LONG_005fLONG_005fMIN"> &para;</a></span></dt>
+<dt><a id="index-LONG_005fLONG_005fMAX"></a><span><code class="code">LONG_LONG_MAX</code><a class="copiable-link" href="#index-LONG_005fLONG_005fMAX"> &para;</a></span></dt>
+<dt><a id="index-ULONG_005fLONG_005fMAX"></a><span><code class="code">ULONG_LONG_MAX</code><a class="copiable-link" href="#index-ULONG_005fLONG_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>These are obsolete names for <code class="code">LLONG_MIN</code>, <code class="code">LLONG_MAX</code>, and
+<code class="code">ULLONG_MAX</code>.  They are only available if <code class="code">_GNU_SOURCE</code> is
+defined (see <a class="pxref" href="Feature-Test-Macros.html">Feature Test Macros</a>).  In GCC versions prior to 3.0,
+these were the only names available.
+</p>
+</dd>
+<dt><a id="index-WCHAR_005fMAX-1"></a><span><code class="code">WCHAR_MAX</code><a class="copiable-link" href="#index-WCHAR_005fMAX-1"> &para;</a></span></dt>
+<dd>
+
+<p>This is the maximum value that can be represented by a <code class="code">wchar_t</code>.
+See <a class="xref" href="Extended-Char-Intro.html">Introduction to Extended Characters</a>.
+</p></dd>
+</dl>
+
+<p>The header file <samp class="file">limits.h</samp> also defines some additional constants
+that parameterize various operating system and file system limits.  These
+constants are described in <a class="ref" href="System-Configuration.html">System Configuration Parameters</a>.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Floating-Type-Macros.html">Floating Type Macros</a>, Previous: <a href="Width-of-Type.html">Width of an Integer Type</a>, Up: <a href="Data-Type-Measurements.html">Data Type Measurements</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

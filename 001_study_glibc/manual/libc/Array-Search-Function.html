@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Array Search Function (The GNU C Library)</title>
+
+<meta name="description" content="Array Search Function (The GNU C Library)">
+<meta name="keywords" content="Array Search Function (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Searching-and-Sorting.html" rel="up" title="Searching and Sorting">
+<link href="Array-Sort-Function.html" rel="next" title="Array Sort Function">
+<link href="Comparison-Functions.html" rel="prev" title="Comparison Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Array-Search-Function">
+<div class="nav-panel">
+<p>
+Next: <a href="Array-Sort-Function.html" accesskey="n" rel="next">Array Sort Function</a>, Previous: <a href="Comparison-Functions.html" accesskey="p" rel="prev">Defining the Comparison Function</a>, Up: <a href="Searching-and-Sorting.html" accesskey="u" rel="up">Searching and Sorting</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Array-Search-Function-1"><span>9.2 Array Search Function<a class="copiable-link" href="#Array-Search-Function-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-search-function-_0028for-arrays_0029"></a>
+<a class="index-entry-id" id="index-binary-search-function-_0028for-arrays_0029"></a>
+<a class="index-entry-id" id="index-array-search-function"></a>
+
+<p>Generally searching for a specific element in an array means that
+potentially all elements must be checked.  The GNU C Library contains
+functions to perform linear search.  The prototypes for the following
+two functions can be found in <samp class="file">search.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-lfind"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">lfind</strong> <code class="def-code-arguments">(const void *<var class="var">key</var>, const void *<var class="var">base</var>, size_t *<var class="var">nmemb</var>, size_t <var class="var">size</var>, comparison_fn_t <var class="var">compar</var>)</code><a class="copiable-link" href="#index-lfind"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">lfind</code> function searches in the array with <code class="code">*<var class="var">nmemb</var></code>
+elements of <var class="var">size</var> bytes pointed to by <var class="var">base</var> for an element
+which matches the one pointed to by <var class="var">key</var>.  The function pointed to
+by <var class="var">compar</var> is used to decide whether two elements match.
+</p>
+<p>The return value is a pointer to the matching element in the array
+starting at <var class="var">base</var> if it is found.  If no matching element is
+available <code class="code">NULL</code> is returned.
+</p>
+<p>The mean runtime of this function is proportional to <code class="code">*<var class="var">nmemb</var>/2</code>,
+assuming random elements of the array are searched for.  This
+function should be used only if elements often get added to or deleted from
+the array in which case it might not be useful to sort the array before
+searching.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-lsearch"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">lsearch</strong> <code class="def-code-arguments">(const void *<var class="var">key</var>, void *<var class="var">base</var>, size_t *<var class="var">nmemb</var>, size_t <var class="var">size</var>, comparison_fn_t <var class="var">compar</var>)</code><a class="copiable-link" href="#index-lsearch"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>The <code class="code">lsearch</code> function is similar to the <code class="code">lfind</code> function.  It
+searches the given array for an element and returns it if found.  The
+difference is that if no matching element is found the <code class="code">lsearch</code>
+function adds the object pointed to by <var class="var">key</var> (with a size of
+<var class="var">size</var> bytes) at the end of the array and it increments the value of
+<code class="code">*<var class="var">nmemb</var></code> to reflect this addition.
+</p>
+<p>This means for the caller that if it is not sure that the array contains
+the element one is searching for the memory allocated for the array
+starting at <var class="var">base</var> must have room for at least <var class="var">size</var> more
+bytes.  If one is sure the element is in the array it is better to use
+<code class="code">lfind</code> so having more room in the array is always necessary when
+calling <code class="code">lsearch</code>.
+</p></dd></dl>
+
+<p>To search a sorted or partially sorted array for an element matching the key,
+use the <code class="code">bsearch</code> function.  The prototype for this function is in
+the header file <samp class="file">stdlib.h</samp>.
+<a class="index-entry-id" id="index-stdlib_002eh-8"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-bsearch"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">bsearch</strong> <code class="def-code-arguments">(const void *<var class="var">key</var>, const void *<var class="var">array</var>, size_t <var class="var">count</var>, size_t <var class="var">size</var>, comparison_fn_t <var class="var">compare</var>)</code><a class="copiable-link" href="#index-bsearch"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">bsearch</code> function searches <var class="var">array</var> for an element
+that is equivalent to <var class="var">key</var>.  The array contains <var class="var">count</var> elements,
+each of which is of size <var class="var">size</var> bytes.
+</p>
+<p>The <var class="var">compare</var> function is used to perform the comparison.  This
+function is called with arguments that point to the key and to an
+array element, in that order, and should return an
+integer less than, equal to, or greater than zero corresponding to
+whether the key is considered less than, equal to, or greater than
+the array element.  The function should not alter the array&rsquo;s contents,
+and the same array element should always compare the same way with the key.
+</p>
+<p>Although the array need not be completely sorted, it should be
+partially sorted with respect to <var class="var">key</var>.  That is, the array should
+begin with elements that compare less than <var class="var">key</var>, followed by
+elements that compare equal to <var class="var">key</var>, and ending with elements
+that compare greater than <var class="var">key</var>.  Any or all of these element
+sequences can be empty.
+</p>
+<p>The return value is a pointer to a matching array element, or a null
+pointer if no match is found.  If the array contains more than one element
+that matches, the one that is returned is unspecified.
+</p>
+<p>This function derives its name from the fact that it is implemented
+using the binary search algorithm.
+</p>
+<p>In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and <var class="var">array</var> has a type
+that is a pointer to a <code class="code">const</code>-qualified object type,
+<code class="code">bsearch</code> returns <code class="code">const void *</code>.
+As an obsolescent feature, if the macro is suppressed
+the external function returns <code class="code">void *</code> regardless.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Array-Sort-Function.html">Array Sort Function</a>, Previous: <a href="Comparison-Functions.html">Defining the Comparison Function</a>, Up: <a href="Searching-and-Sorting.html">Searching and Sorting</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

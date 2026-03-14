@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Control Modes (The GNU C Library)</title>
+
+<meta name="description" content="Control Modes (The GNU C Library)">
+<meta name="keywords" content="Control Modes (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Terminal-Modes.html" rel="up" title="Terminal Modes">
+<link href="Local-Modes.html" rel="next" title="Local Modes">
+<link href="Output-Modes.html" rel="prev" title="Output Modes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Control-Modes">
+<div class="nav-panel">
+<p>
+Next: <a href="Local-Modes.html" accesskey="n" rel="next">Local Modes</a>, Previous: <a href="Output-Modes.html" accesskey="p" rel="prev">Output Modes</a>, Up: <a href="Terminal-Modes.html" accesskey="u" rel="up">Terminal Modes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Control-Modes-1"><span>17.5.6 Control Modes<a class="copiable-link" href="#Control-Modes-1"> &para;</a></span></h4>
+
+<p>This section describes the terminal flags and fields that control
+parameters usually associated with asynchronous serial data
+transmission.  These flags may not make sense for other kinds of
+terminal ports (such as a network connection pseudo-terminal).  All of
+these are contained in the <code class="code">c_cflag</code> member of the <code class="code">struct
+termios</code> structure.
+</p>
+<p>The <code class="code">c_cflag</code> member itself is an integer, and you change the flags
+and fields using the operators <code class="code">&amp;</code>, <code class="code">|</code>, and <code class="code">^</code>.  Don&rsquo;t
+try to specify the entire value for <code class="code">c_cflag</code>&mdash;instead, change
+only specific flags and leave the rest untouched (see <a class="pxref" href="Setting-Modes.html">Setting Terminal Modes Properly</a>).
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CLOCAL"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">CLOCAL</strong><a class="copiable-link" href="#index-CLOCAL"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, it indicates that the terminal is connected
+&ldquo;locally&rdquo; and that the modem status lines (such as carrier detect)
+should be ignored.
+<a class="index-entry-id" id="index-modem-status-lines"></a>
+<a class="index-entry-id" id="index-carrier-detect"></a>
+</p>
+<p>On many systems if this bit is not set and you call <code class="code">open</code> without
+the <code class="code">O_NONBLOCK</code> flag set, <code class="code">open</code> blocks until a modem
+connection is established.
+</p>
+<p>If this bit is not set and a modem disconnect is detected, a
+<code class="code">SIGHUP</code> signal is sent to the controlling process group for the
+terminal (if it has one).  Normally, this causes the process to exit;
+see <a class="ref" href="Signal-Handling.html">Signal Handling</a>.  Reading from the terminal after a disconnect
+causes an end-of-file condition, and writing causes an <code class="code">EIO</code> error
+to be returned.  The terminal device must be closed and reopened to
+clear the condition.
+<a class="index-entry-id" id="index-modem-disconnect-1"></a>
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-HUPCL"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">HUPCL</strong><a class="copiable-link" href="#index-HUPCL"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, a modem disconnect request is generated when all
+processes that have the terminal device open have either closed the file
+or exited.
+<a class="index-entry-id" id="index-modem-disconnect-request-1"></a>
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CREAD"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">CREAD</strong><a class="copiable-link" href="#index-CREAD"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, input can be read from the terminal.  Otherwise,
+input is discarded when it arrives.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CSTOPB"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">CSTOPB</strong><a class="copiable-link" href="#index-CSTOPB"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, two stop bits are used.  Otherwise, only one stop bit
+is used.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-PARENB"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">PARENB</strong><a class="copiable-link" href="#index-PARENB"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, generation and detection of a parity bit are enabled.
+See <a class="xref" href="Input-Modes.html">Input Modes</a>, for information on how input parity errors are handled.
+</p>
+<p>If this bit is not set, no parity bit is added to output characters, and
+input characters are not checked for correct parity.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-PARODD"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">PARODD</strong><a class="copiable-link" href="#index-PARODD"> &para;</a></span></dt>
+<dd>
+<p>This bit is only useful if <code class="code">PARENB</code> is set.  If <code class="code">PARODD</code> is set,
+odd parity is used, otherwise even parity is used.
+</p></dd></dl>
+
+<p>The control mode flags also includes a field for the number of bits per
+character.  You can use the <code class="code">CSIZE</code> macro as a mask to extract the
+value, like this: <code class="code">settings.c_cflag &amp; CSIZE</code>.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CSIZE"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">CSIZE</strong><a class="copiable-link" href="#index-CSIZE"> &para;</a></span></dt>
+<dd>
+<p>This is a mask for the number of bits per character.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CS5"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">CS5</strong><a class="copiable-link" href="#index-CS5"> &para;</a></span></dt>
+<dd>
+<p>This specifies five bits per byte.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CS6"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">CS6</strong><a class="copiable-link" href="#index-CS6"> &para;</a></span></dt>
+<dd>
+<p>This specifies six bits per byte.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CS7"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">CS7</strong><a class="copiable-link" href="#index-CS7"> &para;</a></span></dt>
+<dd>
+<p>This specifies seven bits per byte.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CS8"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">CS8</strong><a class="copiable-link" href="#index-CS8"> &para;</a></span></dt>
+<dd>
+<p>This specifies eight bits per byte.
+</p></dd></dl>
+
+<p>The following four bits are BSD extensions; these exist only on BSD
+systems and GNU/Hurd systems.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CCTS_005fOFLOW"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">CCTS_OFLOW</strong><a class="copiable-link" href="#index-CCTS_005fOFLOW"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, enable flow control of output based on the CTS wire
+(RS232 protocol).
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CRTS_005fIFLOW"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">CRTS_IFLOW</strong><a class="copiable-link" href="#index-CRTS_005fIFLOW"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, enable flow control of input based on the RTS wire
+(RS232 protocol).
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-MDMBUF"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">MDMBUF</strong><a class="copiable-link" href="#index-MDMBUF"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, enable carrier-based flow control of output.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CIGNORE"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">CIGNORE</strong><a class="copiable-link" href="#index-CIGNORE"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, it says to ignore the control modes and line speed
+values entirely.  This is only meaningful in a call to <code class="code">tcsetattr</code>.
+</p>
+<p>The <code class="code">c_cflag</code> member and the line speed values returned by
+<code class="code">cfgetispeed</code>, <code class="code">cfgetospeed</code>, <code class="code">cfgetibaud</code> and
+<code class="code">cfsetibaud</code> will be unaffected by the call.  <code class="code">CIGNORE</code> is
+useful if you want to set all the software modes in the other members,
+but leave the hardware details in <code class="code">c_cflag</code> unchanged.  (This is
+how the <code class="code">TCSASOFT</code> flag to <code class="code">tcsetattr</code> works.)
+</p>
+<p>This bit is never set in the structure filled in by <code class="code">tcgetattr</code>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Local-Modes.html">Local Modes</a>, Previous: <a href="Output-Modes.html">Output Modes</a>, Up: <a href="Terminal-Modes.html">Terminal Modes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

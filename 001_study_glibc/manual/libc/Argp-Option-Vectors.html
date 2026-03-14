@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Argp Option Vectors (The GNU C Library)</title>
+
+<meta name="description" content="Argp Option Vectors (The GNU C Library)">
+<meta name="keywords" content="Argp Option Vectors (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Argp-Parsers.html" rel="up" title="Argp Parsers">
+<link href="Argp-Parser-Functions.html" rel="next" title="Argp Parser Functions">
+<link href="Argp-Parsers.html" rel="prev" title="Argp Parsers">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Argp-Option-Vectors">
+<div class="nav-panel">
+<p>
+Next: <a href="Argp-Parser-Functions.html" accesskey="n" rel="next">Argp Parser Functions</a>, Previous: <a href="Argp-Parsers.html" accesskey="p" rel="prev">Specifying Argp Parsers</a>, Up: <a href="Argp-Parsers.html" accesskey="u" rel="up">Specifying Argp Parsers</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Specifying-Options-in-an-Argp-Parser"><span>26.3.4 Specifying Options in an Argp Parser<a class="copiable-link" href="#Specifying-Options-in-an-Argp-Parser"> &para;</a></span></h4>
+
+<p>The <code class="code">options</code> field in a <code class="code">struct argp</code> points to a vector of
+<code class="code">struct argp_option</code> structures, each of which specifies an option
+that the argp parser supports.  Multiple entries may be used for a single
+option provided it has multiple names.  This should be terminated by an
+entry with zero in all fields.  Note that when using an initialized C
+array for options, writing <code class="code">{ 0 }</code> is enough to achieve this.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-argp_005foption"><span class="category-def">Data Type: </span><span><strong class="def-name">struct argp_option</strong><a class="copiable-link" href="#index-struct-argp_005foption"> &para;</a></span></dt>
+<dd>
+<p>This structure specifies a single option that an argp parser
+understands, as well as how to parse and document that option.  It has
+the following fields:
+</p>
+<dl class="table">
+<dt><code class="code">const char *name</code></dt>
+<dd><p>The long name for this option, corresponding to the long option
+&lsquo;<samp class="samp">--<var class="var">name</var></samp>&rsquo;; this field may be zero if this option <em class="emph">only</em>
+has a short name.  To specify multiple names for an option, additional
+entries may follow this one, with the <code class="code">OPTION_ALIAS</code> flag
+set.  See <a class="xref" href="Argp-Option-Flags.html">Flags for Argp Options</a>.
+</p>
+</dd>
+<dt><code class="code">int key</code></dt>
+<dd><p>The integer key provided by the current option to the option parser.  If
+<var class="var">key</var> has a value that is a printable <small class="sc">ASCII</small> character (i.e.,
+<code class="code">isascii (<var class="var">key</var>)</code> is true), it <em class="emph">also</em> specifies a short
+option &lsquo;<samp class="samp">-<var class="var">char</var></samp>&rsquo;, where <var class="var">char</var> is the <small class="sc">ASCII</small> character
+with the code <var class="var">key</var>.
+</p>
+</dd>
+<dt><code class="code">const char *arg</code></dt>
+<dd><p>If non-zero, this is the name of an argument associated with this
+option, which must be provided (e.g., with the
+&lsquo;<samp class="samp">--<var class="var">name</var>=<var class="var">value</var></samp>&rsquo; or &lsquo;<samp class="samp">-<var class="var">char</var> <var class="var">value</var></samp>&rsquo;
+syntaxes), unless the <code class="code">OPTION_ARG_OPTIONAL</code> flag (see <a class="pxref" href="Argp-Option-Flags.html">Flags for Argp Options</a>) is set, in which case it <em class="emph">may</em> be provided.
+</p>
+</dd>
+<dt><code class="code">int flags</code></dt>
+<dd><p>Flags associated with this option, some of which are referred to above.
+See <a class="xref" href="Argp-Option-Flags.html">Flags for Argp Options</a>.
+</p>
+</dd>
+<dt><code class="code">const char *doc</code></dt>
+<dd><p>A documentation string for this option, for printing in help messages.
+</p>
+<p>If both the <code class="code">name</code> and <code class="code">key</code> fields are zero, this string
+will be printed tabbed left from the normal option column, making it
+useful as a group header.  This will be the first thing printed in its
+group.  In this usage, it&rsquo;s conventional to end the string with a
+&lsquo;<samp class="samp">:</samp>&rsquo; character.
+</p>
+</dd>
+<dt><code class="code">int group</code></dt>
+<dd><p>Group identity for this option.
+</p>
+<p>In a long help message, options are sorted alphabetically within each
+group, and the groups presented in the order 0, 1, 2, &hellip;, <var class="var">n</var>,
+&minus;<var class="var">m</var>, &hellip;, &minus;2, &minus;1.
+</p>
+<p>Every entry in an options array with this field 0 will inherit the group
+number of the previous entry, or zero if it&rsquo;s the first one.  If it&rsquo;s a
+group header with <code class="code">name</code> and <code class="code">key</code> fields both zero, the
+previous entry + 1 is the default.  Automagic options such as
+&lsquo;<samp class="samp">--help</samp>&rsquo; are put into group &minus;1.
+</p>
+<p>Note that because of C structure initialization rules, this field often
+need not be specified, because 0 is the correct value.
+</p></dd>
+</dl>
+</dd></dl>
+
+
+
+<ul class="mini-toc">
+<li><a href="Argp-Option-Flags.html" accesskey="1">Flags for Argp Options</a></li>
+</ul>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Argp-Parser-Functions.html">Argp Parser Functions</a>, Previous: <a href="Argp-Parsers.html">Specifying Argp Parsers</a>, Up: <a href="Argp-Parsers.html">Specifying Argp Parsers</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

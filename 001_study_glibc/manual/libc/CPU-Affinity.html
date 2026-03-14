@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>CPU Affinity (The GNU C Library)</title>
+
+<meta name="description" content="CPU Affinity (The GNU C Library)">
+<meta name="keywords" content="CPU Affinity (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Priority.html" rel="up" title="Priority">
+<link href="Traditional-Scheduling.html" rel="prev" title="Traditional Scheduling">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="CPU-Affinity">
+<div class="nav-panel">
+<p>
+Previous: <a href="Traditional-Scheduling.html" accesskey="p" rel="prev">Traditional Scheduling</a>, Up: <a href="Priority.html" accesskey="u" rel="up">Process CPU Priority And Scheduling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Limiting-execution-to-certain-CPUs"><span>23.3.6 Limiting execution to certain CPUs<a class="copiable-link" href="#Limiting-execution-to-certain-CPUs"> &para;</a></span></h4>
+
+<p>On a multi-processor system the operating system usually distributes
+the different processes which are runnable on all available CPUs in a
+way which allows the system to work most efficiently.  Which processes
+and threads run can to some extend be controlled with the scheduling
+functionality described in the last sections.  But which CPU finally
+executes which process or thread is not covered.
+</p>
+<p>There are a number of reasons why a program might want to have control
+over this aspect of the system as well:
+</p>
+<ul class="itemize mark-bullet">
+<li>One thread or process is responsible for absolutely critical work
+which under no circumstances must be interrupted or hindered from
+making progress by other processes or threads using CPU resources.  In
+this case the special process would be confined to a CPU which no
+other process or thread is allowed to use.
+
+</li><li>The access to certain resources (RAM, I/O ports) has different costs
+from different CPUs.  This is the case in NUMA (Non-Uniform Memory
+Architecture) machines.  Preferably memory should be accessed locally
+but this requirement is usually not visible to the scheduler.
+Therefore forcing a process or thread to the CPUs which have local
+access to the most-used memory helps to significantly boost the
+performance.
+
+</li><li>In controlled runtimes resource allocation and book-keeping work (for
+instance garbage collection) is performance local to processors.  This
+can help to reduce locking costs if the resources do not have to be
+protected from concurrent accesses from different processors.
+</li></ul>
+
+<p>The POSIX standard up to this date is of not much help to solve this
+problem.  The Linux kernel provides a set of interfaces to allow
+specifying <em class="emph">affinity sets</em> for a process.  The scheduler will
+schedule the thread or process on CPUs specified by the affinity
+masks.  The interfaces which the GNU C Library define follow to some
+extent the Linux kernel interface.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-cpu_005fset_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">cpu_set_t</strong><a class="copiable-link" href="#index-cpu_005fset_005ft"> &para;</a></span></dt>
+<dd>
+<p>This data set is a bitset where each bit represents a CPU.  How the
+system&rsquo;s CPUs are mapped to bits in the bitset is system dependent.
+The data type has a fixed size; it is strongly recommended to allocate
+a dynamically sized set based on the actual number of CPUs detected,
+such as via <code class="code">get_nprocs_conf()</code>, and use the <code class="code">CPU_*_S</code>
+variants instead of the fixed-size ones.
+</p>
+<p>This type is a GNU extension and is defined in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<p>To manipulate the bitset, to set and reset bits, and thus add and
+remove CPUs from the sets, a number of macros are defined.  Some of
+the macros take a CPU number as a parameter.  Here it is important to
+never exceed the size of the bitset, either <code class="code">CPU_SETSIZE</code> for
+fixed sets or the allocated size for dynamic sets.  For each macro
+there is a fixed-size version (documented below) and a dynamic-sized
+version (with a <code class="code">_S</code> suffix).
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CPU_005fSETSIZE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">CPU_SETSIZE</strong><a class="copiable-link" href="#index-CPU_005fSETSIZE"> &para;</a></span></dt>
+<dd>
+<p>The value of this macro is the maximum number of CPUs which can be
+handled with a fixed <code class="code">cpu_set_t</code> object.
+</p></dd></dl>
+
+<p>For applications that require CPU sets larger than the built-in size,
+a set of macros that support dynamically-sized sets are defined.
+</p>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fALLOC_005fSIZE"><span class="category-def">Macro: </span><span><code class="def-type">size_t</code> <strong class="def-name">CPU_ALLOC_SIZE</strong> <code class="def-code-arguments">(size_t <var class="var">count</var>)</code><a class="copiable-link" href="#index-CPU_005fALLOC_005fSIZE"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Given a count of CPUs to hold, returns the size of the set to
+allocate.  This return value is appropriate to be used in the *_S macros.
+</p>
+<p>This macro is a GNU extension and is defined in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fALLOC"><span class="category-def">Macro: </span><span><code class="def-type">cpu_set_t *</code> <strong class="def-name">CPU_ALLOC</strong> <code class="def-code-arguments">(size_t <var class="var">count</var>)</code><a class="copiable-link" href="#index-CPU_005fALLOC"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Given the count of CPUs to hold, returns a set large enough to hold
+them; that is, the resulting set will be valid for CPUs numbered 0
+through <var class="var">count</var>-1, inclusive.  This set must be freed via
+<code class="code">CPU_FREE</code> to avoid memory leaks.  Warning: the argument is the
+CPU <em class="emph">count</em> and not the size returned by <code class="code">CPU_ALLOC_SIZE</code>.
+</p>
+<p>This macro is a GNU extension and is defined in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fFREE"><span class="category-def">Macro: </span><span><code class="def-type">void</code> <strong class="def-name">CPU_FREE</strong> <code class="def-code-arguments">(cpu_set_t *<var class="var">set</var>)</code><a class="copiable-link" href="#index-CPU_005fFREE"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Frees a CPU set previously allocated by <code class="code">CPU_ALLOC</code>.
+</p>
+<p>This macro is a GNU extension and is defined in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<p>The type <code class="code">cpu_set_t</code> should be considered opaque; all
+manipulation should happen via the <code class="code">CPU_*</code> macros described
+below.
+</p>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fZERO"><span class="category-def">Macro: </span><span><code class="def-type">void</code> <strong class="def-name">CPU_ZERO</strong> <code class="def-code-arguments">(cpu_set_t *<var class="var">set</var>)</code><a class="copiable-link" href="#index-CPU_005fZERO"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro initializes the CPU set <var class="var">set</var> to be the empty set.
+</p>
+<p>This macro is a GNU extension and is defined in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fSET"><span class="category-def">Macro: </span><span><code class="def-type">void</code> <strong class="def-name">CPU_SET</strong> <code class="def-code-arguments">(int <var class="var">cpu</var>, cpu_set_t *<var class="var">set</var>)</code><a class="copiable-link" href="#index-CPU_005fSET"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro adds <var class="var">cpu</var> to the CPU set <var class="var">set</var>.
+</p>
+<p>The <var class="var">cpu</var> parameter must not have side effects since it is
+evaluated more than once.
+</p>
+<p>This macro is a GNU extension and is defined in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fCLR"><span class="category-def">Macro: </span><span><code class="def-type">void</code> <strong class="def-name">CPU_CLR</strong> <code class="def-code-arguments">(int <var class="var">cpu</var>, cpu_set_t *<var class="var">set</var>)</code><a class="copiable-link" href="#index-CPU_005fCLR"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro removes <var class="var">cpu</var> from the CPU set <var class="var">set</var>.
+</p>
+<p>The <var class="var">cpu</var> parameter must not have side effects since it is
+evaluated more than once.
+</p>
+<p>This macro is a GNU extension and is defined in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fAND"><span class="category-def">Macro: </span><span><code class="def-type">cpu_set_t *</code> <strong class="def-name">CPU_AND</strong> <code class="def-code-arguments">(cpu_set_t *<var class="var">dest</var>, cpu_set_t *<var class="var">src1</var>, cpu_set_t *<var class="var">src2</var>)</code><a class="copiable-link" href="#index-CPU_005fAND"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro populates <var class="var">dest</var> with only those CPUs included in both
+<var class="var">src1</var> and <var class="var">src2</var>.  Its value is <var class="var">dest</var>.
+</p>
+<p>This macro is a GNU extension and is defined in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fOR"><span class="category-def">Macro: </span><span><code class="def-type">cpu_set_t *</code> <strong class="def-name">CPU_OR</strong> <code class="def-code-arguments">(cpu_set_t *<var class="var">dest</var>, cpu_set_t *<var class="var">src1</var>, cpu_set_t *<var class="var">src2</var>)</code><a class="copiable-link" href="#index-CPU_005fOR"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro populates <var class="var">dest</var> with those CPUs included in either
+<var class="var">src1</var> or <var class="var">src2</var>.  Its value is <var class="var">dest</var>.
+</p>
+<p>This macro is a GNU extension and is defined in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fXOR"><span class="category-def">Macro: </span><span><code class="def-type">cpu_set_t *</code> <strong class="def-name">CPU_XOR</strong> <code class="def-code-arguments">(cpu_set_t *<var class="var">dest</var>, cpu_set_t *<var class="var">src1</var>, cpu_set_t *<var class="var">src2</var>)</code><a class="copiable-link" href="#index-CPU_005fXOR"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro populates <var class="var">dest</var> with those CPUs included in either
+<var class="var">src1</var> or <var class="var">src2</var>, but not both.  Its value is <var class="var">dest</var>.
+</p>
+<p>This macro is a GNU extension and is defined in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fISSET"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">CPU_ISSET</strong> <code class="def-code-arguments">(int <var class="var">cpu</var>, const cpu_set_t *<var class="var">set</var>)</code><a class="copiable-link" href="#index-CPU_005fISSET"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro returns a nonzero value (true) if <var class="var">cpu</var> is a member
+of the CPU set <var class="var">set</var>, and zero (false) otherwise.
+</p>
+<p>The <var class="var">cpu</var> parameter must not have side effects since it is
+evaluated more than once.
+</p>
+<p>This macro is a GNU extension and is defined in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fCOUNT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">CPU_COUNT</strong> <code class="def-code-arguments">(const cpu_set_t *<var class="var">set</var>)</code><a class="copiable-link" href="#index-CPU_005fCOUNT"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro returns the count of CPUs (bits) set in <var class="var">set</var>.
+</p>
+<p>This macro is a GNU extension and is defined in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fEQUAL"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">CPU_EQUAL</strong> <code class="def-code-arguments">(cpu_set_t *<var class="var">src1</var>, cpu_set_t *<var class="var">src2</var>)</code><a class="copiable-link" href="#index-CPU_005fEQUAL"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro returns nonzero if the two sets <var class="var">set1</var> and <var class="var">set2</var>
+have the same contents; that is, the set of CPUs represented by both
+sets is identical.
+</p>
+<p>This macro is a GNU extension and is defined in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fZERO_005fS"><span class="category-def">Macro: </span><span><code class="def-type">void</code> <strong class="def-name">CPU_ZERO_S</strong> <code class="def-code-arguments">(size_t <var class="var">size</var>, cpu_set_t *<var class="var">set</var>)</code><a class="copiable-link" href="#index-CPU_005fZERO_005fS"> &para;</a></span></dt>
+</dl>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fSET_005fS"><span class="category-def">Macro: </span><span><code class="def-type">void</code> <strong class="def-name">CPU_SET_S</strong> <code class="def-code-arguments">(int <var class="var">cpu</var>, size_t <var class="var">size</var>, cpu_set_t *<var class="var">set</var>)</code><a class="copiable-link" href="#index-CPU_005fSET_005fS"> &para;</a></span></dt>
+</dl>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fCLR_005fS"><span class="category-def">Macro: </span><span><code class="def-type">void</code> <strong class="def-name">CPU_CLR_S</strong> <code class="def-code-arguments">(int <var class="var">cpu</var>, size_t <var class="var">size</var>, cpu_set_t *<var class="var">set</var>)</code><a class="copiable-link" href="#index-CPU_005fCLR_005fS"> &para;</a></span></dt>
+</dl>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fAND_005fS"><span class="category-def">Macro: </span><span><code class="def-type">cpu_set_t *</code> <strong class="def-name">CPU_AND_S</strong> <code class="def-code-arguments">(size_t <var class="var">size</var>, cpu_set_t *<var class="var">dest</var>, cpu_set_t *<var class="var">src1</var>, cpu_set_t *<var class="var">src2</var>)</code><a class="copiable-link" href="#index-CPU_005fAND_005fS"> &para;</a></span></dt>
+</dl>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fOR_005fS"><span class="category-def">Macro: </span><span><code class="def-type">cpu_set_t *</code> <strong class="def-name">CPU_OR_S</strong> <code class="def-code-arguments">(size_t <var class="var">size</var>, cpu_set_t *<var class="var">dest</var>, cpu_set_t *<var class="var">src1</var>, cpu_set_t *<var class="var">src2</var>)</code><a class="copiable-link" href="#index-CPU_005fOR_005fS"> &para;</a></span></dt>
+</dl>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fXOR_005fS"><span class="category-def">Macro: </span><span><code class="def-type">cpu_set_t *</code> <strong class="def-name">CPU_XOR_S</strong> <code class="def-code-arguments">(size_t <var class="var">size</var>, cpu_set_t *<var class="var">dest</var>, cpu_set_t *<var class="var">src1</var>, cpu_set_t *<var class="var">src2</var>)</code><a class="copiable-link" href="#index-CPU_005fXOR_005fS"> &para;</a></span></dt>
+</dl>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fISSET_005fS"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">CPU_ISSET_S</strong> <code class="def-code-arguments">(int <var class="var">cpu</var>, size_t <var class="var">size</var>, const cpu_set_t *<var class="var">set</var>)</code><a class="copiable-link" href="#index-CPU_005fISSET_005fS"> &para;</a></span></dt>
+</dl>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fCOUNT_005fS"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">CPU_COUNT_S</strong> <code class="def-code-arguments">(size_t <var class="var">size</var>, const cpu_set_t *<var class="var">set</var>)</code><a class="copiable-link" href="#index-CPU_005fCOUNT_005fS"> &para;</a></span></dt>
+</dl>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-CPU_005fEQUAL_005fS"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">CPU_EQUAL_S</strong> <code class="def-code-arguments">(size_t <var class="var">size</var>, cpu_set_t *<var class="var">src1</var>, cpu_set_t *<var class="var">src2</var>)</code><a class="copiable-link" href="#index-CPU_005fEQUAL_005fS"> &para;</a></span></dt>
+</dl>
+
+<p>Each of these macros performs the same action as its non-<code class="code">_S</code> variant,
+but takes a <var class="var">size</var> argument to specify the set size.  This
+<var class="var">size</var> argument is as returned by the <code class="code">CPU_ALLOC_SIZE</code> macro,
+defined above.
+</p>
+<p>CPU bitsets can be constructed from scratch or the currently installed
+affinity mask can be retrieved from the system.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sched_005fgetaffinity"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sched_getaffinity</strong> <code class="def-code-arguments">(pid_t <var class="var">pid</var>, size_t <var class="var">cpusetsize</var>, cpu_set_t *<var class="var">cpuset</var>)</code><a class="copiable-link" href="#index-sched_005fgetaffinity"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function stores the CPU affinity mask for the process or thread
+with the ID <var class="var">pid</var> in the <var class="var">cpusetsize</var> bytes long bitmap
+pointed to by <var class="var">cpuset</var>.  If successful, the function always
+initializes all bits in the <code class="code">cpu_set_t</code> object and returns zero.
+</p>
+<p>If <var class="var">pid</var> does not correspond to a process or thread on the system
+the or the function fails for some other reason, it returns <code class="code">-1</code>
+and <code class="code">errno</code> is set to represent the error condition.
+</p>
+<dl class="table">
+<dt><code class="code">ESRCH</code></dt>
+<dd><p>No process or thread with the given ID found.
+</p>
+</dd>
+<dt><code class="code">EFAULT</code></dt>
+<dd><p>The pointer <var class="var">cpuset</var> does not point to a valid object.
+</p></dd>
+</dl>
+
+<p>This function is a GNU extension and is declared in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<p>Note that it is not portably possible to use this information to
+retrieve the information for different POSIX threads.  A separate
+interface must be provided for that.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sched_005fsetaffinity"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sched_setaffinity</strong> <code class="def-code-arguments">(pid_t <var class="var">pid</var>, size_t <var class="var">cpusetsize</var>, const cpu_set_t *<var class="var">cpuset</var>)</code><a class="copiable-link" href="#index-sched_005fsetaffinity"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function installs the <var class="var">cpusetsize</var> bytes long affinity mask
+pointed to by <var class="var">cpuset</var> for the process or thread with the ID <var class="var">pid</var>.
+If successful the function returns zero and the scheduler will in the future
+take the affinity information into account.
+</p>
+<p>If the function fails it will return <code class="code">-1</code> and <code class="code">errno</code> is set
+to the error code:
+</p>
+<dl class="table">
+<dt><code class="code">ESRCH</code></dt>
+<dd><p>No process or thread with the given ID found.
+</p>
+</dd>
+<dt><code class="code">EFAULT</code></dt>
+<dd><p>The pointer <var class="var">cpuset</var> does not point to a valid object.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The bitset is not valid.  This might mean that the affinity set might
+not leave a processor for the process or thread to run on.
+</p></dd>
+</dl>
+
+<p>This function is a GNU extension and is declared in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getcpu"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getcpu</strong> <code class="def-code-arguments">(unsigned int *cpu, unsigned int *node)</code><a class="copiable-link" href="#index-getcpu"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">getcpu</code> function identifies the processor and node on which
+the calling thread or process is currently running and writes them into
+the integers pointed to by the <var class="var">cpu</var> and <var class="var">node</var> arguments.  The
+processor is a unique nonnegative integer identifying a CPU.  The node
+is a unique nonnegative integer identifying a NUMA node.  When either
+<var class="var">cpu</var> or <var class="var">node</var> is <code class="code">NULL</code>, nothing is written to the
+respective pointer.
+</p>
+<p>The return value is <code class="code">0</code> on success and <code class="code">-1</code> on failure.  The
+following <code class="code">errno</code> error condition is defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">ENOSYS</code></dt>
+<dd><p>The operating system does not support this function.
+</p></dd>
+</dl>
+
+<p>This function is Linux-specific and is declared in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sched_005fgetcpu"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sched_getcpu</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-sched_005fgetcpu"> &para;</a></span></dt>
+<dd>
+
+<p>Similar to <code class="code">getcpu</code> but with a simpler interface.  On success,
+returns a nonnegative number identifying the CPU on which the current
+thread is running.  Returns <code class="code">-1</code> on failure.  The following
+<code class="code">errno</code> error condition is defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">ENOSYS</code></dt>
+<dd><p>The operating system does not support this function.
+</p></dd>
+</dl>
+
+<p>This function is Linux-specific and is declared in <samp class="file">sched.h</samp>.
+</p></dd></dl>
+
+<p>Here&rsquo;s an example of how to use most of the above to limit the number
+of CPUs a process runs on, not including error handling or good logic
+on CPU choices:
+</p>
+<div class="example">
+<pre class="example-preformatted">#define _GNU_SOURCE
+#include &lt;sched.h&gt;
+#include &lt;sys/sysinfo.h&gt;
+#include &lt;unistd.h&gt;
+void
+limit_cpus (void)
+{
+  unsigned int mycpu;
+  size_t nproc, cssz, cpu;
+  cpu_set_t *cs;
+  getcpu (&amp;mycpu, NULL);
+  nproc = get_nprocs_conf ();
+  cssz = CPU_ALLOC_SIZE (nproc);
+  cs = CPU_ALLOC (nproc);
+  sched_getaffinity (0, cssz, cs);
+  if (CPU_COUNT_S (cssz, cs) &gt; nproc / 2)
+    {
+      for (cpu = nproc / 2; cpu &lt; nproc; cpu ++)
+        if (cpu != mycpu)
+          CPU_CLR_S (cpu, cssz, cs);
+      sched_setaffinity (0, cssz, cs);
+    }
+  CPU_FREE (cs);
+}
+</pre></div>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Traditional-Scheduling.html">Traditional Scheduling</a>, Up: <a href="Priority.html">Process CPU Priority And Scheduling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

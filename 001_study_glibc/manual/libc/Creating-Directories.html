@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Creating Directories (The GNU C Library)</title>
+
+<meta name="description" content="Creating Directories (The GNU C Library)">
+<meta name="keywords" content="Creating Directories (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="File-System-Interface.html" rel="up" title="File System Interface">
+<link href="File-Attributes.html" rel="next" title="File Attributes">
+<link href="Renaming-Files.html" rel="prev" title="Renaming Files">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Creating-Directories">
+<div class="nav-panel">
+<p>
+Next: <a href="File-Attributes.html" accesskey="n" rel="next">File Attributes</a>, Previous: <a href="Renaming-Files.html" accesskey="p" rel="prev">Renaming Files</a>, Up: <a href="File-System-Interface.html" accesskey="u" rel="up">File System Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Creating-Directories-1"><span>14.9 Creating Directories<a class="copiable-link" href="#Creating-Directories-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-creating-a-directory"></a>
+<a class="index-entry-id" id="index-directories_002c-creating"></a>
+
+<a class="index-entry-id" id="index-mkdir-1"></a>
+<p>Directories are created with the <code class="code">mkdir</code> function.  (There is also
+a shell command <code class="code">mkdir</code> which does the same thing.)
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mkdir"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">mkdir</strong> <code class="def-code-arguments">(const char *<var class="var">filename</var>, mode_t <var class="var">mode</var>)</code><a class="copiable-link" href="#index-mkdir"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">mkdir</code> function creates a new, empty directory with name
+<var class="var">filename</var>.
+</p>
+<p>The argument <var class="var">mode</var> specifies the file permissions for the new
+directory file.  See <a class="xref" href="Permission-Bits.html">The Mode Bits for Access Permission</a>, for more information about
+this.
+</p>
+<p>A return value of <code class="code">0</code> indicates successful completion, and
+<code class="code">-1</code> indicates failure.  In addition to the usual file name syntax
+errors (see <a class="pxref" href="File-Name-Errors.html">File Name Errors</a>), the following <code class="code">errno</code> error
+conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EACCES</code></dt>
+<dd><p>Write permission is denied for the parent directory in which the new
+directory is to be added.
+</p>
+</dd>
+<dt><code class="code">EEXIST</code></dt>
+<dd><p>A file named <var class="var">filename</var> already exists.
+</p>
+</dd>
+<dt><code class="code">EMLINK</code></dt>
+<dd><p>The parent directory has too many links (entries).
+</p>
+<p>Well-designed file systems never report this error, because they permit
+more links than your disk could possibly hold.  However, you must still
+take account of the possibility of this error, as it could result from
+network access to a file system on another machine.
+</p>
+</dd>
+<dt><code class="code">ENOSPC</code></dt>
+<dd><p>The file system doesn&rsquo;t have enough room to create the new directory.
+</p>
+</dd>
+<dt><code class="code">EROFS</code></dt>
+<dd><p>The parent directory of the directory being created is on a read-only
+file system and cannot be modified.
+</p></dd>
+</dl>
+
+<p>To use this function, your program should include the header file
+<samp class="file">sys/stat.h</samp>.
+<a class="index-entry-id" id="index-sys_002fstat_002eh-1"></a>
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mkdirat"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">mkdirat</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, const char *<var class="var">filename</var>, mode_t <var class="var">mode</var>)</code><a class="copiable-link" href="#index-mkdirat"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is a descriptor-relative version of the <code class="code">mkdir</code>
+function above.  See <a class="xref" href="Descriptor_002dRelative-Access.html">Descriptor-Relative Access</a>.
+</p>
+<p>Compared to <code class="code">mkdir</code>, some additional error conditions can occur.
+See <a class="xref" href="Descriptor_002dRelative-Access.html">Descriptor-Relative Access</a>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="File-Attributes.html">File Attributes</a>, Previous: <a href="Renaming-Files.html">Renaming Files</a>, Up: <a href="File-System-Interface.html">File System Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

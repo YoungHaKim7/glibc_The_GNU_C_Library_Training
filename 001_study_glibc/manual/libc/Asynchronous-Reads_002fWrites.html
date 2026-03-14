@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Asynchronous Reads/Writes (The GNU C Library)</title>
+
+<meta name="description" content="Asynchronous Reads/Writes (The GNU C Library)">
+<meta name="keywords" content="Asynchronous Reads/Writes (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Asynchronous-I_002fO.html" rel="up" title="Asynchronous I/O">
+<link href="Status-of-AIO-Operations.html" rel="next" title="Status of AIO Operations">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Asynchronous-Reads_002fWrites">
+<div class="nav-panel">
+<p>
+Next: <a href="Status-of-AIO-Operations.html" accesskey="n" rel="next">Getting the Status of AIO Operations</a>, Up: <a href="Asynchronous-I_002fO.html" accesskey="u" rel="up">Perform I/O Operations in Parallel</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Asynchronous-Read-and-Write-Operations"><span>13.11.1 Asynchronous Read and Write Operations<a class="copiable-link" href="#Asynchronous-Read-and-Write-Operations"> &para;</a></span></h4>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-aio_005fread"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">aio_read</strong> <code class="def-code-arguments">(struct aiocb *<var class="var">aiocbp</var>)</code><a class="copiable-link" href="#index-aio_005fread"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock heap
+| AC-Unsafe lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+
+<p>This function initiates an asynchronous read operation.  It
+immediately returns after the operation was enqueued or when an
+error was encountered.
+</p>
+<p>The first <code class="code">aiocbp-&gt;aio_nbytes</code> bytes of the file for which
+<code class="code">aiocbp-&gt;aio_fildes</code> is a descriptor are written to the buffer
+starting at <code class="code">aiocbp-&gt;aio_buf</code>.  Reading starts at the absolute
+position <code class="code">aiocbp-&gt;aio_offset</code> in the file.
+</p>
+<p>If prioritized I/O is supported by the platform the
+<code class="code">aiocbp-&gt;aio_reqprio</code> value is used to adjust the priority before
+the request is actually enqueued.
+</p>
+<p>The calling process is notified about the termination of the read
+request according to the <code class="code">aiocbp-&gt;aio_sigevent</code> value.
+</p>
+<p>When <code class="code">aio_read</code> returns, the return value is zero if no error
+occurred that can be found before the process is enqueued.  If such an
+early error is found, the function returns <em class="math">-1</em> and sets
+<code class="code">errno</code> to one of the following values:
+</p>
+<dl class="table">
+<dt><code class="code">EAGAIN</code></dt>
+<dd><p>The request was not enqueued due to (temporarily) exceeded resource
+limitations.
+</p></dd>
+<dt><code class="code">ENOSYS</code></dt>
+<dd><p>The <code class="code">aio_read</code> function is not implemented.
+</p></dd>
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <code class="code">aiocbp-&gt;aio_fildes</code> descriptor is not valid.  This condition
+need not be recognized before enqueueing the request and so this error
+might also be signaled asynchronously.
+</p></dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <code class="code">aiocbp-&gt;aio_offset</code> or <code class="code">aiocbp-&gt;aio_reqpiro</code> value is
+invalid.  This condition need not be recognized before enqueueing the
+request and so this error might also be signaled asynchronously.
+</p></dd>
+</dl>
+
+<p>If <code class="code">aio_read</code> returns zero, the current status of the request
+can be queried using <code class="code">aio_error</code> and <code class="code">aio_return</code> functions.
+As long as the value returned by <code class="code">aio_error</code> is <code class="code">EINPROGRESS</code>
+the operation has not yet completed.  If <code class="code">aio_error</code> returns zero,
+the operation successfully terminated, otherwise the value is to be
+interpreted as an error code.  If the function terminated, the result of
+the operation can be obtained using a call to <code class="code">aio_return</code>.  The
+returned value is the same as an equivalent call to <code class="code">read</code> would
+have returned.  Possible error codes returned by <code class="code">aio_error</code> are:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <code class="code">aiocbp-&gt;aio_fildes</code> descriptor is not valid.
+</p></dd>
+<dt><code class="code">ECANCELED</code></dt>
+<dd><p>The operation was canceled before the operation was finished
+(see <a class="pxref" href="Cancel-AIO-Operations.html">Cancellation of AIO Operations</a>)
+</p></dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <code class="code">aiocbp-&gt;aio_offset</code> value is invalid.
+</p></dd>
+</dl>
+
+<p>When the sources are compiled with <code class="code">_FILE_OFFSET_BITS == 64</code> this
+function is in fact <code class="code">aio_read64</code> since the LFS interface transparently
+replaces the normal implementation.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-aio_005fread64"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">aio_read64</strong> <code class="def-code-arguments">(struct aiocb64 *<var class="var">aiocbp</var>)</code><a class="copiable-link" href="#index-aio_005fread64"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock heap
+| AC-Unsafe lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to the <code class="code">aio_read</code> function.  The only
+difference is that on 32&nbsp;bit<!-- /@w --> machines, the file descriptor should
+be opened in the large file mode.  Internally, <code class="code">aio_read64</code> uses
+functionality equivalent to <code class="code">lseek64</code> (see <a class="pxref" href="File-Position-Primitive.html">Setting the File Position of a Descriptor</a>) to position the file descriptor correctly for the reading,
+as opposed to the <code class="code">lseek</code> functionality used in <code class="code">aio_read</code>.
+</p>
+<p>When the sources are compiled with <code class="code">_FILE_OFFSET_BITS == 64</code>, this
+function is available under the name <code class="code">aio_read</code> and so transparently
+replaces the interface for small files on 32 bit machines.
+</p></dd></dl>
+
+<p>To write data asynchronously to a file, there exists an equivalent pair
+of functions with a very similar interface.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-aio_005fwrite"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">aio_write</strong> <code class="def-code-arguments">(struct aiocb *<var class="var">aiocbp</var>)</code><a class="copiable-link" href="#index-aio_005fwrite"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock heap
+| AC-Unsafe lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function initiates an asynchronous write operation.  The function
+call immediately returns after the operation was enqueued or if before
+this happens an error was encountered.
+</p>
+<p>The first <code class="code">aiocbp-&gt;aio_nbytes</code> bytes from the buffer starting at
+<code class="code">aiocbp-&gt;aio_buf</code> are written to the file for which
+<code class="code">aiocbp-&gt;aio_fildes</code> is a descriptor, starting at the absolute
+position <code class="code">aiocbp-&gt;aio_offset</code> in the file.
+</p>
+<p>If prioritized I/O is supported by the platform, the
+<code class="code">aiocbp-&gt;aio_reqprio</code> value is used to adjust the priority before
+the request is actually enqueued.
+</p>
+<p>The calling process is notified about the termination of the read
+request according to the <code class="code">aiocbp-&gt;aio_sigevent</code> value.
+</p>
+<p>When <code class="code">aio_write</code> returns, the return value is zero if no error
+occurred that can be found before the process is enqueued.  If such an
+early error is found the function returns <em class="math">-1</em> and sets
+<code class="code">errno</code> to one of the following values.
+</p>
+<dl class="table">
+<dt><code class="code">EAGAIN</code></dt>
+<dd><p>The request was not enqueued due to (temporarily) exceeded resource
+limitations.
+</p></dd>
+<dt><code class="code">ENOSYS</code></dt>
+<dd><p>The <code class="code">aio_write</code> function is not implemented.
+</p></dd>
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <code class="code">aiocbp-&gt;aio_fildes</code> descriptor is not valid.  This condition
+may not be recognized before enqueueing the request, and so this error
+might also be signaled asynchronously.
+</p></dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <code class="code">aiocbp-&gt;aio_offset</code> or <code class="code">aiocbp-&gt;aio_reqprio</code> value is
+invalid.  This condition may not be recognized before enqueueing the
+request and so this error might also be signaled asynchronously.
+</p></dd>
+</dl>
+
+<p>In the case <code class="code">aio_write</code> returns zero, the current status of the
+request can be queried using the <code class="code">aio_error</code> and <code class="code">aio_return</code>
+functions.  As long as the value returned by <code class="code">aio_error</code> is
+<code class="code">EINPROGRESS</code> the operation has not yet completed.  If
+<code class="code">aio_error</code> returns zero, the operation successfully terminated,
+otherwise the value is to be interpreted as an error code.  If the
+function terminated, the result of the operation can be obtained using a call
+to <code class="code">aio_return</code>.  The returned value is the same as an equivalent
+call to <code class="code">read</code> would have returned.  Possible error codes returned
+by <code class="code">aio_error</code> are:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <code class="code">aiocbp-&gt;aio_fildes</code> descriptor is not valid.
+</p></dd>
+<dt><code class="code">ECANCELED</code></dt>
+<dd><p>The operation was canceled before the operation was finished.
+(see <a class="pxref" href="Cancel-AIO-Operations.html">Cancellation of AIO Operations</a>)
+</p></dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <code class="code">aiocbp-&gt;aio_offset</code> value is invalid.
+</p></dd>
+</dl>
+
+<p>When the sources are compiled with <code class="code">_FILE_OFFSET_BITS == 64</code>, this
+function is in fact <code class="code">aio_write64</code> since the LFS interface transparently
+replaces the normal implementation.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-aio_005fwrite64"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">aio_write64</strong> <code class="def-code-arguments">(struct aiocb64 *<var class="var">aiocbp</var>)</code><a class="copiable-link" href="#index-aio_005fwrite64"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock heap
+| AC-Unsafe lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to the <code class="code">aio_write</code> function.  The only
+difference is that on 32&nbsp;bit<!-- /@w --> machines the file descriptor should
+be opened in the large file mode.  Internally <code class="code">aio_write64</code> uses
+functionality equivalent to <code class="code">lseek64</code> (see <a class="pxref" href="File-Position-Primitive.html">Setting the File Position of a Descriptor</a>) to position the file descriptor correctly for the writing,
+as opposed to the <code class="code">lseek</code> functionality used in <code class="code">aio_write</code>.
+</p>
+<p>When the sources are compiled with <code class="code">_FILE_OFFSET_BITS == 64</code>, this
+function is available under the name <code class="code">aio_write</code> and so transparently
+replaces the interface for small files on 32 bit machines.
+</p></dd></dl>
+
+<p>Besides these functions with the more or less traditional interface,
+POSIX.1b also defines a function which can initiate more than one
+operation at a time, and which can handle freely mixed read and write
+operations.  It is therefore similar to a combination of <code class="code">readv</code> and
+<code class="code">writev</code>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-lio_005flistio"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">lio_listio</strong> <code class="def-code-arguments">(int <var class="var">mode</var>, struct aiocb *const <var class="var">list</var>[], int <var class="var">nent</var>, struct sigevent *<var class="var">sig</var>)</code><a class="copiable-link" href="#index-lio_005flistio"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock heap
+| AC-Unsafe lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">lio_listio</code> function can be used to enqueue an arbitrary
+number of read and write requests at one time.  The requests can all be
+meant for the same file, all for different files or every solution in
+between.
+</p>
+<p><code class="code">lio_listio</code> gets the <var class="var">nent</var> requests from the array pointed to
+by <var class="var">list</var>.  The operation to be performed is determined by the
+<code class="code">aio_lio_opcode</code> member in each element of <var class="var">list</var>.  If this
+field is <code class="code">LIO_READ</code> a read operation is enqueued, similar to a call
+of <code class="code">aio_read</code> for this element of the array (except that the way
+the termination is signalled is different, as we will see below).  If
+the <code class="code">aio_lio_opcode</code> member is <code class="code">LIO_WRITE</code> a write operation
+is enqueued.  Otherwise the <code class="code">aio_lio_opcode</code> must be <code class="code">LIO_NOP</code>
+in which case this element of <var class="var">list</var> is simply ignored.  This
+&ldquo;operation&rdquo; is useful in situations where one has a fixed array of
+<code class="code">struct aiocb</code> elements from which only a few need to be handled at
+a time.  Another situation is where the <code class="code">lio_listio</code> call was
+canceled before all requests are processed (see <a class="pxref" href="Cancel-AIO-Operations.html">Cancellation of AIO Operations</a>) and the remaining requests have to be reissued.
+</p>
+<p>The other members of each element of the array pointed to by
+<code class="code">list</code> must have values suitable for the operation as described in
+the documentation for <code class="code">aio_read</code> and <code class="code">aio_write</code> above.
+</p>
+<p>The <var class="var">mode</var> argument determines how <code class="code">lio_listio</code> behaves after
+having enqueued all the requests.  If <var class="var">mode</var> is <code class="code">LIO_WAIT</code> it
+waits until all requests terminated.  Otherwise <var class="var">mode</var> must be
+<code class="code">LIO_NOWAIT</code> and in this case the function returns immediately after
+having enqueued all the requests.  In this case the caller gets a
+notification of the termination of all requests according to the
+<var class="var">sig</var> parameter.  If <var class="var">sig</var> is <code class="code">NULL</code> no notification is
+sent.  Otherwise a signal is sent or a thread is started, just as
+described in the description for <code class="code">aio_read</code> or <code class="code">aio_write</code>.
+</p>
+<p>If <var class="var">mode</var> is <code class="code">LIO_WAIT</code>, the return value of <code class="code">lio_listio</code>
+is <em class="math">0</em> when all requests completed successfully.  Otherwise the
+function returns <em class="math">-1</em> and <code class="code">errno</code> is set accordingly.  To find
+out which request or requests failed one has to use the <code class="code">aio_error</code>
+function on all the elements of the array <var class="var">list</var>.
+</p>
+<p>In case <var class="var">mode</var> is <code class="code">LIO_NOWAIT</code>, the function returns <em class="math">0</em> if
+all requests were enqueued correctly.  The current state of the requests
+can be found using <code class="code">aio_error</code> and <code class="code">aio_return</code> as described
+above.  If <code class="code">lio_listio</code> returns <em class="math">-1</em> in this mode, the
+global variable <code class="code">errno</code> is set accordingly.  If a request did not
+yet terminate, a call to <code class="code">aio_error</code> returns <code class="code">EINPROGRESS</code>.  If
+the value is different, the request is finished and the error value (or
+<em class="math">0</em>) is returned and the result of the operation can be retrieved
+using <code class="code">aio_return</code>.
+</p>
+<p>Possible values for <code class="code">errno</code> are:
+</p>
+<dl class="table">
+<dt><code class="code">EAGAIN</code></dt>
+<dd><p>The resources necessary to queue all the requests are not available at
+the moment.  The error status for each element of <var class="var">list</var> must be
+checked to determine which request failed.
+</p>
+<p>Another reason could be that the system wide limit of AIO requests is
+exceeded.  This cannot be the case for the implementation on GNU systems
+since no arbitrary limits exist.
+</p></dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">mode</var> parameter is invalid or <var class="var">nent</var> is larger than
+<code class="code">AIO_LISTIO_MAX</code>.
+</p></dd>
+<dt><code class="code">EIO</code></dt>
+<dd><p>One or more of the request&rsquo;s I/O operations failed.  The error status of
+each request should be checked to determine which one failed.
+</p></dd>
+<dt><code class="code">ENOSYS</code></dt>
+<dd><p>The <code class="code">lio_listio</code> function is not supported.
+</p></dd>
+</dl>
+
+<p>If the <var class="var">mode</var> parameter is <code class="code">LIO_NOWAIT</code> and the caller cancels
+a request, the error status for this request returned by
+<code class="code">aio_error</code> is <code class="code">ECANCELED</code>.
+</p>
+<p>When the sources are compiled with <code class="code">_FILE_OFFSET_BITS == 64</code>, this
+function is in fact <code class="code">lio_listio64</code> since the LFS interface
+transparently replaces the normal implementation.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-lio_005flistio64"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">lio_listio64</strong> <code class="def-code-arguments">(int <var class="var">mode</var>, struct aiocb64 *const <var class="var">list</var>[], int <var class="var">nent</var>, struct sigevent *<var class="var">sig</var>)</code><a class="copiable-link" href="#index-lio_005flistio64"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock heap
+| AC-Unsafe lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to the <code class="code">lio_listio</code> function.  The only
+difference is that on 32&nbsp;bit<!-- /@w --> machines, the file descriptor should
+be opened in the large file mode.  Internally, <code class="code">lio_listio64</code> uses
+functionality equivalent to <code class="code">lseek64</code> (see <a class="pxref" href="File-Position-Primitive.html">Setting the File Position of a Descriptor</a>) to position the file descriptor correctly for the reading or
+writing, as opposed to the <code class="code">lseek</code> functionality used in
+<code class="code">lio_listio</code>.
+</p>
+<p>When the sources are compiled with <code class="code">_FILE_OFFSET_BITS == 64</code>, this
+function is available under the name <code class="code">lio_listio</code> and so
+transparently replaces the interface for small files on 32 bit
+machines.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Status-of-AIO-Operations.html">Getting the Status of AIO Operations</a>, Up: <a href="Asynchronous-I_002fO.html">Perform I/O Operations in Parallel</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Trig Functions (The GNU C Library)</title>
+
+<meta name="description" content="Trig Functions (The GNU C Library)">
+<meta name="keywords" content="Trig Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Mathematics.html" rel="up" title="Mathematics">
+<link href="Inverse-Trig-Functions.html" rel="next" title="Inverse Trig Functions">
+<link href="Mathematical-Constants.html" rel="prev" title="Mathematical Constants">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Trig-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Inverse-Trig-Functions.html" accesskey="n" rel="next">Inverse Trigonometric Functions</a>, Previous: <a href="Mathematical-Constants.html" accesskey="p" rel="prev">Predefined Mathematical Constants</a>, Up: <a href="Mathematics.html" accesskey="u" rel="up">Mathematics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Trigonometric-Functions"><span>19.2 Trigonometric Functions<a class="copiable-link" href="#Trigonometric-Functions"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-trigonometric-functions"></a>
+
+<p>These are the familiar <code class="code">sin</code>, <code class="code">cos</code>, and <code class="code">tan</code> functions.
+The arguments to all of these functions are in units of radians; recall
+that pi radians equals 180 degrees.
+</p>
+<a class="index-entry-id" id="index-pi-_0028trigonometric-constant_0029"></a>
+<p>The math library normally defines <code class="code">M_PI</code> to a <code class="code">double</code>
+approximation of pi.  If strict ISO and/or POSIX compliance
+are requested this constant is not defined, but you can easily define it
+yourself:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">#define M_PI 3.14159265358979323846264338327
+</pre></div>
+
+<p>You can also compute the value of pi with the expression <code class="code">acos
+(-1.0)</code>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sin"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">sin</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-sin"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sinf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">sinf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-sinf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sinl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">sinl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-sinl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sinfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">sinfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-sinfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sinfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">sinfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-sinfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the sine of <var class="var">x</var>, where <var class="var">x</var> is given in
+radians.  The return value is in the range <code class="code">-1</code> to <code class="code">1</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cos"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">cos</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-cos"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cosf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">cosf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-cosf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cosl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">cosl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-cosl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cosfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">cosfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-cosfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cosfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">cosfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-cosfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the cosine of <var class="var">x</var>, where <var class="var">x</var> is given in
+radians.  The return value is in the range <code class="code">-1</code> to <code class="code">1</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-tan"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">tan</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-tan"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tanf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">tanf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-tanf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tanl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">tanl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-tanl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tanfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">tanfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-tanfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tanfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">tanfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-tanfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the tangent of <var class="var">x</var>, where <var class="var">x</var> is given in
+radians.
+</p>
+<p>Mathematically, the tangent function has singularities at odd multiples
+of pi/2.  If the argument <var class="var">x</var> is too close to one of these
+singularities, <code class="code">tan</code> will signal overflow.
+</p></dd></dl>
+
+<p>In many applications where <code class="code">sin</code> and <code class="code">cos</code> are used, the sine
+and cosine of the same angle are needed at the same time.  It is more
+efficient to compute them simultaneously, so the library provides a
+function to do that.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sincos"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">sincos</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double *<var class="var">sinx</var>, double *<var class="var">cosx</var>)</code><a class="copiable-link" href="#index-sincos"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sincosf"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">sincosf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float *<var class="var">sinx</var>, float *<var class="var">cosx</var>)</code><a class="copiable-link" href="#index-sincosf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sincosl"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">sincosl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double *<var class="var">sinx</var>, long double *<var class="var">cosx</var>)</code><a class="copiable-link" href="#index-sincosl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sincosfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">sincosfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> *<var class="var">sinx</var>, _Float<var class="var">N</var> *<var class="var">cosx</var>)</code><a class="copiable-link" href="#index-sincosfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sincosfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">sincosfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x *<var class="var">sinx</var>, _Float<var class="var">N</var>x *<var class="var">cosx</var>)</code><a class="copiable-link" href="#index-sincosfNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the sine of <var class="var">x</var> in <code class="code">*<var class="var">sinx</var></code> and the
+cosine of <var class="var">x</var> in <code class="code">*<var class="var">cosx</var></code>, where <var class="var">x</var> is given in
+radians.  Both values, <code class="code">*<var class="var">sinx</var></code> and <code class="code">*<var class="var">cosx</var></code>, are in
+the range of <code class="code">-1</code> to <code class="code">1</code>.
+</p>
+<p>All these functions, including the <code class="code">_Float<var class="var">N</var></code> and
+<code class="code">_Float<var class="var">N</var>x</code> variants, are GNU extensions.  Portable programs
+should be prepared to cope with their absence.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sinpi"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">sinpi</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-sinpi"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sinpif"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">sinpif</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-sinpif"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sinpil"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">sinpil</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-sinpil"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sinpifN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">sinpifN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-sinpifN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sinpifNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">sinpifNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-sinpifNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the sine of pi multiplied by <var class="var">x</var>.  The
+return value is in the range <code class="code">-1</code> to <code class="code">1</code>.
+</p>
+<p>The <code class="code">sinpi</code> functions are from TS 18661-4:2015.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cospi"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">cospi</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-cospi"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cospif"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">cospif</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-cospif"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cospil"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">cospil</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-cospil"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cospifN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">cospifN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-cospifN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cospifNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">cospifNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-cospifNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the cosine of pi multiplied by <var class="var">x</var>.  The
+return value is in the range <code class="code">-1</code> to <code class="code">1</code>.
+</p>
+<p>The <code class="code">cospi</code> functions are from TS 18661-4:2015.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-tanpi"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">tanpi</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-tanpi"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tanpif"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">tanpif</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-tanpif"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tanpil"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">tanpil</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-tanpil"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tanpifN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">tanpifN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-tanpifN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tanpifNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">tanpifNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-tanpifNx"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the tangent of pi multiplied by <var class="var">x</var>.
+</p>
+<p>The <code class="code">tanpi</code> functions are from TS 18661-4:2015.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-complex-trigonometric-functions"></a>
+
+<p>ISO&nbsp;C99<!-- /@w --> defines variants of the trig functions which work on
+complex numbers.  The GNU C Library provides these functions, but they
+are only useful if your compiler supports the new complex types defined
+by the standard.
+(As of this writing GCC supports complex numbers, but there are bugs in
+the implementation.)
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-csin"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">csin</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-csin"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-csinf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">csinf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-csinf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-csinl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">csinl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-csinl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-csinfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">csinfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-csinfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-csinfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">csinfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-csinfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the complex sine of <var class="var">z</var>.
+The mathematical definition of the complex sine is
+</p>
+<p><em class="math">sin (z) = 1/(2*i) * (exp (z*i) - exp (-z*i))</em>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ccos"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">ccos</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-ccos"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ccosf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">ccosf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-ccosf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ccosl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">ccosl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-ccosl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ccosfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">ccosfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-ccosfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ccosfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">ccosfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-ccosfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the complex cosine of <var class="var">z</var>.
+The mathematical definition of the complex cosine is
+</p>
+<p><em class="math">cos (z) = 1/2 * (exp (z*i) + exp (-z*i))</em>
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ctan"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">ctan</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-ctan"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ctanf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">ctanf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-ctanf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ctanl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">ctanl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-ctanl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ctanfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">ctanfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-ctanfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ctanfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">ctanfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-ctanfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the complex tangent of <var class="var">z</var>.
+The mathematical definition of the complex tangent is
+</p>
+<p><em class="math">tan (z) = -i * (exp (z*i) - exp (-z*i)) / (exp (z*i) + exp (-z*i))</em>
+</p>
+<p>The complex tangent has poles at <em class="math">pi/2 + 2n</em>, where <em class="math">n</em> is an
+integer.  <code class="code">ctan</code> may signal overflow if <var class="var">z</var> is too close to a
+pole.
+</p></dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Inverse-Trig-Functions.html">Inverse Trigonometric Functions</a>, Previous: <a href="Mathematical-Constants.html">Predefined Mathematical Constants</a>, Up: <a href="Mathematics.html">Mathematics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

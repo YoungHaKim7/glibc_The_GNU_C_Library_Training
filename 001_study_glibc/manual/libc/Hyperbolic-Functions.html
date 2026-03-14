@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Hyperbolic Functions (The GNU C Library)</title>
+
+<meta name="description" content="Hyperbolic Functions (The GNU C Library)">
+<meta name="keywords" content="Hyperbolic Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Mathematics.html" rel="up" title="Mathematics">
+<link href="Special-Functions.html" rel="next" title="Special Functions">
+<link href="Exponents-and-Logarithms.html" rel="prev" title="Exponents and Logarithms">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Hyperbolic-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Special-Functions.html" accesskey="n" rel="next">Special Functions</a>, Previous: <a href="Exponents-and-Logarithms.html" accesskey="p" rel="prev">Exponentiation and Logarithms</a>, Up: <a href="Mathematics.html" accesskey="u" rel="up">Mathematics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Hyperbolic-Functions-1"><span>19.5 Hyperbolic Functions<a class="copiable-link" href="#Hyperbolic-Functions-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-hyperbolic-functions"></a>
+
+<p>The functions in this section are related to the exponential functions;
+see <a class="ref" href="Exponents-and-Logarithms.html">Exponentiation and Logarithms</a>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sinh"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">sinh</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-sinh"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sinhf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">sinhf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-sinhf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sinhl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">sinhl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-sinhl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sinhfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">sinhfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-sinhfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-sinhfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">sinhfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-sinhfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the hyperbolic sine of <var class="var">x</var>, defined
+mathematically as <code class="code">(exp&nbsp;(<var class="var">x</var>)&nbsp;-&nbsp;exp&nbsp;(-<var class="var">x</var>))&nbsp;/&nbsp;2</code><!-- /@w -->.  They
+may signal overflow if <var class="var">x</var> is too large.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cosh"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">cosh</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-cosh"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-coshf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">coshf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-coshf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-coshl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">coshl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-coshl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-coshfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">coshfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-coshfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-coshfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">coshfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-coshfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the hyperbolic cosine of <var class="var">x</var>,
+defined mathematically as <code class="code">(exp&nbsp;(<var class="var">x</var>)&nbsp;+&nbsp;exp&nbsp;(-<var class="var">x</var>))&nbsp;/&nbsp;2</code><!-- /@w -->.
+They may signal overflow if <var class="var">x</var> is too large.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-tanh"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">tanh</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-tanh"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tanhf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">tanhf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-tanhf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tanhl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">tanhl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-tanhl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tanhfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">tanhfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-tanhfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tanhfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">tanhfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-tanhfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the hyperbolic tangent of <var class="var">x</var>,
+defined mathematically as <code class="code">sinh&nbsp;(<var class="var">x</var>)&nbsp;/&nbsp;cosh&nbsp;(<var class="var">x</var>)</code><!-- /@w -->.
+They may signal overflow if <var class="var">x</var> is too large.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-hyperbolic-functions-1"></a>
+
+<p>There are counterparts for the hyperbolic functions which take
+complex arguments.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-csinh"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">csinh</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-csinh"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-csinhf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">csinhf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-csinhf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-csinhl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">csinhl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-csinhl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-csinhfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">csinhfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-csinhfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-csinhfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">csinhfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-csinhfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the complex hyperbolic sine of <var class="var">z</var>, defined
+mathematically as <code class="code">(exp&nbsp;(<var class="var">z</var>)&nbsp;-&nbsp;exp&nbsp;(-<var class="var">z</var>))&nbsp;/&nbsp;2</code><!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ccosh"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">ccosh</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-ccosh"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ccoshf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">ccoshf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-ccoshf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ccoshl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">ccoshl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-ccoshl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ccoshfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">ccoshfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-ccoshfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ccoshfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">ccoshfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-ccoshfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the complex hyperbolic cosine of <var class="var">z</var>, defined
+mathematically as <code class="code">(exp&nbsp;(<var class="var">z</var>)&nbsp;+&nbsp;exp&nbsp;(-<var class="var">z</var>))&nbsp;/&nbsp;2</code><!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ctanh"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">ctanh</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-ctanh"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ctanhf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">ctanhf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-ctanhf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ctanhl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">ctanhl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-ctanhl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ctanhfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">ctanhfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-ctanhfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ctanhfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">ctanhfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-ctanhfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the complex hyperbolic tangent of <var class="var">z</var>,
+defined mathematically as <code class="code">csinh&nbsp;(<var class="var">z</var>)&nbsp;/&nbsp;ccosh&nbsp;(<var class="var">z</var>)</code><!-- /@w -->.
+</p></dd></dl>
+
+
+<a class="index-entry-id" id="index-inverse-hyperbolic-functions"></a>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-asinh"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">asinh</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-asinh"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-asinhf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">asinhf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-asinhf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-asinhl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">asinhl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-asinhl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-asinhfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">asinhfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-asinhfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-asinhfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">asinhfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-asinhfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the inverse hyperbolic sine of <var class="var">x</var>&mdash;the
+value whose hyperbolic sine is <var class="var">x</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-acosh"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">acosh</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-acosh"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-acoshf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">acoshf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-acoshf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-acoshl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">acoshl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-acoshl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-acoshfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">acoshfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-acoshfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-acoshfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">acoshfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-acoshfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the inverse hyperbolic cosine of <var class="var">x</var>&mdash;the
+value whose hyperbolic cosine is <var class="var">x</var>.  If <var class="var">x</var> is less than
+<code class="code">1</code>, <code class="code">acosh</code> signals a domain error.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-atanh"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">atanh</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-atanh"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-atanhf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">atanhf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-atanhf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-atanhl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">atanhl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-atanhl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-atanhfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">atanhfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-atanhfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-atanhfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">atanhfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-atanhfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the inverse hyperbolic tangent of <var class="var">x</var>&mdash;the
+value whose hyperbolic tangent is <var class="var">x</var>.  If the absolute value of
+<var class="var">x</var> is greater than <code class="code">1</code>, <code class="code">atanh</code> signals a domain error;
+if it is equal to 1, <code class="code">atanh</code> returns infinity.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-inverse-complex-hyperbolic-functions"></a>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-casinh"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">casinh</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-casinh"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-casinhf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">casinhf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-casinhf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-casinhl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">casinhl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-casinhl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-casinhfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">casinhfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-casinhfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-casinhfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">casinhfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-casinhfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the inverse complex hyperbolic sine of
+<var class="var">z</var>&mdash;the value whose complex hyperbolic sine is <var class="var">z</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cacosh"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">cacosh</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-cacosh"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cacoshf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">cacoshf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-cacoshf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cacoshl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">cacoshl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-cacoshl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cacoshfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">cacoshfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-cacoshfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cacoshfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">cacoshfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-cacoshfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the inverse complex hyperbolic cosine of
+<var class="var">z</var>&mdash;the value whose complex hyperbolic cosine is <var class="var">z</var>.  Unlike
+the real-valued functions, there are no restrictions on the value of <var class="var">z</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-catanh"><span class="category-def">Function: </span><span><code class="def-type">complex double</code> <strong class="def-name">catanh</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-catanh"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-catanhf"><span class="category-def">Function: </span><span><code class="def-type">complex float</code> <strong class="def-name">catanhf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-catanhf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-catanhl"><span class="category-def">Function: </span><span><code class="def-type">complex long double</code> <strong class="def-name">catanhl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-catanhl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-catanhfN"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatN</code> <strong class="def-name">catanhfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-catanhfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-catanhfNx"><span class="category-def">Function: </span><span><code class="def-type">complex _FloatNx</code> <strong class="def-name">catanhfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-catanhfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the inverse complex hyperbolic tangent of
+<var class="var">z</var>&mdash;the value whose complex hyperbolic tangent is <var class="var">z</var>.  Unlike
+the real-valued functions, there are no restrictions on the value of
+<var class="var">z</var>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Special-Functions.html">Special Functions</a>, Previous: <a href="Exponents-and-Logarithms.html">Exponentiation and Logarithms</a>, Up: <a href="Mathematics.html">Mathematics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

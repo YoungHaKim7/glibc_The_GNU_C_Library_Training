@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Allocating Cleared Space (The GNU C Library)</title>
+
+<meta name="description" content="Allocating Cleared Space (The GNU C Library)">
+<meta name="keywords" content="Allocating Cleared Space (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Unconstrained-Allocation.html" rel="up" title="Unconstrained Allocation">
+<link href="Aligned-Memory-Blocks.html" rel="next" title="Aligned Memory Blocks">
+<link href="Changing-Block-Size.html" rel="prev" title="Changing Block Size">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Allocating-Cleared-Space">
+<div class="nav-panel">
+<p>
+Next: <a href="Aligned-Memory-Blocks.html" accesskey="n" rel="next">Allocating Aligned Memory Blocks</a>, Previous: <a href="Changing-Block-Size.html" accesskey="p" rel="prev">Changing the Size of a Block</a>, Up: <a href="Unconstrained-Allocation.html" accesskey="u" rel="up">Unconstrained Allocation</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Allocating-Cleared-Space-1"><span>3.2.3.6 Allocating Cleared Space<a class="copiable-link" href="#Allocating-Cleared-Space-1"> &para;</a></span></h4>
+
+<p>The function <code class="code">calloc</code> allocates memory and clears it to zero.  It
+is declared in <samp class="file">stdlib.h</samp>.
+<a class="index-entry-id" id="index-stdlib_002eh-3"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-calloc"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">calloc</strong> <code class="def-code-arguments">(size_t <var class="var">count</var>, size_t <var class="var">eltsize</var>)</code><a class="copiable-link" href="#index-calloc"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function allocates a zeroed vector.  It acts like
+<code class="code">reallocarray (NULL, <var class="var">count</var>, <var class="var">eltsize</var>)</code> except that the
+vector&rsquo;s contents are cleared to zero before <code class="code">calloc</code> returns.
+</p></dd></dl>
+
+<p>You could define <code class="code">calloc</code> as follows:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">void *
+calloc (size_t count, size_t eltsize)
+{
+  void *p = reallocarray (0, count, eltsize);
+  if (p != NULL)
+    memset (p, 0, count * eltsize);
+  return p;
+}
+</pre></div>
+
+<p>But in general, it is not guaranteed that <code class="code">calloc</code> calls
+<code class="code">reallocarray</code> and <code class="code">memset</code> internally.  For example, if the
+<code class="code">calloc</code> implementation knows for other reasons that the new
+memory block is zero, it need not zero out the block again with
+<code class="code">memset</code>.  Also, if an application provides its own
+<code class="code">reallocarray</code> outside the C library, <code class="code">calloc</code> might not use
+that redefinition.  See <a class="xref" href="Replacing-malloc.html">Replacing <code class="code">malloc</code></a>.
+</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Classification of Characters (The GNU C Library)</title>
+
+<meta name="description" content="Classification of Characters (The GNU C Library)">
+<meta name="keywords" content="Classification of Characters (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Character-Handling.html" rel="up" title="Character Handling">
+<link href="Case-Conversion.html" rel="next" title="Case Conversion">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Classification-of-Characters">
+<div class="nav-panel">
+<p>
+Next: <a href="Case-Conversion.html" accesskey="n" rel="next">Case Conversion</a>, Up: <a href="Character-Handling.html" accesskey="u" rel="up">Character Handling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Classification-of-Characters-1"><span>4.1 Classification of Characters<a class="copiable-link" href="#Classification-of-Characters-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-character-testing"></a>
+<a class="index-entry-id" id="index-classification-of-characters"></a>
+<a class="index-entry-id" id="index-predicates-on-characters"></a>
+<a class="index-entry-id" id="index-character-predicates"></a>
+
+<p>This section explains the library functions for classifying characters.
+For example, <code class="code">isalpha</code> is the function to test for an alphabetic
+character.  It takes one argument, the character to test as an
+<code class="code">unsigned char</code> value, and returns a nonzero integer if the
+character is alphabetic, and zero otherwise.  You would use it like
+this:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">if (isalpha ((unsigned char) c))
+  printf (&quot;The character `%c' is alphabetic.\n&quot;, c);
+</pre></div>
+
+<p>Each of the functions in this section tests for membership in a
+particular class of characters; each has a name starting with &lsquo;<samp class="samp">is</samp>&rsquo;.
+Each of them takes one argument, which is a character to test.  The
+character argument must be in the value range of <code class="code">unsigned char</code> (0
+to 255 for the GNU C Library).  On a machine where the <code class="code">char</code> type is
+signed, it may be necessary to cast the argument to <code class="code">unsigned
+char</code>, or mask it with &lsquo;<samp class="samp">&amp; 0xff</samp>&rsquo;.  (On <code class="code">unsigned char</code>
+machines, this step is harmless, so portable code should always perform
+it.)  The &lsquo;<samp class="samp">is</samp>&rsquo; functions return an <code class="code">int</code> which is treated as a
+boolean value.
+</p>
+<p>All &lsquo;<samp class="samp">is</samp>&rsquo; functions accept the special value <code class="code">EOF</code> and return
+zero.  (Note that <code class="code">EOF</code> must not be cast to <code class="code">unsigned char</code>
+for this to work.)
+</p>
+<p>As an extension, the GNU C Library accepts signed <code class="code">char</code> values as
+&lsquo;<samp class="samp">is</samp>&rsquo; functions arguments in the range -128 to -2, and returns the
+result for the corresponding unsigned character.  However, as there
+might be an actual character corresponding to the <code class="code">EOF</code> integer
+constant, doing so may introduce bugs, and it is recommended to apply
+the conversion to the unsigned character range as appropriate.
+</p>
+<p>The attributes of any given character can vary between locales.
+See <a class="xref" href="Locales.html">Locales and Internationalization</a>, for more information on locales.
+</p>
+<p>These functions are declared in the header file <samp class="file">ctype.h</samp>.
+<a class="index-entry-id" id="index-ctype_002eh-1"></a>
+</p>
+<a class="index-entry-id" id="index-lower_002dcase-character"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-islower"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">islower</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-islower"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">c</var> is a lower-case letter.  The letter need not be
+from the Latin alphabet, any alphabet representable is valid.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-upper_002dcase-character"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-isupper"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">isupper</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-isupper"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">c</var> is an upper-case letter.  The letter need not be
+from the Latin alphabet, any alphabet representable is valid.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-alphabetic-character"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-isalpha"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">isalpha</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-isalpha"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">c</var> is an alphabetic character (a letter).  If
+<code class="code">islower</code> or <code class="code">isupper</code> is true of a character, then
+<code class="code">isalpha</code> is also true.
+</p>
+<p>In some locales, there may be additional characters for which
+<code class="code">isalpha</code> is true&mdash;letters which are neither upper case nor lower
+case.  But in the standard <code class="code">&quot;C&quot;</code> locale, there are no such
+additional characters.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-digit-character"></a>
+<a class="index-entry-id" id="index-decimal-digit-character"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-isdigit"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">isdigit</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-isdigit"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">c</var> is a decimal digit (&lsquo;<samp class="samp">0</samp>&rsquo; through &lsquo;<samp class="samp">9</samp>&rsquo;).
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-alphanumeric-character"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-isalnum"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">isalnum</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-isalnum"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">c</var> is an alphanumeric character (a letter or
+number); in other words, if either <code class="code">isalpha</code> or <code class="code">isdigit</code> is
+true of a character, then <code class="code">isalnum</code> is also true.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-hexadecimal-digit-character"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-isxdigit"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">isxdigit</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-isxdigit"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">c</var> is a hexadecimal digit.
+Hexadecimal digits include the normal decimal digits &lsquo;<samp class="samp">0</samp>&rsquo; through
+&lsquo;<samp class="samp">9</samp>&rsquo; and the letters &lsquo;<samp class="samp">A</samp>&rsquo; through &lsquo;<samp class="samp">F</samp>&rsquo; and
+&lsquo;<samp class="samp">a</samp>&rsquo; through &lsquo;<samp class="samp">f</samp>&rsquo;.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-punctuation-character"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ispunct"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">ispunct</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-ispunct"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">c</var> is a punctuation character.
+This means any printing character that is not alphanumeric or a space
+character.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-whitespace-character"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-isspace"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">isspace</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-isspace"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">c</var> is a <em class="dfn">whitespace</em> character.  In the standard
+<code class="code">&quot;C&quot;</code> locale, <code class="code">isspace</code> returns true for only the standard
+whitespace characters:
+</p>
+<dl class="table">
+<dt><code class="code">' '</code></dt>
+<dd><p>space
+</p>
+</dd>
+<dt><code class="code">'\f'</code></dt>
+<dd><p>formfeed
+</p>
+</dd>
+<dt><code class="code">'\n'</code></dt>
+<dd><p>newline
+</p>
+</dd>
+<dt><code class="code">'\r'</code></dt>
+<dd><p>carriage return
+</p>
+</dd>
+<dt><code class="code">'\t'</code></dt>
+<dd><p>horizontal tab
+</p>
+</dd>
+<dt><code class="code">'\v'</code></dt>
+<dd><p>vertical tab
+</p></dd>
+</dl>
+</dd></dl>
+
+<a class="index-entry-id" id="index-blank-character"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-isblank"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">isblank</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-isblank"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">c</var> is a blank character; that is, a space or a tab.
+This function was originally a GNU extension, but was added in ISO&nbsp;C99<!-- /@w -->.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-graphic-character"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-isgraph"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">isgraph</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-isgraph"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">c</var> is a graphic character; that is, a character
+that has a glyph associated with it.  The whitespace characters are not
+considered graphic.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-printing-character"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-isprint"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">isprint</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-isprint"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">c</var> is a printing character.  Printing characters
+include all the graphic characters, plus the space (&lsquo;<samp class="samp"> </samp>&rsquo;) character.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-control-character"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-iscntrl"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">iscntrl</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-iscntrl"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">c</var> is a control character (that is, a character that
+is not a printing character).
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-ASCII-character"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-isascii"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">isascii</strong> <code class="def-code-arguments">(int <var class="var">c</var>)</code><a class="copiable-link" href="#index-isascii"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Returns true if <var class="var">c</var> is a 7-bit <code class="code">unsigned char</code> value that fits
+into the US/UK ASCII character set.  This function is a BSD extension
+and is also an SVID extension.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Case-Conversion.html">Case Conversion</a>, Up: <a href="Character-Handling.html">Character Handling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

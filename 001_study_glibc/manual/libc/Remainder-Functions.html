@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Remainder Functions (The GNU C Library)</title>
+
+<meta name="description" content="Remainder Functions (The GNU C Library)">
+<meta name="keywords" content="Remainder Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Arithmetic-Functions.html" rel="up" title="Arithmetic Functions">
+<link href="FP-Bit-Twiddling.html" rel="next" title="FP Bit Twiddling">
+<link href="Rounding-Functions.html" rel="prev" title="Rounding Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Remainder-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="FP-Bit-Twiddling.html" accesskey="n" rel="next">Setting and modifying single bits of FP values</a>, Previous: <a href="Rounding-Functions.html" accesskey="p" rel="prev">Rounding Functions</a>, Up: <a href="Arithmetic-Functions.html" accesskey="u" rel="up">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Remainder-Functions-1"><span>20.8.4 Remainder Functions<a class="copiable-link" href="#Remainder-Functions-1"> &para;</a></span></h4>
+
+<p>The functions in this section compute the remainder on division of two
+floating-point numbers.  Each is a little different; pick the one that
+suits your problem.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fmod"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fmod</strong> <code class="def-code-arguments">(double <var class="var">numerator</var>, double <var class="var">denominator</var>)</code><a class="copiable-link" href="#index-fmod"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmodf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fmodf</strong> <code class="def-code-arguments">(float <var class="var">numerator</var>, float <var class="var">denominator</var>)</code><a class="copiable-link" href="#index-fmodf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmodl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fmodl</strong> <code class="def-code-arguments">(long double <var class="var">numerator</var>, long double <var class="var">denominator</var>)</code><a class="copiable-link" href="#index-fmodl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmodfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fmodfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">numerator</var>, _Float<var class="var">N</var> <var class="var">denominator</var>)</code><a class="copiable-link" href="#index-fmodfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fmodfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fmodfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">numerator</var>, _Float<var class="var">N</var>x <var class="var">denominator</var>)</code><a class="copiable-link" href="#index-fmodfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions compute the remainder from the division of
+<var class="var">numerator</var> by <var class="var">denominator</var>.  Specifically, the return value is
+<code class="code"><var class="var">numerator</var> - <var class="var">n</var>&nbsp;*&nbsp;<var class="var">denominator</var><!-- /@w --></code>, where <var class="var">n</var>
+is the quotient of <var class="var">numerator</var> divided by <var class="var">denominator</var>, rounded
+towards zero to an integer.  Thus, <code class="code">fmod&nbsp;(6.5,&nbsp;2.3)</code><!-- /@w --> returns
+<code class="code">1.9</code>, which is <code class="code">6.5</code> minus <code class="code">4.6</code>.
+</p>
+<p>The result has the same sign as the <var class="var">numerator</var> and has magnitude
+less than the magnitude of the <var class="var">denominator</var>.
+</p>
+<p>If <var class="var">denominator</var> is zero, <code class="code">fmod</code> signals a domain error.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-remainder"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">remainder</strong> <code class="def-code-arguments">(double <var class="var">numerator</var>, double <var class="var">denominator</var>)</code><a class="copiable-link" href="#index-remainder"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-remainderf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">remainderf</strong> <code class="def-code-arguments">(float <var class="var">numerator</var>, float <var class="var">denominator</var>)</code><a class="copiable-link" href="#index-remainderf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-remainderl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">remainderl</strong> <code class="def-code-arguments">(long double <var class="var">numerator</var>, long double <var class="var">denominator</var>)</code><a class="copiable-link" href="#index-remainderl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-remainderfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">remainderfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">numerator</var>, _Float<var class="var">N</var> <var class="var">denominator</var>)</code><a class="copiable-link" href="#index-remainderfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-remainderfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">remainderfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">numerator</var>, _Float<var class="var">N</var>x <var class="var">denominator</var>)</code><a class="copiable-link" href="#index-remainderfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions are like <code class="code">fmod</code> except that they round the
+internal quotient <var class="var">n</var> to the nearest integer instead of towards zero
+to an integer.  For example, <code class="code">remainder (6.5, 2.3)</code> returns
+<code class="code">-0.4</code>, which is <code class="code">6.5</code> minus <code class="code">6.9</code>.
+</p>
+<p>The absolute value of the result is less than or equal to half the
+absolute value of the <var class="var">denominator</var>.  The difference between
+<code class="code">fmod (<var class="var">numerator</var>, <var class="var">denominator</var>)</code> and <code class="code">remainder
+(<var class="var">numerator</var>, <var class="var">denominator</var>)</code> is always either
+<var class="var">denominator</var>, minus <var class="var">denominator</var>, or zero.
+</p>
+<p>If <var class="var">denominator</var> is zero, <code class="code">remainder</code> signals a domain error.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-drem"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">drem</strong> <code class="def-code-arguments">(double <var class="var">numerator</var>, double <var class="var">denominator</var>)</code><a class="copiable-link" href="#index-drem"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-dremf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">dremf</strong> <code class="def-code-arguments">(float <var class="var">numerator</var>, float <var class="var">denominator</var>)</code><a class="copiable-link" href="#index-dremf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-dreml"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">dreml</strong> <code class="def-code-arguments">(long double <var class="var">numerator</var>, long double <var class="var">denominator</var>)</code><a class="copiable-link" href="#index-dreml"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is another name for <code class="code">remainder</code>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="FP-Bit-Twiddling.html">Setting and modifying single bits of FP values</a>, Previous: <a href="Rounding-Functions.html">Rounding Functions</a>, Up: <a href="Arithmetic-Functions.html">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Normal Termination (The GNU C Library)</title>
+
+<meta name="description" content="Normal Termination (The GNU C Library)">
+<meta name="keywords" content="Normal Termination (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Program-Termination.html" rel="up" title="Program Termination">
+<link href="Exit-Status.html" rel="next" title="Exit Status">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Normal-Termination">
+<div class="nav-panel">
+<p>
+Next: <a href="Exit-Status.html" accesskey="n" rel="next">Exit Status</a>, Up: <a href="Program-Termination.html" accesskey="u" rel="up">Program Termination</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Normal-Termination-1"><span>26.7.1 Normal Termination<a class="copiable-link" href="#Normal-Termination-1"> &para;</a></span></h4>
+
+<p>A process terminates normally when its program signals it is done by
+calling <code class="code">exit</code>.  Returning from <code class="code">main</code> is equivalent to
+calling <code class="code">exit</code>, and the value that <code class="code">main</code> returns is used as
+the argument to <code class="code">exit</code>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-exit"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">exit</strong> <code class="def-code-arguments">(int <var class="var">status</var>)</code><a class="copiable-link" href="#index-exit"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:exit
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">exit</code> function tells the system that the program is done, which
+causes it to terminate the process.
+</p>
+<p><var class="var">status</var> is the program&rsquo;s exit status, which becomes part of the
+process&rsquo; termination status.  This function does not return.
+</p></dd></dl>
+
+<p>Normal termination causes the following actions:
+</p>
+<ol class="enumerate">
+<li> Functions that were registered with the <code class="code">atexit</code> or <code class="code">on_exit</code>
+functions are called in the reverse order of their registration.  This
+mechanism allows your application to specify its own &ldquo;cleanup&rdquo; actions
+to be performed at program termination.  Typically, this is used to do
+things like saving program state information in a file, or unlocking
+locks in shared data bases.
+
+</li><li> All open streams are closed, writing out any buffered output data.  See
+<a class="ref" href="Closing-Streams.html">Closing Streams</a>.  In addition, temporary files opened
+with the <code class="code">tmpfile</code> function are removed; see <a class="ref" href="Temporary-Files.html">Temporary Files</a>.
+
+</li><li> <code class="code">_exit</code> is called, terminating the program.  See <a class="xref" href="Termination-Internals.html">Termination Internals</a>.
+</li></ol>
+
+</div>
+
+
+
+</body>
+</html>

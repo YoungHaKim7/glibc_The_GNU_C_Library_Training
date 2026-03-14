@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Tunables (The GNU C Library)</title>
+
+<meta name="description" content="Tunables (The GNU C Library)">
+<meta name="keywords" content="Tunables (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html" rel="up" title="Top">
+<link href="Language-Features.html" rel="next" title="Language Features">
+<link href="Internal-Probes.html" rel="prev" title="Internal Probes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="chapter-level-extent" id="Tunables">
+<div class="nav-panel">
+<p>
+Next: <a href="Language-Features.html" accesskey="n" rel="next">C Language Facilities in the Library</a>, Previous: <a href="Internal-Probes.html" accesskey="p" rel="prev">Internal probes</a>, Up: <a href="index.html" accesskey="u" rel="up">Main Menu</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h2 class="chapter" id="Tunables-1"><span>39 Tunables<a class="copiable-link" href="#Tunables-1"> &para;</a></span></h2>
+<a class="index-entry-id" id="index-tunables"></a>
+
+<p><em class="dfn">Tunables</em> are a feature in the GNU C Library that allows application authors and
+distribution maintainers to alter the runtime library behavior to match
+their workload. These are implemented as a set of switches that may be
+modified in different ways. The current default method to do this is via
+the <code class="env">GLIBC_TUNABLES</code> environment variable by setting it to a string
+of colon-separated <var class="var">name</var>=<var class="var">value</var> pairs.  For example, the following
+example enables <code class="code">malloc</code> checking and sets the <code class="code">malloc</code>
+trim threshold to 128
+bytes:
+</p>
+<div class="example">
+<pre class="example-preformatted">GLIBC_TUNABLES=glibc.malloc.trim_threshold=128:glibc.malloc.check=3
+export GLIBC_TUNABLES
+</pre></div>
+
+<p>Tunables are not part of the GNU C Library stable ABI, and they are
+subject to change or removal across releases.  Additionally, the method to
+modify tunable values may change between releases and across distributions.
+It is possible to implement multiple &lsquo;frontends&rsquo; for the tunables allowing
+distributions to choose their preferred method at build time.
+</p>
+<p>Finally, the set of tunables available may vary between distributions as
+the tunables feature allows distributions to add their own tunables under
+their own namespace.
+</p>
+<p>Passing <samp class="option">--list-tunables</samp> to the dynamic loader to print all
+tunables with minimum and maximum values:
+</p>
+<div class="example">
+<pre class="example-preformatted">$ /lib64/ld-linux-x86-64.so.2 --list-tunables
+glibc.rtld.nns: 0x4 (min: 0x1, max: 0x10)
+glibc.malloc.trim_threshold: 0x0 (min: 0x0, max: 0xffffffffffffffff)
+glibc.malloc.perturb: 0 (min: 0, max: 255)
+glibc.cpu.x86_shared_cache_size: 0x100000 (min: 0x0, max: 0xffffffffffffffff)
+glibc.pthread.rseq: 1 (min: 0, max: 1)
+glibc.cpu.prefer_map_32bit_exec: 0 (min: 0, max: 1)
+glibc.mem.tagging: 0 (min: 0, max: 255)
+glibc.malloc.hugetlb: 0x0 (min: 0x0, max: 0xffffffffffffffff)
+glibc.cpu.x86_rep_movsb_threshold: 0x2000 (min: 0x100, max: 0xffffffffffffffff)
+glibc.malloc.mxfast: 0x0 (min: 0x0, max: 0xffffffffffffffff)
+glibc.rtld.dynamic_sort: 2 (min: 1, max: 2)
+glibc.malloc.top_pad: 0x20000 (min: 0x0, max: 0xffffffffffffffff)
+glibc.cpu.x86_rep_stosb_threshold: 0x800 (min: 0x1, max: 0xffffffffffffffff)
+glibc.cpu.x86_non_temporal_threshold: 0xc0000 (min: 0x4040, max: 0xfffffffffffffff)
+glibc.cpu.x86_memset_non_temporal_threshold: 0xc0000 (min: 0x4040, max: 0xfffffffffffffff)
+glibc.cpu.x86_shstk:
+glibc.pthread.stack_cache_size: 0x2800000 (min: 0x0, max: 0xffffffffffffffff)
+glibc.malloc.mmap_max: 0 (min: 0, max: 2147483647)
+glibc.cpu.plt_rewrite: 0 (min: 0, max: 2)
+glibc.cpu.x86_ibt:
+glibc.cpu.hwcaps:
+glibc.malloc.arena_max: 0x0 (min: 0x1, max: 0xffffffffffffffff)
+glibc.malloc.mmap_threshold: 0x0 (min: 0x0, max: 0xffffffffffffffff)
+glibc.cpu.x86_data_cache_size: 0x8000 (min: 0x0, max: 0xffffffffffffffff)
+glibc.malloc.tcache_count: 0x0 (min: 0x0, max: 0xffffffffffffffff)
+glibc.malloc.arena_test: 0x0 (min: 0x1, max: 0xffffffffffffffff)
+glibc.pthread.mutex_spin_count: 100 (min: 0, max: 32767)
+glibc.rtld.optional_static_tls: 0x200 (min: 0x0, max: 0xffffffffffffffff)
+glibc.malloc.tcache_max: 0x0 (min: 0x0, max: 0xffffffffffffffff)
+glibc.malloc.check: 0 (min: 0, max: 3)
+</pre></div>
+
+
+<ul class="mini-toc">
+<li><a href="Tunable-names.html" accesskey="1">Tunable names</a></li>
+<li><a href="Memory-Allocation-Tunables.html" accesskey="2">Memory Allocation Tunables</a></li>
+<li><a href="Dynamic-Linking-Tunables.html" accesskey="3">Dynamic Linking Tunables</a></li>
+<li><a href="POSIX-Thread-Tunables.html" accesskey="4">POSIX Thread Tunables</a></li>
+<li><a href="Hardware-Capability-Tunables.html" accesskey="5">Hardware Capability Tunables</a></li>
+<li><a href="Memory-Related-Tunables.html" accesskey="6">Memory Related Tunables</a></li>
+<li><a href="gmon-Tunables.html" accesskey="7">gmon Tunables</a></li>
+</ul>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Language-Features.html">C Language Facilities in the Library</a>, Previous: <a href="Internal-Probes.html">Internal probes</a>, Up: <a href="index.html">Main Menu</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

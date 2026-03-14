@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Page Lock Functions (The GNU C Library)</title>
+
+<meta name="description" content="Page Lock Functions (The GNU C Library)">
+<meta name="keywords" content="Page Lock Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Locking-Pages.html" rel="up" title="Locking Pages">
+<link href="Locked-Memory-Details.html" rel="prev" title="Locked Memory Details">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Page-Lock-Functions">
+<div class="nav-panel">
+<p>
+Previous: <a href="Locked-Memory-Details.html" accesskey="p" rel="prev">Locked Memory Details</a>, Up: <a href="Locking-Pages.html" accesskey="u" rel="up">Locking Pages</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Functions-To-Lock-And-Unlock-Pages"><span>3.5.3 Functions To Lock And Unlock Pages<a class="copiable-link" href="#Functions-To-Lock-And-Unlock-Pages"> &para;</a></span></h4>
+
+<p>The symbols in this section are declared in <samp class="file">sys/mman.h</samp>.  These
+functions are defined by POSIX.1b, but their availability depends on
+your kernel.  If your kernel doesn&rsquo;t allow these functions, they exist
+but always fail.  They <em class="emph">are</em> available with a Linux kernel.
+</p>
+<p><strong class="strong">Portability Note:</strong> POSIX.1b requires that when the <code class="code">mlock</code>
+and <code class="code">munlock</code> functions are available, the file <samp class="file">unistd.h</samp>
+define the macro <code class="code">_POSIX_MEMLOCK_RANGE</code> and the file
+<code class="code">limits.h</code> define the macro <code class="code">PAGESIZE</code> to be the size of a
+memory page in bytes.  It requires that when the <code class="code">mlockall</code> and
+<code class="code">munlockall</code> functions are available, the <samp class="file">unistd.h</samp> file
+define the macro <code class="code">_POSIX_MEMLOCK</code>.  The GNU C Library conforms to
+this requirement.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mlock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">mlock</strong> <code class="def-code-arguments">(const void *<var class="var">addr</var>, size_t <var class="var">len</var>)</code><a class="copiable-link" href="#index-mlock"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p><code class="code">mlock</code> locks a range of the calling process&rsquo; virtual pages.
+</p>
+<p>The range of memory starts at address <var class="var">addr</var> and is <var class="var">len</var> bytes
+long.  Actually, since you must lock whole pages, it is the range of
+pages that include any part of the specified range.
+</p>
+<p>When the function returns successfully, each of those pages is backed by
+(connected to) a real frame (is resident) and is marked to stay that
+way.  This means the function may cause page-ins and have to wait for
+them.
+</p>
+<p>When the function fails, it does not affect the lock status of any
+pages.
+</p>
+<p>The return value is zero if the function succeeds.  Otherwise, it is
+<code class="code">-1</code> and <code class="code">errno</code> is set accordingly.  <code class="code">errno</code> values
+specific to this function are:
+</p>
+<dl class="table">
+<dt><code class="code">ENOMEM</code></dt>
+<dd><ul class="itemize mark-bullet">
+<li>At least some of the specified address range does not exist in the
+calling process&rsquo; virtual address space.
+</li><li>The locking would cause the process to exceed its locked page limit.
+</li></ul>
+
+</dd>
+<dt><code class="code">EPERM</code></dt>
+<dd><p>The calling process is not superuser.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p><var class="var">len</var> is not positive.
+</p>
+</dd>
+<dt><code class="code">ENOSYS</code></dt>
+<dd><p>The kernel does not provide <code class="code">mlock</code> capability.
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mlock2"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">mlock2</strong> <code class="def-code-arguments">(const void *<var class="var">addr</var>, size_t <var class="var">len</var>, unsigned int <var class="var">flags</var>)</code><a class="copiable-link" href="#index-mlock2"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function is similar to <code class="code">mlock</code>.  If <var class="var">flags</var> is zero, a
+call to <code class="code">mlock2</code> behaves exactly as the equivalent call to <code class="code">mlock</code>.
+</p>
+<p>The <var class="var">flags</var> argument must be a combination of zero or more of the
+following flags:
+</p>
+<dl class="vtable">
+<dt><a id="index-MLOCK_005fONFAULT"></a><span><code class="code">MLOCK_ONFAULT</code><a class="copiable-link" href="#index-MLOCK_005fONFAULT"> &para;</a></span></dt>
+<dd>
+<p>Only those pages in the specified address range which are already in
+memory are locked immediately.  Additional pages in the range are
+automatically locked in case of a page fault and allocation of memory.
+</p></dd>
+</dl>
+
+<p>Like <code class="code">mlock</code>, <code class="code">mlock2</code> returns zero on success and <code class="code">-1</code>
+on failure, setting <code class="code">errno</code> accordingly.  Additional <code class="code">errno</code>
+values defined for <code class="code">mlock2</code> are:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The specified (non-zero) <var class="var">flags</var> argument is not supported by this
+system.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>You can lock <em class="emph">all</em> a process&rsquo; memory with <code class="code">mlockall</code>.  You
+unlock memory with <code class="code">munlock</code> or <code class="code">munlockall</code>.
+</p>
+<p>To avoid all page faults in a C program, you have to use
+<code class="code">mlockall</code>, because some of the memory a program uses is hidden
+from the C code, e.g. the stack and automatic variables, and you
+wouldn&rsquo;t know what address to tell <code class="code">mlock</code>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-munlock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">munlock</strong> <code class="def-code-arguments">(const void *<var class="var">addr</var>, size_t <var class="var">len</var>)</code><a class="copiable-link" href="#index-munlock"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p><code class="code">munlock</code> unlocks a range of the calling process&rsquo; virtual pages.
+</p>
+<p><code class="code">munlock</code> is the inverse of <code class="code">mlock</code> and functions completely
+analogously to <code class="code">mlock</code>, except that there is no <code class="code">EPERM</code>
+failure.
+</p>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mlockall"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">mlockall</strong> <code class="def-code-arguments">(int <var class="var">flags</var>)</code><a class="copiable-link" href="#index-mlockall"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p><code class="code">mlockall</code> locks all the pages in a process&rsquo; virtual memory address
+space, and/or any that are added to it in the future.  This includes the
+pages of the code, data and stack segment, as well as shared libraries,
+user space kernel data, shared memory, and memory mapped files.
+</p>
+<p><var class="var">flags</var> is a string of single bit flags represented by the following
+macros.  They tell <code class="code">mlockall</code> which of its functions you want.  All
+other bits must be zero.
+</p>
+<dl class="vtable">
+<dt><a id="index-MCL_005fCURRENT"></a><span><code class="code">MCL_CURRENT</code><a class="copiable-link" href="#index-MCL_005fCURRENT"> &para;</a></span></dt>
+<dd><p>Lock all pages which currently exist in the calling process&rsquo; virtual
+address space.
+</p>
+</dd>
+<dt><a id="index-MCL_005fFUTURE"></a><span><code class="code">MCL_FUTURE</code><a class="copiable-link" href="#index-MCL_005fFUTURE"> &para;</a></span></dt>
+<dd><p>Set a mode such that any pages added to the process&rsquo; virtual address
+space in the future will be locked from birth.  This mode does not
+affect future address spaces owned by the same process so exec, which
+replaces a process&rsquo; address space, wipes out <code class="code">MCL_FUTURE</code>.
+See <a class="xref" href="Executing-a-File.html">Executing a File</a>.
+</p>
+</dd>
+</dl>
+
+<p>When the function returns successfully, and you specified
+<code class="code">MCL_CURRENT</code>, all of the process&rsquo; pages are backed by (connected
+to) real frames (they are resident) and are marked to stay that way.
+This means the function may cause page-ins and have to wait for them.
+</p>
+<p>When the process is in <code class="code">MCL_FUTURE</code> mode because it successfully
+executed this function and specified <code class="code">MCL_CURRENT</code>, any system call
+by the process that requires space be added to its virtual address space
+fails with <code class="code">errno</code> = <code class="code">ENOMEM</code> if locking the additional space
+would cause the process to exceed its locked page limit.  In the case
+that the address space addition that can&rsquo;t be accommodated is stack
+expansion, the stack expansion fails and the kernel sends a
+<code class="code">SIGSEGV</code> signal to the process.
+</p>
+<p>When the function fails, it does not affect the lock status of any pages
+or the future locking mode.
+</p>
+<p>The return value is zero if the function succeeds.  Otherwise, it is
+<code class="code">-1</code> and <code class="code">errno</code> is set accordingly.  <code class="code">errno</code> values
+specific to this function are:
+</p>
+<dl class="table">
+<dt><code class="code">ENOMEM</code></dt>
+<dd><ul class="itemize mark-bullet">
+<li>At least some of the specified address range does not exist in the
+calling process&rsquo; virtual address space.
+</li><li>The locking would cause the process to exceed its locked page limit.
+</li></ul>
+
+</dd>
+<dt><code class="code">EPERM</code></dt>
+<dd><p>The calling process is not superuser.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>Undefined bits in <var class="var">flags</var> are not zero.
+</p>
+</dd>
+<dt><code class="code">ENOSYS</code></dt>
+<dd><p>The kernel does not provide <code class="code">mlockall</code> capability.
+</p>
+</dd>
+</dl>
+
+<p>You can lock just specific pages with <code class="code">mlock</code>.  You unlock pages
+with <code class="code">munlockall</code> and <code class="code">munlock</code>.
+</p>
+</dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-munlockall"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">munlockall</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-munlockall"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p><code class="code">munlockall</code> unlocks every page in the calling process&rsquo; virtual
+address space and turns off <code class="code">MCL_FUTURE</code> future locking mode.
+</p>
+<p>The return value is zero if the function succeeds.  Otherwise, it is
+<code class="code">-1</code> and <code class="code">errno</code> is set accordingly.  The only way this
+function can fail is for generic reasons that all functions and system
+calls can fail, so there are no specific <code class="code">errno</code> values.
+</p>
+</dd></dl>
+
+
+
+
+
+
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Locked-Memory-Details.html">Locked Memory Details</a>, Up: <a href="Locking-Pages.html">Locking Pages</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

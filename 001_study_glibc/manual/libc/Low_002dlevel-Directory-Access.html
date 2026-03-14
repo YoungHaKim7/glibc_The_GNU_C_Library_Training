@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Low-level Directory Access (The GNU C Library)</title>
+
+<meta name="description" content="Low-level Directory Access (The GNU C Library)">
+<meta name="keywords" content="Low-level Directory Access (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Accessing-Directories.html" rel="up" title="Accessing Directories">
+<link href="Simple-Directory-Lister-Mark-II.html" rel="prev" title="Simple Directory Lister Mark II">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Low_002dlevel-Directory-Access">
+<div class="nav-panel">
+<p>
+Previous: <a href="Simple-Directory-Lister-Mark-II.html" accesskey="p" rel="prev">Simple Program to List a Directory, Mark II</a>, Up: <a href="Accessing-Directories.html" accesskey="u" rel="up">Accessing Directories</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Low_002dlevel-Directory-Access-1"><span>14.3.8 Low-level Directory Access<a class="copiable-link" href="#Low_002dlevel-Directory-Access-1"> &para;</a></span></h4>
+
+<p>The stream-based directory functions are not AS-Safe and cannot be
+used after <code class="code">vfork</code>.  See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.  The functions
+below provide an alternative that can be used in these contexts.
+</p>
+<p>Directory data is obtained from a file descriptor, as created by the
+<code class="code">open</code> function, with or without the <code class="code">O_DIRECTORY</code> flag.
+See <a class="xref" href="Opening-and-Closing-Files.html">Opening and Closing Files</a>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getdents64"><span class="category-def">Function: </span><span><code class="def-type">ssize_t</code> <strong class="def-name">getdents64</strong> <code class="def-code-arguments">(int <var class="var">fd</var>, void *<var class="var">buffer</var>, size_t <var class="var">length</var>)</code><a class="copiable-link" href="#index-getdents64"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">getdents64</code> function reads at most <var class="var">length</var> bytes of
+directory entry data from the file descriptor <var class="var">fd</var> and stores it
+into the byte array starting at <var class="var">buffer</var>.
+</p>
+<p>On success, the function returns the number of bytes written to the
+buffer.  This number is zero if <var class="var">fd</var> is already at the end of the
+directory stream.  On error, the function returns <code class="code">-1</code> and sets
+<code class="code">errno</code> to the appropriate error code.
+</p>
+<p>The data is stored as a sequence of <code class="code">struct dirent64</code> records,
+which can be traversed using the <code class="code">d_reclen</code> member.  The buffer
+should be large enough to hold the largest possible directory entry.
+Note that some file systems support file names longer than
+<code class="code">NAME_MAX</code> bytes (e.g., because they support up to 255 Unicode
+characters), so a buffer size of at least 1024 is recommended.
+</p>
+<p>If the directory has been modified since the first call to
+<code class="code">getdents64</code> on the directory (opening the descriptor or seeking to
+offset zero), it is possible that the buffer contains entries that have
+been encountered before.  Likewise, it is possible that files that are
+still present are not reported before the end of the directory is
+encountered (and <code class="code">getdents64</code> returns zero).
+</p>
+<p>This function is specific to Linux.
+</p></dd></dl>
+
+<p>Systems that support <code class="code">getdents64</code> support seeking on directory
+streams.  See <a class="xref" href="File-Position-Primitive.html">Setting the File Position of a Descriptor</a>.  However, the only offset that
+works reliably is offset zero, indicating that reading the directory
+should start from the beginning.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Simple-Directory-Lister-Mark-II.html">Simple Program to List a Directory, Mark II</a>, Up: <a href="Accessing-Directories.html">Accessing Directories</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

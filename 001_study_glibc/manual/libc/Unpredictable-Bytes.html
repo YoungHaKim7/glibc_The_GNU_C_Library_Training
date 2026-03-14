@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Unpredictable Bytes (The GNU C Library)</title>
+
+<meta name="description" content="Unpredictable Bytes (The GNU C Library)">
+<meta name="keywords" content="Unpredictable Bytes (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Cryptographic-Functions.html" rel="up" title="Cryptographic Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Unpredictable-Bytes">
+<div class="nav-panel">
+<p>
+Up: <a href="Cryptographic-Functions.html" accesskey="u" rel="up">Cryptographic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Generating-Unpredictable-Bytes"><span>34.1 Generating Unpredictable Bytes<a class="copiable-link" href="#Generating-Unpredictable-Bytes"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-randomness-source"></a>
+<a class="index-entry-id" id="index-random-numbers_002c-cryptographic"></a>
+<a class="index-entry-id" id="index-pseudo_002drandom-numbers_002c-cryptographic"></a>
+<a class="index-entry-id" id="index-cryptographic-random-number-generator"></a>
+<a class="index-entry-id" id="index-deterministic-random-bit-generator"></a>
+<a class="index-entry-id" id="index-CRNG"></a>
+<a class="index-entry-id" id="index-CSPRNG"></a>
+<a class="index-entry-id" id="index-DRBG"></a>
+
+<p>Cryptographic applications often need random data that will be as
+difficult as possible for a hostile eavesdropper to guess.
+The pseudo-random number generators provided by the GNU C Library
+(see <a class="pxref" href="Pseudo_002dRandom-Numbers.html">Pseudo-Random Numbers</a>) are not suitable for this purpose.
+They produce output that is <em class="emph">statistically</em> random, but fails to
+be <em class="emph">unpredictable</em>.  Cryptographic applications require a
+<em class="dfn">cryptographic random number generator</em> (CRNG), also known as a
+<em class="dfn">cryptographically strong pseudo-random number generator</em> (CSPRNG)
+or a <em class="dfn">deterministic random bit generator</em> (DRBG).
+</p>
+<p>Currently, the GNU C Library does not provide a cryptographic random number
+generator, but it does provide functions that read cryptographically
+strong random data from a <em class="dfn">randomness source</em> supplied by the
+operating system.  This randomness source is a CRNG at heart, but it
+also continually &ldquo;re-seeds&rdquo; itself from physical sources of
+randomness, such as electronic noise and clock jitter.  This means
+applications do not need to do anything to ensure that the random
+numbers it produces are different on each run.
+</p>
+<p>The catch, however, is that these functions will only produce
+relatively short random strings in any one call.  Often this is not a
+problem, but applications that need more than a few kilobytes of
+cryptographically strong random data should call these functions once
+and use their output to seed a CRNG.
+</p>
+<p>Most applications should use <code class="code">getentropy</code>.  The <code class="code">getrandom</code>
+function is intended for low-level applications which need additional
+control over blocking behavior.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getentropy"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getentropy</strong> <code class="def-code-arguments">(void *<var class="var">buffer</var>, size_t <var class="var">length</var>)</code><a class="copiable-link" href="#index-getentropy"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function writes exactly <var class="var">length</var> bytes of random data to the
+array starting at <var class="var">buffer</var>.  <var class="var">length</var> can be no more than 256.
+On success, it returns zero.  On failure, it returns <em class="math">-1</em>, and
+<code class="code">errno</code> is set to indicate the problem.  Some of the possible
+errors are listed below.
+</p>
+<dl class="table">
+<dt><code class="code">ENOSYS</code></dt>
+<dd><p>The operating system does not implement a randomness source, or does
+not support this way of accessing it.  (For instance, the system call
+used by this function was added to the Linux kernel in version 3.17.)
+</p>
+</dd>
+<dt><code class="code">EFAULT</code></dt>
+<dd><p>The combination of <var class="var">buffer</var> and <var class="var">length</var> arguments specifies
+an invalid memory range.
+</p>
+</dd>
+<dt><code class="code">EIO</code></dt>
+<dd><p><var class="var">length</var> is larger than 256, or the kernel entropy pool has
+suffered a catastrophic failure.
+</p></dd>
+</dl>
+
+<p>A call to <code class="code">getentropy</code> can only block when the system has just
+booted and the randomness source has not yet been initialized.
+However, if it does block, it cannot be interrupted by signals or
+thread cancellation.  Programs intended to run in very early stages of
+the boot process may need to use <code class="code">getrandom</code> in non-blocking mode
+instead, and be prepared to cope with random data not being available
+at all.
+</p>
+<p>The <code class="code">getentropy</code> function is declared in the header file
+<samp class="file">sys/random.h</samp>.  It is derived from OpenBSD.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getrandom"><span class="category-def">Function: </span><span><code class="def-type">ssize_t</code> <strong class="def-name">getrandom</strong> <code class="def-code-arguments">(void *<var class="var">buffer</var>, size_t <var class="var">length</var>, unsigned int <var class="var">flags</var>)</code><a class="copiable-link" href="#index-getrandom"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function writes up to <var class="var">length</var> bytes of random data to the
+array starting at <var class="var">buffer</var>.  The <var class="var">flags</var> argument should be
+either zero, or the bitwise OR of some of the following flags:
+</p>
+<dl class="table">
+<dt><code class="code">GRND_RANDOM</code></dt>
+<dd><p>Use the <samp class="file">/dev/random</samp> (blocking) source instead of the
+<samp class="file">/dev/urandom</samp> (non-blocking) source to obtain randomness.
+</p>
+<p>If this flag is specified, the call may block, potentially for quite
+some time, even after the randomness source has been initialized.  If it
+is not specified, the call can only block when the system has just
+booted and the randomness source has not yet been initialized.
+</p>
+</dd>
+<dt><code class="code">GRND_NONBLOCK</code></dt>
+<dd><p>Instead of blocking, return to the caller immediately if no data is
+available.
+</p>
+</dd>
+<dt><code class="code">GRND_INSECURE</code></dt>
+<dd><p>Write random data that may not be cryptographically secure.
+</p></dd>
+</dl>
+
+<p>Unlike <code class="code">getentropy</code>, the <code class="code">getrandom</code> function is a
+cancellation point, and if it blocks, it can be interrupted by
+signals.
+</p>
+<p>On success, <code class="code">getrandom</code> returns the number of bytes which have
+been written to the buffer, which may be less than <var class="var">length</var>.  On
+error, it returns <em class="math">-1</em>, and <code class="code">errno</code> is set to indicate the
+problem.  Some of the possible errors are:
+</p>
+<dl class="table">
+<dt><code class="code">ENOSYS</code></dt>
+<dd><p>The operating system does not implement a randomness source, or does
+not support this way of accessing it.  (For instance, the system call
+used by this function was added to the Linux kernel in version 3.17.)
+</p>
+</dd>
+<dt><code class="code">EAGAIN</code></dt>
+<dd><p>No random data was available and <code class="code">GRND_NONBLOCK</code> was specified in
+<var class="var">flags</var>.
+</p>
+</dd>
+<dt><code class="code">EFAULT</code></dt>
+<dd><p>The combination of <var class="var">buffer</var> and <var class="var">length</var> arguments specifies
+an invalid memory range.
+</p>
+</dd>
+<dt><code class="code">EINTR</code></dt>
+<dd><p>The system call was interrupted.  During the system boot process, before
+the kernel randomness pool is initialized, this can happen even if
+<var class="var">flags</var> is zero.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">flags</var> argument contains an invalid combination of flags.
+</p></dd>
+</dl>
+
+<p>The <code class="code">getrandom</code> function is declared in the header file
+<samp class="file">sys/random.h</samp>.  It is a GNU extension.
+</p>
+</dd></dl>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Up: <a href="Cryptographic-Functions.html">Cryptographic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

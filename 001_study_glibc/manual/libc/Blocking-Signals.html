@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Blocking Signals (The GNU C Library)</title>
+
+<meta name="description" content="Blocking Signals (The GNU C Library)">
+<meta name="keywords" content="Blocking Signals (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Signal-Handling.html" rel="up" title="Signal Handling">
+<link href="Waiting-for-a-Signal.html" rel="next" title="Waiting for a Signal">
+<link href="Generating-Signals.html" rel="prev" title="Generating Signals">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Blocking-Signals">
+<div class="nav-panel">
+<p>
+Next: <a href="Waiting-for-a-Signal.html" accesskey="n" rel="next">Waiting for a Signal</a>, Previous: <a href="Generating-Signals.html" accesskey="p" rel="prev">Generating Signals</a>, Up: <a href="Signal-Handling.html" accesskey="u" rel="up">Signal Handling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Blocking-Signals-1"><span>25.7 Blocking Signals<a class="copiable-link" href="#Blocking-Signals-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-blocking-signals"></a>
+
+<p>Blocking a signal means telling the operating system to hold it and
+deliver it later.  Generally, a program does not block signals
+indefinitely&mdash;it might as well ignore them by setting their actions to
+<code class="code">SIG_IGN</code>.  But it is useful to block signals briefly, to prevent
+them from interrupting sensitive operations.  For instance:
+</p>
+<ul class="itemize mark-bullet">
+<li>You can use the <code class="code">sigprocmask</code> function to block signals while you
+modify global variables that are also modified by the handlers for these
+signals.
+
+</li><li>You can set <code class="code">sa_mask</code> in your <code class="code">sigaction</code> call to block
+certain signals while a particular signal handler runs.  This way, the
+signal handler can run without being interrupted itself by signals.
+</li></ul>
+
+
+<ul class="mini-toc">
+<li><a href="Why-Block.html" accesskey="1">Why Blocking Signals is Useful</a></li>
+<li><a href="Signal-Sets.html" accesskey="2">Signal Sets</a></li>
+<li><a href="Process-Signal-Mask.html" accesskey="3">Process Signal Mask</a></li>
+<li><a href="Testing-for-Delivery.html" accesskey="4">Blocking to Test for Delivery of a Signal</a></li>
+<li><a href="Blocking-for-Handler.html" accesskey="5">Blocking Signals for a Handler</a></li>
+<li><a href="Checking-for-Pending-Signals.html" accesskey="6">Checking for Pending Signals</a></li>
+<li><a href="Remembering-a-Signal.html" accesskey="7">Remembering a Signal to Act On Later</a></li>
+</ul>
+</div>
+
+
+
+</body>
+</html>

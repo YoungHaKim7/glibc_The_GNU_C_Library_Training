@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Obfuscating Data (The GNU C Library)</title>
+
+<meta name="description" content="Obfuscating Data (The GNU C Library)">
+<meta name="keywords" content="Obfuscating Data (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="String-and-Array-Utilities.html" rel="up" title="String and Array Utilities">
+<link href="Encode-Binary-Data.html" rel="next" title="Encode Binary Data">
+<link href="Shuffling-Bytes.html" rel="prev" title="Shuffling Bytes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Obfuscating-Data">
+<div class="nav-panel">
+<p>
+Next: <a href="Encode-Binary-Data.html" accesskey="n" rel="next">Encode Binary Data</a>, Previous: <a href="Shuffling-Bytes.html" accesskey="p" rel="prev">Shuffling Bytes</a>, Up: <a href="String-and-Array-Utilities.html" accesskey="u" rel="up">String and Array Utilities</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Obfuscating-Data-1"><span>5.13 Obfuscating Data<a class="copiable-link" href="#Obfuscating-Data-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-Rot13"></a>
+
+<p>The <code class="code">memfrob</code> function reversibly obfuscates an array of binary
+data.  This is not true encryption; the obfuscated data still bears a
+clear relationship to the original, and no secret key is required to
+undo the obfuscation.  It is analogous to the &ldquo;Rot13&rdquo; cipher used on
+Usenet for obscuring offensive jokes, spoilers for works of fiction,
+and so on, but it can be applied to arbitrary binary data.
+</p>
+<p>Programs that need true encryption&mdash;a transformation that completely
+obscures the original and cannot be reversed without knowledge of a
+secret key&mdash;should use a dedicated cryptography library, such as
+<a class="uref" href="https://www.gnu.org/software/libgcrypt/">libgcrypt</a>.
+</p>
+<p>Programs that need to <em class="emph">destroy</em> data should use
+<code class="code">explicit_bzero</code> (see <a class="pxref" href="Erasing-Sensitive-Data.html">Erasing Sensitive Data</a>), or possibly
+<code class="code">strfry</code> (see <a class="pxref" href="Shuffling-Bytes.html">Shuffling Bytes</a>).
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-memfrob"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">memfrob</strong> <code class="def-code-arguments">(void *<var class="var">mem</var>, size_t <var class="var">length</var>)</code><a class="copiable-link" href="#index-memfrob"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>The function <code class="code">memfrob</code> obfuscates <var class="var">length</var> bytes of data
+beginning at <var class="var">mem</var>, in place.  Each byte is bitwise xor-ed with
+the binary pattern 00101010 (hexadecimal 0x2A).  The return value is
+always <var class="var">mem</var>.
+</p>
+<p><code class="code">memfrob</code> a second time on the same data returns it to
+its original state.
+</p>
+<p><strong class="strong">Portability Note:</strong>  This function is unique to the GNU C Library.
+It is declared in <samp class="file">string.h</samp>.
+</p></dd></dl>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Formatted Input Functions (The GNU C Library)</title>
+
+<meta name="description" content="Formatted Input Functions (The GNU C Library)">
+<meta name="keywords" content="Formatted Input Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Formatted-Input.html" rel="up" title="Formatted Input">
+<link href="Variable-Arguments-Input.html" rel="next" title="Variable Arguments Input">
+<link href="Other-Input-Conversions.html" rel="prev" title="Other Input Conversions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Formatted-Input-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Variable-Arguments-Input.html" accesskey="n" rel="next">Variable Arguments Input Functions</a>, Previous: <a href="Other-Input-Conversions.html" accesskey="p" rel="prev">Other Input Conversions</a>, Up: <a href="Formatted-Input.html" accesskey="u" rel="up">Formatted Input</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Formatted-Input-Functions-1"><span>12.14.8 Formatted Input Functions<a class="copiable-link" href="#Formatted-Input-Functions-1"> &para;</a></span></h4>
+
+<p>Here are the descriptions of the functions for performing formatted
+input.
+Prototypes for these functions are in the header file <samp class="file">stdio.h</samp>.
+<a class="index-entry-id" id="index-stdio_002eh-8"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-scanf"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">scanf</strong> <code class="def-code-arguments">(const char *<var class="var">template</var>, &hellip;)</code><a class="copiable-link" href="#index-scanf"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe corrupt heap
+| AC-Unsafe mem lock corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">scanf</code> function reads formatted input from the stream
+<code class="code">stdin</code> under the control of the template string <var class="var">template</var>.
+The optional arguments are pointers to the places which receive the
+resulting values.
+</p>
+<p>The return value is normally the number of successful assignments.  If
+an end-of-file condition is detected before any matches are performed,
+including matches against whitespace and literal characters in the
+template, then <code class="code">EOF</code> is returned.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wscanf"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">wscanf</strong> <code class="def-code-arguments">(const wchar_t *<var class="var">template</var>, &hellip;)</code><a class="copiable-link" href="#index-wscanf"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe corrupt heap
+| AC-Unsafe mem lock corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wscanf</code> function reads formatted input from the stream
+<code class="code">stdin</code> under the control of the template string <var class="var">template</var>.
+The optional arguments are pointers to the places which receive the
+resulting values.
+</p>
+<p>The return value is normally the number of successful assignments.  If
+an end-of-file condition is detected before any matches are performed,
+including matches against whitespace and literal characters in the
+template, then <code class="code">WEOF</code> is returned.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fscanf"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fscanf</strong> <code class="def-code-arguments">(FILE *<var class="var">stream</var>, const char *<var class="var">template</var>, &hellip;)</code><a class="copiable-link" href="#index-fscanf"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe corrupt heap
+| AC-Unsafe mem lock corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is just like <code class="code">scanf</code>, except that the input is read
+from the stream <var class="var">stream</var> instead of <code class="code">stdin</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fwscanf"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fwscanf</strong> <code class="def-code-arguments">(FILE *<var class="var">stream</var>, const wchar_t *<var class="var">template</var>, &hellip;)</code><a class="copiable-link" href="#index-fwscanf"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe corrupt heap
+| AC-Unsafe mem lock corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is just like <code class="code">wscanf</code>, except that the input is read
+from the stream <var class="var">stream</var> instead of <code class="code">stdin</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sscanf"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sscanf</strong> <code class="def-code-arguments">(const char *<var class="var">s</var>, const char *<var class="var">template</var>, &hellip;)</code><a class="copiable-link" href="#index-sscanf"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is like <code class="code">scanf</code>, except that the characters are taken from the
+null-terminated string <var class="var">s</var> instead of from a stream.  Reaching the
+end of the string is treated as an end-of-file condition.
+</p>
+<p>The behavior of this function is undefined if copying takes place
+between objects that overlap&mdash;for example, if <var class="var">s</var> is also given
+as an argument to receive a string read under control of the &lsquo;<samp class="samp">%s</samp>&rsquo;,
+&lsquo;<samp class="samp">%S</samp>&rsquo;, or &lsquo;<samp class="samp">%[</samp>&rsquo; conversion.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-swscanf"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">swscanf</strong> <code class="def-code-arguments">(const wchar_t *<var class="var">ws</var>, const wchar_t *<var class="var">template</var>, &hellip;)</code><a class="copiable-link" href="#index-swscanf"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is like <code class="code">wscanf</code>, except that the characters are taken from the
+null-terminated string <var class="var">ws</var> instead of from a stream.  Reaching the
+end of the string is treated as an end-of-file condition.
+</p>
+<p>The behavior of this function is undefined if copying takes place
+between objects that overlap&mdash;for example, if <var class="var">ws</var> is also given as
+an argument to receive a string read under control of the &lsquo;<samp class="samp">%s</samp>&rsquo;,
+&lsquo;<samp class="samp">%S</samp>&rsquo;, or &lsquo;<samp class="samp">%[</samp>&rsquo; conversion.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Variable-Arguments-Input.html">Variable Arguments Input Functions</a>, Previous: <a href="Other-Input-Conversions.html">Other Input Conversions</a>, Up: <a href="Formatted-Input.html">Formatted Input</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

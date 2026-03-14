@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Setting Address (The GNU C Library)</title>
+
+<meta name="description" content="Setting Address (The GNU C Library)">
+<meta name="keywords" content="Setting Address (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Socket-Addresses.html" rel="up" title="Socket Addresses">
+<link href="Reading-Address.html" rel="next" title="Reading Address">
+<link href="Address-Formats.html" rel="prev" title="Address Formats">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Setting-Address">
+<div class="nav-panel">
+<p>
+Next: <a href="Reading-Address.html" accesskey="n" rel="next">Reading the Address of a Socket</a>, Previous: <a href="Address-Formats.html" accesskey="p" rel="prev">Address Formats</a>, Up: <a href="Socket-Addresses.html" accesskey="u" rel="up">Socket Addresses</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Setting-the-Address-of-a-Socket"><span>16.3.2 Setting the Address of a Socket<a class="copiable-link" href="#Setting-the-Address-of-a-Socket"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-sys_002fsocket_002eh-2"></a>
+<p>Use the <code class="code">bind</code> function to assign an address to a socket.  The
+prototype for <code class="code">bind</code> is in the header file <samp class="file">sys/socket.h</samp>.
+For examples of use, see <a class="ref" href="Local-Socket-Example.html">Example of Local-Namespace Sockets</a>, or see <a class="ref" href="Inet-Example.html">Internet Socket Example</a>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-bind"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">bind</strong> <code class="def-code-arguments">(int <var class="var">socket</var>, struct sockaddr *<var class="var">addr</var>, socklen_t <var class="var">length</var>)</code><a class="copiable-link" href="#index-bind"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">bind</code> function assigns an address to the socket
+<var class="var">socket</var>.  The <var class="var">addr</var> and <var class="var">length</var> arguments specify the
+address; the detailed format of the address depends on the namespace.
+The first part of the address is always the format designator, which
+specifies a namespace, and says that the address is in the format of
+that namespace.
+</p>
+<p>The return value is <code class="code">0</code> on success and <code class="code">-1</code> on failure.  The
+following <code class="code">errno</code> error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">socket</var> argument is not a valid file descriptor.
+</p>
+</dd>
+<dt><code class="code">ENOTSOCK</code></dt>
+<dd><p>The descriptor <var class="var">socket</var> is not a socket.
+</p>
+</dd>
+<dt><code class="code">EADDRNOTAVAIL</code></dt>
+<dd><p>The specified address is not available on this machine.
+</p>
+</dd>
+<dt><code class="code">EADDRINUSE</code></dt>
+<dd><p>Some other socket is already using the specified address.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The socket <var class="var">socket</var> already has an address.
+</p>
+</dd>
+<dt><code class="code">EACCES</code></dt>
+<dd><p>You do not have permission to access the requested address.  (In the
+Internet domain, only the super-user is allowed to specify a port number
+in the range 0 through <code class="code">IPPORT_RESERVED</code> minus one; see
+<a class="ref" href="Ports.html">Internet Ports</a>.)
+</p></dd>
+</dl>
+
+<p>Additional conditions may be possible depending on the particular namespace
+of the socket.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Reading-Address.html">Reading the Address of a Socket</a>, Previous: <a href="Address-Formats.html">Address Formats</a>, Up: <a href="Socket-Addresses.html">Socket Addresses</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

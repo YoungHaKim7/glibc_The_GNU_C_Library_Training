@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Unreading Idea (The GNU C Library)</title>
+
+<meta name="description" content="Unreading Idea (The GNU C Library)">
+<meta name="keywords" content="Unreading Idea (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Unreading.html" rel="up" title="Unreading">
+<link href="How-Unread.html" rel="next" title="How Unread">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Unreading-Idea">
+<div class="nav-panel">
+<p>
+Next: <a href="How-Unread.html" accesskey="n" rel="next">Using <code class="code">ungetc</code> To Do Unreading</a>, Up: <a href="Unreading.html" accesskey="u" rel="up">Unreading</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="What-Unreading-Means"><span>12.10.1 What Unreading Means<a class="copiable-link" href="#What-Unreading-Means"> &para;</a></span></h4>
+
+<p>Here is a pictorial explanation of unreading.  Suppose you have a
+stream reading a file that contains just six characters, the letters
+&lsquo;<samp class="samp">foobar</samp>&rsquo;.  Suppose you have read three characters so far.  The
+situation looks like this:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">f  o  o  b  a  r
+	 ^
+</pre></div>
+
+<p>so the next input character will be &lsquo;<samp class="samp">b</samp>&rsquo;.
+</p>
+<p>If instead of reading &lsquo;<samp class="samp">b</samp>&rsquo; you unread the letter &lsquo;<samp class="samp">o</samp>&rsquo;, you get a
+situation like this:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">f  o  o  b  a  r
+	 |
+      o--
+      ^
+</pre></div>
+
+<p>so that the next input characters will be &lsquo;<samp class="samp">o</samp>&rsquo; and &lsquo;<samp class="samp">b</samp>&rsquo;.
+</p>
+<p>If you unread &lsquo;<samp class="samp">9</samp>&rsquo; instead of &lsquo;<samp class="samp">o</samp>&rsquo;, you get this situation:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">f  o  o  b  a  r
+	 |
+      9--
+      ^
+</pre></div>
+
+<p>so that the next input characters will be &lsquo;<samp class="samp">9</samp>&rsquo; and &lsquo;<samp class="samp">b</samp>&rsquo;.
+</p>
+</div>
+
+
+
+</body>
+</html>

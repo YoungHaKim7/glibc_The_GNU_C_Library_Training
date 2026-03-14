@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Portable Allocation (The GNU C Library)</title>
+
+<meta name="description" content="Portable Allocation (The GNU C Library)">
+<meta name="keywords" content="Portable Allocation (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Unconstrained-Allocation.html" rel="up" title="Unconstrained Allocation">
+<link href="Freeing-after-Malloc.html" rel="next" title="Freeing after Malloc">
+<link href="Malloc-Examples.html" rel="prev" title="Malloc Examples">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Portable-Allocation">
+<div class="nav-panel">
+<p>
+Next: <a href="Freeing-after-Malloc.html" accesskey="n" rel="next">Freeing Memory Allocated with <code class="code">malloc</code></a>, Previous: <a href="Malloc-Examples.html" accesskey="p" rel="prev">Examples of <code class="code">malloc</code></a>, Up: <a href="Unconstrained-Allocation.html" accesskey="u" rel="up">Unconstrained Allocation</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Portable-Memory-Allocation"><span>3.2.3.3 Portable Memory Allocation<a class="copiable-link" href="#Portable-Memory-Allocation"> &para;</a></span></h4>
+
+<p>More care is needed when allocating memory in
+code intended to run on both GNU and non-GNU systems,
+or when a non-GNU replacement allocator is used (see <a class="pxref" href="Replacing-malloc.html">Replacing <code class="code">malloc</code></a>).
+When storage size is small or outlandishly large,
+or when storage is allocated for a less-common type,
+the POSIX and ISO C standards permit multiple behaviors.
+</p>
+<ul class="itemize mark-bullet">
+<li>In most systems, a successful <code class="code">malloc (0)</code>
+returns a non-null pointer to a newly allocated size-zero block.
+However, IBM AIX is unusual in that a successful <code class="code">malloc (0)</code>
+returns a null pointer, and this breaks common code such as the
+implementation of <code class="code">xmalloc</code> given in this manual.  See <a class="xref" href="Malloc-Examples.html">Examples of <code class="code">malloc</code></a>.
+Code intended to be portable to IBM AIX can use
+<code class="code">p = malloc (size | (size == 0))</code> instead of <code class="code">p = malloc (size)</code>,
+or if it does not mind a null pointer on success it can replace the following
+<code class="code">if (p == NULL) fatal (...);</code> with
+<code class="code">if (p == NULL &amp;&amp; size != 0) fatal (...);</code>.
+
+</li><li>In the GNU C Library, a failed <code class="code">malloc</code> call sets <code class="code">errno</code>,
+but ISO C does not require this and non-POSIX implementations
+need not set <code class="code">errno</code> when failing.
+
+</li><li>In the GNU C Library, <code class="code">malloc</code> always fails when <var class="var">size</var> exceeds
+<code class="code">PTRDIFF_MAX</code>, to avoid problems with programs that subtract
+pointers or use signed indexes.  Other implementations may succeed in
+this case, leading to undefined behavior later.
+
+</li><li>In the GNU C Library, <code class="code">malloc (<var class="var">size</var>)</code> returns a pointer that when
+converted to an integer is a multiple of <code class="code">alignof (max_align_t)</code>.
+Some other implementations may align the result only to what is needed for
+fundamentally-aligned objects of size at most <code class="code">max (<var class="var">size</var>, 1)</code>.
+For example, if <code class="code">alignof (max_align_t)</code> is 16 but smaller
+fundamentally-aligned objects all have alignment of at most 4,
+other implementations of <code class="code">malloc (15)</code> might return
+a pointer that is a multiple of 4 but not of 16 or even of 8.
+Portable code should therefore use a function like <code class="code">aligned_alloc</code>
+if it needs <code class="code">alignof (max_align_t)</code> alignment even for small allocations.
+
+</li><li>Although the GNU C Library&rsquo;s headers define only types with fundamental alignment,
+the C and POSIX standards require only the following types
+(if available) to have fundamental alignment:
+
+<blockquote class="quotation">
+<p><code class="code">char</code>;
+all integer types (including <code class="code">bool</code>);
+<code class="code">float</code>, <code class="code">double</code>, <code class="code">long double</code>;
+<code class="code">_Decimal32</code>, <code class="code">_Decimal64</code>, <code class="code">_Decimal128</code>;
+<code class="code">float _Complex</code>, <code class="code">double _Complex</code>, <code class="code">long double _Complex</code>;
+all enumerated types;
+all pointer types;
+all array types whose element types have fundamental alignment;
+all struct and union types whose element types all have
+fundamental alignment and that lack stricter alignment specifiers;
+<code class="code">va_list</code> (in <code class="code">&lt;stdarg.h&gt;</code>);
+<code class="code">fpos_t</code> (in <code class="code">&lt;stdio.h&gt;</code>);
+<code class="code">cnd_t</code>, <code class="code">thrd_t</code>, <code class="code">tss_t</code>, <code class="code">mtx_t</code>, <code class="code">once_flag</code>
+(in <code class="code">&lt;threads.h&gt;</code>);
+<code class="code">mbstate_t</code> (in <code class="code">&lt;wchar.h&gt;</code>).
+</p></blockquote>
+
+<p>In theory, portable code should not use <code class="code">malloc</code> to
+allocate storage containing types not in this list;
+it should instead use functions like <code class="code">aligned_alloc</code>.
+In practice, though, other implementations generally follow
+the GNU C Library&rsquo;s lead and define only types with fundamental alignment,
+and it is generally portable to use <code class="code">malloc</code> to allocate objects
+with types defined by the C library.
+</p></li></ul>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Freeing-after-Malloc.html">Freeing Memory Allocated with <code class="code">malloc</code></a>, Previous: <a href="Malloc-Examples.html">Examples of <code class="code">malloc</code></a>, Up: <a href="Unconstrained-Allocation.html">Unconstrained Allocation</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

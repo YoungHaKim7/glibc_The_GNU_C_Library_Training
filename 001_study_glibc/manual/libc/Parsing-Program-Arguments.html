@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Parsing Program Arguments (The GNU C Library)</title>
+
+<meta name="description" content="Parsing Program Arguments (The GNU C Library)">
+<meta name="keywords" content="Parsing Program Arguments (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Program-Arguments.html" rel="up" title="Program Arguments">
+<link href="Argument-Syntax.html" rel="prev" title="Argument Syntax">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Parsing-Program-Arguments">
+<div class="nav-panel">
+<p>
+Previous: <a href="Argument-Syntax.html" accesskey="p" rel="prev">Program Argument Syntax Conventions</a>, Up: <a href="Program-Arguments.html" accesskey="u" rel="up">Program Arguments</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Parsing-Program-Arguments-1"><span>26.1.2 Parsing Program Arguments<a class="copiable-link" href="#Parsing-Program-Arguments-1"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-program-arguments_002c-parsing"></a>
+<a class="index-entry-id" id="index-command-arguments_002c-parsing"></a>
+<a class="index-entry-id" id="index-parsing-program-arguments"></a>
+<p>If the syntax for the command line arguments to your program is simple
+enough, you can simply pick the arguments off from <var class="var">argv</var> by hand.
+But unless your program takes a fixed number of arguments, or all of the
+arguments are interpreted in the same way (as file names, for example),
+you are usually better off using <code class="code">getopt</code> (see <a class="pxref" href="Getopt.html">Parsing program options using <code class="code">getopt</code></a>) or
+<code class="code">argp_parse</code> (see <a class="pxref" href="Argp.html">Parsing Program Options with Argp</a>) to do the parsing.
+</p>
+<p><code class="code">getopt</code> is more standard (the short-option only version of it is a
+part of the POSIX standard), but using <code class="code">argp_parse</code> is often
+easier, both for very simple and very complex option structures, because
+it does more of the dirty work for you.
+</p>
+
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Absolute Priority (The GNU C Library)</title>
+
+<meta name="description" content="Absolute Priority (The GNU C Library)">
+<meta name="keywords" content="Absolute Priority (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Priority.html" rel="up" title="Priority">
+<link href="Realtime-Scheduling.html" rel="next" title="Realtime Scheduling">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Absolute-Priority">
+<div class="nav-panel">
+<p>
+Next: <a href="Realtime-Scheduling.html" accesskey="n" rel="next">Realtime Scheduling</a>, Up: <a href="Priority.html" accesskey="u" rel="up">Process CPU Priority And Scheduling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Absolute-Priority-1"><span>23.3.1 Absolute Priority<a class="copiable-link" href="#Absolute-Priority-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-absolute-priority"></a>
+<a class="index-entry-id" id="index-priority_002c-absolute"></a>
+
+<p>Every process has an absolute priority, and it is represented by a number.
+The higher the number, the higher the absolute priority.
+</p>
+<a class="index-entry-id" id="index-realtime-CPU-scheduling"></a>
+<p>On systems of the past, and most systems today, all processes have
+absolute priority 0 and this section is irrelevant.  In that case,
+See <a class="xref" href="Traditional-Scheduling.html">Traditional Scheduling</a>.  Absolute priorities were invented to
+accommodate realtime systems, in which it is vital that certain processes
+be able to respond to external events happening in real time, which
+means they cannot wait around while some other process that <em class="emph">wants
+to</em>, but doesn&rsquo;t <em class="emph">need to</em> run occupies the CPU.
+</p>
+<a class="index-entry-id" id="index-ready-to-run"></a>
+<a class="index-entry-id" id="index-preemptive-scheduling"></a>
+<p>When two processes are in contention to use the CPU at any instant, the
+one with the higher absolute priority always gets it.  This is true even if the
+process with the lower priority is already using the CPU (i.e., the
+scheduling is preemptive).  Of course, we&rsquo;re only talking about
+processes that are running or &ldquo;ready to run,&rdquo; which means they are
+ready to execute instructions right now.  When a process blocks to wait
+for something like I/O, its absolute priority is irrelevant.
+</p>
+<a class="index-entry-id" id="index-runnable-process"></a>
+<p><strong class="strong">NB:</strong>  The term &ldquo;runnable&rdquo; is a synonym for &ldquo;ready to run.&rdquo;
+</p>
+<p>When two processes are running or ready to run and both have the same
+absolute priority, it&rsquo;s more interesting.  In that case, who gets the
+CPU is determined by the scheduling policy.  If the processes have
+absolute priority 0, the traditional scheduling policy described in
+<a class="ref" href="Traditional-Scheduling.html">Traditional Scheduling</a> applies.  Otherwise, the policies described
+in <a class="ref" href="Realtime-Scheduling.html">Realtime Scheduling</a> apply.
+</p>
+<p>You normally give an absolute priority above 0 only to a process that
+can be trusted not to hog the CPU.  Such processes are designed to block
+(or terminate) after relatively short CPU runs.
+</p>
+<p>A process begins life with the same absolute priority as its parent
+process.  Functions described in <a class="ref" href="Basic-Scheduling-Functions.html">Basic Scheduling Functions</a> can
+change it.
+</p>
+<p>Only a privileged process can change a process&rsquo; absolute priority to
+something other than <code class="code">0</code>.  Only a privileged process or the
+target process&rsquo; owner can change its absolute priority at all.
+</p>
+<p>POSIX requires absolute priority values used with the realtime
+scheduling policies to be consecutive with a range of at least 32.  On
+Linux, they are 1 through 99.  The functions
+<code class="code">sched_get_priority_max</code> and <code class="code">sched_set_priority_min</code> portably
+tell you what the range is on a particular system.
+</p>
+
+<ul class="mini-toc">
+<li><a href="#Using-Absolute-Priority" accesskey="1">Using Absolute Priority</a></li>
+</ul>
+<div class="subsubsection-level-extent" id="Using-Absolute-Priority">
+<h4 class="subsubsection"><span>23.3.1.1 Using Absolute Priority<a class="copiable-link" href="#Using-Absolute-Priority"> &para;</a></span></h4>
+
+<p>One thing you must keep in mind when designing real time applications is
+that having higher absolute priority than any other process doesn&rsquo;t
+guarantee the process can run continuously.  Two things that can wreck a
+good CPU run are interrupts and page faults.
+</p>
+<p>Interrupt handlers live in that limbo between processes.  The CPU is
+executing instructions, but they aren&rsquo;t part of any process.  An
+interrupt will stop even the highest priority process.  So you must
+allow for slight delays and make sure that no device in the system has
+an interrupt handler that could cause too long a delay between
+instructions for your process.
+</p>
+<p>Similarly, a page fault causes what looks like a straightforward
+sequence of instructions to take a long time.  The fact that other
+processes get to run while the page faults in is of no consequence,
+because as soon as the I/O is complete, the higher priority process will
+kick them out and run again, but the wait for the I/O itself could be a
+problem.  To neutralize this threat, use <code class="code">mlock</code> or
+<code class="code">mlockall</code>.
+</p>
+<p>There are a few ramifications of the absoluteness of this priority on a
+single-CPU system that you need to keep in mind when you choose to set a
+priority and also when you&rsquo;re working on a program that runs with high
+absolute priority.  Consider a process that has higher absolute priority
+than any other process in the system and due to a bug in its program, it
+gets into an infinite loop.  It will never cede the CPU.  You can&rsquo;t run
+a command to kill it because your command would need to get the CPU in
+order to run.  The errant program is in complete control.  It controls
+the vertical, it controls the horizontal.
+</p>
+<p>There are two ways to avoid this: 1) keep a shell running somewhere with
+a higher absolute priority or 2) keep a controlling terminal attached to
+the high priority process group.  All the priority in the world won&rsquo;t
+stop an interrupt handler from running and delivering a signal to the
+process if you hit Control-C.
+</p>
+<p>Some systems use absolute priority as a means of allocating a fixed
+percentage of CPU time to a process.  To do this, a super high priority
+privileged process constantly monitors the process&rsquo; CPU usage and raises
+its absolute priority when the process isn&rsquo;t getting its entitled share
+and lowers it when the process is exceeding it.
+</p>
+<p><strong class="strong">NB:</strong>  The absolute priority is sometimes called the &ldquo;static
+priority.&rdquo;  We don&rsquo;t use that term in this manual because it misses the
+most important feature of the absolute priority:  its absoluteness.
+</p>
+
+</div>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Realtime-Scheduling.html">Realtime Scheduling</a>, Up: <a href="Priority.html">Process CPU Priority And Scheduling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

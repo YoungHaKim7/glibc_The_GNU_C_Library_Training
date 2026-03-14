@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Search Functions (The GNU C Library)</title>
+
+<meta name="description" content="Search Functions (The GNU C Library)">
+<meta name="keywords" content="Search Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="String-and-Array-Utilities.html" rel="up" title="String and Array Utilities">
+<link href="Finding-Tokens-in-a-String.html" rel="next" title="Finding Tokens in a String">
+<link href="Collation-Functions.html" rel="prev" title="Collation Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Search-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Finding-Tokens-in-a-String.html" accesskey="n" rel="next">Finding Tokens in a String</a>, Previous: <a href="Collation-Functions.html" accesskey="p" rel="prev">Collation Functions</a>, Up: <a href="String-and-Array-Utilities.html" accesskey="u" rel="up">String and Array Utilities</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Search-Functions-1"><span>5.9 Search Functions<a class="copiable-link" href="#Search-Functions-1"> &para;</a></span></h3>
+
+<p>This section describes library functions which perform various kinds
+of searching operations on strings and arrays.  These functions are
+declared in the header file <samp class="file">string.h</samp>.
+<a class="index-entry-id" id="index-string_002eh-7"></a>
+<a class="index-entry-id" id="index-search-functions-_0028for-strings_0029"></a>
+<a class="index-entry-id" id="index-string-search-functions"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-memchr"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">memchr</strong> <code class="def-code-arguments">(const void *<var class="var">block</var>, int <var class="var">c</var>, size_t <var class="var">size</var>)</code><a class="copiable-link" href="#index-memchr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function finds the first occurrence of the byte <var class="var">c</var> (converted
+to an <code class="code">unsigned char</code>) in the initial <var class="var">size</var> bytes of the
+object beginning at <var class="var">block</var>.  The return value is a pointer to the
+located byte, or a null pointer if no match was found.
+</p>
+<p>In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and <var class="var">block</var> has a type
+that is a pointer to a <code class="code">const</code>-qualified object type,
+<code class="code">memchr</code> returns <code class="code">const void *</code>.
+As an obsolescent feature, if the macro is suppressed
+the external function returns <code class="code">void *</code> regardless.
+The function is also qualifier-generic in C++.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wmemchr"><span class="category-def">Function: </span><span><code class="def-type">wchar_t *</code> <strong class="def-name">wmemchr</strong> <code class="def-code-arguments">(const wchar_t *<var class="var">block</var>, wchar_t <var class="var">wc</var>, size_t <var class="var">size</var>)</code><a class="copiable-link" href="#index-wmemchr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function finds the first occurrence of the wide character <var class="var">wc</var>
+in the initial <var class="var">size</var> wide characters of the object beginning at
+<var class="var">block</var>.  The return value is a pointer to the located wide
+character, or a null pointer if no match was found.
+</p>
+<p>In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and <var class="var">block</var> has a type
+that is a pointer to a <code class="code">const</code>-qualified object type,
+<code class="code">wmemchr</code> returns <code class="code">const wchar_t *</code>.
+As an obsolescent feature, if the macro is suppressed
+the external function returns <code class="code">wchar_t *</code> regardless.
+The function is also qualifier-generic in C++.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-rawmemchr"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">rawmemchr</strong> <code class="def-code-arguments">(const void *<var class="var">block</var>, int <var class="var">c</var>)</code><a class="copiable-link" href="#index-rawmemchr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Often the <code class="code">memchr</code> function is used with the knowledge that the
+byte <var class="var">c</var> is available in the memory block specified by the
+parameters.  But this means that the <var class="var">size</var> parameter is not really
+needed and that the tests performed with it at runtime (to check whether
+the end of the block is reached) are not needed.
+</p>
+<p>The <code class="code">rawmemchr</code> function exists for just this situation which is
+surprisingly frequent.  The interface is similar to <code class="code">memchr</code> except
+that the <var class="var">size</var> parameter is missing.  The function will look beyond
+the end of the block pointed to by <var class="var">block</var> in case the programmer
+made an error in assuming that the byte <var class="var">c</var> is present in the block.
+In this case the result is unspecified.  Otherwise the return value is a
+pointer to the located byte.
+</p>
+<p>When looking for the end of a string, use <code class="code">strchr</code>.
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-memrchr"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">memrchr</strong> <code class="def-code-arguments">(const void *<var class="var">block</var>, int <var class="var">c</var>, size_t <var class="var">size</var>)</code><a class="copiable-link" href="#index-memrchr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">memrchr</code> is like <code class="code">memchr</code>, except that it searches
+backwards from the end of the block defined by <var class="var">block</var> and <var class="var">size</var>
+(instead of forwards from the front).
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strchr"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">strchr</strong> <code class="def-code-arguments">(const char *<var class="var">string</var>, int <var class="var">c</var>)</code><a class="copiable-link" href="#index-strchr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">strchr</code> function finds the first occurrence of the byte
+<var class="var">c</var> (converted to a <code class="code">char</code>) in the string
+beginning at <var class="var">string</var>.  The return value is a pointer to the located
+byte, or a null pointer if no match was found.
+</p>
+<p>For example,
+</p><div class="example smallexample">
+<pre class="example-preformatted">strchr (&quot;hello, world&quot;, 'l')
+    &rArr; &quot;llo, world&quot;
+strchr (&quot;hello, world&quot;, '?')
+    &rArr; NULL
+</pre></div>
+
+<p>The terminating null byte is considered to be part of the string,
+so you can use this function get a pointer to the end of a string by
+specifying zero as the value of the <var class="var">c</var> argument.
+</p>
+<p>When <code class="code">strchr</code> returns a null pointer, it does not let you know
+the position of the terminating null byte it has found.  If you
+need that information, it is better (but less portable) to use
+<code class="code">strchrnul</code> than to search for it a second time.
+</p>
+<p>In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and <var class="var">string</var> has a type
+that is a pointer to a <code class="code">const</code>-qualified object type,
+<code class="code">strchr</code> returns <code class="code">const char *</code>.
+As an obsolescent feature, if the macro is suppressed
+the external function returns <code class="code">char *</code> regardless.
+The function is also qualifier-generic in C++.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcschr"><span class="category-def">Function: </span><span><code class="def-type">wchar_t *</code> <strong class="def-name">wcschr</strong> <code class="def-code-arguments">(const wchar_t *<var class="var">wstring</var>, wchar_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-wcschr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wcschr</code> function finds the first occurrence of the wide
+character <var class="var">wc</var> in the wide string
+beginning at <var class="var">wstring</var>.  The return value is a pointer to the
+located wide character, or a null pointer if no match was found.
+</p>
+<p>The terminating null wide character is considered to be part of the wide
+string, so you can use this function get a pointer to the end
+of a wide string by specifying a null wide character as the
+value of the <var class="var">wc</var> argument.  It would be better (but less portable)
+to use <code class="code">wcschrnul</code> in this case, though.
+</p>
+<p>In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and <var class="var">wstring</var> has a type
+that is a pointer to a <code class="code">const</code>-qualified object type,
+<code class="code">wcschr</code> returns <code class="code">const wchar_t *</code>.
+As an obsolescent feature, if the macro is suppressed
+the external function returns <code class="code">wchar_t *</code> regardless.
+The function is also qualifier-generic in C++.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strchrnul"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">strchrnul</strong> <code class="def-code-arguments">(const char *<var class="var">string</var>, int <var class="var">c</var>)</code><a class="copiable-link" href="#index-strchrnul"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">strchrnul</code> is the same as <code class="code">strchr</code> except that if it does
+not find the byte, it returns a pointer to string&rsquo;s terminating
+null byte rather than a null pointer.
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcschrnul"><span class="category-def">Function: </span><span><code class="def-type">wchar_t *</code> <strong class="def-name">wcschrnul</strong> <code class="def-code-arguments">(const wchar_t *<var class="var">wstring</var>, wchar_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-wcschrnul"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">wcschrnul</code> is the same as <code class="code">wcschr</code> except that if it does not
+find the wide character, it returns a pointer to the wide string&rsquo;s
+terminating null wide character rather than a null pointer.
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+
+<p>One useful, but unusual, use of the <code class="code">strchr</code>
+function is when one wants to have a pointer pointing to the null byte
+terminating a string.  This is often written in this way:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">  s += strlen (s);
+</pre></div>
+
+<p>This is almost optimal but the addition operation duplicated a bit of
+the work already done in the <code class="code">strlen</code> function.  A better solution
+is this:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">  s = strchr (s, '\0');
+</pre></div>
+
+<p>There is no restriction on the second parameter of <code class="code">strchr</code> so it
+could very well also be zero.  Those readers thinking very
+hard about this might now point out that the <code class="code">strchr</code> function is
+more expensive than the <code class="code">strlen</code> function since we have two abort
+criteria.  This is right.  But in the GNU C Library the implementation of
+<code class="code">strchr</code> is optimized in a special way so that <code class="code">strchr</code>
+actually is faster.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strrchr"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">strrchr</strong> <code class="def-code-arguments">(const char *<var class="var">string</var>, int <var class="var">c</var>)</code><a class="copiable-link" href="#index-strrchr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">strrchr</code> is like <code class="code">strchr</code>, except that it searches
+backwards from the end of the string <var class="var">string</var> (instead of forwards
+from the front).
+</p>
+<p>For example,
+</p><div class="example smallexample">
+<pre class="example-preformatted">strrchr (&quot;hello, world&quot;, 'l')
+    &rArr; &quot;ld&quot;
+</pre></div>
+
+<p>In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and <var class="var">string</var> has a type
+that is a pointer to a <code class="code">const</code>-qualified object type,
+<code class="code">strrchr</code> returns <code class="code">const char *</code>.
+As an obsolescent feature, if the macro is suppressed
+the external function returns <code class="code">char *</code> regardless.
+The function is also qualifier-generic in C++.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcsrchr"><span class="category-def">Function: </span><span><code class="def-type">wchar_t *</code> <strong class="def-name">wcsrchr</strong> <code class="def-code-arguments">(const wchar_t *<var class="var">wstring</var>, wchar_t <var class="var">wc</var>)</code><a class="copiable-link" href="#index-wcsrchr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The function <code class="code">wcsrchr</code> is like <code class="code">wcschr</code>, except that it searches
+backwards from the end of the string <var class="var">wstring</var> (instead of forwards
+from the front).
+</p>
+<p>In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and <var class="var">wstring</var> has a type
+that is a pointer to a <code class="code">const</code>-qualified object type,
+<code class="code">wcsrchr</code> returns <code class="code">const wchar_t *</code>.
+As an obsolescent feature, if the macro is suppressed
+the external function returns <code class="code">wchar_t *</code> regardless.
+The function is also qualifier-generic in C++.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strstr"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">strstr</strong> <code class="def-code-arguments">(const char *<var class="var">haystack</var>, const char *<var class="var">needle</var>)</code><a class="copiable-link" href="#index-strstr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is like <code class="code">strchr</code>, except that it searches <var class="var">haystack</var> for a
+substring <var class="var">needle</var> rather than just a single byte.  It
+returns a pointer into the string <var class="var">haystack</var> that is the first
+byte of the substring, or a null pointer if no match was found.  If
+<var class="var">needle</var> is an empty string, the function returns <var class="var">haystack</var>.
+</p>
+<p>For example,
+</p><div class="example smallexample">
+<pre class="example-preformatted">strstr (&quot;hello, world&quot;, &quot;l&quot;)
+    &rArr; &quot;llo, world&quot;
+strstr (&quot;hello, world&quot;, &quot;wo&quot;)
+    &rArr; &quot;world&quot;
+</pre></div>
+
+<p>In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and <var class="var">haystack</var> has a type
+that is a pointer to a <code class="code">const</code>-qualified object type,
+<code class="code">strstr</code> returns <code class="code">const char *</code>.
+As an obsolescent feature, if the macro is suppressed
+the external function returns <code class="code">char *</code> regardless.
+The function is also qualifier-generic in C++.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcsstr"><span class="category-def">Function: </span><span><code class="def-type">wchar_t *</code> <strong class="def-name">wcsstr</strong> <code class="def-code-arguments">(const wchar_t *<var class="var">haystack</var>, const wchar_t *<var class="var">needle</var>)</code><a class="copiable-link" href="#index-wcsstr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is like <code class="code">wcschr</code>, except that it searches <var class="var">haystack</var> for a
+substring <var class="var">needle</var> rather than just a single wide character.  It
+returns a pointer into the string <var class="var">haystack</var> that is the first wide
+character of the substring, or a null pointer if no match was found.  If
+<var class="var">needle</var> is an empty string, the function returns <var class="var">haystack</var>.
+</p>
+<p>In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and <var class="var">haystack</var> has a type
+that is a pointer to a <code class="code">const</code>-qualified object type,
+<code class="code">wcsstr</code> returns <code class="code">const wchar_t *</code>.
+As an obsolescent feature, if the macro is suppressed
+the external function returns <code class="code">wchar_t *</code> regardless.
+The function is also qualifier-generic in C++.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcswcs"><span class="category-def">Function: </span><span><code class="def-type">wchar_t *</code> <strong class="def-name">wcswcs</strong> <code class="def-code-arguments">(const wchar_t *<var class="var">haystack</var>, const wchar_t *<var class="var">needle</var>)</code><a class="copiable-link" href="#index-wcswcs"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">wcswcs</code> is a deprecated alias for <code class="code">wcsstr</code>.  This is the
+name originally used in the X/Open Portability Guide before the
+Amendment&nbsp;1<!-- /@w --> to ISO&nbsp;C90<!-- /@w --> was published.
+</p></dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strcasestr"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">strcasestr</strong> <code class="def-code-arguments">(const char *<var class="var">haystack</var>, const char *<var class="var">needle</var>)</code><a class="copiable-link" href="#index-strcasestr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is like <code class="code">strstr</code>, except that it ignores case in searching for
+the substring.   Like <code class="code">strcasecmp</code>, it is locale dependent how
+uppercase and lowercase characters are related, and arguments are
+multibyte strings.
+</p>
+
+<p>For example,
+</p><div class="example smallexample">
+<pre class="example-preformatted">strcasestr (&quot;hello, world&quot;, &quot;L&quot;)
+    &rArr; &quot;llo, world&quot;
+strcasestr (&quot;hello, World&quot;, &quot;wo&quot;)
+    &rArr; &quot;World&quot;
+</pre></div>
+</dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-memmem"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">memmem</strong> <code class="def-code-arguments">(const void *<var class="var">haystack</var>, size_t <var class="var">haystack-len</var>,<br>const void *<var class="var">needle</var>, size_t <var class="var">needle-len</var>)</code><a class="copiable-link" href="#index-memmem"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is like <code class="code">strstr</code>, but <var class="var">needle</var> and <var class="var">haystack</var> are byte
+arrays rather than strings.  <var class="var">needle-len</var> is the
+length of <var class="var">needle</var> and <var class="var">haystack-len</var> is the length of
+<var class="var">haystack</var>.
+</p>
+<p>This function was originally a GNU extension, but was added in
+POSIX.1-2024.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strspn"><span class="category-def">Function: </span><span><code class="def-type">size_t</code> <strong class="def-name">strspn</strong> <code class="def-code-arguments">(const char *<var class="var">string</var>, const char *<var class="var">skipset</var>)</code><a class="copiable-link" href="#index-strspn"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">strspn</code> (&ldquo;string span&rdquo;) function returns the length of the
+initial substring of <var class="var">string</var> that consists entirely of bytes that
+are members of the set specified by the string <var class="var">skipset</var>.  The order
+of the bytes in <var class="var">skipset</var> is not important.
+</p>
+<p>For example,
+</p><div class="example smallexample">
+<pre class="example-preformatted">strspn (&quot;hello, world&quot;, &quot;abcdefghijklmnopqrstuvwxyz&quot;)
+    &rArr; 5
+</pre></div>
+
+<p>In a multibyte string, characters consisting of
+more than one byte are not treated as single entities.  Each byte is treated
+separately.  The function is not locale-dependent.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcsspn"><span class="category-def">Function: </span><span><code class="def-type">size_t</code> <strong class="def-name">wcsspn</strong> <code class="def-code-arguments">(const wchar_t *<var class="var">wstring</var>, const wchar_t *<var class="var">skipset</var>)</code><a class="copiable-link" href="#index-wcsspn"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wcsspn</code> (&ldquo;wide character string span&rdquo;) function returns the
+length of the initial substring of <var class="var">wstring</var> that consists entirely
+of wide characters that are members of the set specified by the string
+<var class="var">skipset</var>.  The order of the wide characters in <var class="var">skipset</var> is not
+important.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strcspn"><span class="category-def">Function: </span><span><code class="def-type">size_t</code> <strong class="def-name">strcspn</strong> <code class="def-code-arguments">(const char *<var class="var">string</var>, const char *<var class="var">stopset</var>)</code><a class="copiable-link" href="#index-strcspn"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">strcspn</code> (&ldquo;string complement span&rdquo;) function returns the length
+of the initial substring of <var class="var">string</var> that consists entirely of bytes
+that are <em class="emph">not</em> members of the set specified by the string <var class="var">stopset</var>.
+(In other words, it returns the offset of the first byte in <var class="var">string</var>
+that is a member of the set <var class="var">stopset</var>.)
+</p>
+<p>For example,
+</p><div class="example smallexample">
+<pre class="example-preformatted">strcspn (&quot;hello, world&quot;, &quot; \t\n,.;!?&quot;)
+    &rArr; 5
+</pre></div>
+
+<p>In a multibyte string, characters consisting of
+more than one byte are not treated as a single entities.  Each byte is treated
+separately.  The function is not locale-dependent.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcscspn"><span class="category-def">Function: </span><span><code class="def-type">size_t</code> <strong class="def-name">wcscspn</strong> <code class="def-code-arguments">(const wchar_t *<var class="var">wstring</var>, const wchar_t *<var class="var">stopset</var>)</code><a class="copiable-link" href="#index-wcscspn"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wcscspn</code> (&ldquo;wide character string complement span&rdquo;) function
+returns the length of the initial substring of <var class="var">wstring</var> that
+consists entirely of wide characters that are <em class="emph">not</em> members of the
+set specified by the string <var class="var">stopset</var>.  (In other words, it returns
+the offset of the first wide character in <var class="var">string</var> that is a member of
+the set <var class="var">stopset</var>.)
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strpbrk"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">strpbrk</strong> <code class="def-code-arguments">(const char *<var class="var">string</var>, const char *<var class="var">stopset</var>)</code><a class="copiable-link" href="#index-strpbrk"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">strpbrk</code> (&ldquo;string pointer break&rdquo;) function is related to
+<code class="code">strcspn</code>, except that it returns a pointer to the first byte
+in <var class="var">string</var> that is a member of the set <var class="var">stopset</var> instead of the
+length of the initial substring.  It returns a null pointer if no such
+byte from <var class="var">stopset</var> is found.
+</p>
+<p>For example,
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">strpbrk (&quot;hello, world&quot;, &quot; \t\n,.;!?&quot;)
+    &rArr; &quot;, world&quot;
+</pre></div>
+
+<p>In a multibyte string, characters consisting of
+more than one byte are not treated as single entities.  Each byte is treated
+separately.  The function is not locale-dependent.
+</p>
+<p>In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and <var class="var">string</var> has a type
+that is a pointer to a <code class="code">const</code>-qualified object type,
+<code class="code">strpbrk</code> returns <code class="code">const char *</code>.
+As an obsolescent feature, if the macro is suppressed
+the external function returns <code class="code">char *</code> regardless.
+The function is also qualifier-generic in C++.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcspbrk"><span class="category-def">Function: </span><span><code class="def-type">wchar_t *</code> <strong class="def-name">wcspbrk</strong> <code class="def-code-arguments">(const wchar_t *<var class="var">wstring</var>, const wchar_t *<var class="var">stopset</var>)</code><a class="copiable-link" href="#index-wcspbrk"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wcspbrk</code> (&ldquo;wide character string pointer break&rdquo;) function is
+related to <code class="code">wcscspn</code>, except that it returns a pointer to the first
+wide character in <var class="var">wstring</var> that is a member of the set
+<var class="var">stopset</var> instead of the length of the initial substring.  It
+returns a null pointer if no such wide character from <var class="var">stopset</var> is found.
+</p>
+<p>In ISO C23 and later, this function is qualifier-generic:
+that is, it is also implemented as a function-like macro,
+and when the macro is used and <var class="var">wstring</var> has a type
+that is a pointer to a <code class="code">const</code>-qualified object type,
+<code class="code">wcspbrk</code> returns <code class="code">const wchar_t *</code>.
+As an obsolescent feature, if the macro is suppressed
+the external function returns <code class="code">wchar_t *</code> regardless.
+The function is also qualifier-generic in C++.
+</p></dd></dl>
+
+
+<ul class="mini-toc">
+<li><a href="#Compatibility-String-Search-Functions" accesskey="1">Compatibility String Search Functions</a></li>
+</ul>
+<div class="subsection-level-extent" id="Compatibility-String-Search-Functions">
+<h4 class="subsection"><span>5.9.1 Compatibility String Search Functions<a class="copiable-link" href="#Compatibility-String-Search-Functions"> &para;</a></span></h4>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-index"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">index</strong> <code class="def-code-arguments">(const char *<var class="var">string</var>, int <var class="var">c</var>)</code><a class="copiable-link" href="#index-index"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">index</code> is another name for <code class="code">strchr</code>; they are exactly the same.
+New code should always use <code class="code">strchr</code> since this name is defined in
+ISO&nbsp;C<!-- /@w --> while <code class="code">index</code> is a BSD invention which never was available
+on System&nbsp;V<!-- /@w --> derived systems.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-rindex"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">rindex</strong> <code class="def-code-arguments">(const char *<var class="var">string</var>, int <var class="var">c</var>)</code><a class="copiable-link" href="#index-rindex"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">rindex</code> is another name for <code class="code">strrchr</code>; they are exactly the same.
+New code should always use <code class="code">strrchr</code> since this name is defined in
+ISO&nbsp;C<!-- /@w --> while <code class="code">rindex</code> is a BSD invention which never was available
+on System&nbsp;V<!-- /@w --> derived systems.
+</p></dd></dl>
+
+</div>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Finding-Tokens-in-a-String.html">Finding Tokens in a String</a>, Previous: <a href="Collation-Functions.html">Collation Functions</a>, Up: <a href="String-and-Array-Utilities.html">String and Array Utilities</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

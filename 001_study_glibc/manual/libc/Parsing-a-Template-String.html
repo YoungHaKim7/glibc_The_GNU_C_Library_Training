@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Parsing a Template String (The GNU C Library)</title>
+
+<meta name="description" content="Parsing a Template String (The GNU C Library)">
+<meta name="keywords" content="Parsing a Template String (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Formatted-Output.html" rel="up" title="Formatted Output">
+<link href="Example-of-Parsing.html" rel="next" title="Example of Parsing">
+<link href="Variable-Arguments-Output.html" rel="prev" title="Variable Arguments Output">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Parsing-a-Template-String">
+<div class="nav-panel">
+<p>
+Next: <a href="Example-of-Parsing.html" accesskey="n" rel="next">Example of Parsing a Template String</a>, Previous: <a href="Variable-Arguments-Output.html" accesskey="p" rel="prev">Variable Arguments Output Functions</a>, Up: <a href="Formatted-Output.html" accesskey="u" rel="up">Formatted Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Parsing-a-Template-String-1"><span>12.12.10 Parsing a Template String<a class="copiable-link" href="#Parsing-a-Template-String-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-parsing-a-template-string"></a>
+
+<p>You can use the function <code class="code">parse_printf_format</code> to obtain
+information about the number and types of arguments that are expected by
+a given template string.  This function permits interpreters that
+provide interfaces to <code class="code">printf</code> to avoid passing along invalid
+arguments from the user&rsquo;s program, which could cause a crash.
+</p>
+<p>All the symbols described in this section are declared in the header
+file <samp class="file">printf.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-parse_005fprintf_005fformat"><span class="category-def">Function: </span><span><code class="def-type">size_t</code> <strong class="def-name">parse_printf_format</strong> <code class="def-code-arguments">(const char *<var class="var">template</var>, size_t <var class="var">n</var>, int *<var class="var">argtypes</var>)</code><a class="copiable-link" href="#index-parse_005fprintf_005fformat"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns information about the number and types of
+arguments expected by the <code class="code">printf</code> template string <var class="var">template</var>.
+The information is stored in the array <var class="var">argtypes</var>; each element of
+this array describes one argument.  This information is encoded using
+the various &lsquo;<samp class="samp">PA_</samp>&rsquo; macros, listed below.
+</p>
+<p>The argument <var class="var">n</var> specifies the number of elements in the array
+<var class="var">argtypes</var>.  This is the maximum number of elements that
+<code class="code">parse_printf_format</code> will try to write.
+</p>
+<p><code class="code">parse_printf_format</code> returns the total number of arguments required
+by <var class="var">template</var>.  If this number is greater than <var class="var">n</var>, then the
+information returned describes only the first <var class="var">n</var> arguments.  If you
+want information about additional arguments, allocate a bigger
+array and call <code class="code">parse_printf_format</code> again.
+</p></dd></dl>
+
+<p>The argument types are encoded as a combination of a basic type and
+modifier flag bits.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-PA_005fFLAG_005fMASK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">PA_FLAG_MASK</strong><a class="copiable-link" href="#index-PA_005fFLAG_005fMASK"> &para;</a></span></dt>
+<dd>
+<p>This macro is a bitmask for the type modifier flag bits.  You can write
+the expression <code class="code">(argtypes[i] &amp; PA_FLAG_MASK)</code> to extract just the
+flag bits for an argument, or <code class="code">(argtypes[i] &amp; ~PA_FLAG_MASK)</code> to
+extract just the basic type code.
+</p></dd></dl>
+
+<p>Here are symbolic constants that represent the basic types; they stand
+for integer values.
+</p>
+<dl class="vtable">
+<dt><a id="index-PA_005fINT"></a><span><code class="code">PA_INT</code><a class="copiable-link" href="#index-PA_005fINT"> &para;</a></span></dt>
+<dd>
+<p>This specifies that the base type is <code class="code">int</code>.
+</p>
+</dd>
+<dt><a id="index-PA_005fCHAR"></a><span><code class="code">PA_CHAR</code><a class="copiable-link" href="#index-PA_005fCHAR"> &para;</a></span></dt>
+<dd>
+<p>This specifies that the base type is <code class="code">int</code>, cast to <code class="code">char</code>.
+</p>
+</dd>
+<dt><a id="index-PA_005fSTRING"></a><span><code class="code">PA_STRING</code><a class="copiable-link" href="#index-PA_005fSTRING"> &para;</a></span></dt>
+<dd>
+<p>This specifies that the base type is <code class="code">char *</code>, a null-terminated string.
+</p>
+</dd>
+<dt><a id="index-PA_005fPOINTER"></a><span><code class="code">PA_POINTER</code><a class="copiable-link" href="#index-PA_005fPOINTER"> &para;</a></span></dt>
+<dd>
+<p>This specifies that the base type is <code class="code">void *</code>, an arbitrary pointer.
+</p>
+</dd>
+<dt><a id="index-PA_005fFLOAT"></a><span><code class="code">PA_FLOAT</code><a class="copiable-link" href="#index-PA_005fFLOAT"> &para;</a></span></dt>
+<dd>
+<p>This specifies that the base type is <code class="code">float</code>.
+</p>
+</dd>
+<dt><a id="index-PA_005fDOUBLE"></a><span><code class="code">PA_DOUBLE</code><a class="copiable-link" href="#index-PA_005fDOUBLE"> &para;</a></span></dt>
+<dd>
+<p>This specifies that the base type is <code class="code">double</code>.
+</p>
+</dd>
+<dt><a id="index-PA_005fLAST"></a><span><code class="code">PA_LAST</code><a class="copiable-link" href="#index-PA_005fLAST"> &para;</a></span></dt>
+<dd>
+<p>You can define additional base types for your own programs as offsets
+from <code class="code">PA_LAST</code>.  For example, if you have data types &lsquo;<samp class="samp">foo</samp>&rsquo;
+and &lsquo;<samp class="samp">bar</samp>&rsquo; with their own specialized <code class="code">printf</code> conversions,
+you could define encodings for these types as:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">#define PA_FOO  PA_LAST
+#define PA_BAR  (PA_LAST + 1)
+</pre></div>
+</dd>
+</dl>
+
+<p>Here are the flag bits that modify a basic type.  They are combined with
+the code for the basic type using inclusive-or.
+</p>
+<dl class="vtable">
+<dt><a id="index-PA_005fFLAG_005fPTR"></a><span><code class="code">PA_FLAG_PTR</code><a class="copiable-link" href="#index-PA_005fFLAG_005fPTR"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, it indicates that the encoded type is a pointer to
+the base type, rather than an immediate value.
+For example, &lsquo;<samp class="samp">PA_INT|PA_FLAG_PTR</samp>&rsquo; represents the type &lsquo;<samp class="samp">int *</samp>&rsquo;.
+</p>
+</dd>
+<dt><a id="index-PA_005fFLAG_005fSHORT"></a><span><code class="code">PA_FLAG_SHORT</code><a class="copiable-link" href="#index-PA_005fFLAG_005fSHORT"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, it indicates that the base type is modified with
+<code class="code">short</code>.  (This corresponds to the &lsquo;<samp class="samp">h</samp>&rsquo; type modifier.)
+</p>
+</dd>
+<dt><a id="index-PA_005fFLAG_005fLONG"></a><span><code class="code">PA_FLAG_LONG</code><a class="copiable-link" href="#index-PA_005fFLAG_005fLONG"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, it indicates that the base type is modified with
+<code class="code">long</code>.  (This corresponds to the &lsquo;<samp class="samp">l</samp>&rsquo; type modifier.)
+</p>
+</dd>
+<dt><a id="index-PA_005fFLAG_005fLONG_005fLONG"></a><span><code class="code">PA_FLAG_LONG_LONG</code><a class="copiable-link" href="#index-PA_005fFLAG_005fLONG_005fLONG"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, it indicates that the base type is modified with
+<code class="code">long long</code>.  (This corresponds to the &lsquo;<samp class="samp">L</samp>&rsquo; type modifier.)
+</p>
+</dd>
+<dt><a id="index-PA_005fFLAG_005fLONG_005fDOUBLE"></a><span><code class="code">PA_FLAG_LONG_DOUBLE</code><a class="copiable-link" href="#index-PA_005fFLAG_005fLONG_005fDOUBLE"> &para;</a></span></dt>
+<dd>
+<p>This is a synonym for <code class="code">PA_FLAG_LONG_LONG</code>, used by convention with
+a base type of <code class="code">PA_DOUBLE</code> to indicate a type of <code class="code">long double</code>.
+</p></dd>
+</dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Example-of-Parsing.html">Example of Parsing a Template String</a>, Previous: <a href="Variable-Arguments-Output.html">Variable Arguments Output Functions</a>, Up: <a href="Formatted-Output.html">Formatted Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

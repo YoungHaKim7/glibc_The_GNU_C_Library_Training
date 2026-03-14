@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Editing Characters (The GNU C Library)</title>
+
+<meta name="description" content="Editing Characters (The GNU C Library)">
+<meta name="keywords" content="Editing Characters (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Special-Characters.html" rel="up" title="Special Characters">
+<link href="Signal-Characters.html" rel="next" title="Signal Characters">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+kbd.kbd {font-style: oblique}
+kbd.key {font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Editing-Characters">
+<div class="nav-panel">
+<p>
+Next: <a href="Signal-Characters.html" accesskey="n" rel="next">Characters that Cause Signals</a>, Up: <a href="Special-Characters.html" accesskey="u" rel="up">Special Characters</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Characters-for-Input-Editing"><span>17.5.9.1 Characters for Input Editing<a class="copiable-link" href="#Characters-for-Input-Editing"> &para;</a></span></h4>
+
+<p>These special characters are active only in canonical input mode.
+See <a class="xref" href="Canonical-or-Not.html">Two Styles of Input: Canonical or Not</a>.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-VEOF"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">VEOF</strong><a class="copiable-link" href="#index-VEOF"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-EOF-character"></a>
+<p>This is the subscript for the EOF character in the special control
+character array.  <code class="code"><var class="var">termios</var>.c_cc[VEOF]</code> holds the character
+itself.
+</p>
+<p>The EOF character is recognized only in canonical input mode.  It acts
+as a line terminator in the same way as a newline character, but if the
+EOF character is typed at the beginning of a line it causes <code class="code">read</code>
+to return a byte count of zero, indicating end-of-file.  The EOF
+character itself is discarded.
+</p>
+<p>Usually, the EOF character is <kbd class="kbd">C-d</kbd>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-VEOL"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">VEOL</strong><a class="copiable-link" href="#index-VEOL"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-EOL-character"></a>
+<p>This is the subscript for the EOL character in the special control
+character array.  <code class="code"><var class="var">termios</var>.c_cc[VEOL]</code> holds the character
+itself.
+</p>
+<p>The EOL character is recognized only in canonical input mode.  It acts
+as a line terminator, just like a newline character.  The EOL character
+is not discarded; it is read as the last character in the input line.
+</p>
+
+<p>You don&rsquo;t need to use the EOL character to make <kbd class="key">RET</kbd> end a line.
+Just set the ICRNL flag.  In fact, this is the default state of
+affairs.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-VEOL2"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">VEOL2</strong><a class="copiable-link" href="#index-VEOL2"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-EOL2-character"></a>
+<p>This is the subscript for the EOL2 character in the special control
+character array.  <code class="code"><var class="var">termios</var>.c_cc[VEOL2]</code> holds the character
+itself.
+</p>
+<p>The EOL2 character works just like the EOL character (see above), but it
+can be a different character.  Thus, you can specify two characters to
+terminate an input line, by setting EOL to one of them and EOL2 to the
+other.
+</p>
+<p>The EOL2 character is a BSD extension; it exists only on BSD systems
+and GNU/Linux and GNU/Hurd systems.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-VERASE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">VERASE</strong><a class="copiable-link" href="#index-VERASE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-ERASE-character"></a>
+<p>This is the subscript for the ERASE character in the special control
+character array.  <code class="code"><var class="var">termios</var>.c_cc[VERASE]</code> holds the
+character itself.
+</p>
+<p>The ERASE character is recognized only in canonical input mode.  When
+the user types the erase character, the previous character typed is
+discarded.  (If the terminal generates multibyte character sequences,
+this may cause more than one byte of input to be discarded.)  This
+cannot be used to erase past the beginning of the current line of text.
+The ERASE character itself is discarded.
+</p>
+<p>Usually, the ERASE character is <kbd class="key">DEL</kbd>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-VWERASE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">VWERASE</strong><a class="copiable-link" href="#index-VWERASE"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-WERASE-character"></a>
+<p>This is the subscript for the WERASE character in the special control
+character array.  <code class="code"><var class="var">termios</var>.c_cc[VWERASE]</code> holds the character
+itself.
+</p>
+<p>The WERASE character is recognized only in canonical mode.  It erases an
+entire word of prior input, and any whitespace after it; whitespace
+characters before the word are not erased.
+</p>
+<p>The definition of a &ldquo;word&rdquo; depends on the setting of the
+<code class="code">ALTWERASE</code> mode; see <a class="pxref" href="Local-Modes.html">Local Modes</a>.
+</p>
+<p>If the <code class="code">ALTWERASE</code> mode is not set, a word is defined as a sequence
+of any characters except space or tab.
+</p>
+<p>If the <code class="code">ALTWERASE</code> mode is set, a word is defined as a sequence of
+characters containing only letters, numbers, and underscores, optionally
+followed by one character that is not a letter, number, or underscore.
+</p>
+<p>The WERASE character is usually <kbd class="kbd">C-w</kbd>.
+</p>
+<p>This is a BSD extension.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-VKILL"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">VKILL</strong><a class="copiable-link" href="#index-VKILL"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-KILL-character"></a>
+<p>This is the subscript for the KILL character in the special control
+character array.  <code class="code"><var class="var">termios</var>.c_cc[VKILL]</code> holds the character
+itself.
+</p>
+<p>The KILL character is recognized only in canonical input mode.  When the
+user types the kill character, the entire contents of the current line
+of input are discarded.  The kill character itself is discarded too.
+</p>
+<p>The KILL character is usually <kbd class="kbd">C-u</kbd>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-VREPRINT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">VREPRINT</strong><a class="copiable-link" href="#index-VREPRINT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-REPRINT-character"></a>
+<p>This is the subscript for the REPRINT character in the special control
+character array.  <code class="code"><var class="var">termios</var>.c_cc[VREPRINT]</code> holds the character
+itself.
+</p>
+<p>The REPRINT character is recognized only in canonical mode.  It reprints
+the current input line.  If some asynchronous output has come while you
+are typing, this lets you see the line you are typing clearly again.
+</p>
+<p>The REPRINT character is usually <kbd class="kbd">C-r</kbd>.
+</p>
+<p>This is a BSD extension.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Signal-Characters.html">Characters that Cause Signals</a>, Up: <a href="Special-Characters.html">Special Characters</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

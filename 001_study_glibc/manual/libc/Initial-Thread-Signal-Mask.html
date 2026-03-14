@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Initial Thread Signal Mask (The GNU C Library)</title>
+
+<meta name="description" content="Initial Thread Signal Mask (The GNU C Library)">
+<meta name="keywords" content="Initial Thread Signal Mask (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Non_002dPOSIX-Extensions.html" rel="up" title="Non-POSIX Extensions">
+<link href="Thread-CPU-Affinity.html" rel="next" title="Thread CPU Affinity">
+<link href="Default-Thread-Attributes.html" rel="prev" title="Default Thread Attributes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Initial-Thread-Signal-Mask">
+<div class="nav-panel">
+<p>
+Next: <a href="Thread-CPU-Affinity.html" accesskey="n" rel="next">Thread CPU Affinity</a>, Previous: <a href="Default-Thread-Attributes.html" accesskey="p" rel="prev">Setting Process-wide defaults for thread attributes</a>, Up: <a href="Non_002dPOSIX-Extensions.html" accesskey="u" rel="up">Non-POSIX Extensions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Controlling-the-Initial-Signal-Mask-of-a-New-Thread"><span>36.2.9.2 Controlling the Initial Signal Mask of a New Thread<a class="copiable-link" href="#Controlling-the-Initial-Signal-Mask-of-a-New-Thread"> &para;</a></span></h4>
+
+<p>The GNU C Library provides a way to specify the initial signal mask of a
+thread created using <code class="code">pthread_create</code>, passing a thread attribute
+object configured for this purpose.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fattr_005fsetsigmask_005fnp"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_attr_setsigmask_np</strong> <code class="def-code-arguments">(pthread_attr_t *<var class="var">attr</var>, const sigset_t *<var class="var">sigmask</var>)</code><a class="copiable-link" href="#index-pthread_005fattr_005fsetsigmask_005fnp"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Change the initial signal mask specified by <var class="var">attr</var>.  If
+<var class="var">sigmask</var> is not <code class="code">NULL</code>, the initial signal mask for new
+threads created with <var class="var">attr</var> is set to <code class="code">*<var class="var">sigmask</var></code>.  If
+<var class="var">sigmask</var> is <code class="code">NULL</code>, <var class="var">attr</var> will no longer specify an
+explicit signal mask, so that the initial signal mask of the new
+thread is inherited from the thread that calls <code class="code">pthread_create</code>.
+</p>
+<p>This function returns zero on success, and <code class="code">ENOMEM</code> on memory
+allocation failure.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fattr_005fgetsigmask_005fnp"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_attr_getsigmask_np</strong> <code class="def-code-arguments">(const pthread_attr_t *<var class="var">attr</var>, sigset_t *<var class="var">sigmask</var>)</code><a class="copiable-link" href="#index-pthread_005fattr_005fgetsigmask_005fnp"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Retrieve the signal mask stored in <var class="var">attr</var> and copy it to
+<code class="code">*<var class="var">sigmask</var></code>.  If the signal mask has not been set, return
+the special constant <code class="code">PTHREAD_ATTR_NO_SIGMASK_NP</code>, otherwise
+return zero.
+</p>
+<p>Obtaining the signal mask only works if it has been previously stored
+by <code class="code">pthread_attr_setsigmask_np</code>.  For example, the
+<code class="code">pthread_getattr_np</code> function does not obtain the current signal
+mask of the specified thread, and <code class="code">pthread_attr_getsigmask_np</code>
+will subsequently report the signal mask as unset.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-PTHREAD_005fATTR_005fNO_005fSIGMASK_005fNP"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">PTHREAD_ATTR_NO_SIGMASK_NP</strong><a class="copiable-link" href="#index-PTHREAD_005fATTR_005fNO_005fSIGMASK_005fNP"> &para;</a></span></dt>
+<dd><p>The special value returned by <code class="code">pthread_attr_setsigmask_np</code> to
+indicate that no signal mask has been set for the attribute.
+</p></dd></dl>
+
+<p>It is possible to create a new thread with a specific signal mask
+without using these functions.  On the thread that calls
+<code class="code">pthread_create</code>, the required steps for the general case are:
+</p>
+<ol class="enumerate">
+<li> Mask all signals, and save the old signal mask, using
+<code class="code">pthread_sigmask</code>.  This ensures that the new thread will be
+created with all signals masked, so that no signals can be delivered
+to the thread until the desired signal mask is set.
+
+</li><li> Call <code class="code">pthread_create</code> to create the new thread, passing the
+desired signal mask to the thread start routine (which could be a
+wrapper function for the actual thread start routine).  It may be
+necessary to make a copy of the desired signal mask on the heap, so
+that the life-time of the copy extends to the point when the start
+routine needs to access the signal mask.
+
+</li><li> Restore the thread&rsquo;s signal mask, to the set that was saved in the
+first step.
+</li></ol>
+
+<p>The start routine for the created thread needs to locate the desired
+signal mask and use <code class="code">pthread_sigmask</code> to apply it to the thread.
+If the signal mask was copied to a heap allocation, the copy should be
+freed.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Thread-CPU-Affinity.html">Thread CPU Affinity</a>, Previous: <a href="Default-Thread-Attributes.html">Setting Process-wide defaults for thread attributes</a>, Up: <a href="Non_002dPOSIX-Extensions.html">Non-POSIX Extensions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Calculating Elapsed Time (The GNU C Library)</title>
+
+<meta name="description" content="Calculating Elapsed Time (The GNU C Library)">
+<meta name="keywords" content="Calculating Elapsed Time (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Date-and-Time.html" rel="up" title="Date and Time">
+<link href="Processor-And-CPU-Time.html" rel="next" title="Processor And CPU Time">
+<link href="Time-Types.html" rel="prev" title="Time Types">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Calculating-Elapsed-Time">
+<div class="nav-panel">
+<p>
+Next: <a href="Processor-And-CPU-Time.html" accesskey="n" rel="next">Processor And CPU Time</a>, Previous: <a href="Time-Types.html" accesskey="p" rel="prev">Time Types</a>, Up: <a href="Date-and-Time.html" accesskey="u" rel="up">Date and Time</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Calculating-Elapsed-Time-1"><span>22.3 Calculating Elapsed Time<a class="copiable-link" href="#Calculating-Elapsed-Time-1"> &para;</a></span></h3>
+
+<p>Often, one wishes to calculate an elapsed time as the difference
+between two simple calendar times.  The GNU C Library provides only one
+function for this purpose.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-difftime"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">difftime</strong> <code class="def-code-arguments">(time_t <var class="var">end</var>, time_t <var class="var">begin</var>)</code><a class="copiable-link" href="#index-difftime"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">difftime</code> function returns the number of seconds of elapsed
+time from calendar time <var class="var">begin</var> to calendar time <var class="var">end</var>, as
+a value of type <code class="code">double</code>.
+</p>
+<p>On POSIX-conformant systems, the advantage of using
+&lsquo;<samp class="samp">difftime (<var class="var">end</var>, <var class="var">begin</var>)</samp>&rsquo; over &lsquo;<samp class="samp"><var class="var">end</var> - <var class="var">begin</var></samp>&rsquo;
+is that it will not overflow even if
+<var class="var">end</var> and <var class="var">begin</var> are so far apart that a simple subtraction
+would overflow.  However, if they are so far apart that a <code class="code">double</code>
+cannot exactly represent the difference, the result will be inexact.
+</p>
+<p>On other systems, <code class="code">time_t</code> values might be encoded in a way that
+prevents subtraction from working directly, and then <code class="code">difftime</code>
+would be the only way to compute their difference.
+</p></dd></dl>
+
+<p>The GNU C Library does not provide any functions for computing the
+difference between two values of type <code class="code">struct&nbsp;timespec</code><!-- /@w --> or
+<code class="code">struct&nbsp;timeval</code><!-- /@w -->.  Here is one way to do this
+calculation by hand.  It works even on peculiar operating systems
+where the <code class="code">tv_sec</code> member has an unsigned type.
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">#include &lt;stdckdint.h&gt;
+#include &lt;time.h&gt;
+
+/* <span class="r">Put into *R the difference between X and Y.
+   Return true if overflow occurs, false otherwise.</span> */
+
+bool
+timespec_subtract (struct timespec *r,
+                   struct timespec x, struct timespec y)
+{
+  /* <span class="r">Compute nanoseconds, setting <var class="var">borrow</var> to 1 or 0
+     for propagation into seconds.</span> */
+  long int nsec_diff = x.tv_nsec - y.tv_nsec;
+  bool borrow = nsec_diff &lt; 0;
+  r-&gt;tv_nsec = nsec_diff + 1000000000 * borrow;
+
+  /* <span class="r">Compute seconds, returning true if this overflows.</span> */
+  bool v = ckd_sub (&amp;r-&gt;tv_sec, x.tv_sec, y.tv_sec);
+  return v ^ ckd_sub (&amp;r-&gt;tv_sec, r-&gt;tv_sec, borrow);
+}
+</pre></div>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Processor-And-CPU-Time.html">Processor And CPU Time</a>, Previous: <a href="Time-Types.html">Time Types</a>, Up: <a href="Date-and-Time.html">Date and Time</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

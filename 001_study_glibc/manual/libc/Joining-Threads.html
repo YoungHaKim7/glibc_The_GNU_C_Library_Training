@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Joining Threads (The GNU C Library)</title>
+
+<meta name="description" content="Joining Threads (The GNU C Library)">
+<meta name="keywords" content="Joining Threads (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Non_002dPOSIX-Extensions.html" rel="up" title="Non-POSIX Extensions">
+<link href="Thread-Names.html" rel="next" title="Thread Names">
+<link href="Thread-CPU-Affinity.html" rel="prev" title="Thread CPU Affinity">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Joining-Threads">
+<div class="nav-panel">
+<p>
+Next: <a href="Thread-Names.html" accesskey="n" rel="next">Thread Names</a>, Previous: <a href="Thread-CPU-Affinity.html" accesskey="p" rel="prev">Thread CPU Affinity</a>, Up: <a href="Non_002dPOSIX-Extensions.html" accesskey="u" rel="up">Non-POSIX Extensions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Wait-for-a-thread-to-terminate"><span>36.2.9.4 Wait for a thread to terminate<a class="copiable-link" href="#Wait-for-a-thread-to-terminate"> &para;</a></span></h4>
+
+<p>The GNU C Library provides several extensions to the <code class="code">pthread_join</code>
+function.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005ftryjoin_005fnp"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_tryjoin_np</strong> <code class="def-code-arguments">(pthread_t *<var class="var">thread</var>, void **<var class="var">thread_return</var>)</code><a class="copiable-link" href="#index-pthread_005ftryjoin_005fnp"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Behaves like <code class="code">pthread_join</code> except that it will return <code class="code">EBUSY</code>
+immediately if the thread specified by <var class="var">thread</var> has not yet terminated.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005ftimedjoin_005fnp"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_timedjoin_np</strong> <code class="def-code-arguments">(pthread_t *<var class="var">thread</var>, void **<var class="var">thread_return</var>, const struct timespec *<var class="var">abstime</var>)</code><a class="copiable-link" href="#index-pthread_005ftimedjoin_005fnp"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Behaves like <code class="code">pthread_tryjoin_np</code> except that it will block until the
+absolute time <var class="var">abstime</var> measured against <code class="code">CLOCK_REALTIME</code> is
+reached if the thread has not terminated by that time and return
+<code class="code">EBUSY</code>. If <var class="var">abstime</var> is equal to <code class="code">NULL</code> then the function
+will wait forever in the same way as <code class="code">pthread_join</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fclockjoin_005fnp"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_clockjoin_np</strong> <code class="def-code-arguments">(pthread_t *<var class="var">thread</var>, void **<var class="var">thread_return</var>, clockid_t <var class="var">clockid</var>, const struct timespec *<var class="var">abstime</var>)</code><a class="copiable-link" href="#index-pthread_005fclockjoin_005fnp"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Behaves like <code class="code">pthread_timedjoin_np</code> except that the absolute time in
+<var class="var">abstime</var> is measured against the clock specified by <var class="var">clockid</var>.
+Currently, <var class="var">clockid</var> must be either <code class="code">CLOCK_MONOTONIC</code> or
+<code class="code">CLOCK_REALTIME</code>.
+</p></dd></dl>
+
+<p>The <code class="code">sem_clockwait</code> function also works using a <code class="code">clockid_t</code>
+argument.  See <a class="xref" href="POSIX-Semaphores.html">POSIX Semaphores</a>.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Thread-Names.html">Thread Names</a>, Previous: <a href="Thread-CPU-Affinity.html">Thread CPU Affinity</a>, Up: <a href="Non_002dPOSIX-Extensions.html">Non-POSIX Extensions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

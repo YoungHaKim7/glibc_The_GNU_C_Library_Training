@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Selecting the Conversion (The GNU C Library)</title>
+
+<meta name="description" content="Selecting the Conversion (The GNU C Library)">
+<meta name="keywords" content="Selecting the Conversion (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Restartable-multibyte-conversion.html" rel="up" title="Restartable multibyte conversion">
+<link href="Keeping-the-state.html" rel="next" title="Keeping the state">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Selecting-the-Conversion">
+<div class="nav-panel">
+<p>
+Next: <a href="Keeping-the-state.html" accesskey="n" rel="next">Representing the state of the conversion</a>, Up: <a href="Restartable-multibyte-conversion.html" accesskey="u" rel="up">Restartable Multibyte Conversion Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Selecting-the-conversion-and-its-properties"><span>6.3.1 Selecting the conversion and its properties<a class="copiable-link" href="#Selecting-the-conversion-and-its-properties"> &para;</a></span></h4>
+
+<p>We already said above that the currently selected locale for the
+<code class="code">LC_CTYPE</code> category decides the conversion that is performed
+by the functions we are about to describe.  Each locale uses its own
+character set (given as an argument to <code class="code">localedef</code>) and this is the
+one assumed as the external multibyte encoding.  The wide character
+set is always UCS-4 in the GNU C Library.
+</p>
+<p>A characteristic of each multibyte character set is the maximum number
+of bytes that can be necessary to represent one character.  This
+information is quite important when writing code that uses the
+conversion functions (as shown in the examples below).
+The ISO&nbsp;C<!-- /@w --> standard defines two macros that provide this information.
+</p>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-MB_005fLEN_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">MB_LEN_MAX</strong><a class="copiable-link" href="#index-MB_005fLEN_005fMAX"> &para;</a></span></dt>
+<dd>
+<p><code class="code">MB_LEN_MAX</code> specifies the maximum number of bytes in the multibyte
+sequence for a single character in any of the supported locales.  It is
+a compile-time constant and is defined in <samp class="file">limits.h</samp>.
+<a class="index-entry-id" id="index-limits_002eh-1"></a>
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-MB_005fCUR_005fMAX"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">MB_CUR_MAX</strong><a class="copiable-link" href="#index-MB_005fCUR_005fMAX"> &para;</a></span></dt>
+<dd>
+<p><code class="code">MB_CUR_MAX</code> expands into a positive integer expression that is the
+maximum number of bytes in a multibyte character in the current locale.
+The value is never greater than <code class="code">MB_LEN_MAX</code>.  Unlike
+<code class="code">MB_LEN_MAX</code> this macro need not be a compile-time constant, and in
+the GNU C Library it is not.
+</p>
+<a class="index-entry-id" id="index-stdlib_002eh-6"></a>
+<p><code class="code">MB_CUR_MAX</code> is defined in <samp class="file">stdlib.h</samp>.
+</p></dd></dl>
+
+<p>Two different macros are necessary since strictly ISO&nbsp;C90<!-- /@w --> compilers
+do not allow variable length array definitions, but still it is desirable
+to avoid dynamic allocation.  This incomplete piece of code shows the
+problem:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">{
+  char buf[MB_LEN_MAX];
+  ssize_t len = 0;
+
+  while (! feof (fp))
+    {
+      fread (&amp;buf[len], 1, MB_CUR_MAX - len, fp);
+      /* <span class="r">... process</span> buf */
+      len -= used;
+    }
+}
+</pre></div>
+
+<p>The code in the inner loop is expected to have always enough bytes in
+the array <var class="var">buf</var> to convert one multibyte character.  The array
+<var class="var">buf</var> has to be sized statically since many compilers do not allow a
+variable size.  The <code class="code">fread</code> call makes sure that <code class="code">MB_CUR_MAX</code>
+bytes are always available in <var class="var">buf</var>.  Note that it isn&rsquo;t
+a problem if <code class="code">MB_CUR_MAX</code> is not a compile-time constant.
+</p>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Keeping-the-state.html">Representing the state of the conversion</a>, Up: <a href="Restartable-multibyte-conversion.html">Restartable Multibyte Conversion Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

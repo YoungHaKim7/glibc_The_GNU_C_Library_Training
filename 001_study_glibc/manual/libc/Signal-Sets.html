@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Signal Sets (The GNU C Library)</title>
+
+<meta name="description" content="Signal Sets (The GNU C Library)">
+<meta name="keywords" content="Signal Sets (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Blocking-Signals.html" rel="up" title="Blocking Signals">
+<link href="Process-Signal-Mask.html" rel="next" title="Process Signal Mask">
+<link href="Why-Block.html" rel="prev" title="Why Block">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Signal-Sets">
+<div class="nav-panel">
+<p>
+Next: <a href="Process-Signal-Mask.html" accesskey="n" rel="next">Process Signal Mask</a>, Previous: <a href="Why-Block.html" accesskey="p" rel="prev">Why Blocking Signals is Useful</a>, Up: <a href="Blocking-Signals.html" accesskey="u" rel="up">Blocking Signals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Signal-Sets-1"><span>25.7.2 Signal Sets<a class="copiable-link" href="#Signal-Sets-1"> &para;</a></span></h4>
+
+<p>All of the signal blocking functions use a data structure called a
+<em class="dfn">signal set</em> to specify what signals are affected.  Thus, every
+activity involves two stages: creating the signal set, and then passing
+it as an argument to a library function.
+<a class="index-entry-id" id="index-signal-set"></a>
+</p>
+<p>These facilities are declared in the header file <samp class="file">signal.h</samp>.
+<a class="index-entry-id" id="index-signal_002eh-7"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-sigset_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">sigset_t</strong><a class="copiable-link" href="#index-sigset_005ft"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">sigset_t</code> data type is used to represent a signal set.
+Internally, it may be implemented as either an integer or structure
+type.
+</p>
+<p>For portability, use only the functions described in this section to
+initialize, change, and retrieve information from <code class="code">sigset_t</code>
+objects&mdash;don&rsquo;t try to manipulate them directly.
+</p></dd></dl>
+
+<p>There are two ways to initialize a signal set.  You can initially
+specify it to be empty with <code class="code">sigemptyset</code> and then add specified
+signals individually.  Or you can specify it to be full with
+<code class="code">sigfillset</code> and then delete specified signals individually.
+</p>
+<p>You must always initialize the signal set with one of these two
+functions before using it in any other way.  Don&rsquo;t try to set all the
+signals explicitly because the <code class="code">sigset_t</code> object might include some
+other information (like a version field) that needs to be initialized as
+well.  (In addition, it&rsquo;s not wise to put into your program an
+assumption that the system has no signals aside from the ones you know
+about.)
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sigemptyset"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sigemptyset</strong> <code class="def-code-arguments">(sigset_t *<var class="var">set</var>)</code><a class="copiable-link" href="#index-sigemptyset"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function initializes the signal set <var class="var">set</var> to exclude all of the
+defined signals.  It always returns <code class="code">0</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sigfillset"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sigfillset</strong> <code class="def-code-arguments">(sigset_t *<var class="var">set</var>)</code><a class="copiable-link" href="#index-sigfillset"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function initializes the signal set <var class="var">set</var> to include
+all of the defined signals.  Again, the return value is <code class="code">0</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sigaddset"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sigaddset</strong> <code class="def-code-arguments">(sigset_t *<var class="var">set</var>, int <var class="var">signum</var>)</code><a class="copiable-link" href="#index-sigaddset"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function adds the signal <var class="var">signum</var> to the signal set <var class="var">set</var>.
+All <code class="code">sigaddset</code> does is modify <var class="var">set</var>; it does not block or
+unblock any signals.
+</p>
+<p>The return value is <code class="code">0</code> on success and <code class="code">-1</code> on failure.
+The following <code class="code">errno</code> error condition is defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">signum</var> argument doesn&rsquo;t specify a valid signal.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sigdelset"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sigdelset</strong> <code class="def-code-arguments">(sigset_t *<var class="var">set</var>, int <var class="var">signum</var>)</code><a class="copiable-link" href="#index-sigdelset"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function removes the signal <var class="var">signum</var> from the signal set
+<var class="var">set</var>.  All <code class="code">sigdelset</code> does is modify <var class="var">set</var>; it does not
+block or unblock any signals.  The return value and error conditions are
+the same as for <code class="code">sigaddset</code>.
+</p></dd></dl>
+
+<p>Finally, there is a function to test what signals are in a signal set:
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sigismember"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sigismember</strong> <code class="def-code-arguments">(const sigset_t *<var class="var">set</var>, int <var class="var">signum</var>)</code><a class="copiable-link" href="#index-sigismember"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">sigismember</code> function tests whether the signal <var class="var">signum</var> is
+a member of the signal set <var class="var">set</var>.  It returns <code class="code">1</code> if the signal
+is in the set, <code class="code">0</code> if not, and <code class="code">-1</code> if there is an error.
+</p>
+<p>The following <code class="code">errno</code> error condition is defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">signum</var> argument doesn&rsquo;t specify a valid signal.
+</p></dd>
+</dl>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Process-Signal-Mask.html">Process Signal Mask</a>, Previous: <a href="Why-Block.html">Why Blocking Signals is Useful</a>, Up: <a href="Blocking-Signals.html">Blocking Signals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

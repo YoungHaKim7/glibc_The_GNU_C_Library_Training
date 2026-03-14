@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Initial Signal Actions (The GNU C Library)</title>
+
+<meta name="description" content="Initial Signal Actions (The GNU C Library)">
+<meta name="keywords" content="Initial Signal Actions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Signal-Actions.html" rel="up" title="Signal Actions">
+<link href="Flags-for-Sigaction.html" rel="prev" title="Flags for Sigaction">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Initial-Signal-Actions">
+<div class="nav-panel">
+<p>
+Previous: <a href="Flags-for-Sigaction.html" accesskey="p" rel="prev">Flags for <code class="code">sigaction</code></a>, Up: <a href="Signal-Actions.html" accesskey="u" rel="up">Specifying Signal Actions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Initial-Signal-Actions-1"><span>25.3.6 Initial Signal Actions<a class="copiable-link" href="#Initial-Signal-Actions-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-initial-signal-actions"></a>
+
+<p>When a new process is created (see <a class="pxref" href="Creating-a-Process.html">Creating a Process</a>), it inherits
+handling of signals from its parent process.  However, when you load a
+new process image using the <code class="code">exec</code> function (see <a class="pxref" href="Executing-a-File.html">Executing a File</a>), any signals that you&rsquo;ve defined your own handlers for revert to
+their <code class="code">SIG_DFL</code> handling.  (If you think about it a little, this
+makes sense; the handler functions from the old program are specific to
+that program, and aren&rsquo;t even present in the address space of the new
+program image.)  Of course, the new program can establish its own
+handlers.
+</p>
+<p>When a program is run by a shell, the shell normally sets the initial
+actions for the child process to <code class="code">SIG_DFL</code> or <code class="code">SIG_IGN</code>, as
+appropriate.  It&rsquo;s a good idea to check to make sure that the shell has
+not set up an initial action of <code class="code">SIG_IGN</code> before you establish your
+own signal handlers.
+</p>
+<p>Here is an example of how to establish a handler for <code class="code">SIGHUP</code>, but
+not if <code class="code">SIGHUP</code> is currently ignored:
+</p>
+<div class="example smallexample">
+<div class="group"><pre class="example-preformatted">...
+struct sigaction temp;
+
+sigaction (SIGHUP, NULL, &amp;temp);
+
+if (temp.sa_handler != SIG_IGN)
+  {
+    temp.sa_handler = handle_sighup;
+    sigemptyset (&amp;temp.sa_mask);
+    sigaction (SIGHUP, &amp;temp, NULL);
+  }
+</pre></div></div>
+
+</div>
+
+
+
+</body>
+</html>

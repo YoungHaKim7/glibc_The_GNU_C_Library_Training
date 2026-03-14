@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Time Zone State (The GNU C Library)</title>
+
+<meta name="description" content="Time Zone State (The GNU C Library)">
+<meta name="keywords" content="Time Zone State (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Calendar-Time.html" rel="up" title="Calendar Time">
+<link href="Time-Functions-Example.html" rel="next" title="Time Functions Example">
+<link href="TZ-Variable.html" rel="prev" title="TZ Variable">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Time-Zone-State">
+<div class="nav-panel">
+<p>
+Next: <a href="Time-Functions-Example.html" accesskey="n" rel="next">Time Functions Example</a>, Previous: <a href="TZ-Variable.html" accesskey="p" rel="prev">Specifying the Time Zone with <code class="env">TZ</code></a>, Up: <a href="Calendar-Time.html" accesskey="u" rel="up">Calendar Time</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="State-Variables-for-Time-Zones"><span>22.5.7 State Variables for Time Zones<a class="copiable-link" href="#State-Variables-for-Time-Zones"> &para;</a></span></h4>
+
+<p>For compatibility with POSIX, the GNU C Library defines global state
+variables that depend on time zone rules specified by the <code class="env">TZ</code>
+environment variable.  However, these state variables are obsolescent
+and are planned to be removed in a future version of POSIX,
+and programs generally should avoid them because they are not
+thread-safe and their values are specified only when <code class="env">TZ</code> uses the
+proleptic format.  See <a class="xref" href="TZ-Variable.html">Specifying the Time Zone with <code class="env">TZ</code></a>.
+Programs should instead use the <code class="code">tm_gmtoff</code> and
+<code class="code">tm_zone</code> members of <code class="code">struct tm</code>.  See <a class="xref" href="Broken_002ddown-Time.html">Broken-down Time</a>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-tzset"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">tzset</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-tzset"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe env locale
+| AS-Unsafe heap lock
+| AC-Unsafe lock mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">tzset</code> function initializes the state variables from
+the value of the <code class="env">TZ</code> environment variable.
+It is not usually necessary for your program to call this function,
+partly because your program should not use the state variables,
+and partly because this function is called automatically
+when you use the time conversion functions <code class="code">localtime</code>,
+<code class="code">mktime</code>, <code class="code">strftime</code>, <code class="code">strftime_l</code>, and
+<code class="code">wcsftime</code>, or the deprecated function <code class="code">ctime</code>.
+Behavior is undefined if one thread accesses any of these variables directly
+while another thread is calling <code class="code">tzset</code> or any other function
+that is required or allowed to behave as if it called <code class="code">tzset</code>.
+</p></dd></dl>
+
+<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr def-block">
+<dt class="deftypevr deftypevar-alias-deftypevr def-line" id="index-tzname"><span class="category-def">Variable: </span><span><code class="def-type">char *</code> <strong class="def-name">tzname</strong> <code class="def-code-arguments">[2]</code><a class="copiable-link" href="#index-tzname"> &para;</a></span></dt>
+<dd>
+<p>The array <code class="code">tzname</code> contains two strings, which are
+abbreviations of time zones (standard and Daylight
+Saving) that the user has selected.  <code class="code">tzname[0]</code> abbreviates
+a standard time zone (for example, <code class="t">&quot;EST&quot;</code>), and <code class="code">tzname[1]</code>
+abbreviates a time zone when daylight saving time is in use (for
+example, <code class="t">&quot;EDT&quot;</code>).  These correspond to the <var class="var">std</var> and <var class="var">dst</var>
+strings (respectively) when the <code class="env">TZ</code> environment variable
+uses the proleptic format.
+The string values are unspecified if <code class="env">TZ</code> uses the geographical format,
+so it is generally better to use the broken-down time structure&rsquo;s
+<code class="code">tm_zone</code> member instead.
+</p>
+<p>In the GNU C Library, the strings have a storage lifetime that lasts indefinitely;
+on some other platforms, the lifetime lasts only until <code class="env">TZ</code> is changed.
+</p>
+<p>The <code class="code">tzname</code> array is initialized by <code class="code">tzset</code>.
+Though the strings are declared as <code class="code">char *</code>
+the user must refrain from modifying them.
+Modifying the strings will almost certainly lead to trouble.
+</p>
+</dd></dl>
+
+<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr def-block">
+<dt class="deftypevr deftypevar-alias-deftypevr def-line" id="index-timezone"><span class="category-def">Variable: </span><span><code class="def-type">long int</code> <strong class="def-name">timezone</strong><a class="copiable-link" href="#index-timezone"> &para;</a></span></dt>
+<dd>
+<p>This contains the difference between UTC and local standard
+time, in seconds west of the Prime Meridian.
+For example, in the U.S. Eastern time
+zone, the value is <code class="code">5*60*60</code>.  Unlike the <code class="code">tm_gmtoff</code> member
+of the broken-down time structure, this value is not adjusted for
+daylight saving, and its sign is reversed.
+The value is unspecified if <code class="env">TZ</code> uses the geographical format,
+so it is generally better to use the broken-down time structure&rsquo;s
+<code class="code">tm_gmtoff</code> member instead.
+</p></dd></dl>
+
+<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr def-block">
+<dt class="deftypevr deftypevar-alias-deftypevr def-line" id="index-daylight"><span class="category-def">Variable: </span><span><code class="def-type">int</code> <strong class="def-name">daylight</strong><a class="copiable-link" href="#index-daylight"> &para;</a></span></dt>
+<dd>
+
+<p>This variable is nonzero if daylight saving time rules apply.
+A nonzero value does not necessarily mean that daylight saving time is
+now in effect; it means only that daylight saving time is sometimes in effect.
+This variable has little or no practical use;
+it is present for POSIX compatibility.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Time-Functions-Example.html">Time Functions Example</a>, Previous: <a href="TZ-Variable.html">Specifying the Time Zone with <code class="env">TZ</code></a>, Up: <a href="Calendar-Time.html">Calendar Time</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

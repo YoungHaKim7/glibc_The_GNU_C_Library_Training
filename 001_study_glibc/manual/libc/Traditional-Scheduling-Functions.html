@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Traditional Scheduling Functions (The GNU C Library)</title>
+
+<meta name="description" content="Traditional Scheduling Functions (The GNU C Library)">
+<meta name="keywords" content="Traditional Scheduling Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Traditional-Scheduling.html" rel="up" title="Traditional Scheduling">
+<link href="Traditional-Scheduling-Intro.html" rel="prev" title="Traditional Scheduling Intro">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Traditional-Scheduling-Functions">
+<div class="nav-panel">
+<p>
+Previous: <a href="Traditional-Scheduling-Intro.html" accesskey="p" rel="prev">Introduction To Traditional Scheduling</a>, Up: <a href="Traditional-Scheduling.html" accesskey="u" rel="up">Traditional Scheduling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Functions-For-Traditional-Scheduling"><span>23.3.5.2 Functions For Traditional Scheduling<a class="copiable-link" href="#Functions-For-Traditional-Scheduling"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-sys_002fresource_002eh-2"></a>
+<p>This section describes how you can read and set the nice value of a
+process.  All these symbols are declared in <samp class="file">sys/resource.h</samp>.
+</p>
+<p>The function and macro names are defined by POSIX, and refer to
+&quot;priority,&quot; but the functions actually have to do with nice values, as
+the terms are used both in the manual and POSIX.
+</p>
+<p>The range of valid nice values depends on the kernel, but typically it
+runs from <code class="code">-20</code> to <code class="code">20</code>.  A lower nice value corresponds to
+higher priority for the process.  These constants describe the range of
+priority values:
+</p>
+<dl class="vtable">
+<dt><a id="index-PRIO_005fMIN"></a><span><code class="code">PRIO_MIN</code><a class="copiable-link" href="#index-PRIO_005fMIN"> &para;</a></span></dt>
+<dd>
+<p>The lowest valid nice value.
+</p>
+</dd>
+<dt><a id="index-PRIO_005fMAX"></a><span><code class="code">PRIO_MAX</code><a class="copiable-link" href="#index-PRIO_005fMAX"> &para;</a></span></dt>
+<dd>
+<p>The highest valid nice value.
+</p></dd>
+</dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getpriority"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getpriority</strong> <code class="def-code-arguments">(int <var class="var">class</var>, int <var class="var">id</var>)</code><a class="copiable-link" href="#index-getpriority"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Return the nice value of a set of processes; <var class="var">class</var> and <var class="var">id</var>
+specify which ones (see below).  If the processes specified do not all
+have the same nice value, this returns the lowest value that any of them
+has.
+</p>
+<p>On success, the return value is <code class="code">0</code>.  Otherwise, it is <code class="code">-1</code>
+and <code class="code">errno</code> is set accordingly.  The <code class="code">errno</code> values specific
+to this function are:
+</p>
+<dl class="table">
+<dt><code class="code">ESRCH</code></dt>
+<dd><p>The combination of <var class="var">class</var> and <var class="var">id</var> does not match any existing
+process.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The value of <var class="var">class</var> is not valid.
+</p></dd>
+</dl>
+
+<p>If the return value is <code class="code">-1</code>, it could indicate failure, or it could
+be the nice value.  The only way to make certain is to set <code class="code">errno =
+0</code> before calling <code class="code">getpriority</code>, then use <code class="code">errno != 0</code>
+afterward as the criterion for failure.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setpriority"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setpriority</strong> <code class="def-code-arguments">(int <var class="var">class</var>, int <var class="var">id</var>, int <var class="var">niceval</var>)</code><a class="copiable-link" href="#index-setpriority"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Set the nice value of a set of processes to <var class="var">niceval</var>; <var class="var">class</var>
+and <var class="var">id</var> specify which ones (see below).
+</p>
+<p>The return value is <code class="code">0</code> on success, and <code class="code">-1</code> on
+failure.  The following <code class="code">errno</code> error condition are possible for
+this function:
+</p>
+<dl class="table">
+<dt><code class="code">ESRCH</code></dt>
+<dd><p>The combination of <var class="var">class</var> and <var class="var">id</var> does not match any existing
+process.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The value of <var class="var">class</var> is not valid.
+</p>
+</dd>
+<dt><code class="code">EPERM</code></dt>
+<dd><p>The call would set the nice value of a process which is owned by a different
+user than the calling process (i.e., the target process&rsquo; real or effective
+uid does not match the calling process&rsquo; effective uid) and the calling
+process does not have <code class="code">CAP_SYS_NICE</code> permission.
+</p>
+</dd>
+<dt><code class="code">EACCES</code></dt>
+<dd><p>The call would lower the process&rsquo; nice value and the process does not have
+<code class="code">CAP_SYS_NICE</code> permission.
+</p></dd>
+</dl>
+
+</dd></dl>
+
+<p>The arguments <var class="var">class</var> and <var class="var">id</var> together specify a set of
+processes in which you are interested.  These are the possible values of
+<var class="var">class</var>:
+</p>
+<dl class="vtable">
+<dt><a id="index-PRIO_005fPROCESS"></a><span><code class="code">PRIO_PROCESS</code><a class="copiable-link" href="#index-PRIO_005fPROCESS"> &para;</a></span></dt>
+<dd>
+<p>One particular process.  The argument <var class="var">id</var> is a process ID (pid).
+</p>
+</dd>
+<dt><a id="index-PRIO_005fPGRP"></a><span><code class="code">PRIO_PGRP</code><a class="copiable-link" href="#index-PRIO_005fPGRP"> &para;</a></span></dt>
+<dd>
+<p>All the processes in a particular process group.  The argument <var class="var">id</var> is
+a process group ID (pgid).
+</p>
+</dd>
+<dt><a id="index-PRIO_005fUSER"></a><span><code class="code">PRIO_USER</code><a class="copiable-link" href="#index-PRIO_005fUSER"> &para;</a></span></dt>
+<dd>
+<p>All the processes owned by a particular user (i.e., whose real uid
+indicates the user).  The argument <var class="var">id</var> is a user ID (uid).
+</p></dd>
+</dl>
+
+<p>If the argument <var class="var">id</var> is 0, it stands for the calling process, its
+process group, or its owner (real uid), according to <var class="var">class</var>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-nice"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">nice</strong> <code class="def-code-arguments">(int <var class="var">increment</var>)</code><a class="copiable-link" href="#index-nice"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:setpriority
+| AS-Unsafe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Increment the nice value of the calling process by <var class="var">increment</var>.
+The return value is the new nice value on success, and <code class="code">-1</code> on
+failure.  In the case of failure, <code class="code">errno</code> will be set to the
+same values as for <code class="code">setpriority</code>.
+</p>
+
+<p>Here is an equivalent definition of <code class="code">nice</code>:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">int
+nice (int increment)
+{
+  int result, old = getpriority (PRIO_PROCESS, 0);
+  result = setpriority (PRIO_PROCESS, 0, old + increment);
+  if (result != -1)
+      return old + increment;
+  else
+      return -1;
+}
+</pre></div>
+</dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Traditional-Scheduling-Intro.html">Introduction To Traditional Scheduling</a>, Up: <a href="Traditional-Scheduling.html">Traditional Scheduling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

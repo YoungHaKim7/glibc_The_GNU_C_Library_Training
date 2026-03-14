@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Absolute Value (The GNU C Library)</title>
+
+<meta name="description" content="Absolute Value (The GNU C Library)">
+<meta name="keywords" content="Absolute Value (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Arithmetic-Functions.html" rel="up" title="Arithmetic Functions">
+<link href="Normalization-Functions.html" rel="next" title="Normalization Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Absolute-Value">
+<div class="nav-panel">
+<p>
+Next: <a href="Normalization-Functions.html" accesskey="n" rel="next">Normalization Functions</a>, Up: <a href="Arithmetic-Functions.html" accesskey="u" rel="up">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Absolute-Value-1"><span>20.8.1 Absolute Value<a class="copiable-link" href="#Absolute-Value-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-absolute-value-functions"></a>
+
+<p>These functions are provided for obtaining the <em class="dfn">absolute value</em> (or
+<em class="dfn">magnitude</em>) of a number.  The absolute value of a real number
+<var class="var">x</var> is <var class="var">x</var> if <var class="var">x</var> is positive, &minus;<var class="var">x</var> if <var class="var">x</var> is
+negative.  For a complex number <var class="var">z</var>, whose real part is <var class="var">x</var> and
+whose imaginary part is <var class="var">y</var>, the absolute value is <code class="code">sqrt&nbsp;(<var class="var">x</var>*<var class="var">x</var>&nbsp;+&nbsp;<var class="var">y</var>*<var class="var">y</var>)</code><!-- /@w -->.
+</p>
+<a class="index-entry-id" id="index-math_002eh-2"></a>
+<a class="index-entry-id" id="index-stdlib_002eh-17"></a>
+<p>Prototypes for <code class="code">abs</code>, <code class="code">labs</code>, <code class="code">llabs</code>,
+<code class="code">uabs</code>, <code class="code">ulabs</code> and <code class="code">ullabs</code> are in <samp class="file">stdlib.h</samp>;
+<code class="code">imaxabs</code> and <code class="code">umaxabs</code> are declared in <samp class="file">inttypes.h</samp>;
+the <code class="code">fabs</code> functions are declared in <samp class="file">math.h</samp>;
+the <code class="code">cabs</code> functions are declared in <samp class="file">complex.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-abs"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">abs</strong> <code class="def-code-arguments">(int <var class="var">number</var>)</code><a class="copiable-link" href="#index-abs"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-labs"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">labs</strong> <code class="def-code-arguments">(long int <var class="var">number</var>)</code><a class="copiable-link" href="#index-labs"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-llabs"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">llabs</strong> <code class="def-code-arguments">(long long int <var class="var">number</var>)</code><a class="copiable-link" href="#index-llabs"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-uabs"><span class="category-def">Function: </span><span><code class="def-type">unsigned int</code> <strong class="def-name">uabs</strong> <code class="def-code-arguments">(int <var class="var">number</var>)</code><a class="copiable-link" href="#index-uabs"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ulabs"><span class="category-def">Function: </span><span><code class="def-type">unsigned long int</code> <strong class="def-name">ulabs</strong> <code class="def-code-arguments">(long int <var class="var">number</var>)</code><a class="copiable-link" href="#index-ulabs"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ullabs"><span class="category-def">Function: </span><span><code class="def-type">unsigned long long int</code> <strong class="def-name">ullabs</strong> <code class="def-code-arguments">(long long int <var class="var">number</var>)</code><a class="copiable-link" href="#index-ullabs"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-imaxabs"><span class="category-def">Function: </span><span><code class="def-type">intmax_t</code> <strong class="def-name">imaxabs</strong> <code class="def-code-arguments">(intmax_t <var class="var">number</var>)</code><a class="copiable-link" href="#index-imaxabs"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-umaxabs"><span class="category-def">Function: </span><span><code class="def-type">uintmax_t</code> <strong class="def-name">umaxabs</strong> <code class="def-code-arguments">(intmax_t <var class="var">number</var>)</code><a class="copiable-link" href="#index-umaxabs"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the absolute value of <var class="var">number</var>.
+</p>
+<p>Most computers use a two&rsquo;s complement integer representation, in which
+the absolute value of <code class="code">INT_MIN</code> (the smallest possible <code class="code">int</code>)
+cannot be represented; thus, <code class="code">abs&nbsp;(INT_MIN)</code><!-- /@w --> is not defined.
+Using <code class="code">uabs</code> avoids this.
+</p>
+<p><code class="code">llabs</code> and <code class="code">imaxdiv</code> are new to ISO&nbsp;C99<!-- /@w -->.
+<code class="code">uabs</code>, <code class="code">ulabs</code>, <code class="code">ullabs</code> and <code class="code">umaxabs</code> are new to ISO&nbsp;C2Y<!-- /@w -->.
+</p>
+<p>See <a class="ref" href="Integers.html">Integers</a> for a description of the <code class="code">intmax_t</code> type.
+</p>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fabs"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fabs</strong> <code class="def-code-arguments">(double <var class="var">number</var>)</code><a class="copiable-link" href="#index-fabs"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fabsf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fabsf</strong> <code class="def-code-arguments">(float <var class="var">number</var>)</code><a class="copiable-link" href="#index-fabsf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fabsl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fabsl</strong> <code class="def-code-arguments">(long double <var class="var">number</var>)</code><a class="copiable-link" href="#index-fabsl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fabsfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fabsfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">number</var>)</code><a class="copiable-link" href="#index-fabsfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fabsfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fabsfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">number</var>)</code><a class="copiable-link" href="#index-fabsfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns the absolute value of the floating-point number
+<var class="var">number</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cabs"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">cabs</strong> <code class="def-code-arguments">(complex double <var class="var">z</var>)</code><a class="copiable-link" href="#index-cabs"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cabsf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">cabsf</strong> <code class="def-code-arguments">(complex float <var class="var">z</var>)</code><a class="copiable-link" href="#index-cabsf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cabsl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">cabsl</strong> <code class="def-code-arguments">(complex long double <var class="var">z</var>)</code><a class="copiable-link" href="#index-cabsl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cabsfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">cabsfN</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var> <var class="var">z</var>)</code><a class="copiable-link" href="#index-cabsfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-cabsfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">cabsfNx</strong> <code class="def-code-arguments">(complex _Float<var class="var">N</var>x <var class="var">z</var>)</code><a class="copiable-link" href="#index-cabsfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the absolute  value of the complex number <var class="var">z</var>
+(see <a class="pxref" href="Complex-Numbers.html">Complex Numbers</a>).  The absolute value of a complex number is:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">sqrt (creal (<var class="var">z</var>) * creal (<var class="var">z</var>) + cimag (<var class="var">z</var>) * cimag (<var class="var">z</var>))
+</pre></div>
+
+<p>This function should always be used instead of the direct formula
+because it takes special care to avoid losing precision.  It may also
+take advantage of hardware support for this operation.  See <code class="code">hypot</code>
+in <a class="ref" href="Exponents-and-Logarithms.html">Exponentiation and Logarithms</a>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Normalization-Functions.html">Normalization Functions</a>, Up: <a href="Arithmetic-Functions.html">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

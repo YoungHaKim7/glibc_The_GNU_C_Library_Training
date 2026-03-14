@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>FP Bit Twiddling (The GNU C Library)</title>
+
+<meta name="description" content="FP Bit Twiddling (The GNU C Library)">
+<meta name="keywords" content="FP Bit Twiddling (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Arithmetic-Functions.html" rel="up" title="Arithmetic Functions">
+<link href="FP-Comparison-Functions.html" rel="next" title="FP Comparison Functions">
+<link href="Remainder-Functions.html" rel="prev" title="Remainder Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="FP-Bit-Twiddling">
+<div class="nav-panel">
+<p>
+Next: <a href="FP-Comparison-Functions.html" accesskey="n" rel="next">Floating-Point Comparison Functions</a>, Previous: <a href="Remainder-Functions.html" accesskey="p" rel="prev">Remainder Functions</a>, Up: <a href="Arithmetic-Functions.html" accesskey="u" rel="up">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Setting-and-modifying-single-bits-of-FP-values"><span>20.8.5 Setting and modifying single bits of FP values<a class="copiable-link" href="#Setting-and-modifying-single-bits-of-FP-values"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-FP-arithmetic"></a>
+
+<p>There are some operations that are too complicated or expensive to
+perform by hand on floating-point numbers.  ISO&nbsp;C99<!-- /@w --> defines
+functions to do these operations, which mostly involve changing single
+bits.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-copysign"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">copysign</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-copysign"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-copysignf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">copysignf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-copysignf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-copysignl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">copysignl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-copysignl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-copysignfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">copysignfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-copysignfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-copysignfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">copysignfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-copysignfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return <var class="var">x</var> but with the sign of <var class="var">y</var>.  They work
+even if <var class="var">x</var> or <var class="var">y</var> are NaN or zero.  Both of these can carry a
+sign (although not all implementations support it) and this is one of
+the few operations that can tell the difference.
+</p>
+<p><code class="code">copysign</code> never raises an exception.
+</p>
+<p>This function is defined in IEC&nbsp;559<!-- /@w --> (and the appendix with
+recommended functions in IEEE&nbsp;754<!-- /@w -->/IEEE&nbsp;854<!-- /@w -->).
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-signbit"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">signbit</strong> <code class="def-code-arguments">(<em class="emph">float-type</em> <var class="var">x</var>)</code><a class="copiable-link" href="#index-signbit"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">signbit</code> is a generic macro which can work on all floating-point
+types.  It returns a nonzero value if the value of <var class="var">x</var> has its sign
+bit set.
+</p>
+<p>This is not the same as <code class="code">x &lt; 0.0</code>, because IEEE&nbsp;754<!-- /@w --> floating
+point allows zero to be signed.  The comparison <code class="code">-0.0 &lt; 0.0</code> is
+false, but <code class="code">signbit (-0.0)</code> will return a nonzero value.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-nextafter"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">nextafter</strong> <code class="def-code-arguments">(double <var class="var">x</var>, double <var class="var">y</var>)</code><a class="copiable-link" href="#index-nextafter"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nextafterf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">nextafterf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, float <var class="var">y</var>)</code><a class="copiable-link" href="#index-nextafterf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nextafterl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">nextafterl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-nextafterl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nextafterfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">nextafterfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, _Float<var class="var">N</var> <var class="var">y</var>)</code><a class="copiable-link" href="#index-nextafterfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nextafterfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">nextafterfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">y</var>)</code><a class="copiable-link" href="#index-nextafterfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">nextafter</code> function returns the next representable neighbor of
+<var class="var">x</var> in the direction towards <var class="var">y</var>.  The size of the step between
+<var class="var">x</var> and the result depends on the type of the result.  If
+<em class="math"><var class="var">x</var> = <var class="var">y</var></em> the function simply returns <var class="var">y</var>.  If either
+value is <code class="code">NaN</code>, <code class="code">NaN</code> is returned.  Otherwise
+a value corresponding to the value of the least significant bit in the
+mantissa is added or subtracted, depending on the direction.
+<code class="code">nextafter</code> will signal overflow or underflow if the result goes
+outside of the range of normalized numbers.
+</p>
+<p>This function is defined in IEC&nbsp;559<!-- /@w --> (and the appendix with
+recommended functions in IEEE&nbsp;754<!-- /@w -->/IEEE&nbsp;854<!-- /@w -->).
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-nexttoward"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">nexttoward</strong> <code class="def-code-arguments">(double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-nexttoward"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nexttowardf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">nexttowardf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-nexttowardf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nexttowardl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">nexttowardl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, long double <var class="var">y</var>)</code><a class="copiable-link" href="#index-nexttowardl"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions are identical to the corresponding versions of
+<code class="code">nextafter</code> except that their second argument is a <code class="code">long
+double</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-nextup"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">nextup</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-nextup"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nextupf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">nextupf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-nextupf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nextupl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">nextupl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-nextupl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nextupfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">nextupfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-nextupfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nextupfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">nextupfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-nextupfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">nextup</code> function returns the next representable neighbor of <var class="var">x</var>
+in the direction of positive infinity.  If <var class="var">x</var> is the smallest negative
+subnormal number in the type of <var class="var">x</var> the function returns <code class="code">-0</code>.  If
+<em class="math"><var class="var">x</var> = <code class="code">0</code></em> the function returns the smallest positive subnormal
+number in the type of <var class="var">x</var>.  If <var class="var">x</var> is NaN, NaN is returned.
+If <var class="var">x</var> is <em class="math">+&#x221E;</em>, <em class="math">+&#x221E;</em> is returned.
+<code class="code">nextup</code> is from TS 18661-1:2014 and TS 18661-3:2015.
+<code class="code">nextup</code> never raises an exception except for signaling NaNs.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-nextdown"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">nextdown</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-nextdown"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nextdownf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">nextdownf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-nextdownf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nextdownl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">nextdownl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-nextdownl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nextdownfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">nextdownfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-nextdownfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nextdownfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">nextdownfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-nextdownfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">nextdown</code> function returns the next representable neighbor of <var class="var">x</var>
+in the direction of negative infinity.  If <var class="var">x</var> is the smallest positive
+subnormal number in the type of <var class="var">x</var> the function returns <code class="code">+0</code>.  If
+<em class="math"><var class="var">x</var> = <code class="code">0</code></em> the function returns the smallest negative subnormal
+number in the type of <var class="var">x</var>.  If <var class="var">x</var> is NaN, NaN is returned.
+If <var class="var">x</var> is <em class="math">-&#x221E;</em>, <em class="math">-&#x221E;</em> is returned.
+<code class="code">nextdown</code> is from TS 18661-1:2014 and TS 18661-3:2015.
+<code class="code">nextdown</code> never raises an exception except for signaling NaNs.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-NaN-1"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-nan"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">nan</strong> <code class="def-code-arguments">(const char *<var class="var">tagp</var>)</code><a class="copiable-link" href="#index-nan"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nanf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">nanf</strong> <code class="def-code-arguments">(const char *<var class="var">tagp</var>)</code><a class="copiable-link" href="#index-nanf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nanl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">nanl</strong> <code class="def-code-arguments">(const char *<var class="var">tagp</var>)</code><a class="copiable-link" href="#index-nanl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nanfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">nanfN</strong> <code class="def-code-arguments">(const char *<var class="var">tagp</var>)</code><a class="copiable-link" href="#index-nanfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nanfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">nanfNx</strong> <code class="def-code-arguments">(const char *<var class="var">tagp</var>)</code><a class="copiable-link" href="#index-nanfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">nan</code> function returns a representation of NaN, provided that
+NaN is supported by the target platform.
+<code class="code">nan (&quot;<var class="var">n-char-sequence</var>&quot;)</code> is equivalent to
+<code class="code">strtod (&quot;NAN(<var class="var">n-char-sequence</var>)&quot;)</code>.
+</p>
+<p>The argument <var class="var">tagp</var> is used in an unspecified manner.  On IEEE&nbsp;754<!-- /@w --> systems, there are many representations of NaN, and <var class="var">tagp</var>
+selects one.  On other systems it may do nothing.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-canonicalize"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">canonicalize</strong> <code class="def-code-arguments">(double *<var class="var">cx</var>, const double *<var class="var">x</var>)</code><a class="copiable-link" href="#index-canonicalize"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-canonicalizef"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">canonicalizef</strong> <code class="def-code-arguments">(float *<var class="var">cx</var>, const float *<var class="var">x</var>)</code><a class="copiable-link" href="#index-canonicalizef"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-canonicalizel"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">canonicalizel</strong> <code class="def-code-arguments">(long double *<var class="var">cx</var>, const long double *<var class="var">x</var>)</code><a class="copiable-link" href="#index-canonicalizel"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-canonicalizefN"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">canonicalizefN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> *<var class="var">cx</var>, const _Float<var class="var">N</var> *<var class="var">x</var>)</code><a class="copiable-link" href="#index-canonicalizefN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-canonicalizefNx"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">canonicalizefNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x *<var class="var">cx</var>, const _Float<var class="var">N</var>x *<var class="var">x</var>)</code><a class="copiable-link" href="#index-canonicalizefNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>In some floating-point formats, some values have canonical (preferred)
+and noncanonical encodings (for IEEE interchange binary formats, all
+encodings are canonical).  These functions, defined by TS
+18661-1:2014 and TS 18661-3:2015, attempt to produce a canonical version
+of the floating-point value pointed to by <var class="var">x</var>; if that value is a
+signaling NaN, they raise the invalid exception and produce a quiet
+NaN.  If a canonical value is produced, it is stored in the object
+pointed to by <var class="var">cx</var>, and these functions return zero.  Otherwise
+(if a canonical value could not be produced because the object pointed
+to by <var class="var">x</var> is not a valid representation of any floating-point
+value), the object pointed to by <var class="var">cx</var> is unchanged and a nonzero
+value is returned.
+</p>
+<p>Note that some formats have multiple encodings of a value which are
+all equally canonical; when such an encoding is used as an input to
+this function, any such encoding of the same value (or of the
+corresponding quiet NaN, if that value is a signaling NaN) may be
+produced as output.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getpayload"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">getpayload</strong> <code class="def-code-arguments">(const double *<var class="var">x</var>)</code><a class="copiable-link" href="#index-getpayload"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-getpayloadf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">getpayloadf</strong> <code class="def-code-arguments">(const float *<var class="var">x</var>)</code><a class="copiable-link" href="#index-getpayloadf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-getpayloadl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">getpayloadl</strong> <code class="def-code-arguments">(const long double *<var class="var">x</var>)</code><a class="copiable-link" href="#index-getpayloadl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-getpayloadfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">getpayloadfN</strong> <code class="def-code-arguments">(const _Float<var class="var">N</var> *<var class="var">x</var>)</code><a class="copiable-link" href="#index-getpayloadfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-getpayloadfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">getpayloadfNx</strong> <code class="def-code-arguments">(const _Float<var class="var">N</var>x *<var class="var">x</var>)</code><a class="copiable-link" href="#index-getpayloadfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>IEEE 754 defines the <em class="dfn">payload</em> of a NaN to be an integer value
+encoded in the representation of the NaN.  Payloads are typically
+propagated from NaN inputs to the result of a floating-point
+operation.  These functions, defined by TS 18661-1:2014 and TS
+18661-3:2015, return the payload of the NaN pointed to by <var class="var">x</var>
+(returned as a positive integer, or positive zero, represented as a
+floating-point number); if <var class="var">x</var> is not a NaN, they return
+&minus;1.  They raise no floating-point exceptions even for signaling
+NaNs.  (The return value of &minus;1 for an argument that is not a
+NaN is specified in C23; the value was unspecified in TS 18661.)
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setpayload"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setpayload</strong> <code class="def-code-arguments">(double *<var class="var">x</var>, double <var class="var">payload</var>)</code><a class="copiable-link" href="#index-setpayload"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-setpayloadf"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setpayloadf</strong> <code class="def-code-arguments">(float *<var class="var">x</var>, float <var class="var">payload</var>)</code><a class="copiable-link" href="#index-setpayloadf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-setpayloadl"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setpayloadl</strong> <code class="def-code-arguments">(long double *<var class="var">x</var>, long double <var class="var">payload</var>)</code><a class="copiable-link" href="#index-setpayloadl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-setpayloadfN"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setpayloadfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> *<var class="var">x</var>, _Float<var class="var">N</var> <var class="var">payload</var>)</code><a class="copiable-link" href="#index-setpayloadfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-setpayloadfNx"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setpayloadfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x *<var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">payload</var>)</code><a class="copiable-link" href="#index-setpayloadfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions, defined by TS 18661-1:2014 and TS 18661-3:2015, set the
+object pointed to by <var class="var">x</var> to a quiet NaN with payload <var class="var">payload</var>
+and a zero sign bit and return zero.  If <var class="var">payload</var> is not a
+positive-signed integer that is a valid payload for a quiet NaN of the
+given type, the object pointed to by <var class="var">x</var> is set to positive zero and
+a nonzero value is returned.  They raise no floating-point exceptions.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setpayloadsig"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setpayloadsig</strong> <code class="def-code-arguments">(double *<var class="var">x</var>, double <var class="var">payload</var>)</code><a class="copiable-link" href="#index-setpayloadsig"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-setpayloadsigf"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setpayloadsigf</strong> <code class="def-code-arguments">(float *<var class="var">x</var>, float <var class="var">payload</var>)</code><a class="copiable-link" href="#index-setpayloadsigf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-setpayloadsigl"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setpayloadsigl</strong> <code class="def-code-arguments">(long double *<var class="var">x</var>, long double <var class="var">payload</var>)</code><a class="copiable-link" href="#index-setpayloadsigl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-setpayloadsigfN"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setpayloadsigfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> *<var class="var">x</var>, _Float<var class="var">N</var> <var class="var">payload</var>)</code><a class="copiable-link" href="#index-setpayloadsigfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-setpayloadsigfNx"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setpayloadsigfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x *<var class="var">x</var>, _Float<var class="var">N</var>x <var class="var">payload</var>)</code><a class="copiable-link" href="#index-setpayloadsigfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions, defined by TS 18661-1:2014 and TS 18661-3:2015, set the
+object pointed to by <var class="var">x</var> to a signaling NaN with payload
+<var class="var">payload</var> and a zero sign bit and return zero.  If <var class="var">payload</var> is
+not a positive-signed integer that is a valid payload for a signaling
+NaN of the given type, the object pointed to by <var class="var">x</var> is set to
+positive zero and a nonzero value is returned.  They raise no
+floating-point exceptions.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="FP-Comparison-Functions.html">Floating-Point Comparison Functions</a>, Previous: <a href="Remainder-Functions.html">Remainder Functions</a>, Up: <a href="Arithmetic-Functions.html">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

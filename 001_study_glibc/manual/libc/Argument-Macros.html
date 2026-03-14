@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Argument Macros (The GNU C Library)</title>
+
+<meta name="description" content="Argument Macros (The GNU C Library)">
+<meta name="keywords" content="Argument Macros (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="How-Variadic.html" rel="up" title="How Variadic">
+<link href="Calling-Variadics.html" rel="prev" title="Calling Variadics">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Argument-Macros">
+<div class="nav-panel">
+<p>
+Previous: <a href="Calling-Variadics.html" accesskey="p" rel="prev">Calling Variadic Functions</a>, Up: <a href="How-Variadic.html" accesskey="u" rel="up">How Variadic Functions are Defined and Used</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Argument-Access-Macros"><span>A.2.2.5 Argument Access Macros<a class="copiable-link" href="#Argument-Access-Macros"> &para;</a></span></h4>
+
+<p>Here are descriptions of the macros used to retrieve variable arguments.
+These macros are defined in the header file <samp class="file">stdarg.h</samp>.
+<a class="index-entry-id" id="index-stdarg_002eh-1"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-va_005flist"><span class="category-def">Data Type: </span><span><strong class="def-name">va_list</strong><a class="copiable-link" href="#index-va_005flist"> &para;</a></span></dt>
+<dd>
+<p>The type <code class="code">va_list</code> is used for argument pointer variables.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-va_005fstart"><span class="category-def">Macro: </span><span><code class="def-type">void</code> <strong class="def-name">va_start</strong> <code class="def-code-arguments">(va_list <var class="var">ap</var>, <var class="var">last-required</var>)</code><a class="copiable-link" href="#index-va_005fstart"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro initializes the argument pointer variable <var class="var">ap</var> to point
+to the first of the optional arguments of the current function;
+<var class="var">last-required</var> must be the last required argument to the function.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-va_005farg"><span class="category-def">Macro: </span><span><code class="def-type"><var class="var">type</var></code> <strong class="def-name">va_arg</strong> <code class="def-code-arguments">(va_list <var class="var">ap</var>, <var class="var">type</var>)</code><a class="copiable-link" href="#index-va_005farg"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:ap
+| AS-Safe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">va_arg</code> macro returns the value of the next optional argument,
+and modifies the value of <var class="var">ap</var> to point to the subsequent argument.
+Thus, successive uses of <code class="code">va_arg</code> return successive optional
+arguments.
+</p>
+<p>The type of the value returned by <code class="code">va_arg</code> is <var class="var">type</var> as
+specified in the call.  <var class="var">type</var> must be a self-promoting type (not
+<code class="code">char</code> or <code class="code">short int</code> or <code class="code">float</code>) that matches the type
+of the actual argument.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-va_005fend"><span class="category-def">Macro: </span><span><code class="def-type">void</code> <strong class="def-name">va_end</strong> <code class="def-code-arguments">(va_list <var class="var">ap</var>)</code><a class="copiable-link" href="#index-va_005fend"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This ends the use of <var class="var">ap</var>.  After a <code class="code">va_end</code> call, further
+<code class="code">va_arg</code> calls with the same <var class="var">ap</var> may not work.  You should invoke
+<code class="code">va_end</code> before returning from the function in which <code class="code">va_start</code>
+was invoked with the same <var class="var">ap</var> argument.
+</p>
+<p>In the GNU C Library, <code class="code">va_end</code> does nothing, and you need not ever
+use it except for reasons of portability.
+</p>
+</dd></dl>
+
+<p>Sometimes it is necessary to parse the list of parameters more than once
+or one wants to remember a certain position in the parameter list.  To
+do this, one will have to make a copy of the current value of the
+argument.  But <code class="code">va_list</code> is an opaque type and one cannot necessarily
+assign the value of one variable of type <code class="code">va_list</code> to another variable
+of the same type.
+</p>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-va_005fcopy-1"><span class="category-def">Macro: </span><span><code class="def-type">void</code> <strong class="def-name">va_copy</strong> <code class="def-code-arguments">(va_list <var class="var">dest</var>, va_list <var class="var">src</var>)</code><a class="copiable-link" href="#index-va_005fcopy-1"> &para;</a></span></dt>
+<dt class="deftypefnx def-cmd-deftypefn def-line" id="index-_005f_005fva_005fcopy"><span class="category-def">Macro: </span><span><code class="def-type">void</code> <strong class="def-name">__va_copy</strong> <code class="def-code-arguments">(va_list <var class="var">dest</var>, va_list <var class="var">src</var>)</code><a class="copiable-link" href="#index-_005f_005fva_005fcopy"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">va_copy</code> macro allows copying of objects of type
+<code class="code">va_list</code> even if this is not an integral type.  The argument pointer
+in <var class="var">dest</var> is initialized to point to the same argument as the
+pointer in <var class="var">src</var>.
+</p>
+<p><code class="code">va_copy</code> was added in ISO C99.  When building for strict
+conformance to ISO C90 (&lsquo;<samp class="samp">gcc -std=c90</samp>&rsquo;), it is not available.
+GCC provides <code class="code">__va_copy</code>, as an extension, in any standards mode;
+before GCC 3.0, it was the only macro for this functionality.
+</p>
+<p>These macros are no longer provided by the GNU C Library, but rather by the
+compiler.
+</p></dd></dl>
+
+<p>If you want to use <code class="code">va_copy</code> and be portable to pre-C99 systems,
+you should always be prepared for the
+possibility that this macro will not be available.  On architectures where a
+simple assignment is invalid, hopefully <code class="code">va_copy</code> <em class="emph">will</em> be available,
+so one should always write something like this if concerned about
+pre-C99 portability:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">{
+  va_list ap, save;
+  ...
+#ifdef va_copy
+  va_copy (save, ap);
+#else
+  save = ap;
+#endif
+  ...
+}
+</pre></div>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Calling-Variadics.html">Calling Variadic Functions</a>, Up: <a href="How-Variadic.html">How Variadic Functions are Defined and Used</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

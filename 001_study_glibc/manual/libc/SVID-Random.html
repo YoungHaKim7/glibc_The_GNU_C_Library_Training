@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>SVID Random (The GNU C Library)</title>
+
+<meta name="description" content="SVID Random (The GNU C Library)">
+<meta name="keywords" content="SVID Random (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Pseudo_002dRandom-Numbers.html" rel="up" title="Pseudo-Random Numbers">
+<link href="High-Quality-Random.html" rel="next" title="High Quality Random">
+<link href="BSD-Random.html" rel="prev" title="BSD Random">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="SVID-Random">
+<div class="nav-panel">
+<p>
+Next: <a href="High-Quality-Random.html" accesskey="n" rel="next">High Quality Random Number Functions</a>, Previous: <a href="BSD-Random.html" accesskey="p" rel="prev">BSD Random Number Functions</a>, Up: <a href="Pseudo_002dRandom-Numbers.html" accesskey="u" rel="up">Pseudo-Random Numbers</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="SVID-Random-Number-Function"><span>19.8.3 SVID Random Number Function<a class="copiable-link" href="#SVID-Random-Number-Function"> &para;</a></span></h4>
+
+<p>The C library on SVID systems contains yet another kind of random number
+generator functions.  They use a state of 48 bits of data.  The user can
+choose among a collection of functions which return the random bits
+in different forms.
+</p>
+<p>Generally there are two kinds of function.  The first uses a state of
+the random number generator which is shared among several functions and
+by all threads of the process.  The second requires the user to handle
+the state.
+</p>
+<p>All functions have in common that they use the same congruential
+formula with the same constants.  The formula is
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">Y = (a * X + c) mod m
+</pre></div>
+
+<p>where <var class="var">X</var> is the state of the generator at the beginning and
+<var class="var">Y</var> the state at the end.  <code class="code">a</code> and <code class="code">c</code> are constants
+determining the way the generator works.  By default they are
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">a = 0x5DEECE66D = 25214903917
+c = 0xb = 11
+</pre></div>
+
+<p>but they can also be changed by the user.  <code class="code">m</code> is of course 2^48
+since the state consists of a 48-bit array.
+</p>
+<p>The prototypes for these functions are in <samp class="file">stdlib.h</samp>.
+<a class="index-entry-id" id="index-stdlib_002eh-14"></a>
+</p>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-drand48"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">drand48</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-drand48"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:drand48
+| AS-Unsafe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns a <code class="code">double</code> value in the range of <code class="code">0.0</code>
+to <code class="code">1.0</code> (exclusive).  The random bits are determined by the global
+state of the random number generator in the C library.
+</p>
+<p>Since the <code class="code">double</code> type according to IEEE&nbsp;754<!-- /@w --> has a 52-bit
+mantissa this means 4 bits are not initialized by the random number
+generator.  These are (of course) chosen to be the least significant
+bits and they are initialized to <code class="code">0</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-erand48"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">erand48</strong> <code class="def-code-arguments">(unsigned short int <var class="var">xsubi</var>[3])</code><a class="copiable-link" href="#index-erand48"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:drand48
+| AS-Unsafe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns a <code class="code">double</code> value in the range of <code class="code">0.0</code>
+to <code class="code">1.0</code> (exclusive), similarly to <code class="code">drand48</code>.  The argument is
+an array describing the state of the random number generator.
+</p>
+<p>This function can be called subsequently since it updates the array to
+guarantee random numbers.  The array should have been initialized before
+initial use to obtain reproducible results.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-lrand48"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">lrand48</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-lrand48"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:drand48
+| AS-Unsafe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">lrand48</code> function returns an integer value in the range of
+<code class="code">0</code> to <code class="code">2^31</code> (exclusive).  Even if the size of the <code class="code">long
+int</code> type can take more than 32 bits, no higher numbers are returned.
+The random bits are determined by the global state of the random number
+generator in the C library.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-nrand48"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">nrand48</strong> <code class="def-code-arguments">(unsigned short int <var class="var">xsubi</var>[3])</code><a class="copiable-link" href="#index-nrand48"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:drand48
+| AS-Unsafe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to the <code class="code">lrand48</code> function in that it
+returns a number in the range of <code class="code">0</code> to <code class="code">2^31</code> (exclusive) but
+the state of the random number generator used to produce the random bits
+is determined by the array provided as the parameter to the function.
+</p>
+<p>The numbers in the array are updated afterwards so that subsequent calls
+to this function yield different results (as is expected of a random
+number generator).  The array should have been initialized before the
+first call to obtain reproducible results.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mrand48"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">mrand48</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-mrand48"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:drand48
+| AS-Unsafe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">mrand48</code> function is similar to <code class="code">lrand48</code>.  The only
+difference is that the numbers returned are in the range <code class="code">-2^31</code> to
+<code class="code">2^31</code> (exclusive).
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-jrand48"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">jrand48</strong> <code class="def-code-arguments">(unsigned short int <var class="var">xsubi</var>[3])</code><a class="copiable-link" href="#index-jrand48"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:drand48
+| AS-Unsafe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">jrand48</code> function is similar to <code class="code">nrand48</code>.  The only
+difference is that the numbers returned are in the range <code class="code">-2^31</code> to
+<code class="code">2^31</code> (exclusive).  For the <code class="code">xsubi</code> parameter the same
+requirements are necessary.
+</p></dd></dl>
+
+<p>The internal state of the random number generator can be initialized in
+several ways.  The methods differ in the completeness of the
+information provided.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-srand48"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">srand48</strong> <code class="def-code-arguments">(long int <var class="var">seedval</var>)</code><a class="copiable-link" href="#index-srand48"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:drand48
+| AS-Unsafe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">srand48</code> function sets the most significant 32 bits of the
+internal state of the random number generator to the least
+significant 32 bits of the <var class="var">seedval</var> parameter.  The lower 16 bits
+are initialized to the value <code class="code">0x330E</code>.  Even if the <code class="code">long
+int</code> type contains more than 32 bits only the lower 32 bits are used.
+</p>
+<p>Owing to this limitation, initialization of the state of this
+function is not very useful.  But it makes it easy to use a construct
+like <code class="code">srand48 (time (0))</code>.
+</p>
+<p>A side-effect of this function is that the values <code class="code">a</code> and <code class="code">c</code>
+from the internal state, which are used in the congruential formula,
+are reset to the default values given above.  This is of importance once
+the user has called the <code class="code">lcong48</code> function (see below).
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-seed48"><span class="category-def">Function: </span><span><code class="def-type">unsigned short int *</code> <strong class="def-name">seed48</strong> <code class="def-code-arguments">(unsigned short int <var class="var">seed16v</var>[3])</code><a class="copiable-link" href="#index-seed48"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:drand48
+| AS-Unsafe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">seed48</code> function initializes all 48 bits of the state of the
+internal random number generator from the contents of the parameter
+<var class="var">seed16v</var>.  Here the lower 16 bits of the first element of
+<var class="var">seed16v</var> initialize the least significant 16 bits of the internal
+state, the lower 16 bits of <code class="code"><var class="var">seed16v</var>[1]</code> initialize the mid-order
+16 bits of the state and the 16 lower bits of <code class="code"><var class="var">seed16v</var>[2]</code>
+initialize the most significant 16 bits of the state.
+</p>
+<p>Unlike <code class="code">srand48</code> this function lets the user initialize all 48 bits
+of the state.
+</p>
+<p>The value returned by <code class="code">seed48</code> is a pointer to an array containing
+the values of the internal state before the change.  This might be
+useful to restart the random number generator at a certain state.
+Otherwise the value can simply be ignored.
+</p>
+<p>As for <code class="code">srand48</code>, the values <code class="code">a</code> and <code class="code">c</code> from the
+congruential formula are reset to the default values.
+</p></dd></dl>
+
+<p>There is one more function to initialize the random number generator
+which enables you to specify even more information by allowing you to
+change the parameters in the congruential formula.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-lcong48"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">lcong48</strong> <code class="def-code-arguments">(unsigned short int <var class="var">param</var>[7])</code><a class="copiable-link" href="#index-lcong48"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:drand48
+| AS-Unsafe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">lcong48</code> function allows the user to change the complete state
+of the random number generator.  Unlike <code class="code">srand48</code> and
+<code class="code">seed48</code>, this function also changes the constants in the
+congruential formula.
+</p>
+<p>From the seven elements in the array <var class="var">param</var> the least significant
+16 bits of the entries <code class="code"><var class="var">param</var>[0]</code> to <code class="code"><var class="var">param</var>[2]</code>
+determine the initial state, the least significant 16 bits of
+<code class="code"><var class="var">param</var>[3]</code> to <code class="code"><var class="var">param</var>[5]</code> determine the 48 bit
+constant <code class="code">a</code> and <code class="code"><var class="var">param</var>[6]</code> determines the 16-bit value
+<code class="code">c</code>.
+</p></dd></dl>
+
+<p>All the above functions have in common that they use the global
+parameters for the congruential formula.  In multi-threaded programs it
+might sometimes be useful to have different parameters in different
+threads.  For this reason all the above functions have a counterpart
+which works on a description of the random number generator in the
+user-supplied buffer instead of the global state.
+</p>
+<p>Please note that it is no problem if several threads use the global
+state if all threads use the functions which take a pointer to an array
+containing the state.  The random numbers are computed following the
+same loop but if the state in the array is different all threads will
+obtain an individual random number generator.
+</p>
+<p>The user-supplied buffer must be of type <code class="code">struct drand48_data</code>.
+This type should be regarded as opaque and not manipulated directly.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-drand48_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">drand48_r</strong> <code class="def-code-arguments">(struct drand48_data *<var class="var">buffer</var>, double *<var class="var">result</var>)</code><a class="copiable-link" href="#index-drand48_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:buffer
+| AS-Safe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is equivalent to the <code class="code">drand48</code> function with the
+difference that it does not modify the global random number generator
+parameters but instead the parameters in the buffer supplied through the
+pointer <var class="var">buffer</var>.  The random number is returned in the variable
+pointed to by <var class="var">result</var>.
+</p>
+<p>The return value of the function indicates whether the call succeeded.
+If the value is less than <code class="code">0</code> an error occurred and <code class="code">errno</code> is
+set to indicate the problem.
+</p>
+<p>This function is a GNU extension and should not be used in portable
+programs.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-erand48_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">erand48_r</strong> <code class="def-code-arguments">(unsigned short int <var class="var">xsubi</var>[3], struct drand48_data *<var class="var">buffer</var>, double *<var class="var">result</var>)</code><a class="copiable-link" href="#index-erand48_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:buffer
+| AS-Safe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">erand48_r</code> function works like <code class="code">erand48</code>, but in addition
+it takes an argument <var class="var">buffer</var> which describes the random number
+generator.  The state of the random number generator is taken from the
+<code class="code">xsubi</code> array, the parameters for the congruential formula from the
+global random number generator data.  The random number is returned in
+the variable pointed to by <var class="var">result</var>.
+</p>
+<p>The return value is non-negative if the call succeeded.
+</p>
+<p>This function is a GNU extension and should not be used in portable
+programs.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-lrand48_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">lrand48_r</strong> <code class="def-code-arguments">(struct drand48_data *<var class="var">buffer</var>, long int *<var class="var">result</var>)</code><a class="copiable-link" href="#index-lrand48_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:buffer
+| AS-Safe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">lrand48</code>, but in addition it takes a
+pointer to a buffer describing the state of the random number generator
+just like <code class="code">drand48</code>.
+</p>
+<p>If the return value of the function is non-negative the variable pointed
+to by <var class="var">result</var> contains the result.  Otherwise an error occurred.
+</p>
+<p>This function is a GNU extension and should not be used in portable
+programs.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-nrand48_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">nrand48_r</strong> <code class="def-code-arguments">(unsigned short int <var class="var">xsubi</var>[3], struct drand48_data *<var class="var">buffer</var>, long int *<var class="var">result</var>)</code><a class="copiable-link" href="#index-nrand48_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:buffer
+| AS-Safe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">nrand48_r</code> function works like <code class="code">nrand48</code> in that it
+produces a random number in the range <code class="code">0</code> to <code class="code">2^31</code>.  But instead
+of using the global parameters for the congruential formula it uses the
+information from the buffer pointed to by <var class="var">buffer</var>.  The state is
+described by the values in <var class="var">xsubi</var>.
+</p>
+<p>If the return value is non-negative the variable pointed to by
+<var class="var">result</var> contains the result.
+</p>
+<p>This function is a GNU extension and should not be used in portable
+programs.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mrand48_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">mrand48_r</strong> <code class="def-code-arguments">(struct drand48_data *<var class="var">buffer</var>, long int *<var class="var">result</var>)</code><a class="copiable-link" href="#index-mrand48_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:buffer
+| AS-Safe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">mrand48</code> but like the other reentrant
+functions it uses the random number generator described by the value in
+the buffer pointed to by <var class="var">buffer</var>.
+</p>
+<p>If the return value is non-negative the variable pointed to by
+<var class="var">result</var> contains the result.
+</p>
+<p>This function is a GNU extension and should not be used in portable
+programs.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-jrand48_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">jrand48_r</strong> <code class="def-code-arguments">(unsigned short int <var class="var">xsubi</var>[3], struct drand48_data *<var class="var">buffer</var>, long int *<var class="var">result</var>)</code><a class="copiable-link" href="#index-jrand48_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:buffer
+| AS-Safe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">jrand48_r</code> function is similar to <code class="code">jrand48</code>.  Like the
+other reentrant functions of this function family it uses the
+congruential formula parameters from the buffer pointed to by
+<var class="var">buffer</var>.
+</p>
+<p>If the return value is non-negative the variable pointed to by
+<var class="var">result</var> contains the result.
+</p>
+<p>This function is a GNU extension and should not be used in portable
+programs.
+</p></dd></dl>
+
+<p>Before any of the above functions are used the buffer of type
+<code class="code">struct drand48_data</code> should be initialized.  The easiest way to do
+this is to fill the whole buffer with null bytes, e.g. by
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">memset (buffer, '\0', sizeof (struct drand48_data));
+</pre></div>
+
+<p>Using any of the reentrant functions of this family now will
+automatically initialize the random number generator to the default
+values for the state and the parameters of the congruential formula.
+</p>
+<p>The other possibility is to use any of the functions which explicitly
+initialize the buffer.  Though it might be obvious how to initialize the
+buffer from looking at the parameter to the function, it is highly
+recommended to use these functions since the result might not always be
+what you expect.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-srand48_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">srand48_r</strong> <code class="def-code-arguments">(long int <var class="var">seedval</var>, struct drand48_data *<var class="var">buffer</var>)</code><a class="copiable-link" href="#index-srand48_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:buffer
+| AS-Safe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The description of the random number generator represented by the
+information in <var class="var">buffer</var> is initialized similarly to what the function
+<code class="code">srand48</code> does.  The state is initialized from the parameter
+<var class="var">seedval</var> and the parameters for the congruential formula are
+initialized to their default values.
+</p>
+<p>If the return value is non-negative the function call succeeded.
+</p>
+<p>This function is a GNU extension and should not be used in portable
+programs.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-seed48_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">seed48_r</strong> <code class="def-code-arguments">(unsigned short int <var class="var">seed16v</var>[3], struct drand48_data *<var class="var">buffer</var>)</code><a class="copiable-link" href="#index-seed48_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:buffer
+| AS-Safe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">srand48_r</code> but like <code class="code">seed48</code> it
+initializes all 48 bits of the state from the parameter <var class="var">seed16v</var>.
+</p>
+<p>If the return value is non-negative the function call succeeded.  It
+does not return a pointer to the previous state of the random number
+generator like the <code class="code">seed48</code> function does.  If the user wants to
+preserve the state for a later re-run s/he can copy the whole buffer
+pointed to by <var class="var">buffer</var>.
+</p>
+<p>This function is a GNU extension and should not be used in portable
+programs.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-lcong48_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">lcong48_r</strong> <code class="def-code-arguments">(unsigned short int <var class="var">param</var>[7], struct drand48_data *<var class="var">buffer</var>)</code><a class="copiable-link" href="#index-lcong48_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:buffer
+| AS-Safe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function initializes all aspects of the random number generator
+described in <var class="var">buffer</var> with the data in <var class="var">param</var>.  Here it is
+especially true that the function does more than just copying the
+contents of <var class="var">param</var> and <var class="var">buffer</var>.  More work is required and
+therefore it is important to use this function rather than initializing
+the random number generator directly.
+</p>
+<p>If the return value is non-negative the function call succeeded.
+</p>
+<p>This function is a GNU extension and should not be used in portable
+programs.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="High-Quality-Random.html">High Quality Random Number Functions</a>, Previous: <a href="BSD-Random.html">BSD Random Number Functions</a>, Up: <a href="Pseudo_002dRandom-Numbers.html">Pseudo-Random Numbers</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

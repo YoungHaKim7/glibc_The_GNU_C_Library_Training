@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Lookup Netgroup (The GNU C Library)</title>
+
+<meta name="description" content="Lookup Netgroup (The GNU C Library)">
+<meta name="keywords" content="Lookup Netgroup (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Netgroup-Database.html" rel="up" title="Netgroup Database">
+<link href="Netgroup-Membership.html" rel="next" title="Netgroup Membership">
+<link href="Netgroup-Data.html" rel="prev" title="Netgroup Data">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Lookup-Netgroup">
+<div class="nav-panel">
+<p>
+Next: <a href="Netgroup-Membership.html" accesskey="n" rel="next">Testing for Netgroup Membership</a>, Previous: <a href="Netgroup-Data.html" accesskey="p" rel="prev">Netgroup Data</a>, Up: <a href="Netgroup-Database.html" accesskey="u" rel="up">Netgroup Database</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Looking-up-one-Netgroup"><span>31.16.2 Looking up one Netgroup<a class="copiable-link" href="#Looking-up-one-Netgroup"> &para;</a></span></h4>
+
+<p>The lookup functions for netgroups are a bit different than all other
+system database handling functions.  Since a single netgroup can contain
+many entries a two-step process is needed.  First a single netgroup is
+selected and then one can iterate over all entries in this netgroup.
+These functions are declared in <samp class="file">netdb.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setnetgrent"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setnetgrent</strong> <code class="def-code-arguments">(const char *<var class="var">netgroup</var>)</code><a class="copiable-link" href="#index-setnetgrent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:netgrent locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>A call to this function initializes the internal state of the library to
+allow following calls of <code class="code">getnetgrent</code> to iterate over all entries
+in the netgroup with name <var class="var">netgroup</var>.
+</p>
+<p>When the call is successful (i.e., when a netgroup with this name exists)
+the return value is <code class="code">1</code>.  When the return value is <code class="code">0</code> no
+netgroup of this name is known or some other error occurred.
+</p></dd></dl>
+
+<p>It is important to remember that there is only one single state for
+iterating the netgroups.  Even if the programmer uses the
+<code class="code">getnetgrent_r</code> function the result is not really reentrant since
+always only one single netgroup at a time can be processed.  If the
+program needs to process more than one netgroup simultaneously she
+must protect this by using external locking.  This problem was
+introduced in the original netgroups implementation in SunOS and since
+we must stay compatible it is not possible to change this.
+</p>
+<p>Some other functions also use the netgroups state.  Currently these are
+the <code class="code">innetgr</code> function and parts of the implementation of the
+<code class="code">compat</code> service part of the NSS implementation.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getnetgrent"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getnetgrent</strong> <code class="def-code-arguments">(char **<var class="var">hostp</var>, char **<var class="var">userp</var>, char **<var class="var">domainp</var>)</code><a class="copiable-link" href="#index-getnetgrent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:netgrent race:netgrentbuf locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns the next unprocessed entry of the currently
+selected netgroup.  The string pointers, in which addresses are passed in
+the arguments <var class="var">hostp</var>, <var class="var">userp</var>, and <var class="var">domainp</var>, will contain
+after a successful call pointers to appropriate strings.  If the string
+in the next entry is empty the pointer has the value <code class="code">NULL</code>.
+The returned string pointers are only valid if none of the netgroup
+related functions are called.
+</p>
+<p>The return value is <code class="code">1</code> if the next entry was successfully read.  A
+value of <code class="code">0</code> means no further entries exist or internal errors occurred.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getnetgrent_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getnetgrent_r</strong> <code class="def-code-arguments">(char **<var class="var">hostp</var>, char **<var class="var">userp</var>, char **<var class="var">domainp</var>, char *<var class="var">buffer</var>, size_t <var class="var">buflen</var>)</code><a class="copiable-link" href="#index-getnetgrent_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:netgrent locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">getnetgrent</code> with only one exception:
+the strings the three string pointers <var class="var">hostp</var>, <var class="var">userp</var>, and
+<var class="var">domainp</var> point to, are placed in the buffer of <var class="var">buflen</var> bytes
+starting at <var class="var">buffer</var>.  This means the returned values are valid
+even after other netgroup related functions are called.
+</p>
+<p>The return value is <code class="code">1</code> if the next entry was successfully read and
+the buffer contains enough room to place the strings in it.  <code class="code">0</code> is
+returned in case no more entries are found, the buffer is too small, or
+internal errors occurred.
+</p>
+<p>This function is a GNU extension.  The original implementation in the
+SunOS libc does not provide this function.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-endnetgrent"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">endnetgrent</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-endnetgrent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:netgrent
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function frees all buffers which were allocated to process the last
+selected netgroup.  As a result all string pointers returned by calls
+to <code class="code">getnetgrent</code> are invalid afterwards.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Netgroup-Membership.html">Testing for Netgroup Membership</a>, Previous: <a href="Netgroup-Data.html">Netgroup Data</a>, Up: <a href="Netgroup-Database.html">Netgroup Database</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

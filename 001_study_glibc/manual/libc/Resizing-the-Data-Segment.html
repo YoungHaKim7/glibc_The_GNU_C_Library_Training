@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Resizing the Data Segment (The GNU C Library)</title>
+
+<meta name="description" content="Resizing the Data Segment (The GNU C Library)">
+<meta name="keywords" content="Resizing the Data Segment (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Memory.html" rel="up" title="Memory">
+<link href="Memory-Protection.html" rel="next" title="Memory Protection">
+<link href="Memory-Allocation.html" rel="prev" title="Memory Allocation">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Resizing-the-Data-Segment">
+<div class="nav-panel">
+<p>
+Next: <a href="Memory-Protection.html" accesskey="n" rel="next">Memory Protection</a>, Previous: <a href="Memory-Allocation.html" accesskey="p" rel="prev">Allocating Storage For Program Data</a>, Up: <a href="Memory.html" accesskey="u" rel="up">Virtual Memory Allocation And Paging</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Resizing-the-Data-Segment-1"><span>3.3 Resizing the Data Segment<a class="copiable-link" href="#Resizing-the-Data-Segment-1"> &para;</a></span></h3>
+
+<p>The symbols in this section are declared in <samp class="file">unistd.h</samp>.
+</p>
+<p>You will not normally use the functions in this section, because the
+functions described in <a class="ref" href="Memory-Allocation.html">Allocating Storage For Program Data</a> are easier to use.  Those
+are interfaces to a GNU C Library memory allocator that uses the
+functions below itself.  The functions below are simple interfaces to
+system calls.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-brk"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">brk</strong> <code class="def-code-arguments">(void *<var class="var">addr</var>)</code><a class="copiable-link" href="#index-brk"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p><code class="code">brk</code> sets the high end of the calling process&rsquo; data segment to
+<var class="var">addr</var>.
+</p>
+<p>The address of the end of a segment is defined to be the address of the
+last byte in the segment plus 1.
+</p>
+<p>The function has no effect if <var class="var">addr</var> is lower than the low end of
+the data segment.  (This is considered success, by the way.)
+</p>
+<p>The function fails if it would cause the data segment to overlap another
+segment or exceed the process&rsquo; data storage limit (see <a class="pxref" href="Limits-on-Resources.html">Limiting Resource Usage</a>).
+</p>
+<p>The function is named for a common historical case where data storage
+and the stack are in the same segment.  Data storage allocation grows
+upward from the bottom of the segment while the stack grows downward
+toward it from the top of the segment and the curtain between them is
+called the <em class="dfn">break</em>.
+</p>
+<p>The return value is zero on success.  On failure, the return value is
+<code class="code">-1</code> and <code class="code">errno</code> is set accordingly.  The following <code class="code">errno</code>
+values are specific to this function:
+</p>
+<dl class="table">
+<dt><code class="code">ENOMEM</code></dt>
+<dd><p>The request would cause the data segment to overlap another segment or
+exceed the process&rsquo; data storage limit.
+</p></dd>
+</dl>
+
+
+</dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sbrk"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">sbrk</strong> <code class="def-code-arguments">(ptrdiff_t <var class="var">delta</var>)</code><a class="copiable-link" href="#index-sbrk"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function is the same as <code class="code">brk</code> except that you specify the new
+end of the data segment as an offset <var class="var">delta</var> from the current end
+and on success the return value is the address of the resulting end of
+the data segment instead of zero.
+</p>
+<p>This means you can use &lsquo;<samp class="samp">sbrk(0)</samp>&rsquo; to find out what the current end
+of the data segment is.
+</p>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Memory-Protection.html">Memory Protection</a>, Previous: <a href="Memory-Allocation.html">Allocating Storage For Program Data</a>, Up: <a href="Memory.html">Virtual Memory Allocation And Paging</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

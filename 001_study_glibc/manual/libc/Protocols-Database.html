@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Protocols Database (The GNU C Library)</title>
+
+<meta name="description" content="Protocols Database (The GNU C Library)">
+<meta name="keywords" content="Protocols Database (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Internet-Namespace.html" rel="up" title="Internet Namespace">
+<link href="Inet-Example.html" rel="next" title="Inet Example">
+<link href="Byte-Order.html" rel="prev" title="Byte Order">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Protocols-Database">
+<div class="nav-panel">
+<p>
+Next: <a href="Inet-Example.html" accesskey="n" rel="next">Internet Socket Example</a>, Previous: <a href="Byte-Order.html" accesskey="p" rel="prev">Byte Order Conversion</a>, Up: <a href="Internet-Namespace.html" accesskey="u" rel="up">The Internet Namespace</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Protocols-Database-1"><span>16.6.6 Protocols Database<a class="copiable-link" href="#Protocols-Database-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-protocols-database"></a>
+
+<p>The communications protocol used with a socket controls low-level
+details of how data are exchanged.  For example, the protocol implements
+things like checksums to detect errors in transmissions, and routing
+instructions for messages.  Normal user programs have little reason to
+mess with these details directly.
+</p>
+<a class="index-entry-id" id="index-TCP-_0028Internet-protocol_0029"></a>
+<p>The default communications protocol for the Internet namespace depends on
+the communication style.  For stream communication, the default is TCP
+(&ldquo;transmission control protocol&rdquo;).  For datagram communication, the
+default is UDP (&ldquo;user datagram protocol&rdquo;).  For reliable datagram
+communication, the default is RDP (&ldquo;reliable datagram protocol&rdquo;).
+You should nearly always use the default.
+</p>
+<a class="index-entry-id" id="index-_002fetc_002fprotocols"></a>
+<p>Internet protocols are generally specified by a name instead of a
+number.  The network protocols that a host knows about are stored in a
+database.  This is usually either derived from the file
+<samp class="file">/etc/protocols</samp>, or it may be an equivalent provided by a name
+server.  You look up the protocol number associated with a named
+protocol in the database using the <code class="code">getprotobyname</code> function.
+</p>
+<p>Here are detailed descriptions of the utilities for accessing the
+protocols database.  These are declared in <samp class="file">netdb.h</samp>.
+<a class="index-entry-id" id="index-netdb_002eh-2"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-protoent"><span class="category-def">Data Type: </span><span><strong class="def-name">struct protoent</strong><a class="copiable-link" href="#index-struct-protoent"> &para;</a></span></dt>
+<dd>
+<p>This data type is used to represent entries in the network protocols
+database.  It has the following members:
+</p>
+<dl class="table">
+<dt><code class="code">char *p_name</code></dt>
+<dd><p>This is the official name of the protocol.
+</p>
+</dd>
+<dt><code class="code">char **p_aliases</code></dt>
+<dd><p>These are alternate names for the protocol, specified as an array of
+strings.  The last element of the array is a null pointer.
+</p>
+</dd>
+<dt><code class="code">int p_proto</code></dt>
+<dd><p>This is the protocol number (in host byte order); use this member as the
+<var class="var">protocol</var> argument to <code class="code">socket</code>.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>You can use <code class="code">getprotobyname</code> and <code class="code">getprotobynumber</code> to search
+the protocols database for a specific protocol.  The information is
+returned in a statically-allocated structure; you must copy the
+information if you need to save it across calls.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getprotobyname"><span class="category-def">Function: </span><span><code class="def-type">struct protoent *</code> <strong class="def-name">getprotobyname</strong> <code class="def-code-arguments">(const char *<var class="var">name</var>)</code><a class="copiable-link" href="#index-getprotobyname"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:protobyname locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">getprotobyname</code> function returns information about the
+network protocol named <var class="var">name</var>.  If there is no such protocol, it
+returns a null pointer.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getprotobynumber"><span class="category-def">Function: </span><span><code class="def-type">struct protoent *</code> <strong class="def-name">getprotobynumber</strong> <code class="def-code-arguments">(int <var class="var">protocol</var>)</code><a class="copiable-link" href="#index-getprotobynumber"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:protobynumber locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">getprotobynumber</code> function returns information about the
+network protocol with number <var class="var">protocol</var>.  If there is no such
+protocol, it returns a null pointer.
+</p></dd></dl>
+
+<p>You can also scan the whole protocols database one protocol at a time by
+using <code class="code">setprotoent</code>, <code class="code">getprotoent</code> and <code class="code">endprotoent</code>.
+Be careful when using these functions because they are not reentrant.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setprotoent"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">setprotoent</strong> <code class="def-code-arguments">(int <var class="var">stayopen</var>)</code><a class="copiable-link" href="#index-setprotoent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:protoent locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function opens the protocols database to begin scanning it.
+</p>
+<p>If the <var class="var">stayopen</var> argument is nonzero, this sets a flag so that
+subsequent calls to <code class="code">getprotobyname</code> or <code class="code">getprotobynumber</code> will
+not close the database (as they usually would).  This makes for more
+efficiency if you call those functions several times, by avoiding
+reopening the database for each call.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getprotoent"><span class="category-def">Function: </span><span><code class="def-type">struct protoent *</code> <strong class="def-name">getprotoent</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-getprotoent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:protoent race:protoentbuf locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns the next entry in the protocols database.  It
+returns a null pointer if there are no more entries.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-endprotoent"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">endprotoent</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-endprotoent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:protoent locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function closes the protocols database.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Inet-Example.html">Internet Socket Example</a>, Previous: <a href="Byte-Order.html">Byte Order Conversion</a>, Up: <a href="Internet-Namespace.html">The Internet Namespace</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

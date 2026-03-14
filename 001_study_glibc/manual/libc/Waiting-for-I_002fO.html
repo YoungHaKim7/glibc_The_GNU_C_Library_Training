@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Waiting for I/O (The GNU C Library)</title>
+
+<meta name="description" content="Waiting for I/O (The GNU C Library)">
+<meta name="keywords" content="Waiting for I/O (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Low_002dLevel-I_002fO.html" rel="up" title="Low-Level I/O">
+<link href="Synchronizing-I_002fO.html" rel="next" title="Synchronizing I/O">
+<link href="Memory_002dmapped-I_002fO.html" rel="prev" title="Memory-mapped I/O">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Waiting-for-I_002fO">
+<div class="nav-panel">
+<p>
+Next: <a href="Synchronizing-I_002fO.html" accesskey="n" rel="next">Synchronizing I/O operations</a>, Previous: <a href="Memory_002dmapped-I_002fO.html" accesskey="p" rel="prev">Memory-mapped I/O</a>, Up: <a href="Low_002dLevel-I_002fO.html" accesskey="u" rel="up">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Waiting-for-Input-or-Output"><span>13.9 Waiting for Input or Output<a class="copiable-link" href="#Waiting-for-Input-or-Output"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-waiting-for-input-or-output"></a>
+<a class="index-entry-id" id="index-multiplexing-input"></a>
+<a class="index-entry-id" id="index-input-from-multiple-files"></a>
+
+<p>Sometimes a program needs to accept input on multiple input channels
+whenever input arrives.  For example, some workstations may have devices
+such as a digitizing tablet, function button box, or dial box that are
+connected via normal asynchronous serial interfaces; good user interface
+style requires responding immediately to input on any device.  Another
+example is a program that acts as a server to several other processes
+via pipes or sockets.
+</p>
+<p>You cannot normally use <code class="code">read</code> for this purpose, because this
+blocks the program until input is available on one particular file
+descriptor; input on other channels won&rsquo;t wake it up.  You could set
+nonblocking mode and poll each file descriptor in turn, but this is very
+inefficient.
+</p>
+<p>A better solution is to use the <code class="code">select</code> function.  This blocks the
+program until input or output is ready on a specified set of file
+descriptors, or until a timer expires, whichever comes first.  This
+facility is declared in the header file <samp class="file">sys/select.h</samp>.
+<a class="index-entry-id" id="index-sys_002fselect_002eh"></a>
+</p>
+<p>In the case of a server socket (see <a class="pxref" href="Listening.html">Listening for Connections</a>), we say that
+&ldquo;input&rdquo; is available when there are pending connections that could be
+accepted (see <a class="pxref" href="Accepting-Connections.html">Accepting Connections</a>).  <code class="code">accept</code> for server
+sockets blocks and interacts with <code class="code">select</code> just as <code class="code">read</code> does
+for normal input.
+</p>
+<a class="index-entry-id" id="index-file-descriptor-sets_002c-for-select"></a>
+<p>The file descriptor sets for the <code class="code">select</code> function are specified
+as <code class="code">fd_set</code> objects.  Here is the description of the data type
+and some macros for manipulating these objects.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-fd_005fset"><span class="category-def">Data Type: </span><span><strong class="def-name">fd_set</strong><a class="copiable-link" href="#index-fd_005fset"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">fd_set</code> data type represents file descriptor sets for the
+<code class="code">select</code> function.  It is actually a bit array.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-FD_005fSETSIZE"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">FD_SETSIZE</strong><a class="copiable-link" href="#index-FD_005fSETSIZE"> &para;</a></span></dt>
+<dd>
+<p>The value of this macro is the maximum number of file descriptors that a
+<code class="code">fd_set</code> object can hold information about.  On systems with a
+fixed maximum number, <code class="code">FD_SETSIZE</code> is at least that number.  On
+some systems, including GNU, there is no absolute limit on the number of
+descriptors open, but this macro still has a constant value which
+controls the number of bits in an <code class="code">fd_set</code>; if you get a file
+descriptor with a value as high as <code class="code">FD_SETSIZE</code>, you cannot put
+that descriptor into an <code class="code">fd_set</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-FD_005fZERO"><span class="category-def">Macro: </span><span><code class="def-type">void</code> <strong class="def-name">FD_ZERO</strong> <code class="def-code-arguments">(fd_set *<var class="var">set</var>)</code><a class="copiable-link" href="#index-FD_005fZERO"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:set
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro initializes the file descriptor set <var class="var">set</var> to be the
+empty set.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-FD_005fSET"><span class="category-def">Macro: </span><span><code class="def-type">void</code> <strong class="def-name">FD_SET</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, fd_set *<var class="var">set</var>)</code><a class="copiable-link" href="#index-FD_005fSET"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:set
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro adds <var class="var">filedes</var> to the file descriptor set <var class="var">set</var>.
+</p>
+<p>The <var class="var">filedes</var> parameter must not have side effects since it is
+evaluated more than once.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-FD_005fCLR"><span class="category-def">Macro: </span><span><code class="def-type">void</code> <strong class="def-name">FD_CLR</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, fd_set *<var class="var">set</var>)</code><a class="copiable-link" href="#index-FD_005fCLR"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:set
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro removes <var class="var">filedes</var> from the file descriptor set <var class="var">set</var>.
+</p>
+<p>The <var class="var">filedes</var> parameter must not have side effects since it is
+evaluated more than once.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-FD_005fISSET"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">FD_ISSET</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, const fd_set *<var class="var">set</var>)</code><a class="copiable-link" href="#index-FD_005fISSET"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:set
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro returns a nonzero value (true) if <var class="var">filedes</var> is a member
+of the file descriptor set <var class="var">set</var>, and zero (false) otherwise.
+</p>
+<p>The <var class="var">filedes</var> parameter must not have side effects since it is
+evaluated more than once.
+</p></dd></dl>
+
+<p>Next, here is the description of the <code class="code">select</code> function itself.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-select"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">select</strong> <code class="def-code-arguments">(int <var class="var">nfds</var>, fd_set *<var class="var">read-fds</var>, fd_set *<var class="var">write-fds</var>, fd_set *<var class="var">except-fds</var>, struct timeval *<var class="var">timeout</var>)</code><a class="copiable-link" href="#index-select"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe race:read-fds race:write-fds race:except-fds
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">select</code> function blocks the calling process until there is
+activity on any of the specified sets of file descriptors, or until the
+timeout period has expired.
+</p>
+<p>The file descriptors specified by the <var class="var">read-fds</var> argument are
+checked to see if they are ready for reading; the <var class="var">write-fds</var> file
+descriptors are checked to see if they are ready for writing; and the
+<var class="var">except-fds</var> file descriptors are checked for exceptional
+conditions.  You can pass a null pointer for any of these arguments if
+you are not interested in checking for that kind of condition.
+</p>
+<p>A file descriptor is considered ready for reading if a <code class="code">read</code>
+call will not block.  This usually includes the read offset being at
+the end of the file or there is an error to report.  A server socket
+is considered ready for reading if there is a pending connection which
+can be accepted with <code class="code">accept</code>; see <a class="pxref" href="Accepting-Connections.html">Accepting Connections</a>.  A
+client socket is ready for writing when its connection is fully
+established; see <a class="pxref" href="Connecting.html">Making a Connection</a>.
+</p>
+<p>&ldquo;Exceptional conditions&rdquo; does not mean errors&mdash;errors are reported
+immediately when an erroneous system call is executed, and do not
+constitute a state of the descriptor.  Rather, they include conditions
+such as the presence of an urgent message on a socket.  (See <a class="xref" href="Sockets.html">Sockets</a>,
+for information on urgent messages.)
+</p>
+<p>The <code class="code">select</code> function checks only the first <var class="var">nfds</var> file
+descriptors.  The usual thing is to pass <code class="code">FD_SETSIZE</code> as the value
+of this argument.
+</p>
+<p>The <var class="var">timeout</var> specifies the maximum time to wait.  If you pass a
+null pointer for this argument, it means to block indefinitely until
+one of the file descriptors is ready.  Otherwise, you should provide
+the time in <code class="code">struct timeval</code> format; see <a class="ref" href="Time-Types.html">Time Types</a>.
+Specify zero as the time (a <code class="code">struct timeval</code> containing all
+zeros) if you want to find out which descriptors are ready without
+waiting if none are ready.
+</p>
+<p>The normal return value from <code class="code">select</code> is the total number of ready file
+descriptors in all of the sets.  Each of the argument sets is overwritten
+with information about the descriptors that are ready for the corresponding
+operation.  Thus, to see if a particular descriptor <var class="var">desc</var> has input,
+use <code class="code">FD_ISSET (<var class="var">desc</var>, <var class="var">read-fds</var>)</code> after <code class="code">select</code> returns.
+</p>
+<p>If <code class="code">select</code> returns because the timeout period expires, it returns
+a value of zero.
+</p>
+<p>Any signal will cause <code class="code">select</code> to return immediately.  So if your
+program uses signals, you can&rsquo;t rely on <code class="code">select</code> to keep waiting
+for the full time specified.  If you want to be sure of waiting for a
+particular amount of time, you must check for <code class="code">EINTR</code> and repeat
+the <code class="code">select</code> with a newly calculated timeout based on the current
+time.  See the example below.  See also <a class="ref" href="Interrupted-Primitives.html">Primitives Interrupted by Signals</a>.
+</p>
+<p>If an error occurs, <code class="code">select</code> returns <code class="code">-1</code> and does not modify
+the argument file descriptor sets.  The following <code class="code">errno</code> error
+conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>One of the file descriptor sets specified an invalid file descriptor.
+</p>
+</dd>
+<dt><code class="code">EINTR</code></dt>
+<dd><p>The operation was interrupted by a signal.  See <a class="xref" href="Interrupted-Primitives.html">Primitives Interrupted by Signals</a>.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">timeout</var> argument is invalid; one of the components is negative
+or too large.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>Here is an example showing how you can use <code class="code">select</code> to establish a
+timeout period for reading from a file descriptor.  The <code class="code">input_timeout</code>
+function blocks the calling process until input is available on the
+file descriptor, or until the timeout period expires.
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">
+
+</pre><div class="group"><pre class="example-preformatted">#define _GNU_SOURCE 1
+#include &lt;errno.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/select.h&gt;
+</pre></div><pre class="example-preformatted">
+
+</pre><div class="group"><pre class="example-preformatted">int
+input_timeout (int filedes, unsigned int seconds)
+{
+  fd_set set;
+  struct timeval timeout;
+</pre></div><pre class="example-preformatted">
+
+  /* <span class="r">Initialize the file descriptor set.</span> */
+  FD_ZERO (&amp;set);
+  FD_SET (filedes, &amp;set);
+
+  /* <span class="r">Initialize the timeout data structure.</span> */
+  timeout.tv_sec = seconds;
+  timeout.tv_usec = 0;
+
+</pre><div class="group"><pre class="example-preformatted">  /* <span class="r"><code class="code">select</code> returns 0 if timeout, 1 if input available, -1 if error.</span> */
+  return TEMP_FAILURE_RETRY (select (FD_SETSIZE,
+                                     &amp;set, NULL, NULL,
+                                     &amp;timeout));
+}
+</pre></div><pre class="example-preformatted">
+
+</pre><div class="group"><pre class="example-preformatted">int
+main (void)
+{
+  fprintf (stderr, &quot;select returned %d.\n&quot;,
+           input_timeout (STDIN_FILENO, 5));
+  return 0;
+}
+</pre></div></div>
+
+<p>There is another example showing the use of <code class="code">select</code> to multiplex
+input from multiple sockets in <a class="ref" href="Server-Example.html">Byte Stream Connection Server Example</a>.
+</p>
+<p>For an alternate interface to this functionality, see <code class="code">poll</code>
+(see <a class="pxref" href="Other-Low_002dLevel-I_002fO-APIs.html">Other low-level-I/O-related functions</a>).
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Synchronizing-I_002fO.html">Synchronizing I/O operations</a>, Previous: <a href="Memory_002dmapped-I_002fO.html">Memory-mapped I/O</a>, Up: <a href="Low_002dLevel-I_002fO.html">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

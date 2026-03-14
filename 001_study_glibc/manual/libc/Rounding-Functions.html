@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Rounding Functions (The GNU C Library)</title>
+
+<meta name="description" content="Rounding Functions (The GNU C Library)">
+<meta name="keywords" content="Rounding Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Arithmetic-Functions.html" rel="up" title="Arithmetic Functions">
+<link href="Remainder-Functions.html" rel="next" title="Remainder Functions">
+<link href="Normalization-Functions.html" rel="prev" title="Normalization Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Rounding-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Remainder-Functions.html" accesskey="n" rel="next">Remainder Functions</a>, Previous: <a href="Normalization-Functions.html" accesskey="p" rel="prev">Normalization Functions</a>, Up: <a href="Arithmetic-Functions.html" accesskey="u" rel="up">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Rounding-Functions-1"><span>20.8.3 Rounding Functions<a class="copiable-link" href="#Rounding-Functions-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-converting-floats-to-integers"></a>
+
+<a class="index-entry-id" id="index-math_002eh-4"></a>
+<p>The functions listed here perform operations such as rounding and
+truncation of floating-point values.  Some of these functions convert
+floating point numbers to integer values.  They are all declared in
+<samp class="file">math.h</samp>.
+</p>
+<p>You can also convert floating-point numbers to integers simply by
+casting them to <code class="code">int</code>.  This discards the fractional part,
+effectively rounding towards zero.  However, this only works if the
+result can actually be represented as an <code class="code">int</code>&mdash;for very large
+numbers, this is impossible.  The functions listed here return the
+result as a <code class="code">double</code> instead to get around this problem.
+</p>
+<p>The <code class="code">fromfp</code> functions use the following macros, from TS
+18661-1:2014, to specify the direction of rounding.  These correspond
+to the rounding directions defined in IEEE 754-2008.
+</p>
+<dl class="vtable">
+<dt><a id="index-FP_005fINT_005fUPWARD"></a><span><code class="code">FP_INT_UPWARD</code><a class="copiable-link" href="#index-FP_005fINT_005fUPWARD"> &para;</a></span></dt>
+<dd>
+<p>Round toward <em class="math">+&#x221E;</em>.
+</p>
+</dd>
+<dt><a id="index-FP_005fINT_005fDOWNWARD"></a><span><code class="code">FP_INT_DOWNWARD</code><a class="copiable-link" href="#index-FP_005fINT_005fDOWNWARD"> &para;</a></span></dt>
+<dd>
+<p>Round toward <em class="math">-&#x221E;</em>.
+</p>
+</dd>
+<dt><a id="index-FP_005fINT_005fTOWARDZERO"></a><span><code class="code">FP_INT_TOWARDZERO</code><a class="copiable-link" href="#index-FP_005fINT_005fTOWARDZERO"> &para;</a></span></dt>
+<dd>
+<p>Round toward zero.
+</p>
+</dd>
+<dt><a id="index-FP_005fINT_005fTONEARESTFROMZERO"></a><span><code class="code">FP_INT_TONEARESTFROMZERO</code><a class="copiable-link" href="#index-FP_005fINT_005fTONEARESTFROMZERO"> &para;</a></span></dt>
+<dd>
+<p>Round to nearest, ties round away from zero.
+</p>
+</dd>
+<dt><a id="index-FP_005fINT_005fTONEAREST"></a><span><code class="code">FP_INT_TONEAREST</code><a class="copiable-link" href="#index-FP_005fINT_005fTONEAREST"> &para;</a></span></dt>
+<dd>
+<p>Round to nearest, ties round to even.
+</p></dd>
+</dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-ceil"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">ceil</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-ceil"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ceilf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">ceilf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-ceilf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ceill"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">ceill</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-ceill"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ceilfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">ceilfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-ceilfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ceilfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">ceilfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-ceilfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions round <var class="var">x</var> upwards to the nearest integer,
+returning that value as a <code class="code">double</code>.  Thus, <code class="code">ceil (1.5)</code>
+is <code class="code">2.0</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-floor"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">floor</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-floor"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-floorf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">floorf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-floorf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-floorl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">floorl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-floorl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-floorfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">floorfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-floorfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-floorfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">floorfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-floorfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions round <var class="var">x</var> downwards to the nearest
+integer, returning that value as a <code class="code">double</code>.  Thus, <code class="code">floor
+(1.5)</code> is <code class="code">1.0</code> and <code class="code">floor (-1.5)</code> is <code class="code">-2.0</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-trunc"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">trunc</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-trunc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-truncf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">truncf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-truncf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-truncl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">truncl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-truncl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-truncfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">truncfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-truncfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-truncfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">truncfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-truncfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">trunc</code> functions round <var class="var">x</var> towards zero to the nearest
+integer (returned in floating-point format).  Thus, <code class="code">trunc (1.5)</code>
+is <code class="code">1.0</code> and <code class="code">trunc (-1.5)</code> is <code class="code">-1.0</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-rint"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">rint</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-rint"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-rintf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">rintf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-rintf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-rintl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">rintl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-rintl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-rintfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">rintfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-rintfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-rintfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">rintfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-rintfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions round <var class="var">x</var> to an integer value according to the
+current rounding mode.  See <a class="xref" href="Floating-Point-Parameters.html">Floating Point Parameters</a>, for
+information about the various rounding modes.  The default
+rounding mode is to round to the nearest integer; some machines
+support other modes, but round-to-nearest is always used unless
+you explicitly select another.
+</p>
+<p>If <var class="var">x</var> was not initially an integer, these functions raise the
+inexact exception.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-nearbyint"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">nearbyint</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-nearbyint"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nearbyintf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">nearbyintf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-nearbyintf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nearbyintl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">nearbyintl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-nearbyintl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nearbyintfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">nearbyintfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-nearbyintfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-nearbyintfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">nearbyintfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-nearbyintfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions return the same value as the <code class="code">rint</code> functions, but
+do not raise the inexact exception if <var class="var">x</var> is not an integer.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-round"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">round</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-round"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-roundf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">roundf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-roundf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-roundl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">roundl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-roundl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-roundfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">roundfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-roundfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-roundfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">roundfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-roundfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions are similar to <code class="code">rint</code>, but they round halfway
+cases away from zero instead of to the nearest integer (or other
+current rounding mode).
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-roundeven"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">roundeven</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-roundeven"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-roundevenf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">roundevenf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-roundevenf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-roundevenl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">roundevenl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-roundevenl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-roundevenfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">roundevenfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-roundevenfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-roundevenfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">roundevenfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-roundevenfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions, from TS 18661-1:2014 and TS 18661-3:2015, are similar
+to <code class="code">round</code>, but they round halfway cases to even instead of away
+from zero.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-lrint"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">lrint</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-lrint"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lrintf"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">lrintf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-lrintf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lrintl"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">lrintl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-lrintl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lrintfN"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">lrintfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-lrintfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lrintfNx"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">lrintfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-lrintfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions are just like <code class="code">rint</code>, but they return a
+<code class="code">long int</code> instead of a floating-point number.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-llrint"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">llrint</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-llrint"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-llrintf"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">llrintf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-llrintf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-llrintl"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">llrintl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-llrintl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-llrintfN"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">llrintfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-llrintfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-llrintfNx"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">llrintfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-llrintfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions are just like <code class="code">rint</code>, but they return a
+<code class="code">long long int</code> instead of a floating-point number.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-lround"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">lround</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-lround"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lroundf"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">lroundf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-lroundf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lroundl"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">lroundl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-lroundl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lroundfN"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">lroundfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-lroundfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lroundfNx"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">lroundfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-lroundfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions are just like <code class="code">round</code>, but they return a
+<code class="code">long int</code> instead of a floating-point number.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-llround"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">llround</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-llround"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-llroundf"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">llroundf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-llroundf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-llroundl"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">llroundl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-llroundl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-llroundfN"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">llroundfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-llroundfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-llroundfNx"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">llroundfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-llroundfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions are just like <code class="code">round</code>, but they return a
+<code class="code">long long int</code> instead of a floating-point number.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fromfp"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fromfp</strong> <code class="def-code-arguments">(double <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-fromfp"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fromfpf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fromfpf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-fromfpf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fromfpl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fromfpl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-fromfpl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fromfpfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fromfpfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-fromfpfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fromfpfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fromfpfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-fromfpfNx"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ufromfp"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">ufromfp</strong> <code class="def-code-arguments">(double <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-ufromfp"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ufromfpf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">ufromfpf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-ufromfpf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ufromfpl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">ufromfpl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-ufromfpl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ufromfpfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">ufromfpfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-ufromfpfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ufromfpfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">ufromfpfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-ufromfpfNx"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fromfpx"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">fromfpx</strong> <code class="def-code-arguments">(double <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-fromfpx"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fromfpxf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">fromfpxf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-fromfpxf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fromfpxl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">fromfpxl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-fromfpxl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fromfpxfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">fromfpxfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-fromfpxfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-fromfpxfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">fromfpxfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-fromfpxfNx"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ufromfpx"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">ufromfpx</strong> <code class="def-code-arguments">(double <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-ufromfpx"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ufromfpxf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">ufromfpxf</strong> <code class="def-code-arguments">(float <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-ufromfpxf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ufromfpxl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">ufromfpxl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-ufromfpxl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ufromfpxfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">ufromfpxfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-ufromfpxfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ufromfpxfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">ufromfpxfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, int <var class="var">round</var>, unsigned int <var class="var">width</var>)</code><a class="copiable-link" href="#index-ufromfpxfNx"> &para;</a></span></dt>
+<dd>
+
+
+
+
+
+
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>These functions, from TS 18661-1:2014 and TS 18661-3:2015, convert a
+floating-point number to an integer according to the rounding
+direction <var class="var">round</var> (one of the <code class="code">FP_INT_*</code> macros).  If the
+integer is outside the range of a two&rsquo;s complement signed or unsigned
+(depending on the return type of the function) integer of width
+<var class="var">width</var> bits, or if <var class="var">x</var> is infinite or NaN, or if <var class="var">width</var>
+is zero, a domain error occurs and a NaN is returned.  The functions
+with an &lsquo;<samp class="samp">x</samp>&rsquo; in their names raise the inexact exception when a
+domain error does not occur and the argument is not an integer; the
+other functions do not raise the inexact exception.
+</p>
+<p>Following ISO C23, in the GNU C Library these functions return their result
+in the floating-point argument type.  In TS 18661-1:2014 and TS
+18661-3:2015, they were originally defined to return <code class="code">intmax_t</code>
+and <code class="code">uintmax_t</code>.
+</p></dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-modf"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">modf</strong> <code class="def-code-arguments">(double <var class="var">value</var>, double *<var class="var">integer-part</var>)</code><a class="copiable-link" href="#index-modf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-modff"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">modff</strong> <code class="def-code-arguments">(float <var class="var">value</var>, float *<var class="var">integer-part</var>)</code><a class="copiable-link" href="#index-modff"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-modfl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">modfl</strong> <code class="def-code-arguments">(long double <var class="var">value</var>, long double *<var class="var">integer-part</var>)</code><a class="copiable-link" href="#index-modfl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-modffN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">modffN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">value</var>, _Float<var class="var">N</var> *<var class="var">integer-part</var>)</code><a class="copiable-link" href="#index-modffN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-modffNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">modffNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">value</var>, _Float<var class="var">N</var>x *<var class="var">integer-part</var>)</code><a class="copiable-link" href="#index-modffNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions break the argument <var class="var">value</var> into an integer part and a
+fractional part (between <code class="code">-1</code> and <code class="code">1</code>, exclusive).  Their sum
+equals <var class="var">value</var>.  Each of the parts has the same sign as <var class="var">value</var>,
+and the integer part is always rounded toward zero.
+</p>
+<p><code class="code">modf</code> stores the integer part in <code class="code">*<var class="var">integer-part</var></code>, and
+returns the fractional part.  For example, <code class="code">modf (2.5, &amp;intpart)</code>
+returns <code class="code">0.5</code> and stores <code class="code">2.0</code> into <code class="code">intpart</code>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Remainder-Functions.html">Remainder Functions</a>, Previous: <a href="Normalization-Functions.html">Normalization Functions</a>, Up: <a href="Arithmetic-Functions.html">Arithmetic Functions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

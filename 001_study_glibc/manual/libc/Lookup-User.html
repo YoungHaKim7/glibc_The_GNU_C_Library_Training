@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Lookup User (The GNU C Library)</title>
+
+<meta name="description" content="Lookup User (The GNU C Library)">
+<meta name="keywords" content="Lookup User (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="User-Database.html" rel="up" title="User Database">
+<link href="Scanning-All-Users.html" rel="next" title="Scanning All Users">
+<link href="User-Data-Structure.html" rel="prev" title="User Data Structure">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Lookup-User">
+<div class="nav-panel">
+<p>
+Next: <a href="Scanning-All-Users.html" accesskey="n" rel="next">Scanning the List of All Users</a>, Previous: <a href="User-Data-Structure.html" accesskey="p" rel="prev">The Data Structure that Describes a User</a>, Up: <a href="User-Database.html" accesskey="u" rel="up">User Database</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Looking-Up-One-User"><span>31.13.2 Looking Up One User<a class="copiable-link" href="#Looking-Up-One-User"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-converting-user-ID-to-user-name"></a>
+<a class="index-entry-id" id="index-converting-user-name-to-user-ID"></a>
+
+<p>You can search the system user database for information about a
+specific user using <code class="code">getpwuid</code> or <code class="code">getpwnam</code>.  These
+functions are declared in <samp class="file">pwd.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getpwuid"><span class="category-def">Function: </span><span><code class="def-type">struct passwd *</code> <strong class="def-name">getpwuid</strong> <code class="def-code-arguments">(uid_t <var class="var">uid</var>)</code><a class="copiable-link" href="#index-getpwuid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:pwuid locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns a pointer to a statically-allocated structure
+containing information about the user whose user ID is <var class="var">uid</var>.  This
+structure may be overwritten on subsequent calls to <code class="code">getpwuid</code>.
+</p>
+<p>A null pointer value indicates there is no user in the data base with
+user ID <var class="var">uid</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getpwuid_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getpwuid_r</strong> <code class="def-code-arguments">(uid_t <var class="var">uid</var>, struct passwd *<var class="var">result_buf</var>, char *<var class="var">buffer</var>, size_t <var class="var">buflen</var>, struct passwd **<var class="var">result</var>)</code><a class="copiable-link" href="#index-getpwuid_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+
+<p>This function is similar to <code class="code">getpwuid</code> in that it returns
+information about the user whose user ID is <var class="var">uid</var>.  However, it
+fills the user supplied structure pointed to by <var class="var">result_buf</var> with
+the information instead of using a static buffer.  The first
+<var class="var">buflen</var> bytes of the additional buffer pointed to by <var class="var">buffer</var>
+are used to contain additional information, normally strings which are
+pointed to by the elements of the result structure.
+</p>
+<p>If a user with ID <var class="var">uid</var> is found, the pointer returned in
+<var class="var">result</var> points to the record which contains the wanted data (i.e.,
+<var class="var">result</var> contains the value <var class="var">result_buf</var>).  If no user is found
+or if an error occurred, the pointer returned in <var class="var">result</var> is a null
+pointer.  The function returns zero or an error code.  If the buffer
+<var class="var">buffer</var> is too small to contain all the needed information, the
+error code <code class="code">ERANGE</code> is returned and <code class="code">errno</code> is set to
+<code class="code">ERANGE</code>.
+</p></dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getpwnam"><span class="category-def">Function: </span><span><code class="def-type">struct passwd *</code> <strong class="def-name">getpwnam</strong> <code class="def-code-arguments">(const char *<var class="var">name</var>)</code><a class="copiable-link" href="#index-getpwnam"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:pwnam locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns a pointer to a statically-allocated structure
+containing information about the user whose user name is <var class="var">name</var>.
+This structure may be overwritten on subsequent calls to
+<code class="code">getpwnam</code>.
+</p>
+<p>A null pointer return indicates there is no user named <var class="var">name</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getpwnam_005fr"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getpwnam_r</strong> <code class="def-code-arguments">(const char *<var class="var">name</var>, struct passwd *<var class="var">result_buf</var>, char *<var class="var">buffer</var>, size_t <var class="var">buflen</var>, struct passwd **<var class="var">result</var>)</code><a class="copiable-link" href="#index-getpwnam_005fr"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function is similar to <code class="code">getpwnam</code> in that it returns
+information about the user whose user name is <var class="var">name</var>.  However, like
+<code class="code">getpwuid_r</code>, it fills the user supplied buffers in
+<var class="var">result_buf</var> and <var class="var">buffer</var> with the information instead of using
+a static buffer.
+</p>
+<p>The return values are the same as for <code class="code">getpwuid_r</code>.
+</p></dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Scanning-All-Users.html">Scanning the List of All Users</a>, Previous: <a href="User-Data-Structure.html">The Data Structure that Describes a User</a>, Up: <a href="User-Database.html">User Database</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

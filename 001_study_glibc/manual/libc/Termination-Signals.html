@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Termination Signals (The GNU C Library)</title>
+
+<meta name="description" content="Termination Signals (The GNU C Library)">
+<meta name="keywords" content="Termination Signals (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Standard-Signals.html" rel="up" title="Standard Signals">
+<link href="Alarm-Signals.html" rel="next" title="Alarm Signals">
+<link href="Program-Error-Signals.html" rel="prev" title="Program Error Signals">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+kbd.kbd {font-style: oblique}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Termination-Signals">
+<div class="nav-panel">
+<p>
+Next: <a href="Alarm-Signals.html" accesskey="n" rel="next">Alarm Signals</a>, Previous: <a href="Program-Error-Signals.html" accesskey="p" rel="prev">Program Error Signals</a>, Up: <a href="Standard-Signals.html" accesskey="u" rel="up">Standard Signals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Termination-Signals-1"><span>25.2.2 Termination Signals<a class="copiable-link" href="#Termination-Signals-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-program-termination-signals"></a>
+
+<p>These signals are all used to tell a process to terminate, in one way
+or another.  They have different names because they&rsquo;re used for slightly
+different purposes, and programs might want to handle them differently.
+</p>
+<p>The reason for handling these signals is usually so your program can
+tidy up as appropriate before actually terminating.  For example, you
+might want to save state information, delete temporary files, or restore
+the previous terminal modes.  Such a handler should end by specifying
+the default action for the signal that happened and then reraising it;
+this will cause the program to terminate with that signal, as if it had
+not had a handler.  (See <a class="xref" href="Termination-in-Handler.html">Handlers That Terminate the Process</a>.)
+</p>
+<p>The (obvious) default action for all of these signals is to cause the
+process to terminate.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SIGTERM"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SIGTERM</strong><a class="copiable-link" href="#index-SIGTERM"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-termination-signal"></a>
+<p>The <code class="code">SIGTERM</code> signal is a generic signal used to cause program
+termination.  Unlike <code class="code">SIGKILL</code>, this signal can be blocked,
+handled, and ignored.  It is the normal way to politely ask a program to
+terminate.
+</p>
+<p>The shell command <code class="code">kill</code> generates <code class="code">SIGTERM</code> by default.
+<a class="index-entry-id" id="index-kill-1"></a>
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SIGINT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SIGINT</strong><a class="copiable-link" href="#index-SIGINT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-interrupt-signal"></a>
+<p>The <code class="code">SIGINT</code> (&ldquo;program interrupt&rdquo;) signal is sent when the user
+types the INTR character (normally <kbd class="kbd">C-c</kbd>).  See <a class="xref" href="Special-Characters.html">Special Characters</a>, for information about terminal driver support for
+<kbd class="kbd">C-c</kbd>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SIGQUIT"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SIGQUIT</strong><a class="copiable-link" href="#index-SIGQUIT"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-quit-signal"></a>
+<a class="index-entry-id" id="index-quit-signal-1"></a>
+<p>The <code class="code">SIGQUIT</code> signal is similar to <code class="code">SIGINT</code>, except that it&rsquo;s
+controlled by a different key&mdash;the QUIT character, usually
+<kbd class="kbd">C-\</kbd>&mdash;and produces a core dump when it terminates the process,
+just like a program error signal.  You can think of this as a
+program error condition &ldquo;detected&rdquo; by the user.
+</p>
+<p>See <a class="xref" href="Program-Error-Signals.html">Program Error Signals</a>, for information about core dumps.
+See <a class="xref" href="Special-Characters.html">Special Characters</a>, for information about terminal driver
+support.
+</p>
+<p>Certain kinds of cleanups are best omitted in handling <code class="code">SIGQUIT</code>.
+For example, if the program creates temporary files, it should handle
+the other termination requests by deleting the temporary files.  But it
+is better for <code class="code">SIGQUIT</code> not to delete them, so that the user can
+examine them in conjunction with the core dump.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SIGKILL"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SIGKILL</strong><a class="copiable-link" href="#index-SIGKILL"> &para;</a></span></dt>
+<dd>
+<p>The <code class="code">SIGKILL</code> signal is used to cause immediate program termination.
+It cannot be handled or ignored, and is therefore always fatal.  It is
+also not possible to block this signal.
+</p>
+<p>This signal is usually generated only by explicit request.  Since it
+cannot be handled, you should generate it only as a last resort, after
+first trying a less drastic method such as <kbd class="kbd">C-c</kbd> or <code class="code">SIGTERM</code>.
+If a process does not respond to any other termination signals, sending
+it a <code class="code">SIGKILL</code> signal will almost always cause it to go away.
+</p>
+<p>In fact, if <code class="code">SIGKILL</code> fails to terminate a process, that by itself
+constitutes an operating system bug which you should report.
+</p>
+<p>The system will generate <code class="code">SIGKILL</code> for a process itself under some
+unusual conditions where the program cannot possibly continue to run
+(even to run a signal handler).
+</p></dd></dl>
+<a class="index-entry-id" id="index-kill-signal"></a>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-SIGHUP"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">SIGHUP</strong><a class="copiable-link" href="#index-SIGHUP"> &para;</a></span></dt>
+<dd>
+<a class="index-entry-id" id="index-hangup-signal"></a>
+<p>The <code class="code">SIGHUP</code> (&ldquo;hang-up&rdquo;) signal is used to report that the user&rsquo;s
+terminal is disconnected, perhaps because a network or telephone
+connection was broken.  For more information about this, see <a class="ref" href="Control-Modes.html">Control Modes</a>.
+</p>
+<p>This signal is also used to report the termination of the controlling
+process on a terminal to jobs associated with that session; this
+termination effectively disconnects all processes in the session from
+the controlling terminal.  For more information, see <a class="ref" href="Termination-Internals.html">Termination Internals</a>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Alarm-Signals.html">Alarm Signals</a>, Previous: <a href="Program-Error-Signals.html">Program Error Signals</a>, Up: <a href="Standard-Signals.html">Standard Signals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

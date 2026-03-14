@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Who Logged In (The GNU C Library)</title>
+
+<meta name="description" content="Who Logged In (The GNU C Library)">
+<meta name="keywords" content="Who Logged In (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Users-and-Groups.html" rel="up" title="Users and Groups">
+<link href="User-Accounting-Database.html" rel="next" title="User Accounting Database">
+<link href="Tips-for-Setuid.html" rel="prev" title="Tips for Setuid">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Who-Logged-In">
+<div class="nav-panel">
+<p>
+Next: <a href="User-Accounting-Database.html" accesskey="n" rel="next">The User Accounting Database</a>, Previous: <a href="Tips-for-Setuid.html" accesskey="p" rel="prev">Tips for Writing Setuid Programs</a>, Up: <a href="Users-and-Groups.html" accesskey="u" rel="up">Users and Groups</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Identifying-Who-Logged-In"><span>31.11 Identifying Who Logged In<a class="copiable-link" href="#Identifying-Who-Logged-In"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-login-name_002c-determining"></a>
+<a class="index-entry-id" id="index-user-ID_002c-determining"></a>
+
+<p>You can use the functions listed in this section to determine the login
+name of the user who is running a process, and the name of the user who
+logged in the current session.  See also the function <code class="code">getuid</code> and
+friends (see <a class="pxref" href="Reading-Persona.html">Reading the Persona of a Process</a>).  How this information is collected by
+the system and how to control/add/remove information from the background
+storage is described in <a class="ref" href="User-Accounting-Database.html">The User Accounting Database</a>.
+</p>
+<p>The <code class="code">getlogin</code> function is declared in <samp class="file">unistd.h</samp>, while
+<code class="code">cuserid</code> and <code class="code">L_cuserid</code> are declared in <samp class="file">stdio.h</samp>.
+<a class="index-entry-id" id="index-stdio_002eh-20"></a>
+<a class="index-entry-id" id="index-unistd_002eh-25"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getlogin"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">getlogin</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-getlogin"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:getlogin race:utent sig:ALRM timer locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">getlogin</code> function returns a pointer to a string containing the
+name of the user logged in on the controlling terminal of the process,
+or a null pointer if this information cannot be determined.  The string
+is statically allocated and might be overwritten on subsequent calls to
+this function or to <code class="code">cuserid</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-cuserid"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">cuserid</strong> <code class="def-code-arguments">(char *<var class="var">string</var>)</code><a class="copiable-link" href="#index-cuserid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:cuserid/!string locale
+| AS-Unsafe dlopen plugin heap lock
+| AC-Unsafe corrupt lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">cuserid</code> function returns a pointer to a string containing a
+user name associated with the effective ID of the process.  If
+<var class="var">string</var> is not a null pointer, it should be an array that can hold
+at least <code class="code">L_cuserid</code> characters; the string is returned in this
+array.  Otherwise, a pointer to a string in a static area is returned.
+This string is statically allocated and might be overwritten on
+subsequent calls to this function or to <code class="code">getlogin</code>.
+</p>
+<p>The use of this function is deprecated since it is marked to be
+withdrawn in XPG4.2 and has already been removed from newer revisions of
+POSIX.1.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-L_005fcuserid"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">L_cuserid</strong><a class="copiable-link" href="#index-L_005fcuserid"> &para;</a></span></dt>
+<dd>
+<p>An integer constant that indicates how long an array you might need to
+store a user name.
+</p></dd></dl>
+
+<p>These functions let your program identify positively the user who is
+running or the user who logged in this session.  (These can differ when
+setuid programs are involved; see <a class="ref" href="Process-Persona.html">The Persona of a Process</a>.)  The user cannot
+do anything to fool these functions.
+</p>
+<p>For most purposes, it is more useful to use the environment variable
+<code class="code">LOGNAME</code> to find out who the user is.  This is more flexible
+precisely because the user can set <code class="code">LOGNAME</code> arbitrarily.
+See <a class="xref" href="Standard-Environment.html">Standard Environment Variables</a>.
+</p>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="User-Accounting-Database.html">The User Accounting Database</a>, Previous: <a href="Tips-for-Setuid.html">Tips for Writing Setuid Programs</a>, Up: <a href="Users-and-Groups.html">Users and Groups</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

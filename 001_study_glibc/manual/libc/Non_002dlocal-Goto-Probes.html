@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Non-local Goto Probes (The GNU C Library)</title>
+
+<meta name="description" content="Non-local Goto Probes (The GNU C Library)">
+<meta name="keywords" content="Non-local Goto Probes (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Internal-Probes.html" rel="up" title="Internal Probes">
+<link href="Memory-Allocation-Probes.html" rel="prev" title="Memory Allocation Probes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Non_002dlocal-Goto-Probes">
+<div class="nav-panel">
+<p>
+Previous: <a href="Memory-Allocation-Probes.html" accesskey="p" rel="prev">Memory Allocation Probes</a>, Up: <a href="Internal-Probes.html" accesskey="u" rel="up">Internal probes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Non_002dlocal-Goto-Probes-1"><span>38.2 Non-local Goto Probes<a class="copiable-link" href="#Non_002dlocal-Goto-Probes-1"> &para;</a></span></h3>
+
+<p>These probes are used to signal calls to <code class="code">setjmp</code>, <code class="code">sigsetjmp</code>,
+<code class="code">longjmp</code> or <code class="code">siglongjmp</code>.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-setjmp-1"><span class="category-def">Probe: </span><span><strong class="def-name">setjmp</strong> <var class="def-var-arguments">(void *<var class="var">$arg1</var>, int <var class="var">$arg2</var>, void *<var class="var">$arg3</var>)</var><a class="copiable-link" href="#index-setjmp-1"> &para;</a></span></dt>
+<dd><p>This probe is triggered whenever <code class="code">setjmp</code> or <code class="code">sigsetjmp</code> is
+called.  Argument <var class="var">$arg1</var> is a pointer to the <code class="code">jmp_buf</code>
+passed as the first argument of <code class="code">setjmp</code> or <code class="code">sigsetjmp</code>,
+<var class="var">$arg2</var> is the second argument of <code class="code">sigsetjmp</code> or zero if this
+is a call to <code class="code">setjmp</code> and <var class="var">$arg3</var> is a pointer to the return
+address that will be stored in the <code class="code">jmp_buf</code>.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-longjmp-2"><span class="category-def">Probe: </span><span><strong class="def-name">longjmp</strong> <var class="def-var-arguments">(void *<var class="var">$arg1</var>, int <var class="var">$arg2</var>, void *<var class="var">$arg3</var>)</var><a class="copiable-link" href="#index-longjmp-2"> &para;</a></span></dt>
+<dd><p>This probe is triggered whenever <code class="code">longjmp</code> or <code class="code">siglongjmp</code>
+is called.  Argument <var class="var">$arg1</var> is a pointer to the <code class="code">jmp_buf</code>
+passed as the first argument of <code class="code">longjmp</code> or <code class="code">siglongjmp</code>,
+<var class="var">$arg2</var> is the return value passed as the second argument of
+<code class="code">longjmp</code> or <code class="code">siglongjmp</code> and <var class="var">$arg3</var> is a pointer to
+the return address <code class="code">longjmp</code> or <code class="code">siglongjmp</code> will return to.
+</p>
+<p>The <code class="code">longjmp</code> probe is triggered at a point where the registers
+have not yet been restored to the values in the <code class="code">jmp_buf</code> and
+unwinding will show a call stack including the caller of
+<code class="code">longjmp</code> or <code class="code">siglongjmp</code>.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-longjmp_005ftarget"><span class="category-def">Probe: </span><span><strong class="def-name">longjmp_target</strong> <var class="def-var-arguments">(void *<var class="var">$arg1</var>, int <var class="var">$arg2</var>, void *<var class="var">$arg3</var>)</var><a class="copiable-link" href="#index-longjmp_005ftarget"> &para;</a></span></dt>
+<dd><p>This probe is triggered under the same conditions and with the same
+arguments as the <code class="code">longjmp</code> probe.
+</p>
+<p>The <code class="code">longjmp_target</code> probe is triggered at a point where the
+registers have been restored to the values in the <code class="code">jmp_buf</code> and
+unwinding will show a call stack including the caller of <code class="code">setjmp</code>
+or <code class="code">sigsetjmp</code>.
+</p></dd></dl>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Memory-Allocation-Probes.html">Memory Allocation Probes</a>, Up: <a href="Internal-Probes.html">Internal probes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

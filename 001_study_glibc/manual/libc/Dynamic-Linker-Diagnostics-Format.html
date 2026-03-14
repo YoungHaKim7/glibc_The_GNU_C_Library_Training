@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Dynamic Linker Diagnostics Format (The GNU C Library)</title>
+
+<meta name="description" content="Dynamic Linker Diagnostics Format (The GNU C Library)">
+<meta name="keywords" content="Dynamic Linker Diagnostics Format (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Dynamic-Linker-Diagnostics.html" rel="up" title="Dynamic Linker Diagnostics">
+<link href="Dynamic-Linker-Diagnostics-Values.html" rel="next" title="Dynamic Linker Diagnostics Values">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Dynamic-Linker-Diagnostics-Format">
+<div class="nav-panel">
+<p>
+Next: <a href="Dynamic-Linker-Diagnostics-Values.html" accesskey="n" rel="next">Dynamic Linker Diagnostics Values</a>, Up: <a href="Dynamic-Linker-Diagnostics.html" accesskey="u" rel="up">Dynamic Linker Diagnostics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Dynamic-Linker-Diagnostics-Format-1"><span>37.1.1.1 Dynamic Linker Diagnostics Format<a class="copiable-link" href="#Dynamic-Linker-Diagnostics-Format-1"> &para;</a></span></h4>
+
+<p>As seen above, diagnostic lines assign values (integers or strings) to a
+sequence of labeled subscripts, separated by &lsquo;<samp class="samp">.</samp>&rsquo;.  Some subscripts
+have integer indices associated with them.  The subscript indices are
+not necessarily contiguous or small, so an associative array should be
+used to store them.  Currently, all integers fit into the 64-bit
+unsigned integer range.  Every access path to a value has a fixed type
+(string or integer) independent of subscript index values.  Likewise,
+whether a subscript is indexed does not depend on previous indices (but
+may depend on previous subscript labels).
+</p>
+<p>A syntax description in ABNF (RFC 5234) follows.  Note that
+<code class="code">%x30-39</code> denotes the range of decimal digits.  Diagnostic output
+lines are expected to match the <code class="code">line</code> production.
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">HEXDIG = %x30-39 / %x61-6f ; lowercase a-f only
+ALPHA = %x41-5a / %x61-7a / %x7f ; letters and underscore
+ALPHA-NUMERIC = ALPHA / %x30-39 / &quot;_&quot;
+DQUOTE = %x22 ; &quot;
+
+; Numbers are always hexadecimal and use a 0x prefix.
+hex-value-prefix = %x30 %x78
+hex-value = hex-value-prefix 1*HEXDIG
+
+; Strings use octal escape sequences and \\, \&quot;.
+string-char = %x20-21 / %x23-5c / %x5d-7e ; printable but not &quot;\
+string-quoted-octal = %x30-33 2*2%x30-37
+string-quoted = &quot;\&quot; (&quot;\&quot; / DQUOTE / string-quoted-octal)
+string-value = DQUOTE *(string-char / string-quoted) DQUOTE
+
+value = hex-value / string-value
+
+label = ALPHA *ALPHA-NUMERIC
+index = &quot;[&quot; hex-value &quot;]&quot;
+subscript = label [index]
+
+line = subscript *(&quot;.&quot; subscript) &quot;=&quot; value
+</pre></div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Logging In and Out (The GNU C Library)</title>
+
+<meta name="description" content="Logging In and Out (The GNU C Library)">
+<meta name="keywords" content="Logging In and Out (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="User-Accounting-Database.html" rel="up" title="User Accounting Database">
+<link href="XPG-Functions.html" rel="prev" title="XPG Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Logging-In-and-Out">
+<div class="nav-panel">
+<p>
+Previous: <a href="XPG-Functions.html" accesskey="p" rel="prev">XPG User Accounting Database Functions</a>, Up: <a href="User-Accounting-Database.html" accesskey="u" rel="up">The User Accounting Database</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Logging-In-and-Out-1"><span>31.12.3 Logging In and Out<a class="copiable-link" href="#Logging-In-and-Out-1"> &para;</a></span></h4>
+
+<p>These functions, derived from BSD, are available in the separate
+<samp class="file">libutil</samp> library, and declared in <samp class="file">utmp.h</samp>.
+<a class="index-entry-id" id="index-utmp_002eh-1"></a>
+</p>
+<p>Note that the <code class="code">ut_user</code> member of <code class="code">struct utmp</code> is called
+<code class="code">ut_name</code> in BSD.  Therefore, <code class="code">ut_name</code> is defined as an alias
+for <code class="code">ut_user</code> in <samp class="file">utmp.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-login_005ftty"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">login_tty</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>)</code><a class="copiable-link" href="#index-login_005ftty"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:ttyname
+| AS-Unsafe heap lock
+| AC-Unsafe lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function makes <var class="var">filedes</var> the controlling terminal of the
+current process, redirects standard input, standard output and
+standard error output to this terminal, and closes <var class="var">filedes</var>.
+</p>
+<p>This function returns <code class="code">0</code> on successful completion, and <code class="code">-1</code>
+on error.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-login"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">login</strong> <code class="def-code-arguments">(const struct utmp *<var class="var">entry</var>)</code><a class="copiable-link" href="#index-login"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:utent sig:ALRM timer
+| AS-Unsafe lock heap
+| AC-Unsafe lock corrupt fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">login</code> functions inserts an entry into the user accounting
+database.  The <code class="code">ut_line</code> member is set to the name of the terminal
+on standard input.  If standard input is not a terminal <code class="code">login</code>
+uses standard output or standard error output to determine the name of
+the terminal.  If <code class="code">struct utmp</code> has a <code class="code">ut_type</code> member,
+<code class="code">login</code> sets it to <code class="code">USER_PROCESS</code>, and if there is an
+<code class="code">ut_pid</code> member, it will be set to the process ID of the current
+process.  The remaining entries are copied from <var class="var">entry</var>.
+</p>
+<p>A copy of the entry is written to the user accounting log file.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-logout"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">logout</strong> <code class="def-code-arguments">(const char *<var class="var">ut_line</var>)</code><a class="copiable-link" href="#index-logout"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:utent sig:ALRM timer
+| AS-Unsafe lock heap
+| AC-Unsafe lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function modifies the user accounting database to indicate that the
+user on <var class="var">ut_line</var> has logged out.
+</p>
+<p>The <code class="code">logout</code> function returns <code class="code">1</code> if the entry was successfully
+written to the database, or <code class="code">0</code> on error.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-logwtmp"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">logwtmp</strong> <code class="def-code-arguments">(const char *<var class="var">ut_line</var>, const char *<var class="var">ut_name</var>, const char *<var class="var">ut_host</var>)</code><a class="copiable-link" href="#index-logwtmp"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe sig:ALRM timer
+| AS-Unsafe 
+| AC-Unsafe fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">logwtmp</code> function appends an entry to the user accounting log
+file, for the current time and the information provided in the
+<var class="var">ut_line</var>, <var class="var">ut_name</var> and <var class="var">ut_host</var> arguments.
+</p></dd></dl>
+
+<p><strong class="strong">Portability Note:</strong> The BSD <code class="code">struct utmp</code> only has the
+<code class="code">ut_line</code>, <code class="code">ut_name</code>, <code class="code">ut_host</code> and <code class="code">ut_time</code>
+members.  Older systems do not even have the <code class="code">ut_host</code> member.
+</p>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="XPG-Functions.html">XPG User Accounting Database Functions</a>, Up: <a href="User-Accounting-Database.html">The User Accounting Database</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

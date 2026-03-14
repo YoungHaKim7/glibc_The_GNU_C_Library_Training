@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Testing File Access (The GNU C Library)</title>
+
+<meta name="description" content="Testing File Access (The GNU C Library)">
+<meta name="keywords" content="Testing File Access (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="File-Attributes.html" rel="up" title="File Attributes">
+<link href="File-Times.html" rel="next" title="File Times">
+<link href="Setting-Permissions.html" rel="prev" title="Setting Permissions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Testing-File-Access">
+<div class="nav-panel">
+<p>
+Next: <a href="File-Times.html" accesskey="n" rel="next">File Times</a>, Previous: <a href="Setting-Permissions.html" accesskey="p" rel="prev">Assigning File Permissions</a>, Up: <a href="File-Attributes.html" accesskey="u" rel="up">File Attributes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Testing-Permission-to-Access-a-File"><span>14.10.8 Testing Permission to Access a File<a class="copiable-link" href="#Testing-Permission-to-Access-a-File"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-testing-access-permission"></a>
+<a class="index-entry-id" id="index-access_002c-testing-for"></a>
+<a class="index-entry-id" id="index-setuid-programs-and-file-access"></a>
+
+<p>In some situations it is desirable to allow programs to access files or
+devices even if this is not possible with the permissions granted to the
+user.  One possible solution is to set the setuid-bit of the program
+file.  If such a program is started the <em class="emph">effective</em> user ID of the
+process is changed to that of the owner of the program file.  So to
+allow write access to files like <samp class="file">/etc/passwd</samp>, which normally can
+be written only by the super-user, the modifying program will have to be
+owned by <code class="code">root</code> and the setuid-bit must be set.
+</p>
+<p>But besides the files the program is intended to change the user should
+not be allowed to access any file to which s/he would not have access
+anyway.  The program therefore must explicitly check whether <em class="emph">the
+user</em> would have the necessary access to a file, before it reads or
+writes the file.
+</p>
+<p>To do this, use the function <code class="code">access</code>, which checks for access
+permission based on the process&rsquo;s <em class="emph">real</em> user ID rather than the
+effective user ID.  (The setuid feature does not alter the real user ID,
+so it reflects the user who actually ran the program.)
+</p>
+<p>There is another way you could check this access, which is easy to
+describe, but very hard to use.  This is to examine the file mode bits
+and mimic the system&rsquo;s own access computation.  This method is
+undesirable because many systems have additional access control
+features; your program cannot portably mimic them, and you would not
+want to try to keep track of the diverse features that different systems
+have.  Using <code class="code">access</code> is simple and automatically does whatever is
+appropriate for the system you are using.
+</p>
+<p><code class="code">access</code> is <em class="emph">only</em> appropriate to use in setuid programs.
+A non-setuid program will always use the effective ID rather than the
+real ID.
+</p>
+<a class="index-entry-id" id="index-unistd_002eh-10"></a>
+<p>The symbols in this section are declared in <samp class="file">unistd.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-access"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">access</strong> <code class="def-code-arguments">(const char *<var class="var">filename</var>, int <var class="var">how</var>)</code><a class="copiable-link" href="#index-access"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">access</code> function checks to see whether the file named by
+<var class="var">filename</var> can be accessed in the way specified by the <var class="var">how</var>
+argument.  The <var class="var">how</var> argument either can be the bitwise OR of the
+flags <code class="code">R_OK</code>, <code class="code">W_OK</code>, <code class="code">X_OK</code>, or the existence test
+<code class="code">F_OK</code>.
+</p>
+<p>This function uses the <em class="emph">real</em> user and group IDs of the calling
+process, rather than the <em class="emph">effective</em> IDs, to check for access
+permission.  As a result, if you use the function from a <code class="code">setuid</code>
+or <code class="code">setgid</code> program (see <a class="pxref" href="How-Change-Persona.html">How an Application Can Change Persona</a>), it gives
+information relative to the user who actually ran the program.
+</p>
+<p>The return value is <code class="code">0</code> if the access is permitted, and <code class="code">-1</code>
+otherwise.  (In other words, treated as a predicate function,
+<code class="code">access</code> returns true if the requested access is <em class="emph">denied</em>.)
+</p>
+<p>In addition to the usual file name errors (see <a class="pxref" href="File-Name-Errors.html">File Name Errors</a>), the following <code class="code">errno</code> error conditions are defined for
+this function:
+</p>
+<dl class="table">
+<dt><code class="code">EACCES</code></dt>
+<dd><p>The access specified by <var class="var">how</var> is denied.
+</p>
+</dd>
+<dt><code class="code">ENOENT</code></dt>
+<dd><p>The file doesn&rsquo;t exist.
+</p>
+</dd>
+<dt><code class="code">EROFS</code></dt>
+<dd><p>Write permission was requested for a file on a read-only file system.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>These macros are defined in the header file <samp class="file">unistd.h</samp> for use
+as the <var class="var">how</var> argument to the <code class="code">access</code> function.  The values
+are integer constants.
+<a class="index-entry-id" id="index-unistd_002eh-11"></a>
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-R_005fOK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">R_OK</strong><a class="copiable-link" href="#index-R_005fOK"> &para;</a></span></dt>
+<dd>
+<p>Flag meaning test for read permission.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-W_005fOK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">W_OK</strong><a class="copiable-link" href="#index-W_005fOK"> &para;</a></span></dt>
+<dd>
+<p>Flag meaning test for write permission.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-X_005fOK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">X_OK</strong><a class="copiable-link" href="#index-X_005fOK"> &para;</a></span></dt>
+<dd>
+<p>Flag meaning test for execute/search permission.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-F_005fOK"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">F_OK</strong><a class="copiable-link" href="#index-F_005fOK"> &para;</a></span></dt>
+<dd>
+<p>Flag meaning test for existence of the file.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-faccessat"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">faccessat</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, const char *<var class="var">filename</var>, int <var class="var">how</var>, int <var class="var">flags</var>)</code><a class="copiable-link" href="#index-faccessat"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is a descriptor-relative version of the <code class="code">access</code>
+function above.  See <a class="xref" href="Descriptor_002dRelative-Access.html">Descriptor-Relative Access</a>.  The <var class="var">flags</var>
+argument can contain a combination of the flags <code class="code">AT_EACCESS</code> described
+below, <code class="code">AT_EMPTY_PATH</code>, and <code class="code">AT_SYMLINK_NOFOLLOW</code>.
+</p>
+<dl class="vtable">
+<dt><a id="index-AT_005fEACCESS"></a><span><code class="code">AT_EACCESS</code><a class="copiable-link" href="#index-AT_005fEACCESS"> &para;</a></span></dt>
+<dd><p>This flag when passed to the <code class="code">faccessat</code> function causes it to perform
+access checks using effective user and group IDs instead of real IDs, which
+is the default and matches the <code class="code">access</code> function.
+</p></dd>
+</dl>
+
+<p>Compared to <code class="code">access</code>, some additional error conditions can occur.
+See <a class="xref" href="Descriptor_002dRelative-Access.html">Descriptor-Relative Access</a>.
+</p>
+<p>This function may not work correctly on older kernels missing the
+<code class="code">faccessat2</code> system call.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="File-Times.html">File Times</a>, Previous: <a href="Setting-Permissions.html">Assigning File Permissions</a>, Up: <a href="File-Attributes.html">File Attributes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

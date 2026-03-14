@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Comparison Functions (The GNU C Library)</title>
+
+<meta name="description" content="Comparison Functions (The GNU C Library)">
+<meta name="keywords" content="Comparison Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Searching-and-Sorting.html" rel="up" title="Searching and Sorting">
+<link href="Array-Search-Function.html" rel="next" title="Array Search Function">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Comparison-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Array-Search-Function.html" accesskey="n" rel="next">Array Search Function</a>, Up: <a href="Searching-and-Sorting.html" accesskey="u" rel="up">Searching and Sorting</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Defining-the-Comparison-Function"><span>9.1 Defining the Comparison Function<a class="copiable-link" href="#Defining-the-Comparison-Function"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-Comparison-Function"></a>
+
+<p>In order to use the sorted array library functions, you have to describe
+how to compare the elements of the array.
+</p>
+<p>To do this, you supply a comparison function to compare two elements of
+the array.  The library will call this function, passing as arguments
+pointers to two array elements to be compared.  Your comparison function
+should return a value the way <code class="code">strcmp</code> (see <a class="pxref" href="String_002fArray-Comparison.html">String/Array Comparison</a>) does: negative if the first argument is &ldquo;less&rdquo; than the
+second, zero if they are &ldquo;equal&rdquo;, and positive if the first argument
+is &ldquo;greater&rdquo;.
+</p>
+<p>Here is an example of a comparison function which works with an array of
+numbers of type <code class="code">long int</code>:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">int
+compare_long_ints (const void *a, const void *b)
+{
+  const long int *la = a;
+  const long int *lb = b;
+
+  return (*la &gt; *lb) - (*la &lt; *lb);
+}
+</pre></div>
+
+<p>(The code would have to be more complicated for an array of <code class="code">double</code>,
+to handle NaNs correctly.)
+</p>
+<p>The header file <samp class="file">stdlib.h</samp> defines a name for the data type of
+comparison functions.  This type is a GNU extension.
+</p>
+<a class="index-entry-id" id="index-comparison_005ffn_005ft"></a>
+<div class="example smallexample">
+<pre class="example-preformatted">int comparison_fn_t (const void *, const void *);
+</pre></div>
+
+</div>
+
+
+
+</body>
+</html>

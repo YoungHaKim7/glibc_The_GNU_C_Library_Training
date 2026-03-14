@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>POSIX Spin Locks (The GNU C Library)</title>
+
+<meta name="description" content="POSIX Spin Locks (The GNU C Library)">
+<meta name="keywords" content="POSIX Spin Locks (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="POSIX-Threads.html" rel="up" title="POSIX Threads">
+<link href="POSIX-Mutexes.html" rel="next" title="POSIX Mutexes">
+<link href="POSIX-Barriers.html" rel="prev" title="POSIX Barriers">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="POSIX-Spin-Locks">
+<div class="nav-panel">
+<p>
+Next: <a href="POSIX-Mutexes.html" accesskey="n" rel="next">POSIX Mutexes</a>, Previous: <a href="POSIX-Barriers.html" accesskey="p" rel="prev">POSIX Barriers</a>, Up: <a href="POSIX-Threads.html" accesskey="u" rel="up">POSIX Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="POSIX-Spin-Locks-1"><span>36.2.6 POSIX Spin Locks<a class="copiable-link" href="#POSIX-Spin-Locks-1"> &para;</a></span></h4>
+
+<p>A spinlock is a low overhead lock suitable for use in a realtime
+thread where it&rsquo;s known that the thread won&rsquo;t be paused by the
+scheduler.  Non-realtime threads should use mutexes instead.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fspin_005finit"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_spin_init</strong> <code class="def-code-arguments">(pthread_spinlock_t *<var class="var">lock</var>, int <var class="var">pshared</var>)</code><a class="copiable-link" href="#index-pthread_005fspin_005finit"> &para;</a></span></dt>
+<dd><p>Initializes a spinlock.  <var class="var">pshared</var> is one of:
+</p>
+<dl class="table">
+<dt><code class="code">PTHREAD_PROCESS_PRIVATE</code></dt>
+<dd><p>This spinlock is private to the process which created it.
+</p>
+</dd>
+<dt><code class="code">PTHREAD_PROCESS_SHARED</code></dt>
+<dd><p>This spinlock is shared across any process that can access it, for
+example through shared memory.
+</p></dd>
+</dl>
+
+<p>This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_spin_init.3.html">pthread_spin_init(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fspin_005fdestroy"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_spin_destroy</strong> <code class="def-code-arguments">(pthread_spinlock_t *<var class="var">lock</var>)</code><a class="copiable-link" href="#index-pthread_005fspin_005fdestroy"> &para;</a></span></dt>
+<dd><p>Destroys a spinlock and releases any resources it held.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_spin_destroy.3.html">pthread_spin_destroy(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fspin_005flock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_spin_lock</strong> <code class="def-code-arguments">(pthread_spinlock_t *<var class="var">lock</var>)</code><a class="copiable-link" href="#index-pthread_005fspin_005flock"> &para;</a></span></dt>
+<dd><p>Locks a spinlock.  Only one thread at a time can lock a spinlock.  If
+another thread has locked this spinlock, the calling thread waits
+until it is unlocked, then attempts to lock it.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_spin_lock.3.html">pthread_spin_lock(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fspin_005funlock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_spin_unlock</strong> <code class="def-code-arguments">(pthread_spinlock_t *<var class="var">lock</var>)</code><a class="copiable-link" href="#index-pthread_005fspin_005funlock"> &para;</a></span></dt>
+<dd><p>Unlocks a spinlock.  If one or more threads are waiting for the lock
+to be unlocked, one of them (unspecified which) will succeed in
+locking it, and will return from <code class="code">pthread_spin_lock</code>).
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_spin_unlock.3.html">pthread_spin_unlock(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pthread_005fspin_005ftrylock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">pthread_spin_trylock</strong> <code class="def-code-arguments">(pthread_spinlock_t *<var class="var">lock</var>)</code><a class="copiable-link" href="#index-pthread_005fspin_005ftrylock"> &para;</a></span></dt>
+<dd><p>Like <code class="code">pthread_spin_unlock</code> but returns 0 if the lock was
+unlocked, or EBUSY if it was locked.
+This documentation is a stub.  For additional information on this
+function, consult the manual page <a class="url" href="https://man7.org/linux/man-pages/man3/pthread_spin_trylock.3.html">pthread_spin_trylock(3)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="POSIX-Mutexes.html">POSIX Mutexes</a>, Previous: <a href="POSIX-Barriers.html">POSIX Barriers</a>, Up: <a href="POSIX-Threads.html">POSIX Threads</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

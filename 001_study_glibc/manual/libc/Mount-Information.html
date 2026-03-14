@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Mount Information (The GNU C Library)</title>
+
+<meta name="description" content="Mount Information (The GNU C Library)">
+<meta name="keywords" content="Mount Information (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Filesystem-Handling.html" rel="up" title="Filesystem Handling">
+<link href="Mount_002dUnmount_002dRemount.html" rel="next" title="Mount-Unmount-Remount">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Mount-Information">
+<div class="nav-panel">
+<p>
+Next: <a href="Mount_002dUnmount_002dRemount.html" accesskey="n" rel="next">Mount, Unmount, Remount</a>, Up: <a href="Filesystem-Handling.html" accesskey="u" rel="up">Controlling and Querying Mounts</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Mount-Information-1"><span>32.3.1 Mount Information<a class="copiable-link" href="#Mount-Information-1"> &para;</a></span></h4>
+
+<p>For some programs it is desirable and necessary to access information
+about whether a certain filesystem is mounted and, if it is, where, or
+simply to get lists of all the available filesystems.  The GNU C Library
+provides some functions to retrieve this information portably.
+</p>
+<p>Traditionally Unix systems have a file named <samp class="file">/etc/fstab</samp> which
+describes all possibly mounted filesystems.  The <code class="code">mount</code> program
+uses this file to mount at startup time of the system all the
+necessary filesystems.  The information about all the filesystems
+actually mounted is normally kept in a file named either
+<samp class="file">/var/run/mtab</samp> or <samp class="file">/etc/mtab</samp>.  Both files share the same
+syntax and it is crucial that this syntax is followed all the time.
+Therefore it is best to never directly write to the files.  The functions
+described in this section can do this and they also provide the
+functionality to convert the external textual representation to the
+internal representation.
+</p>
+<p>Note that the <samp class="file">fstab</samp> and <samp class="file">mtab</samp> files are maintained on a
+system by <em class="emph">convention</em>.  It is possible for the files not to exist
+or not to be consistent with what is really mounted or available to
+mount, if the system&rsquo;s administration policy allows it.  But programs
+that mount and unmount filesystems typically maintain and use these
+files as described herein.
+</p>
+<a class="index-entry-id" id="index-_005fPATH_005fFSTAB"></a>
+<a class="index-entry-id" id="index-_005fPATH_005fMNTTAB"></a>
+<a class="index-entry-id" id="index-_005fPATH_005fMOUNTED"></a>
+<a class="index-entry-id" id="index-FSTAB"></a>
+<a class="index-entry-id" id="index-MNTTAB"></a>
+<a class="index-entry-id" id="index-MOUNTED"></a>
+<p>The filenames given above should never be used directly.  The portable
+way to handle these files is to use the macros <code class="code">_PATH_FSTAB</code>,
+defined in <samp class="file">fstab.h</samp>, or <code class="code">_PATH_MNTTAB</code>, defined in
+<samp class="file">mntent.h</samp> and <samp class="file">paths.h</samp>, for <samp class="file">fstab</samp>; and the macro
+<code class="code">_PATH_MOUNTED</code>, also defined in <samp class="file">mntent.h</samp> and
+<samp class="file">paths.h</samp>, for <samp class="file">mtab</samp>.  There are also two alternate macro
+names <code class="code">FSTAB</code>, <code class="code">MNTTAB</code>, and <code class="code">MOUNTED</code> defined but
+these names are deprecated and kept only for backward compatibility.
+The names <code class="code">_PATH_MNTTAB</code> and <code class="code">_PATH_MOUNTED</code> should always be used.
+</p>
+
+<ul class="mini-toc">
+<li><a href="fstab.html" accesskey="1">The <samp class="file">fstab</samp> file</a></li>
+<li><a href="mtab.html" accesskey="2">The <samp class="file">mtab</samp> file</a></li>
+<li><a href="Other-Mount-Information.html" accesskey="3">Other (Non-libc) Sources of Mount Information</a></li>
+</ul>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Mount_002dUnmount_002dRemount.html">Mount, Unmount, Remount</a>, Up: <a href="Filesystem-Handling.html">Controlling and Querying Mounts</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Special Functions (The GNU C Library)</title>
+
+<meta name="description" content="Special Functions (The GNU C Library)">
+<meta name="keywords" content="Special Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Mathematics.html" rel="up" title="Mathematics">
+<link href="Errors-in-Math-Functions.html" rel="next" title="Errors in Math Functions">
+<link href="Hyperbolic-Functions.html" rel="prev" title="Hyperbolic Functions">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Special-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Errors-in-Math-Functions.html" accesskey="n" rel="next">Errors in Math Functions</a>, Previous: <a href="Hyperbolic-Functions.html" accesskey="p" rel="prev">Hyperbolic Functions</a>, Up: <a href="Mathematics.html" accesskey="u" rel="up">Mathematics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Special-Functions-1"><span>19.6 Special Functions<a class="copiable-link" href="#Special-Functions-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-special-functions"></a>
+<a class="index-entry-id" id="index-Bessel-functions"></a>
+<a class="index-entry-id" id="index-gamma-function"></a>
+
+<p>These are some more exotic mathematical functions which are sometimes
+useful.  Currently they only have real-valued versions.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-erf"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">erf</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-erf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-erff"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">erff</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-erff"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-erfl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">erfl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-erfl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-erffN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">erffN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-erffN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-erffNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">erffNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-erffNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">erf</code> returns the error function of <var class="var">x</var>.  The error
+function is defined as
+</p><div class="example smallexample">
+<pre class="example-preformatted">erf (x) = 2/sqrt(pi) * integral from 0 to x of exp(-t^2) dt
+</pre></div>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-erfc"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">erfc</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-erfc"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-erfcf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">erfcf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-erfcf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-erfcl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">erfcl</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-erfcl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-erfcfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">erfcfN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-erfcfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-erfcfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">erfcfNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-erfcfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">erfc</code> returns <code class="code">1.0 - erf(<var class="var">x</var>)</code>, but computed in a
+fashion that avoids round-off error when <var class="var">x</var> is large.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-lgamma"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">lgamma</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-lgamma"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lgammaf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">lgammaf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-lgammaf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lgammal"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">lgammal</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-lgammal"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lgammafN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">lgammafN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-lgammafN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lgammafNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">lgammafNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-lgammafNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Unsafe race:signgam
+| AS-Unsafe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">lgamma</code> returns the natural logarithm of the absolute value of
+the gamma function of <var class="var">x</var>.  The gamma function is defined as
+</p><div class="example smallexample">
+<pre class="example-preformatted">gamma (x) = integral from 0 to &#x221E; of t^(x-1) e^-t dt
+</pre></div>
+
+<a class="index-entry-id" id="index-signgam"></a>
+<p>The sign of the gamma function is stored in the global variable
+<var class="var">signgam</var>, which is declared in <samp class="file">math.h</samp>.  It is <code class="code">1</code> if
+the intermediate result was positive or zero, or <code class="code">-1</code> if it was
+negative.
+</p>
+<p>To compute the real gamma function you can use the <code class="code">tgamma</code>
+function or you can compute the values as follows:
+</p><div class="example smallexample">
+<pre class="example-preformatted">lgam = lgamma(x);
+gam  = signgam*exp(lgam);
+</pre></div>
+
+<p>The gamma function has singularities at the non-positive integers.
+<code class="code">lgamma</code> will raise the zero divide exception if evaluated at a
+singularity.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-lgamma_005fr"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">lgamma_r</strong> <code class="def-code-arguments">(double <var class="var">x</var>, int *<var class="var">signp</var>)</code><a class="copiable-link" href="#index-lgamma_005fr"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lgammaf_005fr"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">lgammaf_r</strong> <code class="def-code-arguments">(float <var class="var">x</var>, int *<var class="var">signp</var>)</code><a class="copiable-link" href="#index-lgammaf_005fr"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lgammal_005fr"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">lgammal_r</strong> <code class="def-code-arguments">(long double <var class="var">x</var>, int *<var class="var">signp</var>)</code><a class="copiable-link" href="#index-lgammal_005fr"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lgammafN_005fr"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">lgammafN_r</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>, int *<var class="var">signp</var>)</code><a class="copiable-link" href="#index-lgammafN_005fr"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-lgammafNx_005fr"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">lgammafNx_r</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>, int *<var class="var">signp</var>)</code><a class="copiable-link" href="#index-lgammafNx_005fr"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">lgamma_r</code> is just like <code class="code">lgamma</code>, but it stores the sign of
+the intermediate result in the variable pointed to by <var class="var">signp</var>
+instead of in the <var class="var">signgam</var> global.  This means it is reentrant.
+</p>
+<p>The <code class="code">lgammaf<var class="var">N</var>_r</code> and <code class="code">lgammaf<var class="var">N</var>x_r</code> functions are
+GNU extensions.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-gamma"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">gamma</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-gamma"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-gammaf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">gammaf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-gammaf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-gammal"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">gammal</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-gammal"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:signgam
+| AS-Unsafe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>These functions exist for compatibility reasons.  They are equivalent to
+<code class="code">lgamma</code> etc.  It is better to use <code class="code">lgamma</code> since for one the
+name reflects better the actual computation, and moreover <code class="code">lgamma</code> is
+standardized in ISO&nbsp;C99<!-- /@w --> while <code class="code">gamma</code> is not.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-tgamma"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">tgamma</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-tgamma"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tgammaf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">tgammaf</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-tgammaf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tgammal"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">tgammal</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-tgammal"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tgammafN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">tgammafN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-tgammafN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-tgammafNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">tgammafNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-tgammafNx"> &para;</a></span></dt>
+<dd>
+
+
+
+
+
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">tgamma</code> applies the gamma function to <var class="var">x</var>.  The gamma
+function is defined as
+</p><div class="example smallexample">
+<pre class="example-preformatted">gamma (x) = integral from 0 to &#x221E; of t^(x-1) e^-t dt
+</pre></div>
+
+<p>This function was introduced in ISO&nbsp;C99<!-- /@w -->.  The <code class="code">_Float<var class="var">N</var></code>
+and <code class="code">_Float<var class="var">N</var>x</code> variants were introduced in ISO/IEC&nbsp;TS&nbsp;18661-3<!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-j0"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">j0</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-j0"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-j0f"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">j0f</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-j0f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-j0l"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">j0l</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-j0l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-j0fN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">j0fN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-j0fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-j0fNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">j0fNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-j0fNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">j0</code> returns the Bessel function of the first kind of order 0 of
+<var class="var">x</var>.  It may signal underflow if <var class="var">x</var> is too large.
+</p>
+<p>The <code class="code">_Float<var class="var">N</var></code> and <code class="code">_Float<var class="var">N</var>x</code> variants are GNU
+extensions.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-j1"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">j1</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-j1"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-j1f"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">j1f</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-j1f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-j1l"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">j1l</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-j1l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-j1fN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">j1fN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-j1fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-j1fNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">j1fNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-j1fNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">j1</code> returns the Bessel function of the first kind of order 1 of
+<var class="var">x</var>.  It may signal underflow if <var class="var">x</var> is too large.
+</p>
+<p>The <code class="code">_Float<var class="var">N</var></code> and <code class="code">_Float<var class="var">N</var>x</code> variants are GNU
+extensions.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-jn"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">jn</strong> <code class="def-code-arguments">(int <var class="var">n</var>, double <var class="var">x</var>)</code><a class="copiable-link" href="#index-jn"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-jnf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">jnf</strong> <code class="def-code-arguments">(int <var class="var">n</var>, float <var class="var">x</var>)</code><a class="copiable-link" href="#index-jnf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-jnl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">jnl</strong> <code class="def-code-arguments">(int <var class="var">n</var>, long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-jnl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-jnfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">jnfN</strong> <code class="def-code-arguments">(int <var class="var">n</var>, _Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-jnfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-jnfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">jnfNx</strong> <code class="def-code-arguments">(int <var class="var">n</var>, _Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-jnfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">jn</code> returns the Bessel function of the first kind of order
+<var class="var">n</var> of <var class="var">x</var>.  It may signal underflow if <var class="var">x</var> is too large.
+</p>
+<p>The <code class="code">_Float<var class="var">N</var></code> and <code class="code">_Float<var class="var">N</var>x</code> variants are GNU
+extensions.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-y0"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">y0</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-y0"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-y0f"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">y0f</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-y0f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-y0l"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">y0l</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-y0l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-y0fN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">y0fN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-y0fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-y0fNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">y0fNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-y0fNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">y0</code> returns the Bessel function of the second kind of order 0 of
+<var class="var">x</var>.  It may signal underflow if <var class="var">x</var> is too large.  If <var class="var">x</var>
+is negative, <code class="code">y0</code> signals a domain error; if it is zero,
+<code class="code">y0</code> signals overflow and returns <em class="math">-&#x221E;</em>.
+</p>
+<p>The <code class="code">_Float<var class="var">N</var></code> and <code class="code">_Float<var class="var">N</var>x</code> variants are GNU
+extensions.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-y1"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">y1</strong> <code class="def-code-arguments">(double <var class="var">x</var>)</code><a class="copiable-link" href="#index-y1"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-y1f"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">y1f</strong> <code class="def-code-arguments">(float <var class="var">x</var>)</code><a class="copiable-link" href="#index-y1f"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-y1l"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">y1l</strong> <code class="def-code-arguments">(long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-y1l"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-y1fN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">y1fN</strong> <code class="def-code-arguments">(_Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-y1fN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-y1fNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">y1fNx</strong> <code class="def-code-arguments">(_Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-y1fNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">y1</code> returns the Bessel function of the second kind of order 1 of
+<var class="var">x</var>.  It may signal underflow if <var class="var">x</var> is too large.  If <var class="var">x</var>
+is negative, <code class="code">y1</code> signals a domain error; if it is zero,
+<code class="code">y1</code> signals overflow and returns <em class="math">-&#x221E;</em>.
+</p>
+<p>The <code class="code">_Float<var class="var">N</var></code> and <code class="code">_Float<var class="var">N</var>x</code> variants are GNU
+extensions.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-yn"><span class="category-def">Function: </span><span><code class="def-type">double</code> <strong class="def-name">yn</strong> <code class="def-code-arguments">(int <var class="var">n</var>, double <var class="var">x</var>)</code><a class="copiable-link" href="#index-yn"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ynf"><span class="category-def">Function: </span><span><code class="def-type">float</code> <strong class="def-name">ynf</strong> <code class="def-code-arguments">(int <var class="var">n</var>, float <var class="var">x</var>)</code><a class="copiable-link" href="#index-ynf"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ynl"><span class="category-def">Function: </span><span><code class="def-type">long double</code> <strong class="def-name">ynl</strong> <code class="def-code-arguments">(int <var class="var">n</var>, long double <var class="var">x</var>)</code><a class="copiable-link" href="#index-ynl"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ynfN"><span class="category-def">Function: </span><span><code class="def-type">_FloatN</code> <strong class="def-name">ynfN</strong> <code class="def-code-arguments">(int <var class="var">n</var>, _Float<var class="var">N</var> <var class="var">x</var>)</code><a class="copiable-link" href="#index-ynfN"> &para;</a></span></dt>
+<dt class="deftypefnx deftypefunx-alias-deftypefnx def-cmd-deftypefn def-line" id="index-ynfNx"><span class="category-def">Function: </span><span><code class="def-type">_FloatNx</code> <strong class="def-name">ynfNx</strong> <code class="def-code-arguments">(int <var class="var">n</var>, _Float<var class="var">N</var>x <var class="var">x</var>)</code><a class="copiable-link" href="#index-ynfNx"> &para;</a></span></dt>
+<dd>
+
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">yn</code> returns the Bessel function of the second kind of order <var class="var">n</var> of
+<var class="var">x</var>.  It may signal underflow if <var class="var">x</var> is too large.  If <var class="var">x</var>
+is negative, <code class="code">yn</code> signals a domain error; if it is zero,
+<code class="code">yn</code> signals overflow and returns <em class="math">-&#x221E;</em>.
+</p>
+<p>The <code class="code">_Float<var class="var">N</var></code> and <code class="code">_Float<var class="var">N</var>x</code> variants are GNU
+extensions.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Errors-in-Math-Functions.html">Errors in Math Functions</a>, Previous: <a href="Hyperbolic-Functions.html">Hyperbolic Functions</a>, Up: <a href="Mathematics.html">Mathematics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

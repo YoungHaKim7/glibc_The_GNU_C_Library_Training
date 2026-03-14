@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Getting the Time (The GNU C Library)</title>
+
+<meta name="description" content="Getting the Time (The GNU C Library)">
+<meta name="keywords" content="Getting the Time (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Calendar-Time.html" rel="up" title="Calendar Time">
+<link href="Setting-and-Adjusting-the-Time.html" rel="next" title="Setting and Adjusting the Time">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Getting-the-Time">
+<div class="nav-panel">
+<p>
+Next: <a href="Setting-and-Adjusting-the-Time.html" accesskey="n" rel="next">Setting and Adjusting the Time</a>, Up: <a href="Calendar-Time.html" accesskey="u" rel="up">Calendar Time</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Getting-the-Time-1"><span>22.5.1 Getting the Time<a class="copiable-link" href="#Getting-the-Time-1"> &para;</a></span></h4>
+
+<p>The GNU C Library provides several functions for getting the current
+calendar time, with different levels of resolution.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-time-1"><span class="category-def">Function: </span><span><code class="def-type">time_t</code> <strong class="def-name">time</strong> <code class="def-code-arguments">(time_t *<var class="var">result</var>)</code><a class="copiable-link" href="#index-time-1"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is the simplest function for getting the current calendar time.
+It returns the calendar time as a value of type <code class="code">time_t</code>; on
+POSIX systems, that means it has a resolution of one second.  It
+uses the same clock as &lsquo;<samp class="samp">clock_gettime&nbsp;(CLOCK_REALTIME_COARSE)</samp>&rsquo;<!-- /@w -->,
+when the clock is available or &lsquo;<samp class="samp">clock_gettime&nbsp;(CLOCK_REALTIME)</samp>&rsquo;<!-- /@w -->
+otherwise.
+</p>
+<p>If the argument <var class="var">result</var> is not a null pointer, the calendar time
+value is also stored in <code class="code">*<var class="var">result</var></code>.
+</p>
+<p>This function cannot fail.
+</p></dd></dl>
+
+<p>Some applications need more precise timekeeping than is possible with
+a <code class="code">time_t</code> alone.  Some applications also need more control over
+what is meant by &ldquo;the current time.&rdquo;  For these applications,
+POSIX and ISO&nbsp;C<!-- /@w --> provide functions to retrieve the time
+with up to nanosecond precision, from a variety of different clocks.
+Clocks can be system-wide, measuring time the same for all processes;
+or they can be per-process or per-thread, measuring CPU time consumed
+by a particular process, or some other similar resource.  Each clock
+has its own resolution and epoch.  POSIX and ISO&nbsp;C<!-- /@w --> also provide functions
+for finding the resolution of a clock.  There is no function to
+get the epoch for a clock; either it is fixed and documented, or the
+clock is not meant to be used to measure absolute times.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-clockid_005ft"><span class="category-def">Data Type: </span><span><strong class="def-name">clockid_t</strong><a class="copiable-link" href="#index-clockid_005ft"> &para;</a></span></dt>
+<dd>
+<p>The type <code class="code">clockid_t</code> is used for constants that indicate which of
+several POSIX system clocks one wishes to use.
+</p></dd></dl>
+
+<p>All systems that support the POSIX functions will define at least
+this clock constant:
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CLOCK_005fREALTIME"><span class="category-def">Macro: </span><span><code class="def-type">clockid_t</code> <strong class="def-name">CLOCK_REALTIME</strong><a class="copiable-link" href="#index-CLOCK_005fREALTIME"> &para;</a></span></dt>
+<dd>
+<p>This POSIX clock uses the POSIX Epoch, 1970-01-01 00:00:00 UTC.
+It is close to, but not necessarily in lock-step with, the
+clocks of <code class="code">time</code> (above) and of <code class="code">gettimeofday</code> (below).
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-monotonic-time"></a>
+<p>A second clock constant which is not universal, but still very common,
+is for a clock measuring <em class="dfn">monotonic time</em>.  Monotonic time is
+useful for measuring elapsed times, because it guarantees that those
+measurements are not affected by changes to the system clock.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CLOCK_005fMONOTONIC"><span class="category-def">Macro: </span><span><code class="def-type">clockid_t</code> <strong class="def-name">CLOCK_MONOTONIC</strong><a class="copiable-link" href="#index-CLOCK_005fMONOTONIC"> &para;</a></span></dt>
+<dd>
+<p>This system-wide POSIX clock continuously measures the advancement of
+calendar time, ignoring discontinuous changes to the system&rsquo;s
+setting for absolute calendar time.
+</p>
+<p>The epoch for this clock is an unspecified point in the past.
+The epoch may change if the system is rebooted or suspended.
+Therefore, <code class="code">CLOCK_MONOTONIC</code> cannot be used to measure
+absolute time, only elapsed time.
+</p></dd></dl>
+
+<p>The following clocks are defined by POSIX, but may not be supported by
+all POSIX systems:
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CLOCK_005fPROCESS_005fCPUTIME_005fID"><span class="category-def">Macro: </span><span><code class="def-type">clockid_t</code> <strong class="def-name">CLOCK_PROCESS_CPUTIME_ID</strong><a class="copiable-link" href="#index-CLOCK_005fPROCESS_005fCPUTIME_005fID"> &para;</a></span></dt>
+<dd>
+<p>This POSIX clock measures the amount of CPU time used by the calling
+process.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CLOCK_005fTHREAD_005fCPUTIME_005fID"><span class="category-def">Macro: </span><span><code class="def-type">clockid_t</code> <strong class="def-name">CLOCK_THREAD_CPUTIME_ID</strong><a class="copiable-link" href="#index-CLOCK_005fTHREAD_005fCPUTIME_005fID"> &para;</a></span></dt>
+<dd>
+<p>This POSIX clock measures the amount of CPU time used by the calling
+thread.
+</p></dd></dl>
+
+<p>The following clocks are Linux extensions:
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-CLOCK_005fMONOTONIC_005fRAW"><span class="category-def">Macro: </span><span><code class="def-type">clockid_t</code> <strong class="def-name">CLOCK_MONOTONIC_RAW</strong><a class="copiable-link" href="#index-CLOCK_005fMONOTONIC_005fRAW"> &para;</a></span></dt>
+<dt class="deftypevrx def-cmd-deftypevr def-line" id="index-CLOCK_005fREALTIME_005fCOARSE"><span class="category-def">Macro: </span><span><code class="def-type">clockid_t</code> <strong class="def-name">CLOCK_REALTIME_COARSE</strong><a class="copiable-link" href="#index-CLOCK_005fREALTIME_005fCOARSE"> &para;</a></span></dt>
+<dt class="deftypevrx def-cmd-deftypevr def-line" id="index-CLOCK_005fMONOTONIC_005fCOARSE"><span class="category-def">Macro: </span><span><code class="def-type">clockid_t</code> <strong class="def-name">CLOCK_MONOTONIC_COARSE</strong><a class="copiable-link" href="#index-CLOCK_005fMONOTONIC_005fCOARSE"> &para;</a></span></dt>
+<dt class="deftypevrx def-cmd-deftypevr def-line" id="index-CLOCK_005fBOOTTIME"><span class="category-def">Macro: </span><span><code class="def-type">clockid_t</code> <strong class="def-name">CLOCK_BOOTTIME</strong><a class="copiable-link" href="#index-CLOCK_005fBOOTTIME"> &para;</a></span></dt>
+<dt class="deftypevrx def-cmd-deftypevr def-line" id="index-CLOCK_005fREALTIME_005fALARM"><span class="category-def">Macro: </span><span><code class="def-type">clockid_t</code> <strong class="def-name">CLOCK_REALTIME_ALARM</strong><a class="copiable-link" href="#index-CLOCK_005fREALTIME_005fALARM"> &para;</a></span></dt>
+<dt class="deftypevrx def-cmd-deftypevr def-line" id="index-CLOCK_005fBOOTTIME_005fALARM"><span class="category-def">Macro: </span><span><code class="def-type">clockid_t</code> <strong class="def-name">CLOCK_BOOTTIME_ALARM</strong><a class="copiable-link" href="#index-CLOCK_005fBOOTTIME_005fALARM"> &para;</a></span></dt>
+<dt class="deftypevrx def-cmd-deftypevr def-line" id="index-CLOCK_005fTAI"><span class="category-def">Macro: </span><span><code class="def-type">clockid_t</code> <strong class="def-name">CLOCK_TAI</strong><a class="copiable-link" href="#index-CLOCK_005fTAI"> &para;</a></span></dt>
+<dd>
+<p>For details of these clocks, see the manual page
+<a class="url" href="https://man7.org/linux/man-pages/man2/clock_gettime.2.html">clock_gettime(2)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a>.
+</p></dd></dl>
+
+<p>Systems may support additional clocks beyond those listed here.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-clock_005fgettime"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">clock_gettime</strong> <code class="def-code-arguments">(clockid_t <var class="var">clock</var>, struct timespec *<var class="var">ts</var>)</code><a class="copiable-link" href="#index-clock_005fgettime"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Get the current time according to the clock identified by <var class="var">clock</var>,
+storing it as seconds and nanoseconds in <code class="code">*<var class="var">ts</var></code>.
+See <a class="xref" href="Time-Types.html">Time Types</a>, for a description of <code class="code">struct timespec</code>.
+</p>
+<p>The return value is <code class="code">0</code> on success and <code class="code">-1</code> on failure.  The
+following <code class="code">errno</code> error condition is defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The clock identified by <var class="var">clock</var> is not supported.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p><code class="code">clock_gettime</code> reports the time scaled to seconds and
+nanoseconds, but the actual resolution of each clock may not be as
+fine as one nanosecond, and may not be the same for all clocks.  POSIX
+also provides a function for finding out the actual resolution of a
+clock:
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-clock_005fgetres"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">clock_getres</strong> <code class="def-code-arguments">(clockid_t <var class="var">clock</var>, struct timespec *<var class="var">res</var>)</code><a class="copiable-link" href="#index-clock_005fgetres"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Get the actual resolution of the clock identified by <var class="var">clock</var>,
+storing it in <code class="code">*<var class="var">ts</var></code>.
+</p>
+<p>For instance, if the clock hardware for <code class="code">CLOCK_REALTIME</code>
+uses a quartz crystal that oscillates at 32.768 kHz,
+then its resolution would be 30.518 microseconds,
+and &lsquo;<samp class="samp">clock_getres&nbsp;(CLOCK_REALTIME,&nbsp;&amp;r)</samp>&rsquo;<!-- /@w --> would set
+<code class="code">r.tv_sec</code> to 0 and <code class="code">r.tv_nsec</code> to 30518.
+</p>
+<p>The return value is <code class="code">0</code> on success and <code class="code">-1</code> on failure.  The
+following <code class="code">errno</code> error condition is defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The clock identified by <var class="var">clock</var> is not supported.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p><strong class="strong">Portability Note:</strong> On some systems, including systems that use
+older versions of the GNU C Library, programs that use <code class="code">clock_gettime</code>
+or <code class="code">clock_setres</code> must be linked with the <code class="code">-lrt</code> library.
+This has not been necessary with the GNU C Library since version 2.17.
+</p>
+<p>The following ISO&nbsp;C<!-- /@w --> macros and functions for higher-resolution
+timestamps were standardized more recently than the POSIX functions,
+so they are less portable to older POSIX systems.  However, the ISO&nbsp;C<!-- /@w --> functions are portable to C platforms that do not support POSIX.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-TIME_005fUTC"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">TIME_UTC</strong><a class="copiable-link" href="#index-TIME_005fUTC"> &para;</a></span></dt>
+<dd>
+<p>This is a positive integer constant designating a simple calendar time base.
+In the GNU C Library and other POSIX systems,
+this is equivalent to the POSIX <code class="code">CLOCK_REALTIME</code> clock.
+On non-POSIX systems, though, the epoch is implementation-defined.
+</p></dd></dl>
+
+<p>Systems may support more than just this ISO&nbsp;C<!-- /@w --> clock.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-timespec_005fget"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">timespec_get</strong> <code class="def-code-arguments">(struct timespec *<var class="var">ts</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-timespec_005fget"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Store into <code class="code">*<var class="var">ts</var></code> the current time according to the ISO&nbsp;C<!-- /@w --> time <var class="var">base</var>.
+</p>
+<p>The base <code class="code">TIME_UTC</code> returns the time since the epoch.  It corresponds
+to <code class="code">CLOCK_REALTIME</code>.
+</p>
+<p>The base <code class="code">TIME_MONOTONIC</code> returns a monotonically nondecreasing time since
+an unspecified point in the past that may change if the system is rebooted or
+suspended.  It corresponds to <code class="code">CLOCK_MONOTONIC</code>.
+</p>
+<p>The base <code class="code">TIME_ACTIVE</code> returns the CPU time consumed by the process
+(including all threads).  It corresponds to <code class="code">CLOCK_PROCESS_CPUTIME_ID</code>.
+</p>
+<p>The base <code class="code">TIME_THREAD_ACTIVE</code> returns the CPU time consumed by the
+calling thread.  It corresponds to <code class="code">CLOCK_THREAD_CPUTIME_ID</code>.
+</p>
+<p>The return value is <var class="var">base</var> on success and <code class="code">0</code> on failure.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-timespec_005fgetres"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">timespec_getres</strong> <code class="def-code-arguments">(struct timespec *<var class="var">res</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-timespec_005fgetres"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>If <var class="var">ts</var> is non-null, store into <code class="code">*<var class="var">ts</var></code> the resolution of
+the time provided by <code class="code">timespec_get</code> function for the ISO&nbsp;C<!-- /@w -->
+time <var class="var">base</var>.
+</p>
+<p>The return value is <var class="var">base</var> on success and <code class="code">0</code> on failure.
+</p></dd></dl>
+
+<p>The previous functions, data types and constants are declared in <samp class="file">time.h</samp>.
+The GNU C Library also provides an older function
+for getting the current time with a resolution of microseconds.  This
+function is declared in <samp class="file">sys/time.h</samp>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-gettimeofday"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">gettimeofday</strong> <code class="def-code-arguments">(struct timeval *<var class="var">tp</var>, void *<var class="var">tzp</var>)</code><a class="copiable-link" href="#index-gettimeofday"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Get the current calendar time, storing it as seconds and microseconds
+in <code class="code">*<var class="var">tp</var></code>.  See <a class="xref" href="Time-Types.html">Time Types</a>, for a description of
+<code class="code">struct timeval</code>.  The clock of <code class="code">gettimeofday</code> is close to,
+but not necessarily in lock-step with, the clocks of <code class="code">time</code> and of
+&lsquo;<samp class="samp">clock_gettime&nbsp;(CLOCK_REALTIME)</samp>&rsquo;<!-- /@w --> (see above).
+</p>
+<p>On some historic systems, if <var class="var">tzp</var> was not a null pointer,
+information about a system-wide time zone would be written to
+<code class="code">*<var class="var">tzp</var></code>.  This feature is obsolete and not supported on
+GNU systems.  You should always supply a null pointer for this
+argument.  Instead, use the facilities described in
+<a class="ref" href="Broken_002ddown-Time.html">Broken-down Time</a> for working with time zones.
+</p>
+<p>This function cannot fail, and its return value is always <code class="code">0</code>.
+</p>
+<p><strong class="strong">Portability Note:</strong> POSIX.1-2024 removed this function.
+Although the GNU C Library will continue to provide it indefinitely,
+portable programs should use <code class="code">clock_gettime</code> or
+<code class="code">timespec_get</code> instead.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Setting-and-Adjusting-the-Time.html">Setting and Adjusting the Time</a>, Up: <a href="Calendar-Time.html">Calendar Time</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Parsing of Integers (The GNU C Library)</title>
+
+<meta name="description" content="Parsing of Integers (The GNU C Library)">
+<meta name="keywords" content="Parsing of Integers (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Parsing-of-Numbers.html" rel="up" title="Parsing of Numbers">
+<link href="Parsing-of-Floats.html" rel="next" title="Parsing of Floats">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Parsing-of-Integers">
+<div class="nav-panel">
+<p>
+Next: <a href="Parsing-of-Floats.html" accesskey="n" rel="next">Parsing of Floats</a>, Up: <a href="Parsing-of-Numbers.html" accesskey="u" rel="up">Parsing of Numbers</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Parsing-of-Integers-1"><span>20.11.1 Parsing of Integers<a class="copiable-link" href="#Parsing-of-Integers-1"> &para;</a></span></h4>
+
+<a class="index-entry-id" id="index-stdlib_002eh-18"></a>
+<a class="index-entry-id" id="index-wchar_002eh-16"></a>
+<p>The &lsquo;<samp class="samp">str</samp>&rsquo; functions are declared in <samp class="file">stdlib.h</samp> and those
+beginning with &lsquo;<samp class="samp">wcs</samp>&rsquo; are declared in <samp class="file">wchar.h</samp>.  One might
+wonder about the use of <code class="code">restrict</code> in the prototypes of the
+functions in this section.  It is seemingly useless but the ISO&nbsp;C<!-- /@w -->
+standard uses it (for the functions defined there) so we have to do it
+as well.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strtol"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">strtol</strong> <code class="def-code-arguments">(const char *restrict <var class="var">string</var>, char **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-strtol"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">strtol</code> (&ldquo;string-to-long&rdquo;) function converts the initial
+part of <var class="var">string</var> to a signed integer, which is returned as a value
+of type <code class="code">long int</code>.
+</p>
+<p>This function attempts to decompose <var class="var">string</var> as follows:
+</p>
+<ul class="itemize mark-bullet">
+<li>A (possibly empty) sequence of whitespace characters.  Which characters
+are whitespace is determined by the <code class="code">isspace</code> function
+(see <a class="pxref" href="Classification-of-Characters.html">Classification of Characters</a>).  These are discarded.
+
+</li><li>An optional plus or minus sign (&lsquo;<samp class="samp">+</samp>&rsquo; or &lsquo;<samp class="samp">-</samp>&rsquo;).
+
+</li><li>A nonempty sequence of digits in the radix specified by <var class="var">base</var>.
+
+<p>If <var class="var">base</var> is zero, decimal radix is assumed unless the series of
+digits begins with &lsquo;<samp class="samp">0</samp>&rsquo; (specifying octal radix), or &lsquo;<samp class="samp">0x</samp>&rsquo; or
+&lsquo;<samp class="samp">0X</samp>&rsquo; (specifying hexadecimal radix), or &lsquo;<samp class="samp">0b</samp>&rsquo; or &lsquo;<samp class="samp">0B</samp>&rsquo;
+(specifying binary radix; only supported when C23 features are
+enabled); in other words, the same syntax used for integer constants in C.
+</p>
+<p>Otherwise <var class="var">base</var> must have a value between <code class="code">2</code> and <code class="code">36</code>.
+If <var class="var">base</var> is <code class="code">16</code>, the digits may optionally be preceded by
+&lsquo;<samp class="samp">0x</samp>&rsquo; or &lsquo;<samp class="samp">0X</samp>&rsquo;.  If <var class="var">base</var> is <code class="code">2</code>, and C23 features
+are enabled, the digits may optionally be preceded by
+&lsquo;<samp class="samp">0b</samp>&rsquo; or &lsquo;<samp class="samp">0B</samp>&rsquo;.  If base has no legal value the value returned
+is <code class="code">0l</code> and the global variable <code class="code">errno</code> is set to <code class="code">EINVAL</code>.
+</p>
+</li><li>Any remaining characters in the string.  If <var class="var">tailptr</var> is not a null
+pointer, <code class="code">strtol</code> stores a pointer to this tail in
+<code class="code">*<var class="var">tailptr</var></code>.
+</li></ul>
+
+<p>If the string is empty, contains only whitespace, or does not contain an
+initial substring that has the expected syntax for an integer in the
+specified <var class="var">base</var>, no conversion is performed.  In this case,
+<code class="code">strtol</code> returns a value of zero and the value stored in
+<code class="code">*<var class="var">tailptr</var></code> is the value of <var class="var">string</var>.
+</p>
+<p>In a locale other than the standard <code class="code">&quot;C&quot;</code> locale, this function
+may recognize additional implementation-dependent syntax.
+</p>
+<p>If the string has valid syntax for an integer but the value is not
+representable because of overflow, <code class="code">strtol</code> returns either
+<code class="code">LONG_MAX</code> or <code class="code">LONG_MIN</code> (see <a class="pxref" href="Range-of-Type.html">Range of an Integer Type</a>), as
+appropriate for the sign of the value.  It also sets <code class="code">errno</code>
+to <code class="code">ERANGE</code> to indicate there was overflow.
+</p>
+<p>You should not check for errors by examining the return value of
+<code class="code">strtol</code>, because the string might be a valid representation of
+<code class="code">0l</code>, <code class="code">LONG_MAX</code>, or <code class="code">LONG_MIN</code>.  Instead, check whether
+<var class="var">tailptr</var> points to what you expect after the number
+(e.g. <code class="code">'\0'</code> if the string should end after the number).  You also
+need to clear <code class="code">errno</code> before the call and check it afterward, in
+case there was overflow.
+</p>
+<p>There is an example at the end of this section.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcstol"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">wcstol</strong> <code class="def-code-arguments">(const wchar_t *restrict <var class="var">string</var>, wchar_t **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-wcstol"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wcstol</code> function is equivalent to the <code class="code">strtol</code> function
+in nearly all aspects but handles wide character strings.
+</p>
+<p>The <code class="code">wcstol</code> function was introduced in Amendment&nbsp;1<!-- /@w --> of ISO&nbsp;C90<!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strtoul"><span class="category-def">Function: </span><span><code class="def-type">unsigned long int</code> <strong class="def-name">strtoul</strong> <code class="def-code-arguments">(const char *restrict <var class="var">string</var>, char **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-strtoul"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">strtoul</code> (&ldquo;string-to-unsigned-long&rdquo;) function is like
+<code class="code">strtol</code> except it converts to an <code class="code">unsigned long int</code> value.
+The syntax is the same as described above for <code class="code">strtol</code>.  The value
+returned on overflow is <code class="code">ULONG_MAX</code> (see <a class="pxref" href="Range-of-Type.html">Range of an Integer Type</a>).
+</p>
+<p>If <var class="var">string</var> depicts a negative number, <code class="code">strtoul</code> acts the same
+as <var class="var">strtol</var> but casts the result to an unsigned integer.  That means
+for example that <code class="code">strtoul</code> on <code class="code">&quot;-1&quot;</code> returns <code class="code">ULONG_MAX</code>
+and an input more negative than <code class="code">LONG_MIN</code> returns
+(<code class="code">ULONG_MAX</code> + 1) / 2.
+</p>
+<p><code class="code">strtoul</code> sets <code class="code">errno</code> to <code class="code">EINVAL</code> if <var class="var">base</var> is out of
+range, or <code class="code">ERANGE</code> on overflow.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcstoul"><span class="category-def">Function: </span><span><code class="def-type">unsigned long int</code> <strong class="def-name">wcstoul</strong> <code class="def-code-arguments">(const wchar_t *restrict <var class="var">string</var>, wchar_t **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-wcstoul"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wcstoul</code> function is equivalent to the <code class="code">strtoul</code> function
+in nearly all aspects but handles wide character strings.
+</p>
+<p>The <code class="code">wcstoul</code> function was introduced in Amendment&nbsp;1<!-- /@w --> of ISO&nbsp;C90<!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strtoll"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">strtoll</strong> <code class="def-code-arguments">(const char *restrict <var class="var">string</var>, char **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-strtoll"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">strtoll</code> function is like <code class="code">strtol</code> except that it returns
+a <code class="code">long long int</code> value, and accepts numbers with a correspondingly
+larger range.
+</p>
+<p>If the string has valid syntax for an integer but the value is not
+representable because of overflow, <code class="code">strtoll</code> returns either
+<code class="code">LLONG_MAX</code> or <code class="code">LLONG_MIN</code> (see <a class="pxref" href="Range-of-Type.html">Range of an Integer Type</a>), as
+appropriate for the sign of the value.  It also sets <code class="code">errno</code> to
+<code class="code">ERANGE</code> to indicate there was overflow.
+</p>
+<p>The <code class="code">strtoll</code> function was introduced in ISO&nbsp;C99<!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcstoll"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">wcstoll</strong> <code class="def-code-arguments">(const wchar_t *restrict <var class="var">string</var>, wchar_t **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-wcstoll"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wcstoll</code> function is equivalent to the <code class="code">strtoll</code> function
+in nearly all aspects but handles wide character strings.
+</p>
+<p>The <code class="code">wcstoll</code> function was introduced in Amendment&nbsp;1<!-- /@w --> of ISO&nbsp;C90<!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strtoq"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">strtoq</strong> <code class="def-code-arguments">(const char *restrict <var class="var">string</var>, char **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-strtoq"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">strtoq</code> (&ldquo;string-to-quad-word&rdquo;) is the BSD name for <code class="code">strtoll</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcstoq"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">wcstoq</strong> <code class="def-code-arguments">(const wchar_t *restrict <var class="var">string</var>, wchar_t **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-wcstoq"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wcstoq</code> function is equivalent to the <code class="code">strtoq</code> function
+in nearly all aspects but handles wide character strings.
+</p>
+<p>The <code class="code">wcstoq</code> function is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strtoull"><span class="category-def">Function: </span><span><code class="def-type">unsigned long long int</code> <strong class="def-name">strtoull</strong> <code class="def-code-arguments">(const char *restrict <var class="var">string</var>, char **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-strtoull"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">strtoull</code> function is related to <code class="code">strtoll</code> the same way
+<code class="code">strtoul</code> is related to <code class="code">strtol</code>.
+</p>
+<p>The <code class="code">strtoull</code> function was introduced in ISO&nbsp;C99<!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcstoull"><span class="category-def">Function: </span><span><code class="def-type">unsigned long long int</code> <strong class="def-name">wcstoull</strong> <code class="def-code-arguments">(const wchar_t *restrict <var class="var">string</var>, wchar_t **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-wcstoull"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wcstoull</code> function is equivalent to the <code class="code">strtoull</code> function
+in nearly all aspects but handles wide character strings.
+</p>
+<p>The <code class="code">wcstoull</code> function was introduced in Amendment&nbsp;1<!-- /@w --> of ISO&nbsp;C90<!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strtouq"><span class="category-def">Function: </span><span><code class="def-type">unsigned long long int</code> <strong class="def-name">strtouq</strong> <code class="def-code-arguments">(const char *restrict <var class="var">string</var>, char **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-strtouq"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">strtouq</code> is the BSD name for <code class="code">strtoull</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcstouq"><span class="category-def">Function: </span><span><code class="def-type">unsigned long long int</code> <strong class="def-name">wcstouq</strong> <code class="def-code-arguments">(const wchar_t *restrict <var class="var">string</var>, wchar_t **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-wcstouq"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wcstouq</code> function is equivalent to the <code class="code">strtouq</code> function
+in nearly all aspects but handles wide character strings.
+</p>
+<p>The <code class="code">wcstouq</code> function is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strtoimax"><span class="category-def">Function: </span><span><code class="def-type">intmax_t</code> <strong class="def-name">strtoimax</strong> <code class="def-code-arguments">(const char *restrict <var class="var">string</var>, char **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-strtoimax"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">strtoimax</code> function is like <code class="code">strtol</code> except that it returns
+a <code class="code">intmax_t</code> value, and accepts numbers of a corresponding range.
+</p>
+<p>If the string has valid syntax for an integer but the value is not
+representable because of overflow, <code class="code">strtoimax</code> returns either
+<code class="code">INTMAX_MAX</code> or <code class="code">INTMAX_MIN</code> (see <a class="pxref" href="Integers.html">Integers</a>), as
+appropriate for the sign of the value.  It also sets <code class="code">errno</code> to
+<code class="code">ERANGE</code> to indicate there was overflow.
+</p>
+<p>See <a class="ref" href="Integers.html">Integers</a> for a description of the <code class="code">intmax_t</code> type.  The
+<code class="code">strtoimax</code> function was introduced in ISO&nbsp;C99<!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcstoimax"><span class="category-def">Function: </span><span><code class="def-type">intmax_t</code> <strong class="def-name">wcstoimax</strong> <code class="def-code-arguments">(const wchar_t *restrict <var class="var">string</var>, wchar_t **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-wcstoimax"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wcstoimax</code> function is equivalent to the <code class="code">strtoimax</code> function
+in nearly all aspects but handles wide character strings.
+</p>
+<p>The <code class="code">wcstoimax</code> function was introduced in ISO&nbsp;C99<!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-strtoumax"><span class="category-def">Function: </span><span><code class="def-type">uintmax_t</code> <strong class="def-name">strtoumax</strong> <code class="def-code-arguments">(const char *restrict <var class="var">string</var>, char **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-strtoumax"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">strtoumax</code> function is related to <code class="code">strtoimax</code>
+the same way that <code class="code">strtoul</code> is related to <code class="code">strtol</code>.
+</p>
+<p>See <a class="ref" href="Integers.html">Integers</a> for a description of the <code class="code">intmax_t</code> type.  The
+<code class="code">strtoumax</code> function was introduced in ISO&nbsp;C99<!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-wcstoumax"><span class="category-def">Function: </span><span><code class="def-type">uintmax_t</code> <strong class="def-name">wcstoumax</strong> <code class="def-code-arguments">(const wchar_t *restrict <var class="var">string</var>, wchar_t **restrict <var class="var">tailptr</var>, int <var class="var">base</var>)</code><a class="copiable-link" href="#index-wcstoumax"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">wcstoumax</code> function is equivalent to the <code class="code">strtoumax</code> function
+in nearly all aspects but handles wide character strings.
+</p>
+<p>The <code class="code">wcstoumax</code> function was introduced in ISO&nbsp;C99<!-- /@w -->.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-atol"><span class="category-def">Function: </span><span><code class="def-type">long int</code> <strong class="def-name">atol</strong> <code class="def-code-arguments">(const char *<var class="var">string</var>)</code><a class="copiable-link" href="#index-atol"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to the <code class="code">strtol</code> function with a <var class="var">base</var>
+argument of <code class="code">10</code>, except that it need not detect overflow errors.
+The <code class="code">atol</code> function is provided mostly for compatibility with
+existing code; using <code class="code">strtol</code> is more robust.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-atoi"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">atoi</strong> <code class="def-code-arguments">(const char *<var class="var">string</var>)</code><a class="copiable-link" href="#index-atoi"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is like <code class="code">atol</code>, except that it returns an <code class="code">int</code>.
+The <code class="code">atoi</code> function is also considered obsolete; use <code class="code">strtol</code>
+instead.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-atoll"><span class="category-def">Function: </span><span><code class="def-type">long long int</code> <strong class="def-name">atoll</strong> <code class="def-code-arguments">(const char *<var class="var">string</var>)</code><a class="copiable-link" href="#index-atoll"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">atol</code>, except it returns a <code class="code">long
+long int</code>.
+</p>
+<p>The <code class="code">atoll</code> function was introduced in ISO&nbsp;C99<!-- /@w -->.  It too is
+obsolete (despite having just been added); use <code class="code">strtoll</code> instead.
+</p></dd></dl>
+
+<p>All the functions mentioned in this section so far do not handle
+alternative representations of characters as described in the locale
+data.  Some locales specify thousands separator and the way they have to
+be used which can help to make large numbers more readable.  To read
+such numbers one has to use the <code class="code">scanf</code> functions with the &lsquo;<samp class="samp">'</samp>&rsquo;
+flag.
+</p>
+<p>Here is a function which parses a string as a sequence of integers and
+returns the sum of them:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">int
+sum_ints_from_string (char *string)
+{
+  int sum = 0;
+
+  while (1) {
+    char *tail;
+    int next;
+
+    /* <span class="r">Skip whitespace by hand, to detect the end.</span>  */
+    while (isspace (*string)) string++;
+    if (*string == 0)
+      break;
+
+    /* <span class="r">There is more nonwhitespace,</span>  */
+    /* <span class="r">so it ought to be another number.</span>  */
+    errno = 0;
+    /* <span class="r">Parse it.</span>  */
+    next = strtol (string, &amp;tail, 0);
+    /* <span class="r">Add it in, if not overflow.</span>  */
+    if (errno)
+      printf (&quot;Overflow\n&quot;);
+    else
+      sum += next;
+    /* <span class="r">Advance past it.</span>  */
+    string = tail;
+  }
+
+  return sum;
+}
+</pre></div>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Parsing-of-Floats.html">Parsing of Floats</a>, Up: <a href="Parsing-of-Numbers.html">Parsing of Numbers</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

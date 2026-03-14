@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Dynamic Linker Diagnostics (The GNU C Library)</title>
+
+<meta name="description" content="Dynamic Linker Diagnostics (The GNU C Library)">
+<meta name="keywords" content="Dynamic Linker Diagnostics (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Dynamic-Linker-Invocation.html" rel="up" title="Dynamic Linker Invocation">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Dynamic-Linker-Diagnostics">
+<div class="nav-panel">
+<p>
+Up: <a href="Dynamic-Linker-Invocation.html" accesskey="u" rel="up">Dynamic Linker Invocation</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Dynamic-Linker-Diagnostics-1"><span>37.1.1 Dynamic Linker Diagnostics<a class="copiable-link" href="#Dynamic-Linker-Diagnostics-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-diagnostics-_0028dynamic-linker_0029"></a>
+
+<p>The &lsquo;<samp class="samp">ld.so --list-diagnostics</samp>&rsquo; produces machine-readable
+diagnostics output.  This output contains system data that affects the
+behavior of the GNU C Library, and potentially application behavior as well.
+</p>
+<p>The exact set of diagnostic items can change between releases of
+the GNU C Library.  The output format itself is not expected to change
+radically.
+</p>
+<p>The following table shows some example lines that can be written by the
+diagnostics command.
+</p>
+<dl class="table">
+<dt><code class="code">dl_pagesize=0x1000</code></dt>
+<dd><p>The system page size is 4096 bytes.
+</p>
+</dd>
+<dt><code class="code">env[0x14]=&quot;LANG=en_US.UTF-8&quot;</code></dt>
+<dd><p>This item indicates that the 21st environment variable at process
+startup contains a setting for <code class="code">LANG</code>.
+</p>
+</dd>
+<dt><code class="code">env_filtered[0x22]=&quot;DISPLAY&quot;</code></dt>
+<dd><p>The 35th environment variable is <code class="code">DISPLAY</code>.  Its value is not
+included in the output for privacy reasons because it is not recognized
+as harmless by the diagnostics code.
+</p>
+</dd>
+<dt><code class="code">path.prefix=&quot;/usr&quot;</code></dt>
+<dd><p>This means that the GNU C Library was configured with <code class="code">--prefix=/usr</code>.
+</p>
+</dd>
+<dt><code class="code">path.system_dirs[0x0]=&quot;/lib64/&quot;</code></dt>
+<dt><code class="code">path.system_dirs[0x1]=&quot;/usr/lib64/&quot;</code></dt>
+<dd><p>The built-in dynamic linker search path contains two directories,
+<code class="code">/lib64</code> and <code class="code">/usr/lib64</code>.
+</p></dd>
+</dl>
+
+
+<ul class="mini-toc">
+<li><a href="Dynamic-Linker-Diagnostics-Format.html" accesskey="1">Dynamic Linker Diagnostics Format</a></li>
+<li><a href="Dynamic-Linker-Diagnostics-Values.html" accesskey="2">Dynamic Linker Diagnostics Values</a></li>
+</ul>
+</div>
+
+
+
+</body>
+</html>

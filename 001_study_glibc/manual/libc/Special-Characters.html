@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Special Characters (The GNU C Library)</title>
+
+<meta name="description" content="Special Characters (The GNU C Library)">
+<meta name="keywords" content="Special Characters (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Terminal-Modes.html" rel="up" title="Terminal Modes">
+<link href="Noncanonical-Input.html" rel="next" title="Noncanonical Input">
+<link href="Line-Speed.html" rel="prev" title="Line Speed">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+kbd.kbd {font-style: oblique}
+kbd.key {font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Special-Characters">
+<div class="nav-panel">
+<p>
+Next: <a href="Noncanonical-Input.html" accesskey="n" rel="next">Noncanonical Input</a>, Previous: <a href="Line-Speed.html" accesskey="p" rel="prev">Line Speed</a>, Up: <a href="Terminal-Modes.html" accesskey="u" rel="up">Terminal Modes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Special-Characters-1"><span>17.5.9 Special Characters<a class="copiable-link" href="#Special-Characters-1"> &para;</a></span></h4>
+
+<p>In canonical input, the terminal driver recognizes a number of special
+characters which perform various control functions.  These include the
+ERASE character (usually <kbd class="key">DEL</kbd>) for editing input, and other editing
+characters.  The INTR character (normally <kbd class="kbd">C-c</kbd>) for sending a
+<code class="code">SIGINT</code> signal, and other signal-raising characters, may be
+available in either canonical or noncanonical input mode.  All these
+characters are described in this section.
+</p>
+<p>The particular characters used are specified in the <code class="code">c_cc</code> member
+of the <code class="code">struct termios</code> structure.  This member is an array; each
+element specifies the character for a particular role.  Each element has
+a symbolic constant that stands for the index of that element&mdash;for
+example, <code class="code">VINTR</code> is the index of the element that specifies the INTR
+character, so storing <code class="code">'='</code> in <code class="code"><var class="var">termios</var>.c_cc[VINTR]</code>
+specifies &lsquo;<samp class="samp">=</samp>&rsquo; as the INTR character.
+</p>
+<a class="index-entry-id" id="index-_005fPOSIX_005fVDISABLE"></a>
+<p>On some systems, you can disable a particular special character function
+by specifying the value <code class="code">_POSIX_VDISABLE</code> for that role.  This
+value is unequal to any possible character code.  See <a class="xref" href="Options-for-Files.html">Optional Features in File Support</a>, for more information about how to tell whether the operating
+system you are using supports <code class="code">_POSIX_VDISABLE</code>.
+</p>
+
+<ul class="mini-toc">
+<li><a href="Editing-Characters.html" accesskey="1">Characters for Input Editing</a></li>
+<li><a href="Signal-Characters.html" accesskey="2">Characters that Cause Signals</a></li>
+<li><a href="Start_002fStop-Characters.html" accesskey="3">Special Characters for Flow Control</a></li>
+<li><a href="Other-Special.html" accesskey="4">Other Special Characters</a></li>
+</ul>
+</div>
+
+
+
+</body>
+</html>

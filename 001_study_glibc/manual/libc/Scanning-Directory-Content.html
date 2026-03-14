@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Scanning Directory Content (The GNU C Library)</title>
+
+<meta name="description" content="Scanning Directory Content (The GNU C Library)">
+<meta name="keywords" content="Scanning Directory Content (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Accessing-Directories.html" rel="up" title="Accessing Directories">
+<link href="Simple-Directory-Lister-Mark-II.html" rel="next" title="Simple Directory Lister Mark II">
+<link href="Random-Access-Directory.html" rel="prev" title="Random Access Directory">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Scanning-Directory-Content">
+<div class="nav-panel">
+<p>
+Next: <a href="Simple-Directory-Lister-Mark-II.html" accesskey="n" rel="next">Simple Program to List a Directory, Mark II</a>, Previous: <a href="Random-Access-Directory.html" accesskey="p" rel="prev">Random Access in a Directory Stream</a>, Up: <a href="Accessing-Directories.html" accesskey="u" rel="up">Accessing Directories</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Scanning-the-Content-of-a-Directory"><span>14.3.6 Scanning the Content of a Directory<a class="copiable-link" href="#Scanning-the-Content-of-a-Directory"> &para;</a></span></h4>
+
+<p>A higher-level interface to the directory handling functions is the
+<code class="code">scandir</code> function.  With its help one can select a subset of the
+entries in a directory, possibly sort them and get a list of names as
+the result.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-scandir"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">scandir</strong> <code class="def-code-arguments">(const char *<var class="var">dir</var>, struct dirent ***<var class="var">namelist</var>, int (*<var class="var">selector</var>) (const struct dirent *), int (*<var class="var">cmp</var>) (const struct dirent **, const struct dirent **))</code><a class="copiable-link" href="#index-scandir"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>The <code class="code">scandir</code> function scans the contents of the directory selected
+by <var class="var">dir</var>.  The result in *<var class="var">namelist</var> is an array of pointers to
+structures of type <code class="code">struct dirent</code> which describe all selected
+directory entries and which is allocated using <code class="code">malloc</code>.  Instead
+of always getting all directory entries returned, the user supplied
+function <var class="var">selector</var> can be used to decide which entries are in the
+result.  Only the entries for which <var class="var">selector</var> returns a non-zero
+value are selected.
+</p>
+<p>Finally the entries in *<var class="var">namelist</var> are sorted using the
+user-supplied function <var class="var">cmp</var>.  The arguments passed to the <var class="var">cmp</var>
+function are of type <code class="code">struct dirent **</code>, therefore one cannot
+directly use the <code class="code">strcmp</code> or <code class="code">strcoll</code> functions; instead see
+the functions <code class="code">alphasort</code> and <code class="code">versionsort</code> below.
+</p>
+<p>The return value of the function is the number of entries placed in
+*<var class="var">namelist</var>.  If it is <code class="code">-1</code> an error occurred (either the
+directory could not be opened for reading or memory allocation failed) and
+the global variable <code class="code">errno</code> contains more information on the error.
+</p></dd></dl>
+
+<p>As described above, the fourth argument to the <code class="code">scandir</code> function
+must be a pointer to a sorting function.  For the convenience of the
+programmer the GNU C Library contains implementations of functions which
+are very helpful for this purpose.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-alphasort"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">alphasort</strong> <code class="def-code-arguments">(const struct dirent **<var class="var">a</var>, const struct dirent **<var class="var">b</var>)</code><a class="copiable-link" href="#index-alphasort"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">alphasort</code> function behaves like the <code class="code">strcoll</code> function
+(see <a class="pxref" href="String_002fArray-Comparison.html">String/Array Comparison</a>).  The difference is that the arguments
+are not string pointers but instead they are of type
+<code class="code">struct dirent **</code>.
+</p>
+<p>The return value of <code class="code">alphasort</code> is less than, equal to, or greater
+than zero depending on the order of the two entries <var class="var">a</var> and <var class="var">b</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-versionsort"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">versionsort</strong> <code class="def-code-arguments">(const struct dirent **<var class="var">a</var>, const struct dirent **<var class="var">b</var>)</code><a class="copiable-link" href="#index-versionsort"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">versionsort</code> function is like <code class="code">alphasort</code> except that it
+uses the <code class="code">strverscmp</code> function internally.
+</p></dd></dl>
+
+<p>If the filesystem supports large files we cannot use the <code class="code">scandir</code>
+anymore since the <code class="code">dirent</code> structure might not able to contain all
+the information.  The LFS provides the new type <code class="code">struct&nbsp;dirent64</code><!-- /@w -->.  To use this we need a new function.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-scandir64"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">scandir64</strong> <code class="def-code-arguments">(const char *<var class="var">dir</var>, struct dirent64 ***<var class="var">namelist</var>, int (*<var class="var">selector</var>) (const struct dirent64 *), int (*<var class="var">cmp</var>) (const struct dirent64 **, const struct dirent64 **))</code><a class="copiable-link" href="#index-scandir64"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">scandir64</code> function works like the <code class="code">scandir</code> function
+except that the directory entries it returns are described by elements
+of type <code class="code">struct&nbsp;dirent64</code><!-- /@w -->.  The function pointed to by
+<var class="var">selector</var> is again used to select the desired entries, except that
+<var class="var">selector</var> now must point to a function which takes a
+<code class="code">struct&nbsp;dirent64&nbsp;*</code><!-- /@w --> parameter.
+</p>
+<p>Similarly the <var class="var">cmp</var> function should expect its two arguments to be
+of type <code class="code">struct dirent64 **</code>.
+</p></dd></dl>
+
+<p>As <var class="var">cmp</var> is now a function of a different type, the functions
+<code class="code">alphasort</code> and <code class="code">versionsort</code> cannot be supplied for that
+argument.  Instead we provide the two replacement functions below.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-alphasort64"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">alphasort64</strong> <code class="def-code-arguments">(const struct dirent64 **<var class="var">a</var>, const struct dirent **<var class="var">b</var>)</code><a class="copiable-link" href="#index-alphasort64"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Unsafe heap
+| AC-Unsafe mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">alphasort64</code> function behaves like the <code class="code">strcoll</code> function
+(see <a class="pxref" href="String_002fArray-Comparison.html">String/Array Comparison</a>).  The difference is that the arguments
+are not string pointers but instead they are of type
+<code class="code">struct dirent64 **</code>.
+</p>
+<p>Return value of <code class="code">alphasort64</code> is less than, equal to, or greater
+than zero depending on the order of the two entries <var class="var">a</var> and <var class="var">b</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-versionsort64"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">versionsort64</strong> <code class="def-code-arguments">(const struct dirent64 **<var class="var">a</var>, const struct dirent64 **<var class="var">b</var>)</code><a class="copiable-link" href="#index-versionsort64"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe locale
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">versionsort64</code> function is like <code class="code">alphasort64</code>, excepted that it
+uses the <code class="code">strverscmp</code> function internally.
+</p></dd></dl>
+
+<p>It is important not to mix the use of <code class="code">scandir</code> and the 64-bit
+comparison functions or vice versa.  There are systems on which this
+works but on others it will fail miserably.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Simple-Directory-Lister-Mark-II.html">Simple Program to List a Directory, Mark II</a>, Previous: <a href="Random-Access-Directory.html">Random Access in a Directory Stream</a>, Up: <a href="Accessing-Directories.html">Accessing Directories</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

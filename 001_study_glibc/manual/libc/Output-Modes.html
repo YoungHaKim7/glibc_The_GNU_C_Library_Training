@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Output Modes (The GNU C Library)</title>
+
+<meta name="description" content="Output Modes (The GNU C Library)">
+<meta name="keywords" content="Output Modes (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Terminal-Modes.html" rel="up" title="Terminal Modes">
+<link href="Control-Modes.html" rel="next" title="Control Modes">
+<link href="Input-Modes.html" rel="prev" title="Input Modes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+kbd.kbd {font-style: oblique}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Output-Modes">
+<div class="nav-panel">
+<p>
+Next: <a href="Control-Modes.html" accesskey="n" rel="next">Control Modes</a>, Previous: <a href="Input-Modes.html" accesskey="p" rel="prev">Input Modes</a>, Up: <a href="Terminal-Modes.html" accesskey="u" rel="up">Terminal Modes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Output-Modes-1"><span>17.5.5 Output Modes<a class="copiable-link" href="#Output-Modes-1"> &para;</a></span></h4>
+
+<p>This section describes the terminal flags and fields that control how
+output characters are translated and padded for display.  All of these
+are contained in the <code class="code">c_oflag</code> member of the <code class="code">struct&nbsp;termios</code><!-- /@w -->
+structure.
+</p>
+<p>The <code class="code">c_oflag</code> member itself is an integer, and you change the flags
+and fields using the operators <code class="code">&amp;</code>, <code class="code">|</code>, and <code class="code">^</code>.  Don&rsquo;t
+try to specify the entire value for <code class="code">c_oflag</code>&mdash;instead, change
+only specific flags and leave the rest untouched (see <a class="pxref" href="Setting-Modes.html">Setting Terminal Modes Properly</a>).
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-OPOST"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">OPOST</strong><a class="copiable-link" href="#index-OPOST"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, output data is processed in some unspecified way so
+that it is displayed appropriately on the terminal device.  This
+typically includes mapping newline characters (<code class="code">'\n'</code>) onto
+carriage return and linefeed pairs.
+</p>
+<p>If this bit isn&rsquo;t set, the characters are transmitted as-is.
+</p></dd></dl>
+
+<p>The following three bits are effective only if <code class="code">OPOST</code> is set.
+</p>
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ONLCR"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">ONLCR</strong><a class="copiable-link" href="#index-ONLCR"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, convert the newline character on output into a pair
+of characters, carriage return followed by linefeed.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-OXTABS"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">OXTABS</strong><a class="copiable-link" href="#index-OXTABS"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, convert tab characters on output into the appropriate
+number of spaces to emulate a tab stop every eight columns.  This bit
+exists only on BSD systems and GNU/Hurd systems; on
+GNU/Linux systems it is available as <code class="code">XTABS</code>.
+</p></dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-ONOEOT"><span class="category-def">Macro: </span><span><code class="def-type">tcflag_t</code> <strong class="def-name">ONOEOT</strong><a class="copiable-link" href="#index-ONOEOT"> &para;</a></span></dt>
+<dd>
+<p>If this bit is set, discard <kbd class="kbd">C-d</kbd> characters (code <code class="code">004</code>) on
+output.  These characters cause many dial-up terminals to disconnect.
+This bit exists only on BSD systems and GNU/Hurd systems.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Control-Modes.html">Control Modes</a>, Previous: <a href="Input-Modes.html">Input Modes</a>, Up: <a href="Terminal-Modes.html">Terminal Modes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

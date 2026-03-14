@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Environment Access (The GNU C Library)</title>
+
+<meta name="description" content="Environment Access (The GNU C Library)">
+<meta name="keywords" content="Environment Access (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Environment-Variables.html" rel="up" title="Environment Variables">
+<link href="Standard-Environment.html" rel="next" title="Standard Environment">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Environment-Access">
+<div class="nav-panel">
+<p>
+Next: <a href="Standard-Environment.html" accesskey="n" rel="next">Standard Environment Variables</a>, Up: <a href="Environment-Variables.html" accesskey="u" rel="up">Environment Variables</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Environment-Access-1"><span>26.4.1 Environment Access<a class="copiable-link" href="#Environment-Access-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-environment-access"></a>
+<a class="index-entry-id" id="index-environment-representation"></a>
+
+<p>The value of an environment variable can be accessed with the
+<code class="code">getenv</code> function.  This is declared in the header file
+<samp class="file">stdlib.h</samp>.
+<a class="index-entry-id" id="index-stdlib_002eh-21"></a>
+</p>
+<p>Libraries should use <code class="code">secure_getenv</code> instead of <code class="code">getenv</code>, so
+that they do not accidentally use untrusted environment variables.
+Modifications of environment variables are not allowed in
+multi-threaded programs.  The <code class="code">getenv</code> and <code class="code">secure_getenv</code>
+functions can be safely used in multi-threaded programs.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getenv"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">getenv</strong> <code class="def-code-arguments">(const char *<var class="var">name</var>)</code><a class="copiable-link" href="#index-getenv"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe env
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns a string that is the value of the environment
+variable <var class="var">name</var>.  You must not modify this string.  In some non-Unix
+systems not using the GNU C Library, it might be overwritten by subsequent
+calls to <code class="code">getenv</code> (but not by any other library function).  If the
+environment variable <var class="var">name</var> is not defined, the value is a null
+pointer.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-secure_005fgetenv"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">secure_getenv</strong> <code class="def-code-arguments">(const char *<var class="var">name</var>)</code><a class="copiable-link" href="#index-secure_005fgetenv"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe env
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">getenv</code>, but it returns a null
+pointer if the environment is untrusted.  This happens when the
+program file has SUID or SGID bits set.  General-purpose libraries
+should always prefer this function over <code class="code">getenv</code> to avoid
+vulnerabilities if the library is referenced from a SUID/SGID program.
+</p>
+<p>This function was originally a GNU extension, but was added in
+POSIX.1-2024.
+</p></dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-putenv"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">putenv</strong> <code class="def-code-arguments">(char *<var class="var">string</var>)</code><a class="copiable-link" href="#index-putenv"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe const:env
+| AS-Unsafe heap lock
+| AC-Unsafe corrupt lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">putenv</code> function adds or removes definitions from the environment.
+If the <var class="var">string</var> is of the form &lsquo;<samp class="samp"><var class="var">name</var>=<var class="var">value</var></samp>&rsquo;, the
+definition is added to the environment.  Otherwise, the <var class="var">string</var> is
+interpreted as the name of an environment variable, and any definition
+for this variable in the environment is removed.
+</p>
+<p>If the function is successful it returns <code class="code">0</code>.  Otherwise the return
+value is nonzero and <code class="code">errno</code> is set to indicate the error.
+</p>
+<p>The difference to the <code class="code">setenv</code> function is that the exact string
+given as the parameter <var class="var">string</var> is put into the environment.  If the
+user should change the string after the <code class="code">putenv</code> call this will
+reflect automatically in the environment.  This also requires that
+<var class="var">string</var> not be an automatic variable whose scope is left before the
+variable is removed from the environment.  The same applies of course to
+dynamically allocated variables which are freed later.
+</p>
+<p>This function is part of the extended Unix interface.  You should define
+<var class="var">_XOPEN_SOURCE</var> before including any header.
+</p></dd></dl>
+
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setenv"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">setenv</strong> <code class="def-code-arguments">(const char *<var class="var">name</var>, const char *<var class="var">value</var>, int <var class="var">replace</var>)</code><a class="copiable-link" href="#index-setenv"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe const:env
+| AS-Unsafe heap lock
+| AC-Unsafe corrupt lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">setenv</code> function can be used to add a new definition to the
+environment.  The entry with the name <var class="var">name</var> is replaced by the
+value &lsquo;<samp class="samp"><var class="var">name</var>=<var class="var">value</var></samp>&rsquo;.  Please note that this is also true
+if <var class="var">value</var> is the empty string.  To do this a new string is created
+and the strings <var class="var">name</var> and <var class="var">value</var> are copied.  A null pointer
+for the <var class="var">value</var> parameter is illegal.  If the environment already
+contains an entry with key <var class="var">name</var> the <var class="var">replace</var> parameter
+controls the action.  If replace is zero, nothing happens.  Otherwise
+the old entry is replaced by the new one.
+</p>
+<p>Please note that you cannot remove an entry completely using this function.
+</p>
+<p>If the function is successful it returns <code class="code">0</code>.  Otherwise the
+environment is unchanged and the return value is <code class="code">-1</code> and
+<code class="code">errno</code> is set.
+</p>
+<p>This function was originally part of the BSD library but is now part of
+the Unix standard.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-unsetenv"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">unsetenv</strong> <code class="def-code-arguments">(const char *<var class="var">name</var>)</code><a class="copiable-link" href="#index-unsetenv"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe const:env
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>Using this function one can remove an entry completely from the
+environment.  If the environment contains an entry with the key
+<var class="var">name</var> this whole entry is removed.  A call to this function is
+equivalent to a call to <code class="code">putenv</code> when the <var class="var">value</var> part of the
+string is empty.
+</p>
+<p>The function returns <code class="code">-1</code> if <var class="var">name</var> is a null pointer, points to
+an empty string, or points to a string containing a <code class="code">=</code> character.
+It returns <code class="code">0</code> if the call succeeded.
+</p>
+<p>This function was originally part of the BSD library but is now part of
+the Unix standard.  The BSD version had no return value, though.
+</p></dd></dl>
+
+<p>There is one more function to modify the whole environment.  This
+function is said to be used in the POSIX.9 (POSIX bindings for Fortran
+77) and so one should expect it did made it into POSIX.1.  But this
+never happened.  But we still provide this function as a GNU extension
+to enable writing standard compliant Fortran environments.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-clearenv"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">clearenv</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-clearenv"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe const:env
+| AS-Unsafe heap lock
+| AC-Unsafe lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">clearenv</code> function removes all entries from the environment.
+Using <code class="code">putenv</code> and <code class="code">setenv</code> new entries can be added again
+later.
+</p>
+<p>If the function is successful it returns <code class="code">0</code>.  Otherwise the return
+value is nonzero.
+</p></dd></dl>
+
+
+<p>You can deal directly with the underlying representation of environment
+objects to add more variables to the environment (for example, to
+communicate with another program you are about to execute;
+see <a class="pxref" href="Executing-a-File.html">Executing a File</a>).
+</p>
+<dl class="first-deftypevr first-deftypevar-alias-first-deftypevr def-block">
+<dt class="deftypevr deftypevar-alias-deftypevr def-line" id="index-environ"><span class="category-def">Variable: </span><span><code class="def-type">char **</code> <strong class="def-name">environ</strong><a class="copiable-link" href="#index-environ"> &para;</a></span></dt>
+<dd>
+<p>The environment is represented as an array of strings.  Each string is
+of the format &lsquo;<samp class="samp"><var class="var">name</var>=<var class="var">value</var></samp>&rsquo;.  The order in which
+strings appear in the environment is not significant, but the same
+<var class="var">name</var> must not appear more than once.  The last element of the
+array is a null pointer.
+</p>
+<p>This variable is declared in the header file <samp class="file">unistd.h</samp>.
+</p>
+<p>If you just want to get the value of an environment variable, use
+<code class="code">getenv</code>.
+</p></dd></dl>
+
+<p>Unix systems, and GNU systems, pass the initial value of
+<code class="code">environ</code> as the third argument to <code class="code">main</code>.
+See <a class="xref" href="Program-Arguments.html">Program Arguments</a>.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Standard-Environment.html">Standard Environment Variables</a>, Up: <a href="Environment-Variables.html">Environment Variables</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

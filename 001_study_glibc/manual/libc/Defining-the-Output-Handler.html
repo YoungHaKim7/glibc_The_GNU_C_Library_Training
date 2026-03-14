@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Defining the Output Handler (The GNU C Library)</title>
+
+<meta name="description" content="Defining the Output Handler (The GNU C Library)">
+<meta name="keywords" content="Defining the Output Handler (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Customizing-Printf.html" rel="up" title="Customizing Printf">
+<link href="Printf-Extension-Example.html" rel="next" title="Printf Extension Example">
+<link href="Conversion-Specifier-Options.html" rel="prev" title="Conversion Specifier Options">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Defining-the-Output-Handler">
+<div class="nav-panel">
+<p>
+Next: <a href="Printf-Extension-Example.html" accesskey="n" rel="next"><code class="code">printf</code> Extension Example</a>, Previous: <a href="Conversion-Specifier-Options.html" accesskey="p" rel="prev">Conversion Specifier Options</a>, Up: <a href="Customizing-Printf.html" accesskey="u" rel="up">Customizing <code class="code">printf</code></a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Defining-the-Output-Handler-1"><span>12.13.3 Defining the Output Handler<a class="copiable-link" href="#Defining-the-Output-Handler-1"> &para;</a></span></h4>
+
+<p>Now let&rsquo;s look at how to define the handler and arginfo functions
+which are passed as arguments to <code class="code">register_printf_function</code>.
+</p>
+<p><strong class="strong">Compatibility Note:</strong> The interface changed in the GNU C Library
+version 2.0.  Previously the third argument was of type
+<code class="code">va_list *</code>.
+</p>
+<p>You should define your handler functions with a prototype like:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">int <var class="var">function</var> (FILE *stream, const struct printf_info *info,
+		    const void *const *args)
+</pre></div>
+
+<p>The <var class="var">stream</var> argument passed to the handler function is the stream to
+which it should write output.
+</p>
+<p>The <var class="var">info</var> argument is a pointer to a structure that contains
+information about the various options that were included with the
+conversion in the template string.  You should not modify this structure
+inside your handler function.  See <a class="xref" href="Conversion-Specifier-Options.html">Conversion Specifier Options</a>, for
+a description of this data structure.
+</p>
+
+<p>The <var class="var">args</var> is a vector of pointers to the arguments data.
+The number of arguments was determined by calling the argument
+information function provided by the user.
+</p>
+<p>Your handler function should return a value just like <code class="code">printf</code>
+does: it should return the number of characters it has written, or a
+negative value to indicate an error.
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-printf_005ffunction"><span class="category-def">Data Type: </span><span><strong class="def-name">printf_function</strong><a class="copiable-link" href="#index-printf_005ffunction"> &para;</a></span></dt>
+<dd>
+<p>This is the data type that a handler function should have.
+</p></dd></dl>
+
+<p>If you are going to use <code class="code">parse_printf_format</code><!-- /@w --> in your
+application, you must also define a function to pass as the
+<var class="var">arginfo-function</var> argument for each new conversion you install with
+<code class="code">register_printf_function</code>.
+</p>
+<p>You have to define these functions with a prototype like:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">int <var class="var">function</var> (const struct printf_info *info,
+		    size_t n, int *argtypes)
+</pre></div>
+
+<p>The return value from the function should be the number of arguments the
+conversion expects.  The function should also fill in no more than
+<var class="var">n</var> elements of the <var class="var">argtypes</var> array with information about the
+types of each of these arguments.  This information is encoded using the
+various &lsquo;<samp class="samp">PA_</samp>&rsquo; macros.  (You will notice that this is the same
+calling convention <code class="code">parse_printf_format</code> itself uses.)
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-printf_005farginfo_005ffunction"><span class="category-def">Data Type: </span><span><strong class="def-name">printf_arginfo_function</strong><a class="copiable-link" href="#index-printf_005farginfo_005ffunction"> &para;</a></span></dt>
+<dd>
+<p>This type is used to describe functions that return information about
+the number and type of arguments used by a conversion specifier.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Printf-Extension-Example.html"><code class="code">printf</code> Extension Example</a>, Previous: <a href="Conversion-Specifier-Options.html">Conversion Specifier Options</a>, Up: <a href="Customizing-Printf.html">Customizing <code class="code">printf</code></a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

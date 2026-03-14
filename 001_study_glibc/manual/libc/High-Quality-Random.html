@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>High Quality Random (The GNU C Library)</title>
+
+<meta name="description" content="High Quality Random (The GNU C Library)">
+<meta name="keywords" content="High Quality Random (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Pseudo_002dRandom-Numbers.html" rel="up" title="Pseudo-Random Numbers">
+<link href="SVID-Random.html" rel="prev" title="SVID Random">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="High-Quality-Random">
+<div class="nav-panel">
+<p>
+Previous: <a href="SVID-Random.html" accesskey="p" rel="prev">SVID Random Number Function</a>, Up: <a href="Pseudo_002dRandom-Numbers.html" accesskey="u" rel="up">Pseudo-Random Numbers</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="High-Quality-Random-Number-Functions"><span>19.8.4 High Quality Random Number Functions<a class="copiable-link" href="#High-Quality-Random-Number-Functions"> &para;</a></span></h4>
+
+<p>This section describes the random number functions provided as a GNU
+extension, based on OpenBSD interfaces.
+</p>
+<p>The GNU C Library uses kernel entropy obtained either through <code class="code">getrandom</code>
+or by reading <samp class="file">/dev/urandom</samp> to seed.
+</p>
+<p>These functions provide higher random quality than ISO, BSD, and SVID
+functions, and may be used in cryptographic contexts.
+</p>
+<p>The prototypes for these functions are in <samp class="file">stdlib.h</samp>.
+<a class="index-entry-id" id="index-stdlib_002eh-15"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-arc4random"><span class="category-def">Function: </span><span><code class="def-type">uint32_t</code> <strong class="def-name">arc4random</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-arc4random"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns a single 32-bit value in the range of <code class="code">0</code> to
+<code class="code">2^32−1</code> (inclusive), which is twice the range of <code class="code">rand</code> and
+<code class="code">random</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-arc4random_005fbuf"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">arc4random_buf</strong> <code class="def-code-arguments">(void *<var class="var">buffer</var>, size_t <var class="var">length</var>)</code><a class="copiable-link" href="#index-arc4random_005fbuf"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function fills the region <var class="var">buffer</var> of length <var class="var">length</var> bytes
+with random data.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-arc4random_005funiform"><span class="category-def">Function: </span><span><code class="def-type">uint32_t</code> <strong class="def-name">arc4random_uniform</strong> <code class="def-code-arguments">(uint32_t <var class="var">upper_bound</var>)</code><a class="copiable-link" href="#index-arc4random_005funiform"> &para;</a></span></dt>
+<dd>
+<p>| MT-Safe 
+| AS-Unsafe corrupt
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function returns a single 32-bit value, uniformly distributed but
+less than the <var class="var">upper_bound</var>.  It avoids the modulo&nbsp;bias<!-- /@w --> when the
+upper bound is not a power of two.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="SVID-Random.html">SVID Random Number Function</a>, Up: <a href="Pseudo_002dRandom-Numbers.html">Pseudo-Random Numbers</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

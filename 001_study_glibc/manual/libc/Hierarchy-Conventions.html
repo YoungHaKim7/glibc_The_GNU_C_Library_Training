@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Hierarchy Conventions (The GNU C Library)</title>
+
+<meta name="description" content="Hierarchy Conventions (The GNU C Library)">
+<meta name="keywords" content="Hierarchy Conventions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Porting.html" rel="up" title="Porting">
+<link href="Porting-to-Unix.html" rel="next" title="Porting to Unix">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="appendixsubsec-level-extent" id="Hierarchy-Conventions">
+<div class="nav-panel">
+<p>
+Next: <a href="Porting-to-Unix.html" accesskey="n" rel="next">Porting the GNU C Library to Unix Systems</a>, Up: <a href="Porting.html" accesskey="u" rel="up">Porting the GNU C Library</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="appendixsubsec" id="Layout-of-the-sysdeps-Directory-Hierarchy"><span>D.4.1 Layout of the <samp class="file">sysdeps</samp> Directory Hierarchy<a class="copiable-link" href="#Layout-of-the-sysdeps-Directory-Hierarchy"> &para;</a></span></h4>
+
+<p>A GNU configuration name has three parts: the CPU type, the
+manufacturer&rsquo;s name, and the operating system.  <samp class="file">configure</samp> uses
+these to pick the list of system-dependent directories to look for.  If
+the &lsquo;<samp class="samp">--nfp</samp>&rsquo; option is <em class="emph">not</em> passed to <samp class="file">configure</samp>, the
+directory <samp class="file"><var class="var">machine</var>/fpu</samp> is also used.  The operating system
+often has a <em class="dfn">base operating system</em>; for example, if the operating
+system is &lsquo;<samp class="samp">Linux</samp>&rsquo;, the base operating system is &lsquo;<samp class="samp">unix/sysv</samp>&rsquo;.
+The algorithm used to pick the list of directories is simple:
+<samp class="file">configure</samp> makes a list of the base operating system,
+manufacturer, CPU type, and operating system, in that order.  It then
+concatenates all these together with slashes in between, to produce a
+directory name; for example, the configuration &lsquo;<samp class="samp">i686-linux-gnu</samp>&rsquo;<!-- /@w -->
+results in <samp class="file">unix/sysv/linux/i386/i686</samp>.  <samp class="file">configure</samp> then
+tries removing each element of the list in turn, so
+<samp class="file">unix/sysv/linux</samp> and <samp class="file">unix/sysv</samp> are also tried, among others.
+Since the precise version number of the operating system is often not
+important, and it would be very inconvenient, for example, to have
+identical <samp class="file">irix6.2</samp> and <samp class="file">irix6.3</samp> directories,
+<samp class="file">configure</samp> tries successively less specific operating system names
+by removing trailing suffixes starting with a period.
+</p>
+<p>As an example, here is the complete list of directories that would be
+tried for the configuration &lsquo;<samp class="samp">i686-linux-gnu</samp>&rsquo;<!-- /@w -->:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">sysdeps/i386/elf
+sysdeps/unix/sysv/linux/i386
+sysdeps/unix/sysv/linux
+sysdeps/gnu
+sysdeps/unix/common
+sysdeps/unix/mman
+sysdeps/unix/inet
+sysdeps/unix/sysv/i386/i686
+sysdeps/unix/sysv/i386
+sysdeps/unix/sysv
+sysdeps/unix/i386
+sysdeps/unix
+sysdeps/posix
+sysdeps/i386/i686
+sysdeps/i386/i486
+sysdeps/libm-i387/i686
+sysdeps/i386/fpu
+sysdeps/libm-i387
+sysdeps/i386
+sysdeps/wordsize-32
+sysdeps/ieee754
+sysdeps/libm-ieee754
+sysdeps/generic
+</pre></div>
+
+<p>Different machine architectures are conventionally subdirectories at the
+top level of the <samp class="file">sysdeps</samp> directory tree.  For example,
+<samp class="file">sysdeps/sparc</samp><!-- /@w --> and <samp class="file">sysdeps/m68k</samp><!-- /@w -->.  These contain
+files specific to those machine architectures, but not specific to any
+particular operating system.  There might be subdirectories for
+specializations of those architectures, such as
+<samp class="file">sysdeps/m68k/68020</samp><!-- /@w -->.  Code which is specific to the
+floating-point coprocessor used with a particular machine should go in
+<samp class="file">sysdeps/<var class="var">machine</var>/fpu</samp><!-- /@w -->.
+</p>
+<p>There are a few directories at the top level of the <samp class="file">sysdeps</samp>
+hierarchy that are not for particular machine architectures.
+</p>
+<dl class="table">
+<dt><samp class="file">generic</samp></dt>
+<dd><p>As described above (see <a class="pxref" href="Porting.html">Porting the GNU C Library</a>), this is the subdirectory
+that every configuration implicitly uses after all others.
+</p>
+</dd>
+<dt><samp class="file">ieee754</samp></dt>
+<dd><p>This directory is for code using the IEEE 754 floating-point format,
+where the C type <code class="code">float</code> is IEEE 754 single-precision format, and
+<code class="code">double</code> is IEEE 754 double-precision format.  Usually this
+directory is referred to in the <samp class="file">Implies</samp> file in a machine
+architecture-specific directory, such as <samp class="file">m68k/Implies</samp>.
+</p>
+</dd>
+<dt><samp class="file">libm-ieee754</samp></dt>
+<dd><p>This directory contains an implementation of a mathematical library
+usable on platforms which use IEEE&nbsp;754<!-- /@w --> conformant floating-point
+arithmetic.
+</p>
+</dd>
+<dt><samp class="file">libm-i387</samp></dt>
+<dd><p>This is a special case.  Ideally the code should be in
+<samp class="file">sysdeps/i386/fpu</samp> but for various reasons it is kept aside.
+</p>
+</dd>
+<dt><samp class="file">posix</samp></dt>
+<dd><p>This directory contains implementations of things in the library in
+terms of <small class="sc">POSIX.1</small> functions.  This includes some of the <small class="sc">POSIX.1</small>
+functions themselves.  Of course, <small class="sc">POSIX.1</small> cannot be completely
+implemented in terms of itself, so a configuration using just
+<samp class="file">posix</samp> cannot be complete.
+</p>
+</dd>
+<dt><samp class="file">unix</samp></dt>
+<dd><p>This is the directory for Unix-like things.  See <a class="xref" href="Porting-to-Unix.html">Porting the GNU C Library to Unix Systems</a>.
+<samp class="file">unix</samp> implies <samp class="file">posix</samp>.  There are some special-purpose
+subdirectories of <samp class="file">unix</samp>:
+</p>
+<dl class="table">
+<dt><samp class="file">unix/common</samp></dt>
+<dd><p>This directory is for things common to both BSD and System V release 4.
+Both <samp class="file">unix/bsd</samp> and <samp class="file">unix/sysv/sysv4</samp> imply <samp class="file">unix/common</samp>.
+</p>
+</dd>
+<dt><samp class="file">unix/inet</samp></dt>
+<dd><p>This directory is for <code class="code">socket</code> and related functions on Unix systems.
+<samp class="file">unix/inet/Subdirs</samp> enables the <samp class="file">inet</samp> top-level subdirectory.
+<samp class="file">unix/common</samp> implies <samp class="file">unix/inet</samp>.
+</p></dd>
+</dl>
+
+</dd>
+<dt><samp class="file">mach</samp></dt>
+<dd><p>This is the directory for things based on the Mach microkernel from CMU
+(including GNU/Hurd systems).  Other basic operating systems
+(VMS, for example) would have their own directories at the top level of
+the <samp class="file">sysdeps</samp> hierarchy, parallel to <samp class="file">unix</samp> and <samp class="file">mach</samp>.
+</p></dd>
+</dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Porting-to-Unix.html">Porting the GNU C Library to Unix Systems</a>, Up: <a href="Porting.html">Porting the GNU C Library</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

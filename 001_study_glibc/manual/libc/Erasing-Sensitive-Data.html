@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Erasing Sensitive Data (The GNU C Library)</title>
+
+<meta name="description" content="Erasing Sensitive Data (The GNU C Library)">
+<meta name="keywords" content="Erasing Sensitive Data (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="String-and-Array-Utilities.html" rel="up" title="String and Array Utilities">
+<link href="Shuffling-Bytes.html" rel="next" title="Shuffling Bytes">
+<link href="Finding-Tokens-in-a-String.html" rel="prev" title="Finding Tokens in a String">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Erasing-Sensitive-Data">
+<div class="nav-panel">
+<p>
+Next: <a href="Shuffling-Bytes.html" accesskey="n" rel="next">Shuffling Bytes</a>, Previous: <a href="Finding-Tokens-in-a-String.html" accesskey="p" rel="prev">Finding Tokens in a String</a>, Up: <a href="String-and-Array-Utilities.html" accesskey="u" rel="up">String and Array Utilities</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Erasing-Sensitive-Data-1"><span>5.11 Erasing Sensitive Data<a class="copiable-link" href="#Erasing-Sensitive-Data-1"> &para;</a></span></h3>
+
+<p>Sensitive data, such as cryptographic keys, should be erased from
+memory after use, to reduce the risk that a bug will expose it to the
+outside world.  However, compiler optimizations may determine that an
+erasure operation is &ldquo;unnecessary,&rdquo; and remove it from the generated
+code, because no <em class="emph">correct</em> program could access the variable or
+heap object containing the sensitive data after it&rsquo;s deallocated.
+Since erasure is a precaution against bugs, this optimization is
+inappropriate.
+</p>
+<p>The functions <code class="code">explicit_bzero</code> and <code class="code">memset_explicit</code> erase a
+block of memory, and guarantee that the compiler will not remove the erasure as
+&ldquo;unnecessary.&rdquo;
+</p>
+<div class="example smallexample">
+<div class="group"><pre class="example-preformatted">#include &lt;string.h&gt;
+
+extern void encrypt (const char *key, const char *in,
+                     char *out, size_t n);
+extern void genkey (const char *phrase, char *key);
+
+void encrypt_with_phrase (const char *phrase, const char *in,
+                          char *out, size_t n)
+{
+  char key[16];
+  genkey (phrase, key);
+  encrypt (key, in, out, n);
+  explicit_bzero (key, 16);
+}
+</pre></div></div>
+
+<p>In this example, if <code class="code">memset</code>, <code class="code">bzero</code>, or a hand-written
+loop had been used, the compiler might remove them as &ldquo;unnecessary.&rdquo;
+</p>
+<p><strong class="strong">Warning:</strong> <code class="code">explicit_bzero</code> and <code class="code">memset_explicit</code> do
+not guarantee that
+sensitive data is <em class="emph">completely</em> erased from the computer&rsquo;s memory.
+There may be copies in temporary storage areas, such as registers and
+&ldquo;scratch&rdquo; stack space; since these are invisible to the source code,
+a library function cannot erase them.
+</p>
+<p>Also, <code class="code">explicit_bzero</code> and <code class="code">memset_explicit</code> only operate on
+RAM.  If a sensitive data object never needs to have its address taken
+other than to call <code class="code">explicit_bzero</code> or <code class="code">memset_explicit</code>, it
+might be stored entirely in CPU registers <em class="emph">until</em> the call to
+<code class="code">explicit_bzero</code> or <code class="code">memset_explicit</code>.  Then it will be
+copied into RAM, the copy will be erased, and the original will remain
+intact.  Data in RAM is more likely to be exposed by a bug than data
+in registers, so this creates a brief window where the data is at
+greater risk of exposure than it would have been if the program didn&rsquo;t
+try to erase it at all.
+</p>
+<p>Declaring sensitive variables as <code class="code">volatile</code> will make both the
+above problems <em class="emph">worse</em>; a <code class="code">volatile</code> variable will be stored
+in memory for its entire lifetime, and the compiler will make
+<em class="emph">more</em> copies of it than it would otherwise have.  Attempting to
+erase a normal variable &ldquo;by hand&rdquo; through a
+<code class="code">volatile</code>-qualified pointer doesn&rsquo;t work at all&mdash;because the
+variable itself is not <code class="code">volatile</code>, some compilers will ignore the
+qualification on the pointer and remove the erasure anyway.
+</p>
+<p>Having said all that, in most situations, using <code class="code">explicit_bzero</code>
+or <code class="code">memset_explicit</code>
+is better than not using it.  At present, the only way to do a more
+thorough job is to write the entire sensitive operation in assembly
+language.  We anticipate that future compilers will recognize calls to
+<code class="code">explicit_bzero</code> or <code class="code">memset_explicit</code> and take appropriate
+steps to erase all the
+copies of the affected data, wherever they may be.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-explicit_005fbzero"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">explicit_bzero</strong> <code class="def-code-arguments">(void *<var class="var">block</var>, size_t <var class="var">len</var>)</code><a class="copiable-link" href="#index-explicit_005fbzero"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p><code class="code">explicit_bzero</code> writes zero into <var class="var">len</var> bytes of memory
+beginning at <var class="var">block</var>, just as <code class="code">bzero</code> would.  The zeroes are
+always written, even if the compiler could determine that this is
+&ldquo;unnecessary&rdquo; because no correct program could read them back.
+</p>
+<p><strong class="strong">Note:</strong> The <em class="emph">only</em> optimization that <code class="code">explicit_bzero</code>
+disables is removal of &ldquo;unnecessary&rdquo; writes to memory.  The compiler
+can perform all the other optimizations that it could for a call to
+<code class="code">memset</code>.  For instance, it may replace the function call with
+inline memory writes, and it may assume that <var class="var">block</var> cannot be a
+null pointer.
+</p>
+<p><strong class="strong">Portability Note:</strong> This function first appeared in OpenBSD 5.5
+and has not been standardized.  Other systems may provide the same
+functionality under a different name, such as <code class="code">explicit_memset</code>,
+<code class="code">memset_s</code>, or <code class="code">SecureZeroMemory</code>.
+</p>
+<p>The GNU C Library declares this function in <samp class="file">string.h</samp>, but on other
+systems it may be in <samp class="file">strings.h</samp> instead.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-memset_005fexplicit"><span class="category-def">Function: </span><span><code class="def-type">void *</code> <strong class="def-name">memset_explicit</strong> <code class="def-code-arguments">(void *<var class="var">block</var>, int <var class="var">c</var>, size_t <var class="var">size</var>)</code><a class="copiable-link" href="#index-memset_005fexplicit"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function copies the value of <var class="var">c</var> (converted to an
+<code class="code">unsigned char</code>) into each of the first <var class="var">size</var> bytes of the
+object beginning at <var class="var">block</var>, just as <code class="code">memset</code> would.  It
+returns the value of <var class="var">block</var>.  The bytes are always written, even
+if the compiler could determine that this is &ldquo;unnecessary&rdquo; because
+no correct program could read them back.
+</p>
+<p><strong class="strong">Note:</strong> The <em class="emph">only</em> optimization that <code class="code">memset_explicit</code>
+disables is removal of &ldquo;unnecessary&rdquo; writes to memory.  The compiler
+can perform all the other optimizations that it could for a call to
+<code class="code">memset</code>.  For instance, it may replace the function call with
+inline memory writes, and it may assume that <var class="var">block</var> cannot be a
+null pointer.
+</p></dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Shuffling-Bytes.html">Shuffling Bytes</a>, Previous: <a href="Finding-Tokens-in-a-String.html">Finding Tokens in a String</a>, Up: <a href="String-and-Array-Utilities.html">String and Array Utilities</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

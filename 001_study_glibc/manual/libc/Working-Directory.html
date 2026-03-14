@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Working Directory (The GNU C Library)</title>
+
+<meta name="description" content="Working Directory (The GNU C Library)">
+<meta name="keywords" content="Working Directory (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="File-System-Interface.html" rel="up" title="File System Interface">
+<link href="Descriptor_002dRelative-Access.html" rel="next" title="Descriptor-Relative Access">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Working-Directory">
+<div class="nav-panel">
+<p>
+Next: <a href="Descriptor_002dRelative-Access.html" accesskey="n" rel="next">Descriptor-Relative Access</a>, Up: <a href="File-System-Interface.html" accesskey="u" rel="up">File System Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Working-Directory-1"><span>14.1 Working Directory<a class="copiable-link" href="#Working-Directory-1"> &para;</a></span></h3>
+
+<a class="index-entry-id" id="index-current-working-directory"></a>
+<a class="index-entry-id" id="index-working-directory"></a>
+<a class="index-entry-id" id="index-change-working-directory"></a>
+<p>Each process has associated with it a directory, called its <em class="dfn">current
+working directory</em> or simply <em class="dfn">working directory</em>, that is used in
+the resolution of relative file names (see <a class="pxref" href="File-Name-Resolution.html">File Name Resolution</a>).
+</p>
+<p>When you log in and begin a new session, your working directory is
+initially set to the home directory associated with your login account
+in the system user database.  You can find any user&rsquo;s home directory
+using the <code class="code">getpwuid</code> or <code class="code">getpwnam</code> functions; see <a class="ref" href="User-Database.html">User Database</a>.
+</p>
+<p>Users can change the working directory using shell commands like
+<code class="code">cd</code>.  The functions described in this section are the primitives
+used by those commands and by other programs for examining and changing
+the working directory.
+<a class="index-entry-id" id="index-cd"></a>
+</p>
+<p>Prototypes for these functions are declared in the header file
+<samp class="file">unistd.h</samp>.
+<a class="index-entry-id" id="index-unistd_002eh-4"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getcwd"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">getcwd</strong> <code class="def-code-arguments">(char *<var class="var">buffer</var>, size_t <var class="var">size</var>)</code><a class="copiable-link" href="#index-getcwd"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>The <code class="code">getcwd</code> function returns an absolute file name representing
+the current working directory, storing it in the character array
+<var class="var">buffer</var> that you provide.  The <var class="var">size</var> argument is how you tell
+the system the allocation size of <var class="var">buffer</var>.
+</p>
+<p>The GNU C Library version of this function also permits you to specify a
+null pointer for the <var class="var">buffer</var> argument.  Then <code class="code">getcwd</code>
+allocates a buffer automatically, as with <code class="code">malloc</code>
+(see <a class="pxref" href="Unconstrained-Allocation.html">Unconstrained Allocation</a>).  If the <var class="var">size</var> is greater than
+zero, then the buffer is that large; otherwise, the buffer is as large
+as necessary to hold the result.
+</p>
+<p>The return value is <var class="var">buffer</var> on success and a null pointer on failure.
+The following <code class="code">errno</code> error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">size</var> argument is zero and <var class="var">buffer</var> is not a null pointer.
+</p>
+</dd>
+<dt><code class="code">ERANGE</code></dt>
+<dd><p>The <var class="var">size</var> argument is less than the length of the working directory
+name.  You need to allocate a bigger array and try again.
+</p>
+</dd>
+<dt><code class="code">EACCES</code></dt>
+<dd><p>Permission to read or search a component of the file name was denied.
+</p></dd>
+</dl>
+</dd></dl>
+
+<p>You could implement the behavior of GNU&rsquo;s <code class="code">getcwd&nbsp;(NULL,&nbsp;0)</code><!-- /@w -->
+using only the standard behavior of <code class="code">getcwd</code>:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">char *
+gnu_getcwd ()
+{
+  size_t size = 100;
+
+  while (1)
+    {
+      char *buffer = (char *) xmalloc (size);
+      if (getcwd (buffer, size) == buffer)
+        return buffer;
+      free (buffer);
+      if (errno != ERANGE)
+        return 0;
+      size *= 2;
+    }
+}
+</pre></div>
+
+<p>See <a class="xref" href="Malloc-Examples.html">Examples of <code class="code">malloc</code></a>, for information about <code class="code">xmalloc</code>, which is
+not a library function but is a customary name used in most GNU
+software.
+</p>
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-getwd"><span class="category-def">Deprecated Function: </span><span><code class="def-type">char *</code> <strong class="def-name">getwd</strong> <code class="def-code-arguments">(char *<var class="var">buffer</var>)</code><a class="copiable-link" href="#index-getwd"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap i18n
+| AC-Unsafe mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This is similar to <code class="code">getcwd</code>, but has no way to specify the size of
+the buffer.  The GNU C Library provides <code class="code">getwd</code> only
+for backwards compatibility with BSD.
+</p>
+<p>The <var class="var">buffer</var> argument should be a pointer to an array at least
+<code class="code">PATH_MAX</code> bytes long (see <a class="pxref" href="Limits-for-Files.html">Limits on File System Capacity</a>).  On GNU/Hurd systems
+there is no limit to the size of a file name, so this is not
+necessarily enough space to contain the directory name.  That is why
+this function is deprecated.
+</p></dd></dl>
+
+<a class="index-entry-id" id="index-PWD"></a>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-get_005fcurrent_005fdir_005fname"><span class="category-def">Function: </span><span><code class="def-type">char *</code> <strong class="def-name">get_current_dir_name</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-get_005fcurrent_005fdir_005fname"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe env
+| AS-Unsafe heap
+| AC-Unsafe mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">get_current_dir_name</code> function is basically equivalent to
+<code class="code">getcwd&nbsp;(NULL,&nbsp;0)</code><!-- /@w -->, except the value of the <code class="env">PWD</code>
+environment variable is first examined, and if it does in fact
+correspond to the current directory, that value is returned.  This is
+a subtle difference which is visible if the path described by the
+value in <code class="env">PWD</code> is using one or more symbolic links, in which case
+the value returned by <code class="code">getcwd</code> would resolve the symbolic links
+and therefore yield a different result.
+</p>
+<p>This function is a GNU extension.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-chdir"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">chdir</strong> <code class="def-code-arguments">(const char *<var class="var">filename</var>)</code><a class="copiable-link" href="#index-chdir"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is used to set the process&rsquo;s working directory to
+<var class="var">filename</var>.
+</p>
+<p>The normal, successful return value from <code class="code">chdir</code> is <code class="code">0</code>.  A
+value of <code class="code">-1</code> is returned to indicate an error.  The <code class="code">errno</code>
+error conditions defined for this function are the usual file name
+syntax errors (see <a class="pxref" href="File-Name-Errors.html">File Name Errors</a>), plus <code class="code">ENOTDIR</code> if the
+file <var class="var">filename</var> is not a directory.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fchdir"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fchdir</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>)</code><a class="copiable-link" href="#index-fchdir"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is used to set the process&rsquo;s working directory to
+directory associated with the file descriptor <var class="var">filedes</var>.
+</p>
+<p>The normal, successful return value from <code class="code">fchdir</code> is <code class="code">0</code>.  A
+value of <code class="code">-1</code> is returned to indicate an error.  The following
+<code class="code">errno</code> error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EACCES</code></dt>
+<dd><p>Read permission is denied for the directory named by <code class="code">dirname</code>.
+</p>
+</dd>
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">filedes</var> argument is not a valid file descriptor.
+</p>
+</dd>
+<dt><code class="code">ENOTDIR</code></dt>
+<dd><p>The file descriptor <var class="var">filedes</var> is not associated with a directory.
+</p>
+</dd>
+<dt><code class="code">EINTR</code></dt>
+<dd><p>The function call was interrupt by a signal.
+</p>
+</dd>
+<dt><code class="code">EIO</code></dt>
+<dd><p>An I/O error occurred.
+</p></dd>
+</dl>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Descriptor_002dRelative-Access.html">Descriptor-Relative Access</a>, Up: <a href="File-System-Interface.html">File System Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

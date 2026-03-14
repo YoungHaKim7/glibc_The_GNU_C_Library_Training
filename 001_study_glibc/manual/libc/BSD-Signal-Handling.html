@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>BSD Signal Handling (The GNU C Library)</title>
+
+<meta name="description" content="BSD Signal Handling (The GNU C Library)">
+<meta name="keywords" content="BSD Signal Handling (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Signal-Handling.html" rel="up" title="Signal Handling">
+<link href="Signal-Stack.html" rel="prev" title="Signal Stack">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="BSD-Signal-Handling">
+<div class="nav-panel">
+<p>
+Previous: <a href="Signal-Stack.html" accesskey="p" rel="prev">Using a Separate Signal Stack</a>, Up: <a href="Signal-Handling.html" accesskey="u" rel="up">Signal Handling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="BSD-Signal-Handling-1"><span>25.10 BSD Signal Handling<a class="copiable-link" href="#BSD-Signal-Handling-1"> &para;</a></span></h3>
+
+<p>This section describes alternative signal handling functions derived
+from BSD Unix.  These facilities were an advance, in their time; today,
+they are mostly obsolete, and supported mainly for compatibility with
+BSD Unix.
+</p>
+<p>There are many similarities between the BSD and POSIX signal handling
+facilities, because the POSIX facilities were inspired by the BSD
+facilities.  Besides having different names for all the functions to
+avoid conflicts, the main difference between the two is that BSD Unix
+represents signal masks as an <code class="code">int</code> bit mask, rather than as a
+<code class="code">sigset_t</code> object.
+</p>
+<p>The BSD facilities are declared in <samp class="file">signal.h</samp>.
+<a class="index-entry-id" id="index-signal_002eh-10"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-siginterrupt"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">siginterrupt</strong> <code class="def-code-arguments">(int <var class="var">signum</var>, int <var class="var">failflag</var>)</code><a class="copiable-link" href="#index-siginterrupt"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe const:sigintr
+| AS-Unsafe 
+| AC-Unsafe corrupt
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function specifies which approach to use when certain primitives
+are interrupted by handling signal <var class="var">signum</var>.  If <var class="var">failflag</var> is
+false, signal <var class="var">signum</var> restarts primitives.  If <var class="var">failflag</var> is
+true, handling <var class="var">signum</var> causes these primitives to fail with error
+code <code class="code">EINTR</code>.  See <a class="xref" href="Interrupted-Primitives.html">Primitives Interrupted by Signals</a>.
+</p>
+<p>This function has been replaced by the <code class="code">SA_RESTART</code> flag of the
+<code class="code">sigaction</code> function.  See <a class="xref" href="Advanced-Signal-Handling.html">Advanced Signal Handling</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn def-block">
+<dt class="deftypefn def-line" id="index-sigmask"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">sigmask</strong> <code class="def-code-arguments">(int <var class="var">signum</var>)</code><a class="copiable-link" href="#index-sigmask"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This macro returns a signal mask that has the bit for signal <var class="var">signum</var>
+set.  You can bitwise-OR the results of several calls to <code class="code">sigmask</code>
+together to specify more than one signal.  For example,
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">(sigmask (SIGTSTP) | sigmask (SIGSTOP)
+ | sigmask (SIGTTIN) | sigmask (SIGTTOU))
+</pre></div>
+
+<p>specifies a mask that includes all the job-control stop signals.
+</p>
+<p>This macro has been replaced by the <code class="code">sigset_t</code> type and the
+associated signal set manipulation functions.  See <a class="xref" href="Signal-Sets.html">Signal Sets</a>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sigblock"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sigblock</strong> <code class="def-code-arguments">(int <var class="var">mask</var>)</code><a class="copiable-link" href="#index-sigblock"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock/hurd
+| AC-Unsafe lock/hurd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is equivalent to <code class="code">sigprocmask</code> (see <a class="pxref" href="Process-Signal-Mask.html">Process Signal Mask</a>) with a <var class="var">how</var> argument of <code class="code">SIG_BLOCK</code>: it adds the
+signals specified by <var class="var">mask</var> to the calling process&rsquo;s set of blocked
+signals.  The return value is the previous set of blocked signals.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sigsetmask"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sigsetmask</strong> <code class="def-code-arguments">(int <var class="var">mask</var>)</code><a class="copiable-link" href="#index-sigsetmask"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe lock/hurd
+| AC-Unsafe lock/hurd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is equivalent to <code class="code">sigprocmask</code> (see <a class="pxref" href="Process-Signal-Mask.html">Process Signal Mask</a>) with a <var class="var">how</var> argument of <code class="code">SIG_SETMASK</code>: it sets
+the calling process&rsquo;s signal mask to <var class="var">mask</var>.  The return value is
+the previous set of blocked signals.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sigpause"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sigpause</strong> <code class="def-code-arguments">(int <var class="var">mask</var>)</code><a class="copiable-link" href="#index-sigpause"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:sigprocmask/!bsd!linux
+| AS-Unsafe lock/hurd
+| AC-Unsafe lock/hurd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is the equivalent of <code class="code">sigsuspend</code> (see <a class="pxref" href="Waiting-for-a-Signal.html">Waiting for a Signal</a>):  it sets the calling process&rsquo;s signal mask to <var class="var">mask</var>,
+and waits for a signal to arrive.  On return the previous set of blocked
+signals is restored.
+</p></dd></dl>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Signal-Stack.html">Using a Separate Signal Stack</a>, Up: <a href="Signal-Handling.html">Signal Handling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

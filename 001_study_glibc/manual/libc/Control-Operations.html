@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Control Operations (The GNU C Library)</title>
+
+<meta name="description" content="Control Operations (The GNU C Library)">
+<meta name="keywords" content="Control Operations (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Low_002dLevel-I_002fO.html" rel="up" title="Low-Level I/O">
+<link href="Duplicating-Descriptors.html" rel="next" title="Duplicating Descriptors">
+<link href="Asynchronous-I_002fO.html" rel="prev" title="Asynchronous I/O">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Control-Operations">
+<div class="nav-panel">
+<p>
+Next: <a href="Duplicating-Descriptors.html" accesskey="n" rel="next">Duplicating Descriptors</a>, Previous: <a href="Asynchronous-I_002fO.html" accesskey="p" rel="prev">Perform I/O Operations in Parallel</a>, Up: <a href="Low_002dLevel-I_002fO.html" accesskey="u" rel="up">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Control-Operations-on-Files"><span>13.12 Control Operations on Files<a class="copiable-link" href="#Control-Operations-on-Files"> &para;</a></span></h3>
+
+<a class="index-entry-id" id="index-control-operations-on-files"></a>
+<a class="index-entry-id" id="index-fcntl-function"></a>
+<p>This section describes how you can perform various other operations on
+file descriptors, such as inquiring about or setting flags describing
+the status of the file descriptor, manipulating record locks, and the
+like.  All of these operations are performed by the function <code class="code">fcntl</code>.
+</p>
+<p>The second argument to the <code class="code">fcntl</code> function is a command that
+specifies which operation to perform.  The function and macros that name
+various flags that are used with it are declared in the header file
+<samp class="file">fcntl.h</samp>.  Many of these flags are also used by the <code class="code">open</code>
+function; see <a class="ref" href="Opening-and-Closing-Files.html">Opening and Closing Files</a>.
+<a class="index-entry-id" id="index-fcntl_002eh-2"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-fcntl"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">fcntl</strong> <code class="def-code-arguments">(int <var class="var">filedes</var>, int <var class="var">command</var>, &hellip;)</code><a class="copiable-link" href="#index-fcntl"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">fcntl</code> function performs the operation specified by
+<var class="var">command</var> on the file descriptor <var class="var">filedes</var>.  Some commands
+require additional arguments to be supplied.  These additional arguments
+and the return value and error conditions are given in the detailed
+descriptions of the individual commands.
+</p>
+<p>Briefly, here is a list of what the various commands are.  For an
+exhaustive list of kernel-specific options, please see See <a class="xref" href="System-Calls.html">System Calls</a>.
+</p>
+<dl class="vtable">
+<dt><a id="index-F_005fDUPFD"></a><span><code class="code">F_DUPFD</code><a class="copiable-link" href="#index-F_005fDUPFD"> &para;</a></span></dt>
+<dd><p>Duplicate the file descriptor (return another file descriptor pointing
+to the same open file).  See <a class="xref" href="Duplicating-Descriptors.html">Duplicating Descriptors</a>.
+</p>
+</dd>
+<dt><a id="index-F_005fGETFD"></a><span><code class="code">F_GETFD</code><a class="copiable-link" href="#index-F_005fGETFD"> &para;</a></span></dt>
+<dd><p>Get flags associated with the file descriptor.  See <a class="xref" href="Descriptor-Flags.html">File Descriptor Flags</a>.
+</p>
+</dd>
+<dt><a id="index-F_005fSETFD"></a><span><code class="code">F_SETFD</code><a class="copiable-link" href="#index-F_005fSETFD"> &para;</a></span></dt>
+<dd><p>Set flags associated with the file descriptor.  See <a class="xref" href="Descriptor-Flags.html">File Descriptor Flags</a>.
+</p>
+</dd>
+<dt><a id="index-F_005fGETFL"></a><span><code class="code">F_GETFL</code><a class="copiable-link" href="#index-F_005fGETFL"> &para;</a></span></dt>
+<dd><p>Get flags associated with the open file.  See <a class="xref" href="File-Status-Flags.html">File Status Flags</a>.
+</p>
+</dd>
+<dt><a id="index-F_005fSETFL"></a><span><code class="code">F_SETFL</code><a class="copiable-link" href="#index-F_005fSETFL"> &para;</a></span></dt>
+<dd><p>Set flags associated with the open file.  See <a class="xref" href="File-Status-Flags.html">File Status Flags</a>.
+</p>
+</dd>
+<dt><a id="index-F_005fGETLK"></a><span><code class="code">F_GETLK</code><a class="copiable-link" href="#index-F_005fGETLK"> &para;</a></span></dt>
+<dd><p>Test a file lock.  See <a class="xref" href="File-Locks.html">File Locks</a>.
+</p>
+</dd>
+<dt><a id="index-F_005fSETLK"></a><span><code class="code">F_SETLK</code><a class="copiable-link" href="#index-F_005fSETLK"> &para;</a></span></dt>
+<dd><p>Set or clear a file lock.  See <a class="xref" href="File-Locks.html">File Locks</a>.
+</p>
+</dd>
+<dt><a id="index-F_005fSETLKW"></a><span><code class="code">F_SETLKW</code><a class="copiable-link" href="#index-F_005fSETLKW"> &para;</a></span></dt>
+<dd><p>Like <code class="code">F_SETLK</code>, but wait for completion.  See <a class="xref" href="File-Locks.html">File Locks</a>.
+</p>
+</dd>
+<dt><a id="index-F_005fOFD_005fGETLK"></a><span><code class="code">F_OFD_GETLK</code><a class="copiable-link" href="#index-F_005fOFD_005fGETLK"> &para;</a></span></dt>
+<dd><p>Test an open file description lock.  See <a class="xref" href="Open-File-Description-Locks.html">Open File Description Locks</a>.
+Specific to Linux.
+</p>
+</dd>
+<dt><a id="index-F_005fOFD_005fSETLK"></a><span><code class="code">F_OFD_SETLK</code><a class="copiable-link" href="#index-F_005fOFD_005fSETLK"> &para;</a></span></dt>
+<dd><p>Set or clear an open file description lock.  See <a class="xref" href="Open-File-Description-Locks.html">Open File Description Locks</a>.
+Specific to Linux.
+</p>
+</dd>
+<dt><a id="index-F_005fOFD_005fSETLKW"></a><span><code class="code">F_OFD_SETLKW</code><a class="copiable-link" href="#index-F_005fOFD_005fSETLKW"> &para;</a></span></dt>
+<dd><p>Like <code class="code">F_OFD_SETLK</code>, but block until lock is acquired.
+See <a class="xref" href="Open-File-Description-Locks.html">Open File Description Locks</a>.  Specific to Linux.
+</p>
+</dd>
+<dt><a id="index-F_005fGETOWN"></a><span><code class="code">F_GETOWN</code><a class="copiable-link" href="#index-F_005fGETOWN"> &para;</a></span></dt>
+<dd><p>Get process or process group ID to receive <code class="code">SIGIO</code> signals.
+See <a class="xref" href="Interrupt-Input.html">Interrupt-Driven Input</a>.
+</p>
+</dd>
+<dt><a id="index-F_005fSETOWN"></a><span><code class="code">F_SETOWN</code><a class="copiable-link" href="#index-F_005fSETOWN"> &para;</a></span></dt>
+<dd><p>Set process or process group ID to receive <code class="code">SIGIO</code> signals.
+See <a class="xref" href="Interrupt-Input.html">Interrupt-Driven Input</a>.
+</p></dd>
+</dl>
+
+<p>This function is a cancellation point in multi-threaded programs for the
+commands <code class="code">F_SETLKW</code> (and the LFS analogous <code class="code">F_SETLKW64</code>) and
+<code class="code">F_OFD_SETLKW</code>.  This is a problem if the thread allocates some
+resources (like memory, file descriptors, semaphores or whatever) at the time
+<code class="code">fcntl</code> is called.  If the thread gets canceled these resources stay
+allocated until the program ends.  To avoid this calls to <code class="code">fcntl</code> should
+be protected using cancellation handlers.
+</p></dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Duplicating-Descriptors.html">Duplicating Descriptors</a>, Previous: <a href="Asynchronous-I_002fO.html">Perform I/O Operations in Parallel</a>, Up: <a href="Low_002dLevel-I_002fO.html">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

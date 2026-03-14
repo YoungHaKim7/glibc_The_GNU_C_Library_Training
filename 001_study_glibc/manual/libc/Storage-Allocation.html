@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Storage Allocation (The GNU C Library)</title>
+
+<meta name="description" content="Storage Allocation (The GNU C Library)">
+<meta name="keywords" content="Storage Allocation (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="File-Attributes.html" rel="up" title="File Attributes">
+<link href="File-Size.html" rel="prev" title="File Size">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Storage-Allocation">
+<div class="nav-panel">
+<p>
+Previous: <a href="File-Size.html" accesskey="p" rel="prev">File Size</a>, Up: <a href="File-Attributes.html" accesskey="u" rel="up">File Attributes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Storage-Allocation-1"><span>14.10.11 Storage Allocation<a class="copiable-link" href="#Storage-Allocation-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-allocating-file-storage"></a>
+<a class="index-entry-id" id="index-file-allocation"></a>
+<a class="index-entry-id" id="index-storage-allocating"></a>
+
+<a class="index-entry-id" id="index-file-fragmentation"></a>
+<a class="index-entry-id" id="index-fragmentation-of-files"></a>
+<a class="index-entry-id" id="index-sparse-files-1"></a>
+<a class="index-entry-id" id="index-files_002c-sparse"></a>
+<p>Most file systems support allocating large files in a non-contiguous
+fashion: the file is split into <em class="emph">fragments</em> which are allocated
+sequentially, but the fragments themselves can be scattered across the
+disk.  File systems generally try to avoid such fragmentation because it
+decreases performance, but if a file gradually increases in size, there
+might be no other option than to fragment it.  In addition, many file
+systems support <em class="emph">sparse files</em> with <em class="emph">holes</em>: regions of null
+bytes for which no backing storage has been allocated by the file
+system.  When the holes are finally overwritten with data, fragmentation
+can occur as well.
+</p>
+<p>Explicit allocation of storage for yet-unwritten parts of the file can
+help the system to avoid fragmentation.  Additionally, if storage
+pre-allocation fails, it is possible to report the out-of-disk error
+early, often without filling up the entire disk.  However, due to
+deduplication, copy-on-write semantics, and file compression, such
+pre-allocation may not reliably prevent the out-of-disk-space error from
+occurring later.  Checking for write errors is still required, and
+writes to memory-mapped regions created with <code class="code">mmap</code> can still
+result in <code class="code">SIGBUS</code>.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-posix_005ffallocate"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">posix_fallocate</strong> <code class="def-code-arguments">(int <var class="var">fd</var>, off_t <var class="var">offset</var>, off_t <var class="var">length</var>)</code><a class="copiable-link" href="#index-posix_005ffallocate"> &para;</a></span></dt>
+<dd><p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>Allocate backing store for the region of <var class="var">length</var> bytes starting at
+byte <var class="var">offset</var> in the file for the descriptor <var class="var">fd</var>.  The file
+length is increased to &lsquo;<samp class="samp"><var class="var">length</var> + <var class="var">offset</var></samp>&rsquo; if necessary.
+</p>
+<p><var class="var">fd</var> must be a regular file opened for writing, or <code class="code">EBADF</code> is
+returned.  If there is insufficient disk space to fulfill the allocation
+request, <code class="code">ENOSPC</code> is returned.
+</p>
+<p><strong class="strong">Note:</strong> If <code class="code">fallocate</code> is not available (because the file
+system does not support it), <code class="code">posix_fallocate</code> is emulated, which
+has the following drawbacks:
+</p>
+<ul class="itemize mark-bullet">
+<li>It is very inefficient because all file system blocks in the requested
+range need to be examined (even if they have been allocated before) and
+potentially rewritten.  In contrast, with proper <code class="code">fallocate</code>
+support (see below), the file system can examine the internal file
+allocation data structures and eliminate holes directly, maybe even
+using unwritten extents (which are pre-allocated but uninitialized on
+disk).
+
+</li><li>There is a race condition if another thread or process modifies the
+underlying file in the to-be-allocated area.  Non-null bytes could be
+overwritten with null bytes.
+
+</li><li>If <var class="var">fd</var> has been opened with the <code class="code">O_WRONLY</code> flag, the function
+will fail with an <code class="code">errno</code> value of <code class="code">EBADF</code>.
+
+</li><li>If <var class="var">fd</var> has been opened with the <code class="code">O_APPEND</code> flag, the function
+will fail with an <code class="code">errno</code> value of <code class="code">EBADF</code>.
+
+</li><li>If <var class="var">length</var> is zero, <code class="code">ftruncate</code> is used to increase the file
+size as requested, without allocating file system blocks.  There is a
+race condition which means that <code class="code">ftruncate</code> can accidentally
+truncate the file if it has been extended concurrently.
+</li></ul>
+
+<p>On Linux, if an application does not benefit from emulation or if the
+emulation is harmful due to its inherent race conditions, the
+application can use the Linux-specific <code class="code">fallocate</code> function, with a
+zero flag argument.  For the <code class="code">fallocate</code> function, the GNU C Library does
+not perform allocation emulation if the file system does not support
+allocation.  Instead, an <code class="code">EOPNOTSUPP</code> is returned to the caller.
+</p>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-posix_005ffallocate64"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">posix_fallocate64</strong> <code class="def-code-arguments">(int <var class="var">fd</var>, off64_t <var class="var">offset</var>, off64_t <var class="var">length</var>)</code><a class="copiable-link" href="#index-posix_005ffallocate64"> &para;</a></span></dt>
+<dd><p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+
+<p>This function is a variant of <code class="code">posix_fallocate64</code> which accepts
+64-bit file offsets on all platforms.
+</p>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="File-Size.html">File Size</a>, Up: <a href="File-Attributes.html">File Attributes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

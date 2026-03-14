@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Proleptic TZ (The GNU C Library)</title>
+
+<meta name="description" content="Proleptic TZ (The GNU C Library)">
+<meta name="keywords" content="Proleptic TZ (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="TZ-Variable.html" rel="up" title="TZ Variable">
+<link href="Geographical-TZ.html" rel="prev" title="Geographical TZ">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsubsection-level-extent" id="Proleptic-TZ">
+<div class="nav-panel">
+<p>
+Previous: <a href="Geographical-TZ.html" accesskey="p" rel="prev">Geographical Format for <code class="env">TZ</code></a>, Up: <a href="TZ-Variable.html" accesskey="u" rel="up">Specifying the Time Zone with <code class="env">TZ</code></a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsubsection" id="Proleptic-Format-for-TZ"><span>22.5.6.2 Proleptic Format for <code class="env">TZ</code><a class="copiable-link" href="#Proleptic-Format-for-TZ"> &para;</a></span></h4>
+
+<p>Although the proleptic format is cumbersome and inaccurate for old timestamps,
+POSIX.1-2017 and earlier specified details only for the proleptic format,
+and you may need to use it on small systems that lack a time zone
+information database.
+</p>
+<p>The proleptic format is:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted"><span class="r"><var class="var">std</var><var class="var">offset</var>[<var class="var">dst</var>[<var class="var">offset</var>][<code class="t">,</code><var class="var">start</var>[<code class="t">/</code><var class="var">time</var>]<code class="t">,</code><var class="var">end</var>[<code class="t">/</code><var class="var">time</var>]]]</span>
+</pre></div>
+
+<p>The <var class="var">std</var> string specifies the time zone abbreviation,
+which must be at least three bytes long,
+and which can appear in unquoted or quoted form.
+The unquoted form can contain only ASCII alphabetic characters.
+The quoted form can also contain ASCII digits, &lsquo;<samp class="samp">+</samp>&rsquo;, and &lsquo;<samp class="samp">-</samp>&rsquo;;
+it is quoted by surrounding it by &lsquo;<samp class="samp">&lt;</samp>&rsquo; and &lsquo;<samp class="samp">&gt;</samp>&rsquo;,
+which are not part of the abbreviation.  There is no space
+character separating the time zone abbreviation from the <var class="var">offset</var>, so these
+restrictions are necessary to parse the specification correctly.
+</p>
+<p>The <var class="var">offset</var> specifies the time value you must add to the local time
+to get a UTC value.  It has syntax like:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">[<code class="t">+</code>|<code class="t">-</code>]<var class="var">hh</var>[<code class="t">:</code><var class="var">mm</var>[<code class="t">:</code><var class="var">ss</var>]]
+</pre></div>
+
+<p>This
+is positive if the local time zone is west of the Prime Meridian and
+negative if it is east; this is opposite from the usual convention
+that positive time zone offsets are east of the Prime Meridian.
+The hour <var class="var">hh</var> must be between 0 and 24
+and may be a single digit, and the minutes <var class="var">mm</var> and seconds
+<var class="var">ss</var>, if present, must be between 0 and 59.
+</p>
+<p>For example, to specify time in Panama, which is Eastern Standard Time
+without any daylight saving time alternative:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">EST+5
+</pre></div>
+
+<p>When daylight saving time is used, the proleptic format is more complicated.
+The initial <var class="var">std</var> and <var class="var">offset</var> specify the standard time zone, as
+described above.  The <var class="var">dst</var> string and <var class="var">offset</var> are the abbreviation
+and offset for the corresponding daylight saving time zone; if the
+<var class="var">offset</var> is omitted, it defaults to one hour ahead of standard time.
+</p>
+<p>The remainder of the proleptic format, which starts with the first comma,
+describes when daylight saving time is in effect.  This remainder is
+optional and if omitted, the GNU C Library defaults to the daylight saving
+rules that would be used if <code class="env">TZ</code> had the value <code class="t">&quot;posixrules&quot;</code>.
+However, other POSIX implementations default to different daylight
+saving rules, so portable <code class="env">TZ</code> settings should not omit the
+remainder.
+</p>
+<p>In the remainder, the <var class="var">start</var> field is when daylight saving time goes into
+effect and the <var class="var">end</var> field is when the change is made back to standard
+time.  The following formats are recognized for these fields:
+</p>
+<dl class="table">
+<dt><code class="code">J<var class="var">n</var></code></dt>
+<dd><p>This specifies the Julian day, with <var class="var">n</var> between <code class="code">1</code> and <code class="code">365</code>.
+February 29 is never counted, even in leap years.
+</p>
+</dd>
+<dt><code class="code"><var class="var">n</var></code></dt>
+<dd><p>This specifies the Julian day, with <var class="var">n</var> between <code class="code">0</code> and <code class="code">365</code>.
+February 29 is counted in leap years.
+</p>
+</dd>
+<dt><code class="code">M<var class="var">m</var>.<var class="var">w</var>.<var class="var">d</var></code></dt>
+<dd><p>This specifies day <var class="var">d</var> of week <var class="var">w</var> of month <var class="var">m</var>.  The day
+<var class="var">d</var> must be between <code class="code">0</code> (Sunday) and <code class="code">6</code>.  The week
+<var class="var">w</var> must be between <code class="code">1</code> and <code class="code">5</code>; week <code class="code">1</code> is the
+first week in which day <var class="var">d</var> occurs, and week <code class="code">5</code> specifies the
+<em class="emph">last</em> <var class="var">d</var> day in the month.  The month <var class="var">m</var> should be
+between <code class="code">1</code> and <code class="code">12</code>.
+</p></dd>
+</dl>
+
+<p>The <var class="var">time</var> fields specify when, in the local time currently in
+effect, the change to the other time occurs.  They have the same
+format as <var class="var">offset</var> except the hours part can range from
+&minus;167 through 167; for example, <code class="code">-22:30</code> stands for 01:30
+the previous day and <code class="code">25:30</code> stands for 01:30 the next day.  If
+omitted, <var class="var">time</var> defaults to <code class="code">02:00:00</code>.
+</p>
+<p>Here are example <code class="env">TZ</code> values with daylight saving time rules.
+</p>
+<dl class="table">
+<dt>&lsquo;<samp class="samp">EST+5EDT,M3.2.0/2,M11.1.0/2</samp>&rsquo;</dt>
+<dd><p>In North American Eastern Standard Time (EST) and Eastern Daylight Time (EDT),
+the normal offset from UTC is 5 hours; since this is
+west of the Prime Meridian, the sign is positive.  Summer time begins on
+March&rsquo;s second Sunday at 2:00am, and ends on November&rsquo;s first Sunday
+at 2:00am.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">IST-2IDT,M3.4.4/26,M10.5.0</samp>&rsquo;</dt>
+<dd><p>Israel Standard Time (IST) and Israel Daylight Time (IDT) are 2 hours
+ahead of the prime meridian in winter, springing forward an hour on
+March&rsquo;s fourth Thursday at 26:00 (i.e., 02:00 on the first Friday on or
+after March 23), and falling back on October&rsquo;s last Sunday at 02:00.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">IST-1GMT0,M10.5.0,M3.5.0/1</samp>&rsquo;</dt>
+<dd><p>Irish Standard Time (IST) is 1 hour behind the Prime Meridian in
+summer, falling forward to Greenwich Mean Time (GMT, the Prime
+Meridian&rsquo;s time), on October&rsquo;s last Sunday at 00:00 and springing back
+on March&rsquo;s last Sunday at 01:00.  This is an example of &ldquo;negative
+daylight saving&rdquo;; here,  daylight saving time is one hour west of
+standard time instead of the more usual one hour east.
+</p>
+</dd>
+<dt>&lsquo;<samp class="samp">&lt;-02&gt;+2&lt;-01&gt;,M3.5.0/-1,M10.5.0/0</samp>&rsquo;</dt>
+<dd><p>Most of Greenland is 2 hours behind UTC in winter.  Clocks follow the European
+Union rules of springing forward by one hour on March&rsquo;s last Sunday at
+01:00 UTC (&minus;01:00 local time) and falling back on October&rsquo;s
+last Sunday at 01:00 UTC (00:00 local time).
+The numeric abbreviations &lsquo;<samp class="samp">-02</samp>&rsquo; and &lsquo;<samp class="samp">-01</samp>&rsquo; stand
+for standard and daylight saving time, respectively.
+</p></dd>
+</dl>
+
+<p>The schedule of daylight saving time in any particular jurisdiction has
+changed over the years.  To be strictly correct, the conversion of dates
+and times in the past should be based on the schedule that was in effect
+then.  However, the proleptic format does not let you specify how the
+schedule has changed from year to year.  The most you can do is specify
+one particular schedule&mdash;usually the present day schedule&mdash;and this is
+used to convert any date, no matter when.  For precise time zone
+specifications, it is best to use the geographical format.
+See <a class="xref" href="Geographical-TZ.html">Geographical Format for <code class="env">TZ</code></a>.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Previous: <a href="Geographical-TZ.html">Geographical Format for <code class="env">TZ</code></a>, Up: <a href="TZ-Variable.html">Specifying the Time Zone with <code class="env">TZ</code></a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

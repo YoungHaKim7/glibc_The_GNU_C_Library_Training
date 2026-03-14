@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>XPG Functions (The GNU C Library)</title>
+
+<meta name="description" content="XPG Functions (The GNU C Library)">
+<meta name="keywords" content="XPG Functions (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="User-Accounting-Database.html" rel="up" title="User Accounting Database">
+<link href="Logging-In-and-Out.html" rel="next" title="Logging In and Out">
+<link href="Manipulating-the-Database.html" rel="prev" title="Manipulating the Database">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="XPG-Functions">
+<div class="nav-panel">
+<p>
+Next: <a href="Logging-In-and-Out.html" accesskey="n" rel="next">Logging In and Out</a>, Previous: <a href="Manipulating-the-Database.html" accesskey="p" rel="prev">Manipulating the User Accounting Database</a>, Up: <a href="User-Accounting-Database.html" accesskey="u" rel="up">The User Accounting Database</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="XPG-User-Accounting-Database-Functions"><span>31.12.2 XPG User Accounting Database Functions<a class="copiable-link" href="#XPG-User-Accounting-Database-Functions"> &para;</a></span></h4>
+
+<p>These functions, described in the X/Open Portability Guide, are declared
+in the header file <samp class="file">utmpx.h</samp>.
+<a class="index-entry-id" id="index-utmpx_002eh"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-utmpx"><span class="category-def">Data Type: </span><span><strong class="def-name">struct utmpx</strong><a class="copiable-link" href="#index-struct-utmpx"> &para;</a></span></dt>
+<dd><p>The <code class="code">utmpx</code> data structure contains at least the following members:
+</p>
+<dl class="table">
+<dt><code class="code">short int ut_type</code></dt>
+<dd><p>Specifies the type of login; one of <code class="code">EMPTY</code>, <code class="code">RUN_LVL</code>,
+<code class="code">BOOT_TIME</code>, <code class="code">OLD_TIME</code>, <code class="code">NEW_TIME</code>, <code class="code">INIT_PROCESS</code>,
+<code class="code">LOGIN_PROCESS</code>, <code class="code">USER_PROCESS</code> or <code class="code">DEAD_PROCESS</code>.
+</p>
+</dd>
+<dt><code class="code">pid_t ut_pid</code></dt>
+<dd><p>The process ID number of the login process.
+</p>
+</dd>
+<dt><code class="code">char ut_line[]</code></dt>
+<dd><p>The device name of the tty (without <samp class="file">/dev/</samp>).
+</p>
+</dd>
+<dt><code class="code">char ut_id[]</code></dt>
+<dd><p>The inittab ID of the process.
+</p>
+</dd>
+<dt><code class="code">char ut_user[]</code></dt>
+<dd><p>The user&rsquo;s login name.
+</p>
+</dd>
+<dt><code class="code">struct timeval ut_tv</code></dt>
+<dd><p>Time the entry was made.  For entries of type <code class="code">OLD_TIME</code> this is
+the time when the system clock changed, and for entries of type
+<code class="code">NEW_TIME</code> this is the time the system clock was set to.
+</p></dd>
+</dl>
+<p>In the GNU C Library, <code class="code">struct utmpx</code> is identical to <code class="code">struct
+utmp</code> except for the fact that including <samp class="file">utmpx.h</samp> does not make
+visible the declaration of <code class="code">struct exit_status</code>.
+</p></dd></dl>
+
+<p>The following macros are defined for use as values for the
+<code class="code">ut_type</code> member of the <code class="code">utmpx</code> structure.  The values are
+integer constants and are, in the GNU C Library, identical to the
+definitions in <samp class="file">utmp.h</samp>.
+</p>
+<dl class="vtable">
+<dt><a id="index-EMPTY-1"></a><span><code class="code">EMPTY</code><a class="copiable-link" href="#index-EMPTY-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used to indicate that the entry contains no valid user
+accounting information.
+</p>
+</dd>
+<dt><a id="index-RUN_005fLVL-1"></a><span><code class="code">RUN_LVL</code><a class="copiable-link" href="#index-RUN_005fLVL-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used to identify the system&rsquo;s runlevel.
+</p>
+</dd>
+<dt><a id="index-BOOT_005fTIME-1"></a><span><code class="code">BOOT_TIME</code><a class="copiable-link" href="#index-BOOT_005fTIME-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used to identify the time of system boot.
+</p>
+</dd>
+<dt><a id="index-OLD_005fTIME-1"></a><span><code class="code">OLD_TIME</code><a class="copiable-link" href="#index-OLD_005fTIME-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used to identify the time when the system clock changed.
+</p>
+</dd>
+<dt><a id="index-NEW_005fTIME-1"></a><span><code class="code">NEW_TIME</code><a class="copiable-link" href="#index-NEW_005fTIME-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used to identify the time after the system clock changed.
+</p>
+</dd>
+<dt><a id="index-INIT_005fPROCESS-1"></a><span><code class="code">INIT_PROCESS</code><a class="copiable-link" href="#index-INIT_005fPROCESS-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used to identify a process spawned by the init process.
+</p>
+</dd>
+<dt><a id="index-LOGIN_005fPROCESS-1"></a><span><code class="code">LOGIN_PROCESS</code><a class="copiable-link" href="#index-LOGIN_005fPROCESS-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used to identify the session leader of a logged in user.
+</p>
+</dd>
+<dt><a id="index-USER_005fPROCESS-1"></a><span><code class="code">USER_PROCESS</code><a class="copiable-link" href="#index-USER_005fPROCESS-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used to identify a user process.
+</p>
+</dd>
+<dt><a id="index-DEAD_005fPROCESS-1"></a><span><code class="code">DEAD_PROCESS</code><a class="copiable-link" href="#index-DEAD_005fPROCESS-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used to identify a terminated process.
+</p></dd>
+</dl>
+
+<p>The size of the <code class="code">ut_line</code>, <code class="code">ut_id</code> and <code class="code">ut_user</code> arrays
+can be found using the <code class="code">sizeof</code> operator.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-setutxent"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">setutxent</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-setutxent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:utent
+| AS-Unsafe lock
+| AC-Unsafe lock fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">setutent</code>.  In the GNU C Library it is
+simply an alias for <code class="code">setutent</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getutxent"><span class="category-def">Function: </span><span><code class="def-type">struct utmpx *</code> <strong class="def-name">getutxent</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-getutxent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe init race:utent sig:ALRM timer
+| AS-Unsafe heap lock
+| AC-Unsafe lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">getutxent</code> function is similar to <code class="code">getutent</code>, but returns
+a pointer to a <code class="code">struct utmpx</code> instead of <code class="code">struct utmp</code>.  In
+the GNU C Library it simply is an alias for <code class="code">getutent</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-endutxent"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">endutxent</strong> <code class="def-code-arguments">(void)</code><a class="copiable-link" href="#index-endutxent"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:utent
+| AS-Unsafe lock
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">endutent</code>.  In the GNU C Library it is
+simply an alias for <code class="code">endutent</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getutxid"><span class="category-def">Function: </span><span><code class="def-type">struct utmpx *</code> <strong class="def-name">getutxid</strong> <code class="def-code-arguments">(const struct utmpx *<var class="var">id</var>)</code><a class="copiable-link" href="#index-getutxid"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe init race:utent sig:ALRM timer
+| AS-Unsafe lock heap
+| AC-Unsafe lock mem fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">getutid</code>, but uses <code class="code">struct utmpx</code>
+instead of <code class="code">struct utmp</code>.  In the GNU C Library it is simply an alias
+for <code class="code">getutid</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getutxline"><span class="category-def">Function: </span><span><code class="def-type">struct utmpx *</code> <strong class="def-name">getutxline</strong> <code class="def-code-arguments">(const struct utmpx *<var class="var">line</var>)</code><a class="copiable-link" href="#index-getutxline"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe init race:utent sig:ALRM timer
+| AS-Unsafe heap lock
+| AC-Unsafe lock fd mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>This function is similar to <code class="code">getutid</code>, but uses <code class="code">struct utmpx</code>
+instead of <code class="code">struct utmp</code>.  In the GNU C Library it is simply an alias
+for <code class="code">getutline</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-pututxline"><span class="category-def">Function: </span><span><code class="def-type">struct utmpx *</code> <strong class="def-name">pututxline</strong> <code class="def-code-arguments">(const struct utmpx *<var class="var">utmp</var>)</code><a class="copiable-link" href="#index-pututxline"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:utent sig:ALRM timer
+| AS-Unsafe lock
+| AC-Unsafe lock fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">pututxline</code> function is functionally identical to
+<code class="code">pututline</code>, but uses <code class="code">struct utmpx</code> instead of <code class="code">struct
+utmp</code>.  In the GNU C Library, <code class="code">pututxline</code> is simply an alias for
+<code class="code">pututline</code>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-utmpxname"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">utmpxname</strong> <code class="def-code-arguments">(const char *<var class="var">file</var>)</code><a class="copiable-link" href="#index-utmpxname"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Unsafe race:utent
+| AS-Unsafe lock heap
+| AC-Unsafe lock mem
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">utmpxname</code> function is functionally identical to
+<code class="code">utmpname</code>.  In the GNU C Library, <code class="code">utmpxname</code> is simply an
+alias for <code class="code">utmpname</code>.
+</p></dd></dl>
+
+<p>You can translate between a traditional <code class="code">struct utmp</code> and an XPG
+<code class="code">struct utmpx</code> with the following functions.  In the GNU C Library,
+these functions are merely copies, since the two structures are
+identical.
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getutmp"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getutmp</strong> <code class="def-code-arguments">(const struct utmpx *<var class="var">utmpx</var>, struct utmp *<var class="var">utmp</var>)</code><a class="copiable-link" href="#index-getutmp"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">getutmp</code> copies the information, insofar as the structures are
+compatible, from <var class="var">utmpx</var> to <var class="var">utmp</var>.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-getutmpx"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">getutmpx</strong> <code class="def-code-arguments">(const struct utmp *<var class="var">utmp</var>, struct utmpx *<var class="var">utmpx</var>)</code><a class="copiable-link" href="#index-getutmpx"> &para;</a></span></dt>
+<dd>
+
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p><code class="code">getutmpx</code> copies the information, insofar as the structures are
+compatible, from <var class="var">utmp</var> to <var class="var">utmpx</var>.
+</p></dd></dl>
+
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Logging-In-and-Out.html">Logging In and Out</a>, Previous: <a href="Manipulating-the-Database.html">Manipulating the User Accounting Database</a>, Up: <a href="User-Accounting-Database.html">The User Accounting Database</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Backtraces (The GNU C Library)</title>
+
+<meta name="description" content="Backtraces (The GNU C Library)">
+<meta name="keywords" content="Backtraces (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Debugging-Support.html" rel="up" title="Debugging Support">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span.r {font-family: initial; font-weight: normal; font-style: normal}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Backtraces">
+<div class="nav-panel">
+<p>
+Up: <a href="Debugging-Support.html" accesskey="u" rel="up">Debugging support</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Backtraces-1"><span>35.1 Backtraces<a class="copiable-link" href="#Backtraces-1"> &para;</a></span></h3>
+
+<a class="index-entry-id" id="index-backtrace"></a>
+<a class="index-entry-id" id="index-backtrace_005fsymbols"></a>
+<a class="index-entry-id" id="index-backtrace_005ffd"></a>
+<p>A <em class="dfn">backtrace</em> is a list of the function calls that are currently
+active in a thread.  The usual way to inspect a backtrace of a program
+is to use an external debugger such as gdb.  However, sometimes it is
+useful to obtain a backtrace programmatically from within a program,
+e.g., for the purposes of logging or diagnostics.
+</p>
+<p>The header file <samp class="file">execinfo.h</samp> declares three functions that obtain
+and manipulate backtraces of the current thread.
+<a class="index-entry-id" id="index-execinfo_002eh"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-backtrace-1"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">backtrace</strong> <code class="def-code-arguments">(void **<var class="var">buffer</var>, int <var class="var">size</var>)</code><a class="copiable-link" href="#index-backtrace-1"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe init heap dlopen plugin lock
+| AC-Unsafe init mem lock fd
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">backtrace</code> function obtains a backtrace for the current
+thread, as a list of pointers, and places the information into
+<var class="var">buffer</var>.  The argument <var class="var">size</var> should be the number of
+<code class="code">void&nbsp;*</code><!-- /@w --> elements that will fit into <var class="var">buffer</var>.  The return
+value is the actual number of entries of <var class="var">buffer</var> that are obtained,
+and is at most <var class="var">size</var>.
+</p>
+<p>The pointers placed in <var class="var">buffer</var> are actually return addresses
+obtained by inspecting the stack, one return address per stack frame.
+</p>
+<p>Note that certain compiler optimizations may interfere with obtaining a
+valid backtrace.  Function inlining causes the inlined function to not
+have a stack frame; tail call optimization replaces one stack frame with
+another; frame pointer elimination will stop <code class="code">backtrace</code> from
+interpreting the stack contents correctly.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-backtrace_005fsymbols-1"><span class="category-def">Function: </span><span><code class="def-type">char **</code> <strong class="def-name">backtrace_symbols</strong> <code class="def-code-arguments">(void *const *<var class="var">buffer</var>, int <var class="var">size</var>)</code><a class="copiable-link" href="#index-backtrace_005fsymbols-1"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Unsafe heap
+| AC-Unsafe mem lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">backtrace_symbols</code> function translates the information
+obtained from the <code class="code">backtrace</code> function into an array of strings.
+The argument <var class="var">buffer</var> should be a pointer to an array of addresses
+obtained via the <code class="code">backtrace</code> function, and <var class="var">size</var> is the number
+of entries in that array (the return value of <code class="code">backtrace</code>).
+</p>
+<p>The return value is a pointer to an array of strings, which has
+<var class="var">size</var> entries just like the array <var class="var">buffer</var>.  Each string
+contains a printable representation of the corresponding element of
+<var class="var">buffer</var>.  It includes the function name (if this can be
+determined), an offset into the function, and the actual return address
+(in hexadecimal).
+</p>
+<p>Currently, the function name and offset can only be obtained on systems that
+use the ELF binary format for programs and libraries.  On other systems,
+only the hexadecimal return address will be present.  Also, you may need
+to pass additional flags to the linker to make the function names
+available to the program.  (For example, on systems using GNU ld, you
+must pass <code class="code">-rdynamic</code>.)
+</p>
+<p>The return value of <code class="code">backtrace_symbols</code> is a pointer obtained via
+the <code class="code">malloc</code> function, and it is the responsibility of the caller
+to <code class="code">free</code> that pointer.  Note that only the return value need be
+freed, not the individual strings.
+</p>
+<p>The return value is <code class="code">NULL</code> if sufficient memory for the strings
+cannot be obtained.
+</p></dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-backtrace_005fsymbols_005ffd"><span class="category-def">Function: </span><span><code class="def-type">void</code> <strong class="def-name">backtrace_symbols_fd</strong> <code class="def-code-arguments">(void *const *<var class="var">buffer</var>, int <var class="var">size</var>, int <var class="var">fd</var>)</code><a class="copiable-link" href="#index-backtrace_005fsymbols_005ffd"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Unsafe lock
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">backtrace_symbols_fd</code> function performs the same translation
+as the function <code class="code">backtrace_symbols</code> function.  Instead of returning
+the strings to the caller, it writes the strings to the file descriptor
+<var class="var">fd</var>, one per line.  It does not use the <code class="code">malloc</code> function, and
+can therefore be used in situations where that function might fail.
+</p></dd></dl>
+
+<p>The following program illustrates the use of these functions.  Note that
+the array to contain the return addresses returned by <code class="code">backtrace</code>
+is allocated on the stack.  Therefore code like this can be used in
+situations where the memory handling via <code class="code">malloc</code> does not work
+anymore (in which case the <code class="code">backtrace_symbols</code> has to be replaced
+by a <code class="code">backtrace_symbols_fd</code> call as well).  The number of return
+addresses is normally not very large.  Even complicated programs rather
+seldom have a nesting level of more than, say, 50 and with 200 possible
+entries probably all programs should be covered.
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">
+
+#include &lt;execinfo.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+/* <span class="r">Obtain a backtrace and print it to <code class="code">stdout</code>.</span> */
+void
+print_trace (void)
+{
+  void *array[10];
+  char **strings;
+  int size, i;
+
+  size = backtrace (array, 10);
+  strings = backtrace_symbols (array, size);
+  if (strings != NULL)
+  {
+
+    printf (&quot;Obtained %d stack frames.\n&quot;, size);
+    for (i = 0; i &lt; size; i++)
+      printf (&quot;%s\n&quot;, strings[i]);
+  }
+
+  free (strings);
+}
+
+/* <span class="r">A dummy function to make the backtrace more interesting.</span> */
+void
+dummy_function (void)
+{
+  print_trace ();
+}
+
+int
+main (void)
+{
+  dummy_function ();
+  return 0;
+}
+</pre></div>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Up: <a href="Debugging-Support.html">Debugging support</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

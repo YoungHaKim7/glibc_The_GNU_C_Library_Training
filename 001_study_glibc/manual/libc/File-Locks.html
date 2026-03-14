@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>File Locks (The GNU C Library)</title>
+
+<meta name="description" content="File Locks (The GNU C Library)">
+<meta name="keywords" content="File Locks (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Low_002dLevel-I_002fO.html" rel="up" title="Low-Level I/O">
+<link href="Open-File-Description-Locks.html" rel="next" title="Open File Description Locks">
+<link href="File-Status-Flags.html" rel="prev" title="File Status Flags">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="File-Locks">
+<div class="nav-panel">
+<p>
+Next: <a href="Open-File-Description-Locks.html" accesskey="n" rel="next">Open File Description Locks</a>, Previous: <a href="File-Status-Flags.html" accesskey="p" rel="prev">File Status Flags</a>, Up: <a href="Low_002dLevel-I_002fO.html" accesskey="u" rel="up">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="File-Locks-1"><span>13.16 File Locks<a class="copiable-link" href="#File-Locks-1"> &para;</a></span></h3>
+
+<a class="index-entry-id" id="index-file-locks"></a>
+<a class="index-entry-id" id="index-record-locking"></a>
+<p>This section describes record locks that are associated with the process.
+There is also a different type of record lock that is associated with the
+open file description instead of the process.  See <a class="xref" href="Open-File-Description-Locks.html">Open File Description Locks</a>.
+</p>
+<p>The remaining <code class="code">fcntl</code> commands are used to support <em class="dfn">record
+locking</em>, which permits multiple cooperating programs to prevent each
+other from simultaneously accessing parts of a file in error-prone
+ways.
+</p>
+<a class="index-entry-id" id="index-exclusive-lock"></a>
+<a class="index-entry-id" id="index-write-lock"></a>
+<p>An <em class="dfn">exclusive</em> or <em class="dfn">write</em> lock gives a process exclusive access
+for writing to the specified part of the file.  While a write lock is in
+place, no other process can lock that part of the file.
+</p>
+<a class="index-entry-id" id="index-shared-lock"></a>
+<a class="index-entry-id" id="index-read-lock"></a>
+<p>A <em class="dfn">shared</em> or <em class="dfn">read</em> lock prohibits any other process from
+requesting a write lock on the specified part of the file.  However,
+other processes can request read locks.
+</p>
+<p>The <code class="code">read</code> and <code class="code">write</code> functions do not actually check to see
+whether there are any locks in place.  If you want to implement a
+locking protocol for a file shared by multiple processes, your application
+must do explicit <code class="code">fcntl</code> calls to request and clear locks at the
+appropriate points.
+</p>
+<p>Locks are associated with processes.  A process can only have one kind
+of lock set for each byte of a given file.  When any file descriptor for
+that file is closed by the process, all of the locks that process holds
+on that file are released, even if the locks were made using other
+descriptors that remain open.  Likewise, locks are released when a
+process exits, and are not inherited by child processes created using
+<code class="code">fork</code> (see <a class="pxref" href="Creating-a-Process.html">Creating a Process</a>).
+</p>
+<p>When making a lock, use a <code class="code">struct flock</code> to specify what kind of
+lock and where.  This data type and the associated macros for the
+<code class="code">fcntl</code> function are declared in the header file <samp class="file">fcntl.h</samp>.
+<a class="index-entry-id" id="index-fcntl_002eh-6"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-flock"><span class="category-def">Data Type: </span><span><strong class="def-name">struct flock</strong><a class="copiable-link" href="#index-struct-flock"> &para;</a></span></dt>
+<dd>
+<p>This structure is used with the <code class="code">fcntl</code> function to describe a file
+lock.  It has these members:
+</p>
+<dl class="table">
+<dt><code class="code">short int l_type</code></dt>
+<dd><p>Specifies the type of the lock; one of <code class="code">F_RDLCK</code>, <code class="code">F_WRLCK</code>, or
+<code class="code">F_UNLCK</code>.
+</p>
+</dd>
+<dt><code class="code">short int l_whence</code></dt>
+<dd><p>This corresponds to the <var class="var">whence</var> argument to <code class="code">fseek</code> or
+<code class="code">lseek</code>, and specifies what the offset is relative to.  Its value
+can be one of <code class="code">SEEK_SET</code>, <code class="code">SEEK_CUR</code>, or <code class="code">SEEK_END</code>.
+</p>
+</dd>
+<dt><code class="code">off_t l_start</code></dt>
+<dd><p>This specifies the offset of the start of the region to which the lock
+applies, and is given in bytes relative to the point specified by the
+<code class="code">l_whence</code> member.
+</p>
+</dd>
+<dt><code class="code">off_t l_len</code></dt>
+<dd><p>This specifies the length of the region to be locked.  A value of
+<code class="code">0</code> is treated specially; it means the region extends to the end of
+the file.
+</p>
+</dd>
+<dt><code class="code">pid_t l_pid</code></dt>
+<dd><p>This field is the process ID (see <a class="pxref" href="Process-Creation-Concepts.html">Process Creation Concepts</a>) of the
+process holding the lock.  It is filled in by calling <code class="code">fcntl</code> with
+the <code class="code">F_GETLK</code> command, but is ignored when making a lock.  If the
+conflicting lock is an open file description lock
+(see <a class="pxref" href="Open-File-Description-Locks.html">Open File Description Locks</a>), then this field will be set to
+<em class="math">-1</em>.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-F_005fGETLK-1"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">F_GETLK</strong><a class="copiable-link" href="#index-F_005fGETLK-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used as the <var class="var">command</var> argument to <code class="code">fcntl</code>, to
+specify that it should get information about a lock.  This command
+requires a third argument of type <code class="code">struct&nbsp;flock&nbsp;*</code><!-- /@w --> to be passed
+to <code class="code">fcntl</code>, so that the form of the call is:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">fcntl (<var class="var">filedes</var>, F_GETLK, <var class="var">lockp</var>)
+</pre></div>
+
+<p>If there is a lock already in place that would block the lock described
+by the <var class="var">lockp</var> argument, information about that lock overwrites
+<code class="code">*<var class="var">lockp</var></code>.  Existing locks are not reported if they are
+compatible with making a new lock as specified.  Thus, you should
+specify a lock type of <code class="code">F_WRLCK</code> if you want to find out about both
+read and write locks, or <code class="code">F_RDLCK</code> if you want to find out about
+write locks only.
+</p>
+<p>There might be more than one lock affecting the region specified by the
+<var class="var">lockp</var> argument, but <code class="code">fcntl</code> only returns information about
+one of them.  The <code class="code">l_whence</code> member of the <var class="var">lockp</var> structure is
+set to <code class="code">SEEK_SET</code> and the <code class="code">l_start</code> and <code class="code">l_len</code> fields
+set to identify the locked region.
+</p>
+<p>If no lock applies, the only change to the <var class="var">lockp</var> structure is to
+update the <code class="code">l_type</code> to a value of <code class="code">F_UNLCK</code>.
+</p>
+<p>The normal return value from <code class="code">fcntl</code> with this command is an
+unspecified value other than <em class="math">-1</em>, which is reserved to indicate an
+error.  The following <code class="code">errno</code> error conditions are defined for
+this command:
+</p>
+<dl class="table">
+<dt><code class="code">EBADF</code></dt>
+<dd><p>The <var class="var">filedes</var> argument is invalid.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>Either the <var class="var">lockp</var> argument doesn&rsquo;t specify valid lock information,
+or the file associated with <var class="var">filedes</var> doesn&rsquo;t support locks.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-F_005fSETLK-1"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">F_SETLK</strong><a class="copiable-link" href="#index-F_005fSETLK-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used as the <var class="var">command</var> argument to <code class="code">fcntl</code>, to
+specify that it should set or clear a lock.  This command requires a
+third argument of type <code class="code">struct&nbsp;flock&nbsp;*</code><!-- /@w --> to be passed to
+<code class="code">fcntl</code>, so that the form of the call is:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">fcntl (<var class="var">filedes</var>, F_SETLK, <var class="var">lockp</var>)
+</pre></div>
+
+<p>If the process already has a lock on any part of the region, the old lock
+on that part is replaced with the new lock.  You can remove a lock
+by specifying a lock type of <code class="code">F_UNLCK</code>.
+</p>
+<p>If the lock cannot be set, <code class="code">fcntl</code> returns immediately with a value
+of <em class="math">-1</em>.  This function does not block while waiting for other processes
+to release locks.  If <code class="code">fcntl</code> succeeds, it returns a value other
+than <em class="math">-1</em>.
+</p>
+<p>The following <code class="code">errno</code> error conditions are defined for this
+function:
+</p>
+<dl class="table">
+<dt><code class="code">EAGAIN</code></dt>
+<dt><code class="code">EACCES</code></dt>
+<dd><p>The lock cannot be set because it is blocked by an existing lock on the
+file.  Some systems use <code class="code">EAGAIN</code> in this case, and other systems
+use <code class="code">EACCES</code>; your program should treat them alike, after
+<code class="code">F_SETLK</code>.  (GNU/Linux and GNU/Hurd systems always use <code class="code">EAGAIN</code>.)
+</p>
+</dd>
+<dt><code class="code">EBADF</code></dt>
+<dd><p>Either: the <var class="var">filedes</var> argument is invalid; you requested a read lock
+but the <var class="var">filedes</var> is not open for read access; or, you requested a
+write lock but the <var class="var">filedes</var> is not open for write access.
+</p>
+</dd>
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>Either the <var class="var">lockp</var> argument doesn&rsquo;t specify valid lock information,
+or the file associated with <var class="var">filedes</var> doesn&rsquo;t support locks.
+</p>
+</dd>
+<dt><code class="code">ENOLCK</code></dt>
+<dd><p>The system has run out of file lock resources; there are already too
+many file locks in place.
+</p>
+<p>Well-designed file systems never report this error, because they have no
+limitation on the number of locks.  However, you must still take account
+of the possibility of this error, as it could result from network access
+to a file system on another machine.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypevr def-block">
+<dt class="deftypevr def-line" id="index-F_005fSETLKW-1"><span class="category-def">Macro: </span><span><code class="def-type">int</code> <strong class="def-name">F_SETLKW</strong><a class="copiable-link" href="#index-F_005fSETLKW-1"> &para;</a></span></dt>
+<dd>
+<p>This macro is used as the <var class="var">command</var> argument to <code class="code">fcntl</code>, to
+specify that it should set or clear a lock.  It is just like the
+<code class="code">F_SETLK</code> command, but causes the process to block (or wait)
+until the request can be specified.
+</p>
+<p>This command requires a third argument of type <code class="code">struct flock *</code>, as
+for the <code class="code">F_SETLK</code> command.
+</p>
+<p>The <code class="code">fcntl</code> return values and errors are the same as for the
+<code class="code">F_SETLK</code> command, but these additional <code class="code">errno</code> error conditions
+are defined for this command:
+</p>
+<dl class="table">
+<dt><code class="code">EINTR</code></dt>
+<dd><p>The function was interrupted by a signal while it was waiting.
+See <a class="xref" href="Interrupted-Primitives.html">Primitives Interrupted by Signals</a>.
+</p>
+</dd>
+<dt><code class="code">EDEADLK</code></dt>
+<dd><p>The specified region is being locked by another process.  But that
+process is waiting to lock a region which the current process has
+locked, so waiting for the lock would result in deadlock.  The system
+does not guarantee that it will detect all such conditions, but it lets
+you know if it notices one.
+</p></dd>
+</dl>
+</dd></dl>
+
+
+<p>The following macros are defined for use as values for the <code class="code">l_type</code>
+member of the <code class="code">flock</code> structure.  The values are integer constants.
+</p>
+<dl class="vtable">
+<dt><a id="index-F_005fRDLCK"></a><span><code class="code">F_RDLCK</code><a class="copiable-link" href="#index-F_005fRDLCK"> &para;</a></span></dt>
+<dd>
+<p>This macro is used to specify a read (or shared) lock.
+</p>
+</dd>
+<dt><a id="index-F_005fWRLCK"></a><span><code class="code">F_WRLCK</code><a class="copiable-link" href="#index-F_005fWRLCK"> &para;</a></span></dt>
+<dd>
+<p>This macro is used to specify a write (or exclusive) lock.
+</p>
+</dd>
+<dt><a id="index-F_005fUNLCK"></a><span><code class="code">F_UNLCK</code><a class="copiable-link" href="#index-F_005fUNLCK"> &para;</a></span></dt>
+<dd>
+<p>This macro is used to specify that the region is unlocked.
+</p></dd>
+</dl>
+
+<p>As an example of a situation where file locking is useful, consider a
+program that can be run simultaneously by several different users, that
+logs status information to a common file.  One example of such a program
+might be a game that uses a file to keep track of high scores.  Another
+example might be a program that records usage or accounting information
+for billing purposes.
+</p>
+<p>Having multiple copies of the program simultaneously writing to the
+file could cause the contents of the file to become mixed up.  But
+you can prevent this kind of problem by setting a write lock on the
+file before actually writing to the file.
+</p>
+<p>If the program also needs to read the file and wants to make sure that
+the contents of the file are in a consistent state, then it can also use
+a read lock.  While the read lock is set, no other process can lock
+that part of the file for writing.
+</p>
+
+<p>Remember that file locks are only an <em class="emph">advisory</em> protocol for
+controlling access to a file.  There is still potential for access to
+the file by programs that don&rsquo;t use the lock protocol.
+</p>
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Open-File-Description-Locks.html">Open File Description Locks</a>, Previous: <a href="File-Status-Flags.html">File Status Flags</a>, Up: <a href="Low_002dLevel-I_002fO.html">Low-Level Input/Output</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

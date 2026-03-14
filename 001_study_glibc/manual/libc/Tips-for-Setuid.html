@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Tips for Setuid (The GNU C Library)</title>
+
+<meta name="description" content="Tips for Setuid (The GNU C Library)">
+<meta name="keywords" content="Tips for Setuid (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Users-and-Groups.html" rel="up" title="Users and Groups">
+<link href="Who-Logged-In.html" rel="next" title="Who Logged In">
+<link href="Setuid-Program-Example.html" rel="prev" title="Setuid Program Example">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+ul.mark-bullet {list-style-type: disc}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Tips-for-Setuid">
+<div class="nav-panel">
+<p>
+Next: <a href="Who-Logged-In.html" accesskey="n" rel="next">Identifying Who Logged In</a>, Previous: <a href="Setuid-Program-Example.html" accesskey="p" rel="prev">Setuid Program Example</a>, Up: <a href="Users-and-Groups.html" accesskey="u" rel="up">Users and Groups</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Tips-for-Writing-Setuid-Programs"><span>31.10 Tips for Writing Setuid Programs<a class="copiable-link" href="#Tips-for-Writing-Setuid-Programs"> &para;</a></span></h3>
+
+<p>It is easy for setuid programs to give the user access that isn&rsquo;t
+intended&mdash;in fact, if you want to avoid this, you need to be careful.
+Here are some guidelines for preventing unintended access and
+minimizing its consequences when it does occur:
+</p>
+<ul class="itemize mark-bullet">
+<li>Don&rsquo;t have <code class="code">setuid</code> programs with privileged user IDs such as
+<code class="code">root</code> unless it is absolutely necessary.  If the resource is
+specific to your particular program, it&rsquo;s better to define a new,
+nonprivileged user ID or group ID just to manage that resource.
+It&rsquo;s better if you can write your program to use a special group than a
+special user.
+
+</li><li>Be cautious about using the <code class="code">exec</code> functions in combination with
+changing the effective user ID.  Don&rsquo;t let users of your program execute
+arbitrary programs under a changed user ID.  Executing a shell is
+especially bad news.  Less obviously, the <code class="code">execlp</code> and <code class="code">execvp</code>
+functions are a potential risk (since the program they execute depends
+on the user&rsquo;s <code class="code">PATH</code> environment variable).
+
+<p>If you must <code class="code">exec</code> another program under a changed ID, specify an
+absolute file name (see <a class="pxref" href="File-Name-Resolution.html">File Name Resolution</a>) for the executable,
+and make sure that the protections on that executable and <em class="emph">all</em>
+containing directories are such that ordinary users cannot replace it
+with some other program.
+</p>
+<p>You should also check the arguments passed to the program to make sure
+they do not have unexpected effects.  Likewise, you should examine the
+environment variables.  Decide which arguments and variables are safe,
+and reject all others.
+</p>
+<p>You should never use <code class="code">system</code> in a privileged program, because it
+invokes a shell.
+</p>
+</li><li>Only use the user ID controlling the resource in the part of the program
+that actually uses that resource.  When you&rsquo;re finished with it, restore
+the effective user ID back to the actual user&rsquo;s user ID.
+See <a class="xref" href="Enable_002fDisable-Setuid.html">Enabling and Disabling Setuid Access</a>.
+
+</li><li>If the <code class="code">setuid</code> part of your program needs to access other files
+besides the controlled resource, it should verify that the real user
+would ordinarily have permission to access those files.  You can use the
+<code class="code">access</code> function (see <a class="pxref" href="Access-Permission.html">How Your Access to a File is Decided</a>) to check this; it
+uses the real user and group IDs, rather than the effective IDs.
+</li></ul>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Who-Logged-In.html">Identifying Who Logged In</a>, Previous: <a href="Setuid-Program-Example.html">Setuid Program Example</a>, Up: <a href="Users-and-Groups.html">Users and Groups</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

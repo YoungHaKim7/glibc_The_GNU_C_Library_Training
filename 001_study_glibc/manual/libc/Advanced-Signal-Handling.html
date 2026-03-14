@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Advanced Signal Handling (The GNU C Library)</title>
+
+<meta name="description" content="Advanced Signal Handling (The GNU C Library)">
+<meta name="keywords" content="Advanced Signal Handling (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Signal-Actions.html" rel="up" title="Signal Actions">
+<link href="Signal-and-Sigaction.html" rel="next" title="Signal and Sigaction">
+<link href="Basic-Signal-Handling.html" rel="prev" title="Basic Signal Handling">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="subsection-level-extent" id="Advanced-Signal-Handling">
+<div class="nav-panel">
+<p>
+Next: <a href="Signal-and-Sigaction.html" accesskey="n" rel="next">Interaction of <code class="code">signal</code> and <code class="code">sigaction</code></a>, Previous: <a href="Basic-Signal-Handling.html" accesskey="p" rel="prev">Basic Signal Handling</a>, Up: <a href="Signal-Actions.html" accesskey="u" rel="up">Specifying Signal Actions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h4 class="subsection" id="Advanced-Signal-Handling-1"><span>25.3.2 Advanced Signal Handling<a class="copiable-link" href="#Advanced-Signal-Handling-1"> &para;</a></span></h4>
+<a class="index-entry-id" id="index-sigaction-function"></a>
+
+<p>The <code class="code">sigaction</code> function has the same basic effect as
+<code class="code">signal</code>: to specify how a signal should be handled by the process.
+However, <code class="code">sigaction</code> offers more control, at the expense of more
+complexity.  In particular, <code class="code">sigaction</code> allows you to specify
+additional flags to control when the signal is generated and how the
+handler is invoked.
+</p>
+<p>The <code class="code">sigaction</code> function is declared in <samp class="file">signal.h</samp>.
+<a class="index-entry-id" id="index-signal_002eh-3"></a>
+</p>
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-struct-sigaction"><span class="category-def">Data Type: </span><span><strong class="def-name">struct sigaction</strong><a class="copiable-link" href="#index-struct-sigaction"> &para;</a></span></dt>
+<dd>
+<p>Structures of type <code class="code">struct sigaction</code> are used in the
+<code class="code">sigaction</code> function to specify all the information about how to
+handle a particular signal.  This structure contains at least the
+following members:
+</p>
+<dl class="table">
+<dt><code class="code">sighandler_t sa_handler</code></dt>
+<dd><p>This is used in the same way as the <var class="var">action</var> argument to the
+<code class="code">signal</code> function.  The value can be <code class="code">SIG_DFL</code>,
+<code class="code">SIG_IGN</code>, or a function pointer.  See <a class="xref" href="Basic-Signal-Handling.html">Basic Signal Handling</a>.
+</p>
+</dd>
+<dt><code class="code">void (*sa_sigaction) (int <var class="var">signum</var>, siginfo_t *<var class="var">info</var>, void *<var class="var">ucontext</var>)</code></dt>
+<dd><p>This is an alternate to <code class="code">sa_handler</code> that is used when the
+<code class="code">sa_flags</code> includes the <code class="code">flag SA_SIGINFO</code>.  Note that this
+and <code class="code">sa_handler</code> overlap; only ever set one at a time.
+</p>
+<p>The contents of the <var class="var">info</var> and <var class="var">ucontext</var> structures are
+kernel and architecture dependent.  Please see
+<a class="url" href="https://man7.org/linux/man-pages/man2/sigaction.2.html">sigaction(2)</a>
+See <a class="xref" href="Linux-Kernel.html">Linux (The Linux Kernel)</a> for details.
+</p>
+</dd>
+<dt><code class="code">sigset_t sa_mask</code></dt>
+<dd><p>This specifies a set of signals to be blocked while the handler runs.
+Blocking is explained in <a class="ref" href="Blocking-for-Handler.html">Blocking Signals for a Handler</a>.  Note that the
+signal that was delivered is automatically blocked by default before its
+handler is started; this is true regardless of the value in
+<code class="code">sa_mask</code>.  If you want that signal not to be blocked within its
+handler, you must write code in the handler to unblock it.
+</p>
+</dd>
+<dt><code class="code">int sa_flags</code></dt>
+<dd><p>This specifies various flags which can affect the behavior of
+the signal.  These are described in more detail in <a class="ref" href="Flags-for-Sigaction.html">Flags for <code class="code">sigaction</code></a>.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-sigaction"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">sigaction</strong> <code class="def-code-arguments">(int <var class="var">signum</var>, const struct sigaction *restrict <var class="var">action</var>, struct sigaction *restrict <var class="var">old-action</var>)</code><a class="copiable-link" href="#index-sigaction"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <var class="var">action</var> argument is used to set up a new action for the signal
+<var class="var">signum</var>, while the <var class="var">old-action</var> argument is used to return
+information about the action previously associated with this signal.
+(In other words, <var class="var">old-action</var> has the same purpose as the
+<code class="code">signal</code> function&rsquo;s return value&mdash;you can check to see what the
+old action in effect for the signal was, and restore it later if you
+want.)
+</p>
+<p>Either <var class="var">action</var> or <var class="var">old-action</var> can be a null pointer.  If
+<var class="var">old-action</var> is a null pointer, this simply suppresses the return
+of information about the old action.  If <var class="var">action</var> is a null pointer,
+the action associated with the signal <var class="var">signum</var> is unchanged; this
+allows you to inquire about how a signal is being handled without changing
+that handling.
+</p>
+<p>The return value from <code class="code">sigaction</code> is zero if it succeeds, and
+<code class="code">-1</code> on failure.  The following <code class="code">errno</code> error conditions are
+defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EINVAL</code></dt>
+<dd><p>The <var class="var">signum</var> argument is not valid, or you are trying to
+trap or ignore <code class="code">SIGKILL</code> or <code class="code">SIGSTOP</code>.
+</p></dd>
+</dl>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Signal-and-Sigaction.html">Interaction of <code class="code">signal</code> and <code class="code">sigaction</code></a>, Previous: <a href="Basic-Signal-Handling.html">Basic Signal Handling</a>, Up: <a href="Signal-Actions.html">Specifying Signal Actions</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

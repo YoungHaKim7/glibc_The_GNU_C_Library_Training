@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Making Special Files (The GNU C Library)</title>
+
+<meta name="description" content="Making Special Files (The GNU C Library)">
+<meta name="keywords" content="Making Special Files (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="File-System-Interface.html" rel="up" title="File System Interface">
+<link href="Temporary-Files.html" rel="next" title="Temporary Files">
+<link href="File-Attributes.html" rel="prev" title="File Attributes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Making-Special-Files">
+<div class="nav-panel">
+<p>
+Next: <a href="Temporary-Files.html" accesskey="n" rel="next">Temporary Files</a>, Previous: <a href="File-Attributes.html" accesskey="p" rel="prev">File Attributes</a>, Up: <a href="File-System-Interface.html" accesskey="u" rel="up">File System Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Making-Special-Files-1"><span>14.11 Making Special Files<a class="copiable-link" href="#Making-Special-Files-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-creating-special-files"></a>
+<a class="index-entry-id" id="index-special-files"></a>
+
+<p>The <code class="code">mknod</code> function is the primitive for making special files,
+such as files that correspond to devices.  The GNU C Library includes
+this function for compatibility with BSD.
+</p>
+<p>The prototype for <code class="code">mknod</code> is declared in <samp class="file">sys/stat.h</samp>.
+<a class="index-entry-id" id="index-sys_002fstat_002eh-6"></a>
+</p>
+<dl class="first-deftypefn first-deftypefun-alias-first-deftypefn def-block">
+<dt class="deftypefn deftypefun-alias-deftypefn def-line" id="index-mknod"><span class="category-def">Function: </span><span><code class="def-type">int</code> <strong class="def-name">mknod</strong> <code class="def-code-arguments">(const char *<var class="var">filename</var>, mode_t <var class="var">mode</var>, dev_t <var class="var">dev</var>)</code><a class="copiable-link" href="#index-mknod"> &para;</a></span></dt>
+<dd>
+<p>Preliminary:
+| MT-Safe 
+| AS-Safe 
+| AC-Safe 
+| See <a class="xref" href="POSIX-Safety-Concepts.html">POSIX Safety Concepts</a>.
+</p>
+
+<p>The <code class="code">mknod</code> function makes a special file with name <var class="var">filename</var>.
+The <var class="var">mode</var> specifies the mode of the file, and may include the various
+special file bits, such as <code class="code">S_IFCHR</code> (for a character special file)
+or <code class="code">S_IFBLK</code> (for a block special file).  See <a class="xref" href="Testing-File-Type.html">Testing the Type of a File</a>.
+</p>
+<p>The <var class="var">dev</var> argument specifies which device the special file refers to.
+Its exact interpretation depends on the kind of special file being created.
+</p>
+<p>The return value is <code class="code">0</code> on success and <code class="code">-1</code> on error.  In addition
+to the usual file name errors (see <a class="pxref" href="File-Name-Errors.html">File Name Errors</a>), the
+following <code class="code">errno</code> error conditions are defined for this function:
+</p>
+<dl class="table">
+<dt><code class="code">EPERM</code></dt>
+<dd><p>The calling process is not privileged.  Only the superuser can create
+special files.
+</p>
+</dd>
+<dt><code class="code">ENOSPC</code></dt>
+<dd><p>The directory or file system that would contain the new file is full
+and cannot be extended.
+</p>
+</dd>
+<dt><code class="code">EROFS</code></dt>
+<dd><p>The directory containing the new file can&rsquo;t be modified because it&rsquo;s on
+a read-only file system.
+</p>
+</dd>
+<dt><code class="code">EEXIST</code></dt>
+<dd><p>There is already a file named <var class="var">filename</var>.  If you want to replace
+this file, you must remove the old file explicitly first.
+</p></dd>
+</dl>
+</dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="Temporary-Files.html">Temporary Files</a>, Previous: <a href="File-Attributes.html">File Attributes</a>, Up: <a href="File-System-Interface.html">File System Interface</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

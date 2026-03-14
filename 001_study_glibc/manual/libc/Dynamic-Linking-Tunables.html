@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This is
+The GNU C Library Reference Manual, for version
+2.43.9000.
+
+Copyright © 1993-2026 Free Software Foundation, Inc.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version
+1.3 or any later version published by the Free
+Software Foundation; with the Invariant Sections being "Free Software
+Needs Free Documentation" and "GNU Lesser General Public License",
+the Front-Cover texts being "A GNU Manual", and with the Back-Cover
+Texts as in (a) below.  A copy of the license is included in the
+section entitled "GNU Free Documentation License".
+
+(a) The FSF's Back-Cover Text is: "You have the freedom to
+copy and modify this GNU manual.  Buying copies from the FSF
+supports it in developing GNU and promoting software freedom." -->
+<title>Dynamic Linking Tunables (The GNU C Library)</title>
+
+<meta name="description" content="Dynamic Linking Tunables (The GNU C Library)">
+<meta name="keywords" content="Dynamic Linking Tunables (The GNU C Library)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="Concept-Index.html" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Tunables.html" rel="up" title="Tunables">
+<link href="POSIX-Thread-Tunables.html" rel="next" title="POSIX Thread Tunables">
+<link href="Memory-Allocation-Tunables.html" rel="prev" title="Memory Allocation Tunables">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Dynamic-Linking-Tunables">
+<div class="nav-panel">
+<p>
+Next: <a href="POSIX-Thread-Tunables.html" accesskey="n" rel="next">POSIX Thread Tunables</a>, Previous: <a href="Memory-Allocation-Tunables.html" accesskey="p" rel="prev">Memory Allocation Tunables</a>, Up: <a href="Tunables.html" accesskey="u" rel="up">Tunables</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Dynamic-Linking-Tunables-1"><span>39.3 Dynamic Linking Tunables<a class="copiable-link" href="#Dynamic-Linking-Tunables-1"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-dynamic-linking-tunables"></a>
+<a class="index-entry-id" id="index-rtld-tunables"></a>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-glibc_002ertld"><span class="category-def">Tunable namespace: </span><span><strong class="def-name">glibc.rtld</strong><a class="copiable-link" href="#index-glibc_002ertld"> &para;</a></span></dt>
+<dd><p>Dynamic linker behavior can be modified by setting the
+following tunables in the <code class="code">rtld</code> namespace:
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-glibc_002ertld_002enns"><span class="category-def">Tunable: </span><span><strong class="def-name">glibc.rtld.nns</strong><a class="copiable-link" href="#index-glibc_002ertld_002enns"> &para;</a></span></dt>
+<dd><p>Sets the number of supported dynamic link namespaces (see <code class="code">dlmopen</code>).
+Currently this limit can be set between 1 and 16 inclusive, the default is 4.
+Each link namespace consumes some memory in all thread, and thus raising the
+limit will increase the amount of memory each thread uses. Raising the limit
+is useful when your application uses more than 4 dynamic link namespaces as
+created by <code class="code">dlmopen</code> with an lmid argument of <code class="code">LM_ID_NEWLM</code>.
+Dynamic linker audit modules are loaded in their own dynamic link namespaces,
+but they are not accounted for in <code class="code">glibc.rtld.nns</code>.  They implicitly
+increase the per-thread memory usage as necessary, so this tunable does
+not need to be changed to allow many audit modules e.g. via <code class="env">LD_AUDIT</code>.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-glibc_002ertld_002eoptional_005fstatic_005ftls"><span class="category-def">Tunable: </span><span><strong class="def-name">glibc.rtld.optional_static_tls</strong><a class="copiable-link" href="#index-glibc_002ertld_002eoptional_005fstatic_005ftls"> &para;</a></span></dt>
+<dd><p>Sets the amount of surplus static TLS in bytes to allocate at program
+startup.  Every thread created allocates this amount of specified surplus
+static TLS. This is a minimum value and additional space may be allocated
+for internal purposes including alignment.  Optional static TLS is used for
+optimizing dynamic TLS access for platforms that support such optimizations
+e.g. TLS descriptors or optimized TLS access for POWER (<code class="code">DT_PPC64_OPT</code>
+and <code class="code">DT_PPC_OPT</code>).  In order to make the best use of such optimizations
+the value should be as many bytes as would be required to hold all TLS
+variables in all dynamic loaded shared libraries.  The value cannot be known
+by the dynamic loader because it doesn&rsquo;t know the expected set of shared
+libraries which will be loaded.  The existing static TLS space cannot be
+changed once allocated at process startup.  The default allocation of
+optional static TLS is 512 bytes and is allocated in every thread.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-glibc_002ertld_002edynamic_005fsort"><span class="category-def">Tunable: </span><span><strong class="def-name">glibc.rtld.dynamic_sort</strong><a class="copiable-link" href="#index-glibc_002ertld_002edynamic_005fsort"> &para;</a></span></dt>
+<dd><p>Sets the algorithm to use for DSO sorting, valid values are &lsquo;<samp class="samp">1</samp>&rsquo; and
+&lsquo;<samp class="samp">2</samp>&rsquo;.  For value of &lsquo;<samp class="samp">1</samp>&rsquo;, an older O(n^3) algorithm is used, which is
+long time tested, but may have performance issues when dependencies between
+shared objects contain cycles due to circular dependencies.  When set to the
+value of &lsquo;<samp class="samp">2</samp>&rsquo;, a different algorithm is used, which implements a
+topological sort through depth-first search, and does not exhibit the
+performance issues of &lsquo;<samp class="samp">1</samp>&rsquo;.
+</p>
+<p>The default value of this tunable is &lsquo;<samp class="samp">2</samp>&rsquo;.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-glibc_002ertld_002eenable_005fsecure"><span class="category-def">Tunable: </span><span><strong class="def-name">glibc.rtld.enable_secure</strong><a class="copiable-link" href="#index-glibc_002ertld_002eenable_005fsecure"> &para;</a></span></dt>
+<dd><p>Used to run a program as if it were a setuid process.  The only valid value
+is &lsquo;<samp class="samp">1</samp>&rsquo; as this tunable can only be used to set and not unset
+<code class="code">enable_secure</code>.  Setting this tunable to &lsquo;<samp class="samp">1</samp>&rsquo; also disables all other
+tunables.  This tunable is intended to facilitate more extensive verification
+tests for <code class="code">AT_SECURE</code> programs and not meant to be a security feature.
+</p>
+<p>The default value of this tunable is &lsquo;<samp class="samp">0</samp>&rsquo;.
+</p></dd></dl>
+
+<dl class="first-deftp def-block">
+<dt class="deftp def-line" id="index-glibc_002ertld_002eexecstack"><span class="category-def">Tunable: </span><span><strong class="def-name">glibc.rtld.execstack</strong><a class="copiable-link" href="#index-glibc_002ertld_002eexecstack"> &para;</a></span></dt>
+<dd><p>The GNU C Library will use either the default architecture ABI flags (that might
+contain the executable bit) or the value of <code class="code">PT_GNU_STACK</code> (if present)
+to define whether to mark the stack non-executable and if the program or
+any shared library dependency requires an executable stack the loader will
+change the main stack permission if kernel starts with a non-executable stack.
+</p>
+<p>The <code class="code">glibc.rtld.execstack</code> can be used to control whether an executable
+stack is allowed from the main program.  Setting the value to <code class="code">0</code> disables
+the ABI auto-negotiation (meaning no executable stacks even if the ABI or ELF
+header requires it), <code class="code">1</code> enables auto-negotiation (although the program
+might not need an executable stack), while <code class="code">2</code> forces an executable
+stack at process start.  This is provided for compatibility reasons, when
+the program dynamically loads modules with <code class="code">dlopen</code> which require
+an executable stack.
+</p>
+<p>When executable stacks are not allowed, and if the main program requires it,
+the loader will fail with an error message.
+</p>
+<p>Some systems do not have separate page protection flags at the hardware
+level for read access and execute access (sometimes called read-implies-exec).
+This mode can also be enabled on certain systems where the hardware supports
+separate protection flags.  The the GNU C Library tunable configuration is independent
+of hardware capabilities and kernel configuration.
+</p>
+<p><strong class="strong">NB:</strong> Trying to load a dynamic shared library with <code class="code">dlopen</code> or
+<code class="code">dlmopen</code> that requires an executable stack will always fail if the
+main program does not require an executable stack at loading time.  This
+can be worked around by setting the tunable to <code class="code">2</code>, where the stack is
+always executable.
+</p></dd></dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="POSIX-Thread-Tunables.html">POSIX Thread Tunables</a>, Previous: <a href="Memory-Allocation-Tunables.html">Memory Allocation Tunables</a>, Up: <a href="Tunables.html">Tunables</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>
