@@ -1,17 +1,15 @@
-use libc::*;
-use std::ffi::CString;
-use std::mem;
-use std::process;
+use std::{ffi::CString, mem, process};
+
+use libc::{
+    AF_INET, PF_INET, SOCK_STREAM, addrinfo, close, connect, freeaddrinfo, getaddrinfo, htons,
+    perror, sockaddr, sockaddr_in, socket, write,
+};
 
 const PORT: u16 = 5555;
 const MESSAGE: &str = "Yow!!! Are we having fun yet?!?";
 const SERVERHOST: &str = "127.0.0.1";
 
-unsafe fn init_sockaddr(
-    name: &mut sockaddr_in,
-    hostname: &str,
-    port: u16,
-) {
+unsafe fn init_sockaddr(name: &mut sockaddr_in, hostname: &str, port: u16) {
     unsafe {
         let c_host = CString::new(hostname).unwrap();
         let c_port = format!("{}", port);
@@ -24,12 +22,7 @@ unsafe fn init_sockaddr(
         let hints: addrinfo = mem::zeroed();
         let mut res: *mut addrinfo = std::ptr::null_mut();
 
-        let status = getaddrinfo(
-            c_host.as_ptr(),
-            c_port.as_ptr(),
-            &hints,
-            &mut res,
-        );
+        let status = getaddrinfo(c_host.as_ptr(), c_port.as_ptr(), &hints, &mut res);
 
         if status != 0 {
             eprintln!("getaddrinfo: {}", hostname);
@@ -52,11 +45,7 @@ unsafe fn write_to_server(fd: i32) {
     unsafe {
         let msg = MESSAGE.as_bytes();
 
-        let nbytes = write(
-            fd,
-            msg.as_ptr() as *const _,
-            msg.len(),
-        );
+        let nbytes = write(fd, msg.as_ptr() as *const _, msg.len());
 
         if nbytes < 0 {
             perror(b"write\0".as_ptr() as *const _);
@@ -76,11 +65,7 @@ fn main() {
 
         let mut servername: sockaddr_in = mem::zeroed();
 
-        init_sockaddr(
-            &mut servername,
-            SERVERHOST,
-            PORT,
-        );
+        init_sockaddr(&mut servername, SERVERHOST, PORT);
 
         let result = connect(
             sock,
