@@ -2,6 +2,7 @@ justfile
 .DS_Store
 # build
 target/
+build/
 # Prerequisites
 *.d
 
