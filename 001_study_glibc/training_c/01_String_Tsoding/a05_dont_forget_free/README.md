@@ -1,5 +1,7 @@
 # Result(leak memory 해결 잊지말자 free)
 
+- macOS(M1) test
+
 ```bash
 $ LSAN_OPTIONS=suppressions=../.lsan.supp
 rm -rf target
