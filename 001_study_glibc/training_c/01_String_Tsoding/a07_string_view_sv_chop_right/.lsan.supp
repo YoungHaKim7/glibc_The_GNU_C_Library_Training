@@ -1,0 +1,4 @@
+# Suppress macOS system library leaks
+leak:libobjc.A.dylib
+leak:libxpc.dylib
+leak:libSystem.B.dylib
