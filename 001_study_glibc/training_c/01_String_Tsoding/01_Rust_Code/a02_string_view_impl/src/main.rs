@@ -5,8 +5,8 @@ struct StringView<'a> {
 }
 
 impl<'a> StringView<'a> {
-    fn sv(s: &str) -> StringView<'_> {
-        StringView {
+    fn sv(s: &'a str) -> Self {
+        Self {
             data: s,
             count: s.len(),
         }
