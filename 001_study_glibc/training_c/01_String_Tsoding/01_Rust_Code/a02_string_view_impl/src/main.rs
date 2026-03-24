@@ -12,13 +12,13 @@ impl<'a> StringView<'a> {
         }
     }
 
-    fn sv_chop_left(sv: &mut StringView, n: usize) {
+    fn sv_chop_left(sv: &mut Self, n: usize) {
         let n = n.min(sv.count);
 
         sv.data = &sv.data[n..];
         sv.count -= n;
     }
-    fn sv_chop_right(sv: &mut StringView, n: usize) {
+    fn sv_chop_right(sv: &mut Self, n: usize) {
         let n = n.min(sv.count);
 
         sv.count -= n;
