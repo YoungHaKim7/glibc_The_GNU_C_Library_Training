@@ -27,6 +27,6 @@ git checkout master
 git clone https://sourceware.org/git/glibc.git
 cd glibc
 git checkout release/2.43/master
-bash
+```
 
 - Release tarballs are available via anonymous ftp at https://ftp.gnu.org/gnu/glibc/ and its mirrors. 
