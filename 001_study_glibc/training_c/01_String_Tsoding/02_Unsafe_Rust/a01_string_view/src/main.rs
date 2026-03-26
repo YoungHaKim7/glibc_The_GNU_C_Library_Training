@@ -1,7 +1,4 @@
-use std::{ffi::CStr, os::raw::c_char, ptr};
-
-#[repr(C)]
-struct String_View {
+struct StringView {
     data: *const u8,
     count: usize,
 }
@@ -21,15 +18,15 @@ fn c_strlen(mut s: *const u8) -> usize {
 }
 
 // String_View sv(const char *cstr)
-fn sv(cstr: *const u8) -> String_View {
-    String_View {
+fn sv(cstr: *const u8) -> StringView {
+    StringView {
         data: cstr,
         count: c_strlen(cstr),
     }
 }
 
 // void sv_chop_left(String_View *sv, size_t n)
-fn sv_chop_left(sv: *mut String_View, mut n: usize) {
+fn sv_chop_left(sv: *mut StringView, mut n: usize) {
     unsafe {
         if n > (*sv).count {
             n = (*sv).count;
@@ -41,7 +38,7 @@ fn sv_chop_left(sv: *mut String_View, mut n: usize) {
 }
 
 // void sv_chop_right(String_View *sv, size_t n)
-fn sv_chop_right(sv: *mut String_View, mut n: usize) {
+fn sv_chop_right(sv: *mut StringView, mut n: usize) {
     unsafe {
         if n > (*sv).count {
             n = (*sv).count;
