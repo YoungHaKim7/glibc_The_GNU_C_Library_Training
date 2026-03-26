@@ -1,0 +1,11 @@
+# Result
+
+```bash
+$ zig build run
+
+StringView zig lang (ver0.16.0-dev.2984+cb7d2b056)
+
+
+llo, Wo
+
+```
