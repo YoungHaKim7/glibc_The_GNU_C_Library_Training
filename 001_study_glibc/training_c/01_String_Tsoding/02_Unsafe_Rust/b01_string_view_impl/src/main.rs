@@ -27,7 +27,7 @@ impl StringView {
     }
 
     // void sv_chop_left(String_View *sv, size_t n)
-    fn sv_chop_left(sv: *mut StringView, mut n: usize) {
+    fn sv_chop_left(sv: *mut Self, mut n: usize) {
         unsafe {
             if n > (*sv).count {
                 n = (*sv).count;
@@ -39,7 +39,7 @@ impl StringView {
     }
 
     // void sv_chop_right(String_View *sv, size_t n)
-    fn sv_chop_right(sv: *mut StringView, mut n: usize) {
+    fn sv_chop_right(sv: *mut Self, mut n: usize) {
         unsafe {
             if n > (*sv).count {
                 n = (*sv).count;
