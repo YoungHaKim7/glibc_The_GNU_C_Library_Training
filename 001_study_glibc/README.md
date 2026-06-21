@@ -1,3 +1,76 @@
+# linux man-pages
+- https://man7.org/linux/man-pages/index.html
+
+- 이 텍스트는 Linux 매뉴얼 페이지를 웹에서 볼 수 있는 Linux man-pages online 사이트의 첫 화면입니다. 보통 개발자들은 터미널에서:
+
+```bash
+man printf
+man mmap
+man pthread_create
+```
+
+- 처럼 사용하지만, 이 사이트에서는 같은 내용을 브라우저에서 HTML로 볼 수 있습니다.
+
+- 주요 항목은 다음과 같습니다.
+  - by section : 매뉴얼 섹션별 목록
+  - alphabetically : 알파벳 순 목록
+  - by project : 프로젝트별 목록
+  - 1 ~ 8 : 각 매뉴얼 섹션
+
+- Linux 매뉴얼 섹션은 보통 다음 의미입니다.
+
+
+| 섹션 | 내용                                                |
+| -- | ------------------------------------------------- |
+| 1  | 사용자 명령어 (`ls`, `grep`, `cat`)                     |
+| 2  | 시스템 호출 (`open`, `read`, `mmap`)                   |
+| 3  | C 라이브러리 함수 (`printf`, `malloc`, `pthread_create`) |
+| 4  | 장치 파일                                             |
+| 5  | 설정 파일 형식 (`passwd`, `fstab`)                      |
+| 6  | 게임                                                |
+| 7  | 개념 및 규약 (`signal`, `tcp`, `utf-8`)                |
+| 8  | 시스템 관리 명령어 (`mount`, `fsck`)                      |
+
+# 예를 들어 Rust에서 libc::mmap을 공부하고 싶다면:
+
+```bash
+man 2 mmap
+```
+
+- 또는 웹에서 `mmap(2)` 페이지를 보면 됩니다. 시스템 호출은 섹션 2에 있기 때문입니다.
+
+- Rust + libc 프로그래밍을 자주 한다면 특히 많이 보는 섹션은:
+  - `man 2` — 시스템 호출
+  - `man 3` — C 라이브러리 함수
+  - `man 7` — 개념 설명
+
+- 입니다.
+
+- 예를 들어 최근에 질문했던 `libc`, `fork`, `signal`, `mmap`, `pthread` 관련 내용은 대부분 Section 2 와 Section 3 에 있습니다.
+
+- 또한 macOS에서도 터미널에서 동일하게 사용할 수 있습니다.
+
+```bash
+man printf
+man pthread_create
+man mmap
+```
+
+- 특정 함수가 어느 섹션에 있는지 모르면:
+
+```bash
+man -k mmap
+```
+
+- 또는
+
+```bash
+apropos mmap
+```
+- 으로 검색할 수 있습니다.
+
+<hr />
+
 # 공부하는 순서
 Based on my exploration of the glibc codebase, here's a structured approach to studying it:
 
