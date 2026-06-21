@@ -31,7 +31,7 @@ man pthread_create
 | 7  | 개념 및 규약 (`signal`, `tcp`, `utf-8`)                |
 | 8  | 시스템 관리 명령어 (`mount`, `fsck`)                      |
 
-# 예를 들어 Rust에서 libc::mmap을 공부하고 싶다면:
+# 예를 들어 Rust에서 `libc::mmap` 을 공부하고 싶다면:
 
 ```bash
 man 2 mmap
