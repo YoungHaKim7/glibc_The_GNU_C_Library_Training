@@ -1,3 +1,6 @@
+# 커널 이해하기(C언어 개념으로 이해해야함)
+- https://youtu.be/iqqf8YWJhSs?si=wKzFVK7XLl_SlhjG
+
 # linux man-pages
 - https://man7.org/linux/man-pages/index.html
 
