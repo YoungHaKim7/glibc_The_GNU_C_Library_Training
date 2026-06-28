@@ -1,8 +1,9 @@
 # C99 (ISO/IEC 9899 - Programming languages - C)
-- https://www.open-std.org/jtc1/sc22/wg14/www/standards)
+- https://www.open-std.org/jtc1/sc22/wg14/www/standards
 
 ### The Portable Operating System Interface (POSIX)
-- 
+- The Portable Operating System Interface (POSIX; IPA: /ˈpɒz.ɪks/[1]) is a family of standards specified by the IEEE Computer Society for maintaining compatibility between operating systems.
+  - 휴대용 운영 체제 인터페이스(POSIX; IPA: /ˈpɒz.ɪks/[1])는 운영 체제 간 호환성을 유지하기 위해 IEEE 컴퓨터 학회가 지정한 표준군입니다.
 - https://en.wikipedia.org/wiki/POSIX
 
 - Assuming you are referring to the Portable Applications Standards Committee (PASC), they are the IEEE standards committee responsible for maintaining POSIX (Portable Operating System Interface) standards. Their work primarily focuses on standardizing application programming interfaces (APIs) to ensure software can easily run across different operating systems
