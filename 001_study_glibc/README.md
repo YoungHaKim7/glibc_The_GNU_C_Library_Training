@@ -10,7 +10,8 @@
   - 귀하가 포터블 애플리케이션 표준 위원회(PASC)를 언급하고 있다고 가정하면, 이들은 POSIX(포터블 운영 체제 인터페이스) 표준을 유지 관리할 책임이 있는 IEEE 표준 위원회입니다. 그들의 작업은 주로 애플리케이션 프로그래밍 인터페이스(API)를 표준화하여 소프트웨어가 다양한 운영 체제에서 쉽게 실행될 수 있도록 하는 데 중점을 둡니다.
   - https://standards.ieee.org/
 
-- 
+## 단일 UNIX
+- https://en.wikipedia.org/wiki/Single_UNIX_Specification
 
 # 커널 이해하기(C언어 개념으로 이해해야함)
 - https://youtu.be/iqqf8YWJhSs?si=wKzFVK7XLl_SlhjG
