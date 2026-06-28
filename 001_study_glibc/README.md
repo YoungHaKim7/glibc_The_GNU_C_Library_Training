@@ -13,6 +13,9 @@
 ## 단일 UNIX
 - https://en.wikipedia.org/wiki/Single_UNIX_Specification
 
+- Version7 UNIX
+  - https://en.wikipedia.org/wiki/Version_7_Unix
+
 # 커널 이해하기(C언어 개념으로 이해해야함)
 - https://youtu.be/iqqf8YWJhSs?si=wKzFVK7XLl_SlhjG
 
