@@ -1,3 +1,6 @@
+# C99 (ISO/IEC 9899 - Programming languages - C)
+- https://www.open-std.org/jtc1/sc22/wg14/www/standards)
+
 # 커널 이해하기(C언어 개념으로 이해해야함)
 - https://youtu.be/iqqf8YWJhSs?si=wKzFVK7XLl_SlhjG
 
