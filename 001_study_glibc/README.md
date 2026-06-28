@@ -1,6 +1,16 @@
 # C99 (ISO/IEC 9899 - Programming languages - C)
 - https://www.open-std.org/jtc1/sc22/wg14/www/standards)
 
+### The Portable Operating System Interface (POSIX)
+- 
+- https://en.wikipedia.org/wiki/POSIX
+
+- Assuming you are referring to the Portable Applications Standards Committee (PASC), they are the IEEE standards committee responsible for maintaining POSIX (Portable Operating System Interface) standards. Their work primarily focuses on standardizing application programming interfaces (APIs) to ensure software can easily run across different operating systems
+  - 귀하가 포터블 애플리케이션 표준 위원회(PASC)를 언급하고 있다고 가정하면, 이들은 POSIX(포터블 운영 체제 인터페이스) 표준을 유지 관리할 책임이 있는 IEEE 표준 위원회입니다. 그들의 작업은 주로 애플리케이션 프로그래밍 인터페이스(API)를 표준화하여 소프트웨어가 다양한 운영 체제에서 쉽게 실행될 수 있도록 하는 데 중점을 둡니다.
+  - https://standards.ieee.org/
+
+- 
+
 # 커널 이해하기(C언어 개념으로 이해해야함)
 - https://youtu.be/iqqf8YWJhSs?si=wKzFVK7XLl_SlhjG
 
